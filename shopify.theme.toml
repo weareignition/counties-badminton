@@ -1,0 +1,6 @@
+# Shopify CLI environments: https://shopify.dev/docs/storefronts/themes/tools/cli/environments
+# The npm scripts in package.json use the "development" environment.
+# Don't commit passwords or tokens here; pass them as env vars (see README).
+
+[environments.development]
+store = "countiesbadmintonproshop.myshopify.com"

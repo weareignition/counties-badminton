@@ -1,0 +1,21 @@
+{
+  "name": "counties-badminton",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Shopify theme for Counties Badminton, based on Shopify's Horizon theme.",
+  "scripts": {
+    "dev": "shopify theme dev -e development",
+    "check": "shopify theme check",
+    "pull": "shopify theme pull -e development",
+    "push": "shopify theme push -e development",
+    "package": "shopify theme package",
+    "list": "shopify theme list -e development",
+    "upstream:update": "git fetch upstream && git merge upstream/main"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "devDependencies": {
+    "@shopify/cli": "4.9.4"
+  }
+}
