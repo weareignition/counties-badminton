@@ -1,0 +1,35 @@
+<div class="cb-footer__brand" {{ block.shopify_attributes }}>
+  {% content_for 'blocks' %}
+</div>
+
+{% stylesheet %}
+  .cb-footer__brand {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 22px;
+    min-width: 0;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Brand column",
+  "tag": null,
+  "blocks": [
+    { "type": "_cb-footer-logo" },
+    { "type": "_cb-footer-text" },
+    { "type": "_cb-footer-badge" }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Brand column",
+      "blocks": {
+        "logo": { "type": "_cb-footer-logo" },
+        "text": { "type": "_cb-footer-text" }
+      },
+      "block_order": ["logo", "text"]
+    }
+  ]
+}
+{% endschema %}

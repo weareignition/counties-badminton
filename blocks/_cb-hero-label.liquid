@@ -1,0 +1,129 @@
+{%- if block.settings.label_text != blank -%}
+  <span
+    class="cb-hero__label cb-hero__label--{{ block.settings.position }} cb-hero__label--{{ block.settings.style }}{% if block.settings.uppercase %} cb-hero__label--caps{% endif %}"
+    {{ block.shopify_attributes }}
+  >
+    {{- block.settings.label_text | escape -}}
+    {%- if block.settings.label_secondary != blank %}
+      <span class="cb-hero__label-secondary">{{ block.settings.label_secondary | escape }}</span>
+    {%- endif -%}
+  </span>
+{%- endif -%}
+
+{% stylesheet %}
+  /* Labels sit in rows inside .cb-hero__labels (see the media block), so several can share a corner. */
+  .cb-hero__label {
+    flex: 0 1 auto;
+    order: 1;
+    min-width: 0;
+    max-width: 100%;
+    padding: 5px 9px;
+    border-radius: 4px;
+    font-family: var(--cbh-font-body);
+    font-size: 11px;
+    font-weight: var(--cbh-font-body-strong);
+    line-height: 1.25;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    pointer-events: auto;
+  }
+
+  .cb-hero__label--dark {
+    background: rgb(0 0 0 / 0.7);
+    border: 1px solid rgb(255 255 255 / 0.15);
+    color: #fff;
+    backdrop-filter: blur(6px);
+  }
+
+  .cb-hero__label--accent {
+    background: var(--cbh-accent);
+    color: var(--cbh-accent-text);
+  }
+
+  .cb-hero__label--light {
+    background: rgb(255 255 255 / 0.9);
+    color: #111;
+  }
+
+  .cb-hero__label--caps {
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .cb-hero__label-secondary {
+    font-weight: var(--cbh-font-body-weight);
+    opacity: 0.75;
+  }
+
+  /* Bottom labels go after the row break; the first label of each right-hand run is pushed right. */
+  .cb-hero__label--bottom-left,
+  .cb-hero__label--bottom-right {
+    order: 3;
+  }
+
+  .cb-hero__label--top-right:first-child,
+  :not(.cb-hero__label--top-right) + .cb-hero__label--top-right,
+  .cb-hero__label--bottom-right:first-child,
+  :not(.cb-hero__label--bottom-right) + .cb-hero__label--bottom-right {
+    margin-left: auto;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-hero__label {
+      font-size: 12px;
+      padding: 6px 10px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Image label",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "label_text",
+      "label": "Text",
+      "default": "Label"
+    },
+    {
+      "type": "text",
+      "id": "label_secondary",
+      "label": "Second part",
+      "info": "Optional. Shown after the text in a lighter weight, e.g. Yonex · Victor · Ashaway."
+    },
+    {
+      "type": "checkbox",
+      "id": "uppercase",
+      "label": "Capitals",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "position",
+      "label": "Position",
+      "options": [
+        { "value": "top-left", "label": "Top left" },
+        { "value": "top-right", "label": "Top right" },
+        { "value": "bottom-left", "label": "Bottom left" },
+        { "value": "bottom-right", "label": "Bottom right" }
+      ],
+      "default": "bottom-left"
+    },
+    {
+      "type": "select",
+      "id": "style",
+      "label": "Style",
+      "options": [
+        { "value": "dark", "label": "Dark" },
+        { "value": "accent", "label": "Accent" },
+        { "value": "light", "label": "Light" }
+      ],
+      "default": "dark"
+    }
+  ],
+  "presets": [{ "name": "[CB] Image label" }]
+}
+{% endschema %}

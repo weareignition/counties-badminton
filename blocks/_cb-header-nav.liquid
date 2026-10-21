@@ -1,0 +1,365 @@
+{%- liquid
+  assign menu = block.settings.menu
+  assign caret = '<svg class="cb-header__caret" width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="m3 4.5 3 3 3-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+-%}
+
+<div class="cb-header__nav-block" {{ block.shopify_attributes }}>
+  {%- comment -%} Phones, tablets and any width where the menu doesn't fit: menu button + drawer {%- endcomment -%}
+  <details class="cb-header__drawer">
+    <summary class="cb-header__burger" aria-label="{{ 'accessibility.menu' | t }}">
+      <svg class="cb-header__burger-open" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+        <path d="M4 7h16M4 12h16M4 17h16"/>
+      </svg>
+      <svg class="cb-header__burger-close" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+        <path d="M6 6l12 12M18 6 6 18"/>
+      </svg>
+    </summary>
+    <div class="cb-header__drawer-panel">
+      <nav aria-label="{{ menu.title | default: shop.name | escape }}">
+        <ul class="cb-header__drawer-menu" role="list">
+          {%- for link in menu.links -%}
+            <li>
+              {%- if link.links.size > 0 -%}
+                <details class="cb-header__drawer-group">
+                  <summary>{{ link.title | escape }}{{ caret }}</summary>
+                  <ul class="cb-header__drawer-sub" role="list">
+                    {%- for child in link.links -%}
+                      <li>
+                        <a
+                          href="{{ child.url }}"
+                          {% if child.current %}
+                            aria-current="page"
+                          {% endif %}
+                        >
+                          {{- child.title | escape -}}
+                        </a>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                </details>
+              {%- else -%}
+                <a
+                  href="{{ link.url }}"
+                  class="cb-header__drawer-link"
+                  {% if link.current %}
+                    aria-current="page"
+                  {% endif %}
+                >
+                  {{- link.title | escape -}}
+                </a>
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+        </ul>
+      </nav>
+      {%- if block.settings.drawer_button_label != blank -%}
+        <a href="{{ block.settings.drawer_button_link | default: routes.all_products_collection_url }}" class="cb-header__drawer-button">
+          {{- block.settings.drawer_button_label | escape -}}
+        </a>
+      {%- endif -%}
+    </div>
+  </details>
+
+  {%- comment -%} Wide screens: inline menu; links with child links open a dropdown {%- endcomment -%}
+  <nav class="cb-header__nav" aria-label="{{ menu.title | default: shop.name | escape }}">
+    <ul class="cb-header__menu" role="list">
+      {%- for link in menu.links -%}
+        <li class="cb-header__menu-item">
+          {%- if link.links.size > 0 -%}
+            <details class="cb-header__dropdown">
+              <summary class="cb-header__menu-link{% if link.active or link.child_active %} is-active{% endif %}">
+                {{- link.title | escape }}{{ caret -}}
+              </summary>
+              <ul class="cb-header__submenu" role="list">
+                {%- for child in link.links -%}
+                  <li>
+                    <a
+                      href="{{ child.url }}"
+                      class="cb-header__submenu-link"
+                      {% if child.current %}
+                        aria-current="page"
+                      {% endif %}
+                    >
+                      {{- child.title | escape -}}
+                    </a>
+                  </li>
+                {%- endfor -%}
+              </ul>
+            </details>
+          {%- else -%}
+            <a
+              href="{{ link.url }}"
+              class="cb-header__menu-link{% if link.active %} is-active{% endif %}"
+              {% if link.current %}
+                aria-current="page"
+              {% endif %}
+            >
+              {{- link.title | escape -}}
+            </a>
+          {%- endif -%}
+        </li>
+      {%- endfor -%}
+    </ul>
+  </nav>
+</div>
+
+{% stylesheet %}
+  .cb-header__nav-block {
+    display: flex;
+    flex: 1 1 auto;
+    justify-content: center;
+    min-width: 0;
+  }
+
+  /* No overflow clipping (dropdowns hang below); the header switches to the menu button when the menu doesn't fit. */
+  .cb-header__nav {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  /* max-content lets the header measure whether the whole menu fits. */
+  .cb-header__menu {
+    display: flex;
+    align-items: center;
+    gap: clamp(16px, 1.8vw, 28px);
+    width: max-content;
+    margin: 0 auto;
+    padding: 0 2px;
+    list-style: none;
+  }
+
+  .cb-header__menu-link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 0;
+    font-family: var(--cbhd-font-body);
+    font-weight: var(--cbhd-font-body-weight);
+    font-size: 14px;
+    line-height: 1.2;
+    white-space: nowrap;
+    color: var(--cbhd-soft);
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.2s ease;
+  }
+
+  .cb-header__menu-link:hover,
+  .cb-header__menu-link.is-active,
+  .cb-header__dropdown[open] > .cb-header__menu-link {
+    color: var(--cbhd-text);
+  }
+
+  .cb-header__menu-link.is-active {
+    font-weight: var(--cbhd-font-body-strong);
+  }
+
+  .cb-header__menu-link.is-active::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    bottom: 2px;
+    left: 0;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--cbhd-accent);
+  }
+
+  .cb-header__menu-link:focus-visible {
+    outline: 2px solid var(--cbhd-text);
+    outline-offset: 2px;
+  }
+
+  .cb-header__dropdown {
+    position: relative;
+  }
+
+  .cb-header__dropdown > summary {
+    list-style: none;
+  }
+
+  .cb-header__dropdown > summary::-webkit-details-marker,
+  .cb-header__drawer > summary::-webkit-details-marker,
+  .cb-header__drawer-group > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .cb-header__caret {
+    flex: none;
+    transition: transform 0.2s ease;
+  }
+
+  details[open] > summary .cb-header__caret {
+    transform: rotate(180deg);
+  }
+
+  .cb-header__submenu {
+    position: absolute;
+    top: calc(100% + 12px);
+    left: -14px;
+    z-index: 5;
+    min-width: 220px;
+    margin: 0;
+    padding: 8px;
+    list-style: none;
+    background: var(--cbhd-bg);
+    border: 1px solid var(--cbhd-border);
+    border-radius: 8px;
+    box-shadow: 0 20px 40px rgb(0 0 0 / 0.45);
+  }
+
+  .cb-header__submenu-link {
+    display: block;
+    padding: 9px 12px;
+    border-radius: 6px;
+    font-family: var(--cbhd-font-body);
+    font-weight: var(--cbhd-font-body-weight);
+    font-size: 14px;
+    color: var(--cbhd-soft);
+    text-decoration: none;
+  }
+
+  .cb-header__submenu-link:hover,
+  .cb-header__submenu-link[aria-current='page'] {
+    background: var(--cbhd-surface);
+    color: var(--cbhd-text);
+  }
+
+  /* Drawer (menu button) */
+  .cb-header__drawer {
+    display: none;
+  }
+
+  .cb-header__burger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    margin-left: -8px;
+    border-radius: 6px;
+    list-style: none;
+    color: var(--cbhd-text);
+    cursor: pointer;
+  }
+
+  .cb-header__burger:focus-visible {
+    outline: 2px solid var(--cbhd-text);
+  }
+
+  .cb-header__burger-close,
+  .cb-header__drawer[open] .cb-header__burger-open {
+    display: none;
+  }
+
+  .cb-header__drawer[open] .cb-header__burger-close {
+    display: block;
+  }
+
+  .cb-header__drawer-panel {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: 0;
+    z-index: 5;
+    max-height: calc(100dvh - var(--header-group-height, 120px));
+    overflow-y: auto;
+    padding: 8px 16px 24px;
+    background: var(--cbhd-bg);
+    border-top: 1px solid var(--cbhd-border);
+    box-shadow: 0 24px 40px rgb(0 0 0 / 0.5);
+  }
+
+  .cb-header__drawer-menu {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .cb-header__drawer-menu > li {
+    border-bottom: 1px solid var(--cbhd-border);
+  }
+
+  .cb-header__drawer-link,
+  .cb-header__drawer-group > summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 4px;
+    font-family: var(--cbhd-font-body);
+    font-weight: var(--cbhd-font-body-weight);
+    font-size: 16px;
+    color: var(--cbhd-text);
+    text-decoration: none;
+    list-style: none;
+    cursor: pointer;
+  }
+
+  .cb-header__drawer-link[aria-current='page'] {
+    color: var(--cbhd-accent);
+  }
+
+  .cb-header__drawer-sub {
+    margin: 0 0 10px;
+    padding: 0 0 0 12px;
+    list-style: none;
+  }
+
+  .cb-header__drawer-sub a {
+    display: block;
+    padding: 9px 4px;
+    font-family: var(--cbhd-font-body);
+    font-size: 14px;
+    color: var(--cbhd-soft);
+    text-decoration: none;
+  }
+
+  .cb-header__drawer-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 46px;
+    margin-top: 20px;
+    border-radius: 999px;
+    background: var(--cbhd-accent);
+    font-family: var(--cbhd-font-body);
+    font-weight: var(--cbhd-font-body-strong);
+    font-size: 14px;
+    color: var(--cbhd-accent-text);
+    text-decoration: none;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Navigation",
+  "tag": null,
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "info": "Links with child links open a dropdown. Edit menus in Content > Menus.",
+      "default": "main-menu"
+    },
+    {
+      "type": "header",
+      "content": "Mobile menu"
+    },
+    {
+      "type": "text",
+      "id": "drawer_button_label",
+      "label": "Button label",
+      "info": "Shown at the bottom of the mobile menu.",
+      "default": "Find My Racket"
+    },
+    {
+      "type": "url",
+      "id": "drawer_button_link",
+      "label": "Button link"
+    }
+  ],
+  "presets": [{ "name": "[CB] Navigation" }]
+}
+{% endschema %}

@@ -1,0 +1,29 @@
+<div class="cb-info__badges" {{ block.shopify_attributes }}>
+  {% content_for 'blocks' %}
+</div>
+
+{% stylesheet %}
+  .cb-info__badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Badge row",
+  "tag": null,
+  "blocks": [{ "type": "_cb-info-badge" }],
+  "presets": [
+    {
+      "name": "[CB] Badge row",
+      "blocks": {
+        "badge_1": { "type": "_cb-info-badge", "settings": { "style": "dark", "show_dot": true } },
+        "badge_2": { "type": "_cb-info-badge", "settings": { "style": "accent" } }
+      },
+      "block_order": ["badge_1", "badge_2"]
+    }
+  ]
+}
+{% endschema %}

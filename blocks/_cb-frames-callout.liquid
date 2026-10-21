@@ -1,0 +1,176 @@
+{%- liquid
+  assign link = block.settings.button_link | default: routes.all_products_collection_url
+-%}
+
+<div class="cb-frames__callout" {{ block.shopify_attributes }}>
+  <span class="cb-frames__callout-icon" aria-hidden="true">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      {%- case block.settings.icon -%}
+        {%- when 'racket' -%}
+          <ellipse cx="9" cy="9" rx="5" ry="6.2" transform="rotate(-45 9 9)"/><path d="m12.6 12.6 7.4 7.4"/>
+        {%- when 'calendar' -%}
+          <rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/>
+        {%- when 'clock' -%}
+          <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>
+        {%- when 'pin' -%}
+          <path d="M12 21s-7-6.1-7-11.5a7 7 0 0 1 14 0C19 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>
+        {%- when 'info' -%}
+          <circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>
+      {%- endcase -%}
+    </svg>
+  </span>
+
+  <div class="cb-frames__callout-body">
+    {%- if block.settings.callout_title != blank -%}
+      <p class="cb-frames__callout-title">{{ block.settings.callout_title | escape }}</p>
+    {%- endif -%}
+    {%- if block.settings.callout_text != blank -%}
+      <p class="cb-frames__callout-text">{{ block.settings.callout_text | escape }}</p>
+    {%- endif -%}
+  </div>
+
+  {%- if block.settings.button_label != blank -%}
+    <a href="{{ link }}" class="cb-frames__callout-button">{{ block.settings.button_label | escape }}</a>
+  {%- endif -%}
+</div>
+
+{% stylesheet %}
+  .cb-frames__callout {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 18px;
+    background: var(--cbp-card);
+    border: 1px solid var(--cbp-border);
+    border-radius: var(--cbp-radius);
+  }
+
+  .cb-frames__callout-icon {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid color-mix(in srgb, var(--cbp-accent) 55%, transparent);
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--cbp-accent) 12%, transparent);
+    color: var(--cbp-accent);
+  }
+
+  .cb-frames__callout-body {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .cb-frames__callout-title {
+    margin: 0;
+    font-family: var(--cbp-font-heading);
+    font-weight: var(--cbp-font-heading-weight);
+    font-size: 16px;
+    line-height: 1.25;
+    color: var(--cbp-text);
+  }
+
+  .cb-frames__callout-text {
+    margin: 0;
+    font-family: var(--cbp-font-body);
+    font-weight: var(--cbp-font-body-weight);
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--cbp-muted);
+  }
+
+  .cb-frames__callout-button {
+    display: inline-flex;
+    align-self: stretch;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 12px 22px;
+    border-radius: 6px;
+    background: var(--cbp-accent);
+    font-family: var(--cbp-font-body);
+    font-weight: var(--cbp-font-body-strong);
+    font-size: 13px;
+    line-height: 1.2;
+    text-decoration: none;
+    color: var(--cbp-accent-text);
+    transition: background-color 0.2s ease;
+  }
+
+  .cb-frames__callout-button:hover {
+    background: color-mix(in srgb, var(--cbp-accent) 85%, #000);
+  }
+
+  .cb-frames__callout-button:focus-visible {
+    outline: 2px solid var(--cbp-text);
+    outline-offset: 3px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-frames__callout {
+      flex-direction: row;
+      align-items: center;
+      gap: 18px;
+      padding: 20px 24px;
+    }
+
+    .cb-frames__callout-body {
+      flex: 1;
+    }
+
+    .cb-frames__callout-button {
+      flex: none;
+      align-self: auto;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Callout",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "icon",
+      "label": "Icon",
+      "options": [
+        { "value": "racket", "label": "Racket" },
+        { "value": "calendar", "label": "Calendar" },
+        { "value": "clock", "label": "Clock" },
+        { "value": "pin", "label": "Location" },
+        { "value": "info", "label": "Info" }
+      ],
+      "default": "racket"
+    },
+    {
+      "type": "text",
+      "id": "callout_title",
+      "label": "Title",
+      "default": "Want to test before you buy?"
+    },
+    {
+      "type": "textarea",
+      "id": "callout_text",
+      "label": "Text"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Learn more"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    }
+  ],
+  "presets": [{ "name": "[CB] Callout" }]
+}
+{% endschema %}

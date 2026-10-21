@@ -1,0 +1,114 @@
+{%- liquid
+  assign link = block.settings.link | default: routes.all_products_collection_url
+-%}
+
+{%- if block.settings.label != blank -%}
+  <a
+    href="{{ link }}"
+    class="cb-string__button cb-string__button--{{ block.settings.style }}"
+    {% if block.settings.open_in_new_tab %}
+      target="_blank" rel="noopener"
+    {% endif %}
+    {{ block.shopify_attributes }}
+  >
+    {{- block.settings.label | escape -}}
+    {%- if block.settings.show_arrow -%}
+      <svg class="cb-string__button-arrow" width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    {%- endif -%}
+  </a>
+{%- endif -%}
+
+{% stylesheet %}
+  .cb-string__button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 48px;
+    padding: 12px 22px;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    font-family: var(--cbs-font-body);
+    font-weight: var(--cbs-font-body-strong);
+    font-size: 14px;
+    line-height: 1.2;
+    text-decoration: none;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .cb-string__button--primary {
+    background: var(--cbs-accent);
+    color: var(--cbs-accent-text);
+  }
+
+  .cb-string__button--primary:hover {
+    background: color-mix(in srgb, var(--cbs-accent) 85%, #000);
+  }
+
+  .cb-string__button--secondary {
+    background: var(--cbs-card);
+    border-color: var(--cbs-border);
+    color: var(--cbs-text);
+  }
+
+  .cb-string__button--secondary:hover {
+    border-color: color-mix(in srgb, var(--cbs-text) 35%, transparent);
+  }
+
+  .cb-string__button:focus-visible {
+    outline: 2px solid var(--cbs-text);
+    outline-offset: 3px;
+  }
+
+  .cb-string__button-arrow {
+    transition: transform 0.2s ease;
+  }
+
+  .cb-string__button:hover .cb-string__button-arrow {
+    transform: translateX(3px);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Button",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "Book stringing"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link"
+    },
+    {
+      "type": "checkbox",
+      "id": "open_in_new_tab",
+      "label": "Open in new tab",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "style",
+      "label": "Style",
+      "options": [
+        { "value": "primary", "label": "Primary (accent)" },
+        { "value": "secondary", "label": "Secondary (outline)" }
+      ],
+      "default": "primary"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrow",
+      "label": "Show arrow",
+      "default": true
+    }
+  ],
+  "presets": [{ "name": "[CB] Button" }]
+}
+{% endschema %}

@@ -1,0 +1,90 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "cb-catalogue",
+      "blocks": {
+        "play_style": {
+          "type": "_cb-cat-filter",
+          "settings": {
+            "filter_label": "Play style",
+            "display": "list"
+          }
+        },
+        "player_level": {
+          "type": "_cb-cat-filter",
+          "settings": {
+            "filter_label": "Player level",
+            "display": "buttons",
+            "button_columns": "2",
+            "button_style": "filled"
+          }
+        },
+        "balance": {
+          "type": "_cb-cat-filter",
+          "settings": {
+            "filter_label": "Balance",
+            "title_text": "Balance & swing",
+            "display": "list"
+          }
+        },
+        "weight": {
+          "type": "_cb-cat-filter",
+          "settings": {
+            "filter_label": "Frame weight",
+            "display": "buttons",
+            "button_columns": "3",
+            "button_style": "outline",
+            "note": "4U is standard for fast modern competitive badminton"
+          }
+        },
+        "price": {
+          "type": "_cb-cat-filter",
+          "settings": {
+            "filter_label": "Price",
+            "title_text": "Price range (NZD)"
+          }
+        },
+        "brand": {
+          "type": "_cb-cat-filter",
+          "settings": {
+            "filter_label": "Brand",
+            "title_text": "Brand (optional filter)",
+            "numbered": false
+          }
+        },
+        "promo": {
+          "type": "_cb-cat-promo",
+          "settings": {
+            "icon": "tools",
+            "promo_title": "Certified restring service",
+            "promo_text": "Add any string of your choice. Our Papakura master stringers prepare your tension calibration before dispatch or pickup.",
+            "footer_label": "Electronic constant pull",
+            "footer_value": "±0.5 lbs precision"
+          }
+        }
+      },
+      "block_order": [
+        "play_style",
+        "player_level",
+        "balance",
+        "weight",
+        "price",
+        "brand",
+        "promo"
+      ],
+      "settings": {}
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

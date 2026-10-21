@@ -1,0 +1,513 @@
+{%- liquid
+  assign s = section.settings
+  assign font_scope = '#cb-hero-' | append: section.id
+-%}
+
+{% render 'cb-font-styles',
+  selector: font_scope,
+  prefix: 'cbh',
+  heading_font: s.heading_font,
+  body_font: s.body_font
+%}
+
+<section
+  id="cb-hero-{{ section.id }}"
+  class="cb-hero cb-hero--design-{{ s.design | default: '1' }}{% if s.media_first_mobile %} cb-hero--media-first{% endif %}"
+  style="
+    --cbh-bg: {{ s.background_color }};
+    --cbh-glow: {{ s.glow_color }};
+    --cbh-text: {{ s.text_color }};
+    --cbh-muted: {{ s.text_color | color_modify: 'alpha', 0.72 }};
+    --cbh-border: {{ s.text_color | color_modify: 'alpha', 0.12 }};
+    --cbh-surface: {{ s.text_color | color_modify: 'alpha', 0.04 }};
+    --cbh-accent: {{ s.accent_color }};
+    --cbh-accent-text: {{ s.accent_text_color }};
+    --cbh-max-width: {{ s.max_width }}px;
+    --cbh-gap: {{ s.column_gap }}px;
+    --cbh-pt: {{ s.padding_top }}px;
+    --cbh-pb: {{ s.padding_bottom }}px;
+    --cbh-content-col: {{ s.content_width }}fr;
+    --cbh-media-col: {{ 100 | minus: s.content_width }}fr;
+  "
+>
+  <div class="cb-hero__inner">
+    {% content_for 'blocks' %}
+  </div>
+</section>
+
+{% stylesheet %}
+  .cb-hero {
+    position: relative;
+    overflow: hidden;
+    color: var(--cbh-text);
+    background:
+      radial-gradient(60% 80% at 0% 0%, var(--cbh-glow) 0%, transparent 70%),
+      var(--cbh-bg);
+    padding: calc(var(--cbh-pt) * 0.6) 16px calc(var(--cbh-pb) * 0.6);
+  }
+
+  .cb-hero__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 40px;
+    align-items: center;
+    max-width: var(--cbh-max-width);
+    margin-inline: auto;
+  }
+
+  .cb-hero--media-first .cb-hero__media {
+    order: -1;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-hero {
+      padding: calc(var(--cbh-pt) * 0.8) 32px calc(var(--cbh-pb) * 0.8);
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .cb-hero {
+      padding: var(--cbh-pt) 48px var(--cbh-pb);
+    }
+
+    .cb-hero__inner {
+      grid-template-columns: minmax(0, var(--cbh-content-col)) minmax(0, var(--cbh-media-col));
+      gap: var(--cbh-gap);
+    }
+
+    .cb-hero--media-first .cb-hero__media {
+      order: 0;
+    }
+  }
+
+  /*
+   * Design 2: the image runs full-bleed down the right half (edge to edge, no frame) and the text column
+   * carries the section padding, lining up with the other sections' content edge.
+   * Rules are prefixed with .cb-hero--design-2 so they beat the blocks' own defaults in any stylesheet order.
+   */
+  .cb-hero.cb-hero--design-2 {
+    padding: 0;
+  }
+
+  .cb-hero--design-2 .cb-hero__inner {
+    gap: 0;
+    max-width: none;
+  }
+
+  .cb-hero--design-2 .cb-hero__content {
+    padding: calc(var(--cbh-pt) * 0.6) 16px calc(var(--cbh-pb) * 0.6);
+  }
+
+  .cb-hero--design-2 .cb-hero__media-frame {
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .cb-hero--design-2 .cb-hero__badge {
+    padding: 0;
+    border: 0;
+    background: none;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .cb-hero--design-2 .cb-hero__badge-main {
+    color: var(--cbh-accent);
+  }
+
+  .cb-hero--design-2 .cb-hero__button {
+    min-height: 46px;
+    padding: 12px 20px;
+    border-radius: 3px;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .cb-hero--design-2 .cb-hero__feature {
+    font-size: 12px;
+    font-weight: var(--cbh-font-body-weight);
+  }
+
+  /* Design 2 labels: smaller, near-square corners, solid dark background without a border. */
+  .cb-hero--design-2 .cb-hero__label {
+    padding: 4px 8px;
+    border-radius: 2px;
+    font-size: 10px;
+  }
+
+  .cb-hero--design-2 .cb-hero__label--dark {
+    border: 0;
+    background: rgb(24 24 24 / 0.92);
+    color: #ececec;
+  }
+
+  .cb-hero--design-2 .cb-hero__label--caps {
+    font-size: 9px;
+    letter-spacing: 0.05em;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-hero--design-2 .cb-hero__content {
+      padding: calc(var(--cbh-pt) * 0.8) 32px calc(var(--cbh-pb) * 0.8);
+    }
+
+    /* Features take their natural width so they sit on one line. */
+    .cb-hero--design-2 .cb-hero__features {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 28px;
+    }
+
+    .cb-hero--design-2 .cb-hero__label {
+      padding: 6px 10px;
+      font-size: 11px;
+    }
+
+    .cb-hero--design-2 .cb-hero__label--caps {
+      font-size: 10px;
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .cb-hero--design-2 .cb-hero__inner {
+      align-items: stretch;
+    }
+
+    .cb-hero--design-2 .cb-hero__content {
+      align-self: center;
+      padding: var(--cbh-pt) var(--cbh-gap) var(--cbh-pb) max(48px, calc((100vw - var(--cbh-max-width)) / 2));
+    }
+
+    .cb-hero--design-2 .cb-hero__media-frame {
+      height: 100%;
+      min-height: 460px;
+      aspect-ratio: auto;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .cb-hero__content > *,
+    .cb-hero__media {
+      animation: cb-hero-rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    }
+
+    .cb-hero__content > *:nth-child(2) { animation-delay: 0.06s; }
+    .cb-hero__content > *:nth-child(3) { animation-delay: 0.12s; }
+    .cb-hero__content > *:nth-child(4) { animation-delay: 0.18s; }
+    .cb-hero__content > *:nth-child(n + 5) { animation-delay: 0.24s; }
+    .cb-hero__media { animation-delay: 0.15s; }
+  }
+
+  @keyframes cb-hero-rise {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Hero",
+  "tag": "div",
+  "class": "section-wrapper",
+  "blocks": [
+    { "type": "_cb-hero-content" },
+    { "type": "_cb-hero-media" }
+  ],
+  "max_blocks": 4,
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "select",
+      "id": "design",
+      "label": "Design",
+      "options": [
+        { "value": "1", "label": "Design 1 – framed image" },
+        { "value": "2", "label": "Design 2 – full-bleed image" }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "label": "Content column width",
+      "min": 40,
+      "max": 70,
+      "step": 1,
+      "unit": "%",
+      "default": 55
+    },
+    {
+      "type": "range",
+      "id": "column_gap",
+      "label": "Column gap",
+      "min": 16,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width",
+      "min": 960,
+      "max": 1800,
+      "step": 20,
+      "unit": "px",
+      "default": 1400
+    },
+    {
+      "type": "checkbox",
+      "id": "media_first_mobile",
+      "label": "Show media first on mobile",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "space_grotesk_n7"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "info": "Used for the paragraph, badge, buttons, features and image labels.",
+      "default": "inter_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "id": "glow_color",
+      "label": "Background glow",
+      "default": "#3a0c10"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "default": "#d71f27"
+    },
+    {
+      "type": "color",
+      "id": "accent_text_color",
+      "label": "Text on accent",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Hero",
+      "category": "t:categories.banners",
+      "blocks": {
+        "content": {
+          "type": "_cb-hero-content",
+          "blocks": {
+            "badge": {
+              "type": "_cb-hero-badge",
+              "settings": { "badge_text": "Counties Manukau Badminton Association Official Store" }
+            },
+            "heading": {
+              "type": "_cb-hero-heading",
+              "settings": { "heading_text": "Built for badminton." }
+            },
+            "text": {
+              "type": "_cb-hero-text",
+              "settings": {
+                "body_text": "<p>Expert-selected rackets, gear and professional stringing from people who actually play, coach and string.</p>"
+              }
+            },
+            "buttons": {
+              "type": "_cb-hero-buttons",
+              "blocks": {
+                "button_1": {
+                  "type": "_cb-hero-button",
+                  "settings": { "label": "Find My Racket", "style": "primary", "show_arrow": true }
+                },
+                "button_2": {
+                  "type": "_cb-hero-button",
+                  "settings": { "label": "Shop Rackets", "style": "secondary", "show_arrow": false }
+                }
+              },
+              "block_order": ["button_1", "button_2"]
+            },
+            "features": {
+              "type": "_cb-hero-features",
+              "blocks": {
+                "feature_1": {
+                  "type": "_cb-hero-feature",
+                  "settings": { "icon": "check", "feature_text": "Expert Advice" }
+                },
+                "feature_2": {
+                  "type": "_cb-hero-feature",
+                  "settings": { "icon": "sliders", "feature_text": "Professional Stringing" }
+                },
+                "feature_3": {
+                  "type": "_cb-hero-feature",
+                  "settings": { "icon": "calendar", "feature_text": "Open 7 Days" }
+                }
+              },
+              "block_order": ["feature_1", "feature_2", "feature_3"]
+            }
+          },
+          "block_order": ["badge", "heading", "text", "buttons", "features"]
+        },
+        "media": {
+          "type": "_cb-hero-media",
+          "blocks": {
+            "label_1": {
+              "type": "_cb-hero-label",
+              "settings": { "label_text": "41R Elliot St Pro Shop", "position": "bottom-left", "style": "dark" }
+            },
+            "label_2": {
+              "type": "_cb-hero-label",
+              "settings": { "label_text": "Master Rigging Lab", "position": "bottom-right", "style": "accent" }
+            }
+          },
+          "block_order": ["label_1", "label_2"]
+        }
+      },
+      "block_order": ["content", "media"]
+    },
+    {
+      "name": "[CB] Hero (Design 2)",
+      "category": "t:categories.banners",
+      "settings": {
+        "design": "2",
+        "content_width": 44,
+        "column_gap": 56,
+        "padding_top": 72,
+        "padding_bottom": 72
+      },
+      "blocks": {
+        "content": {
+          "type": "_cb-hero-content",
+          "blocks": {
+            "badge": {
+              "type": "_cb-hero-badge",
+              "settings": { "badge_text": "Specialist racket fitting", "badge_secondary": "Papakura HQ" }
+            },
+            "heading": {
+              "type": "_cb-hero-heading",
+              "settings": { "heading_text": "Find the frame that fits your game.", "size": 46 }
+            },
+            "text": {
+              "type": "_cb-hero-text",
+              "settings": {
+                "body_text": "<p>We don’t sell rackets by logo alone. Choose by your swing speed, tactical play style and court needs — calibrated by CMBA certified stringers and competitive coaches.</p>",
+                "size": 16
+              }
+            },
+            "buttons": {
+              "type": "_cb-hero-buttons",
+              "blocks": {
+                "button_1": {
+                  "type": "_cb-hero-button",
+                  "settings": { "label": "Find My Racket", "style": "primary", "show_arrow": true }
+                },
+                "button_2": {
+                  "type": "_cb-hero-button",
+                  "settings": { "label": "Shop by Play Style", "style": "secondary", "show_arrow": false }
+                }
+              },
+              "block_order": ["button_1", "button_2"]
+            },
+            "features": {
+              "type": "_cb-hero-features",
+              "blocks": {
+                "feature_1": { "type": "_cb-hero-feature", "settings": { "icon": "check", "feature_text": "100% Genuine Spec" } },
+                "feature_2": { "type": "_cb-hero-feature", "settings": { "icon": "sliders", "feature_text": "Custom Stringing Option" } },
+                "feature_3": { "type": "_cb-hero-feature", "settings": { "icon": "store", "feature_text": "Papakura Pickup Today" } }
+              },
+              "block_order": ["feature_1", "feature_2", "feature_3"]
+            }
+          },
+          "block_order": ["badge", "heading", "text", "buttons", "features"]
+        },
+        "media": {
+          "type": "_cb-hero-media",
+          "blocks": {
+            "label_1": {
+              "type": "_cb-hero-label",
+              "settings": { "label_text": "41R Elliot St Pro Shop", "position": "top-left", "style": "dark", "uppercase": true }
+            },
+            "label_2": {
+              "type": "_cb-hero-label",
+              "settings": { "label_text": "Master Calibration Lab", "position": "top-left", "style": "accent", "uppercase": true }
+            },
+            "label_3": {
+              "type": "_cb-hero-label",
+              "settings": {
+                "label_text": "In-Store Demo Rackets Available:",
+                "label_secondary": "Yonex · Victor · Ashaway",
+                "position": "bottom-right",
+                "style": "dark"
+              }
+            }
+          },
+          "block_order": ["label_1", "label_2", "label_3"]
+        }
+      },
+      "block_order": ["content", "media"]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,62 @@
+<div
+  class="cb-footer__bottom{% if block.settings.show_divider %} cb-footer__bottom--divider{% endif %}"
+  {{ block.shopify_attributes }}
+>
+  {% content_for 'blocks' %}
+</div>
+
+{% stylesheet %}
+  .cb-footer__bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .cb-footer__bottom--divider {
+    padding-top: 28px;
+    border-top: 1px solid var(--cbft-border);
+  }
+
+  /* Copyright on the left, the other items pushed to the right. */
+  @media screen and (min-width: 750px) {
+    .cb-footer__bottom {
+      flex-flow: row wrap;
+      align-items: center;
+      gap: 8px 28px;
+    }
+
+    .cb-footer__bottom > .cb-footer__copyright {
+      margin-right: auto;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Bottom bar",
+  "tag": null,
+  "blocks": [
+    { "type": "_cb-footer-copyright" },
+    { "type": "_cb-footer-meta" }
+  ],
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_divider",
+      "label": "Show divider above",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Bottom bar",
+      "blocks": {
+        "copyright": { "type": "_cb-footer-copyright" },
+        "meta": { "type": "_cb-footer-meta" }
+      },
+      "block_order": ["copyright", "meta"]
+    }
+  ]
+}
+{% endschema %}

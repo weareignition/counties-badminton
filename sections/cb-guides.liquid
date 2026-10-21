@@ -1,0 +1,258 @@
+{%- liquid
+  assign s = section.settings
+  assign font_scope = '#cb-guides-' | append: section.id
+-%}
+
+{% render 'cb-font-styles',
+  selector: font_scope,
+  prefix: 'cbg',
+  heading_font: s.heading_font,
+  body_font: s.body_font
+%}
+
+<section
+  id="cb-guides-{{ section.id }}"
+  class="cb-guides"
+  style="
+    --cbg-bg: {{ s.background_color }};
+    --cbg-card: {{ s.card_background_color }};
+    --cbg-border: {{ s.border_color }};
+    --cbg-border-hover: {{ s.text_color | color_modify: 'alpha', 0.25 }};
+    --cbg-text: {{ s.text_color }};
+    --cbg-muted: {{ s.text_color | color_modify: 'alpha', 0.6 }};
+    --cbg-accent: {{ s.accent_color }};
+    --cbg-radius: {{ s.card_radius }}px;
+    --cbg-max-width: {{ s.max_width }}px;
+    --cbg-stack-gap: {{ s.stack_gap }}px;
+    --cbg-pt: {{ s.padding_top }}px;
+    --cbg-pb: {{ s.padding_bottom }}px;
+  "
+>
+  <div class="cb-guides__inner">
+    {% content_for 'blocks' %}
+  </div>
+</section>
+
+{% stylesheet %}
+  .cb-guides {
+    color: var(--cbg-text);
+    background: var(--cbg-bg);
+    padding: calc(var(--cbg-pt) * 0.6) 16px calc(var(--cbg-pb) * 0.6);
+  }
+
+  .cb-guides__inner {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--cbg-stack-gap) * 0.75);
+    max-width: var(--cbg-max-width);
+    margin-inline: auto;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-guides {
+      padding: calc(var(--cbg-pt) * 0.8) 32px calc(var(--cbg-pb) * 0.8);
+    }
+
+    .cb-guides__inner {
+      gap: var(--cbg-stack-gap);
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .cb-guides {
+      padding: var(--cbg-pt) 48px var(--cbg-pb);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Technical guides",
+  "tag": "div",
+  "class": "section-wrapper",
+  "blocks": [
+    { "type": "_cb-guides-header" },
+    { "type": "_cb-guides-grid" }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width",
+      "min": 960,
+      "max": 1800,
+      "step": 20,
+      "unit": "px",
+      "default": 1400
+    },
+    {
+      "type": "range",
+      "id": "stack_gap",
+      "label": "Space between header and cards",
+      "min": 8,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Card corner radius",
+      "min": 0,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "info": "Used for the heading and card titles.",
+      "default": "space_grotesk_n7"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "info": "Used for the eyebrow, text, labels, summaries and links.",
+      "default": "inter_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "id": "card_background_color",
+      "label": "Card background",
+      "default": "#181818"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Card border",
+      "default": "#ffffff14"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "default": "#d71f27"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Technical guides",
+      "category": "t:categories.storytelling",
+      "blocks": {
+        "header": {
+          "type": "_cb-guides-header",
+          "blocks": {
+            "eyebrow": {
+              "type": "_cb-guides-eyebrow",
+              "settings": { "eyebrow_text": "Technical guidance" }
+            },
+            "heading": {
+              "type": "_cb-guides-heading",
+              "settings": { "heading_text": "We don’t expect you to know what 4U, head-heavy or 26 lbs means. That’s our job." }
+            },
+            "text": {
+              "type": "_cb-guides-text",
+              "settings": {
+                "body_text": "<p>Read technical briefings straight from Counties Manukau stringers and coaching staff to demystify badminton gear.</p>"
+              }
+            }
+          },
+          "block_order": ["eyebrow", "heading", "text"]
+        },
+        "grid": {
+          "type": "_cb-guides-grid",
+          "blocks": {
+            "card_1": {
+              "type": "_cb-guides-card",
+              "settings": {
+                "icon": "player",
+                "label": "Player guide",
+                "card_title": "Choosing Your First Racket",
+                "summary": "A 3U racket (85-89g) delivers heavier smash weight, but demands shoulder strength during 3-set matches. A 4U racket (80-84g) provides much quicker net defense without sacrificing punch if strung right.",
+                "link_label": "Read full weight guide"
+              }
+            },
+            "card_2": {
+              "type": "_cb-guides-card",
+              "settings": {
+                "icon": "strings",
+                "label": "String lab insight",
+                "card_title": "String Tension Guide: Why higher tension shrinks sweet spot",
+                "summary": "Pro players string at 28-32 lbs for surgical shuttle placement. But if your hitting timing isn't millimeter-perfect, high tension robs power and transfers harsh vibrations straight to your elbow joint.",
+                "link_label": "Read tension recommendations"
+              }
+            },
+            "card_3": {
+              "type": "_cb-guides-card",
+              "settings": {
+                "icon": "shoe",
+                "label": "Injury prevention",
+                "card_title": "Choosing Court Shoes: Why running shoes cause rolled ankles",
+                "summary": "Running shoes are built for forward stride with tall foam stacks. Badminton requires rapid 45-degree lateral lunges, requiring low-profile gum outsoles and anti-torsion carbon shank plates.",
+                "link_label": "Read court footwear guide"
+              }
+            }
+          },
+          "block_order": ["card_1", "card_2", "card_3"]
+        }
+      },
+      "block_order": ["header", "grid"]
+    }
+  ]
+}
+{% endschema %}

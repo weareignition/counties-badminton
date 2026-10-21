@@ -1,0 +1,38 @@
+<p class="cb-footer__copyright" {{ block.shopify_attributes }}>
+  {%- if block.settings.show_year %}&copy; {{ 'now' | date: '%Y' }} {% endif -%}
+  {{- block.settings.copyright_text | escape -}}
+</p>
+
+{% stylesheet %}
+  .cb-footer__copyright {
+    margin: 0;
+    font-family: var(--cbft-font-body);
+    font-weight: var(--cbft-font-body-weight);
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--cbft-muted);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Copyright",
+  "tag": null,
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_year",
+      "label": "Show © and the current year",
+      "info": "The year updates automatically.",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "copyright_text",
+      "label": "Text",
+      "default": "All rights reserved."
+    }
+  ],
+  "presets": [{ "name": "[CB] Copyright" }]
+}
+{% endschema %}

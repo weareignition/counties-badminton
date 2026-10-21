@@ -1,0 +1,114 @@
+<div
+  class="cb-frames__filters"
+  role="group"
+  {% if block.settings.filter_label != blank %}
+    aria-label="{{ block.settings.filter_label | escape }}"
+  {% endif %}
+  {{ block.shopify_attributes }}
+>
+  {%- if block.settings.filter_label != blank -%}
+    <span class="cb-frames__filters-label" aria-hidden="true">{{ block.settings.filter_label | escape }}</span>
+  {%- endif -%}
+  <div class="cb-frames__pills">
+    <button type="button" class="cb-frames__pill" data-cb-filter="all" aria-pressed="true">
+      {{- block.settings.all_label | escape -}}
+    </button>
+    {% content_for 'blocks' %}
+  </div>
+</div>
+
+{% stylesheet %}
+  .cb-frames__filters {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+  }
+
+  .cb-frames__filters-label {
+    flex: none;
+    font-family: var(--cbp-font-body);
+    font-weight: var(--cbp-font-body-weight);
+    font-size: 11px;
+    color: var(--cbp-muted);
+  }
+
+  /* Pills scroll sideways when they don't fit; the padding leaves room for focus outlines. */
+  .cb-frames__pills {
+    display: flex;
+    gap: 8px;
+    min-width: 0;
+    margin: -4px;
+    padding: 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .cb-frames__pills::-webkit-scrollbar {
+    display: none;
+  }
+
+  .cb-frames__pill {
+    flex: none;
+    margin: 0;
+    padding: 7px 14px;
+    border: 1px solid var(--cbp-border);
+    border-radius: 999px;
+    background: transparent;
+    font-family: var(--cbp-font-body);
+    font-weight: var(--cbp-font-body-strong);
+    font-size: 11px;
+    line-height: 1.2;
+    color: var(--cbp-text);
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  }
+
+  .cb-frames__pill:hover {
+    border-color: var(--cbp-border-hover);
+  }
+
+  .cb-frames__pill[aria-pressed='true'] {
+    border-color: var(--cbp-accent);
+    background: var(--cbp-accent);
+    color: var(--cbp-accent-text);
+  }
+
+  .cb-frames__pill:focus-visible {
+    outline: 2px solid var(--cbp-text);
+    outline-offset: 2px;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Filter bar",
+  "tag": null,
+  "blocks": [{ "type": "_cb-frames-filter" }],
+  "settings": [
+    {
+      "type": "text",
+      "id": "filter_label",
+      "label": "Label",
+      "default": "Filter by:"
+    },
+    {
+      "type": "text",
+      "id": "all_label",
+      "label": "\"Show all\" button",
+      "default": "All"
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Filter bar",
+      "blocks": {
+        "filter_1": { "type": "_cb-frames-filter", "settings": { "pill_label": "Head-Heavy" } },
+        "filter_2": { "type": "_cb-frames-filter", "settings": { "pill_label": "Speed" } },
+        "filter_3": { "type": "_cb-frames-filter", "settings": { "pill_label": "All-Round" } }
+      },
+      "block_order": ["filter_1", "filter_2", "filter_3"]
+    }
+  ]
+}
+{% endschema %}

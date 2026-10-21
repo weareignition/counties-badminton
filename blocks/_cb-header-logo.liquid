@@ -1,0 +1,216 @@
+{%- liquid
+  # The logo is decorative when the title is shown beside it (the link already reads the title).
+  assign logo_alt = shop.name
+  if block.settings.title_text != blank
+    assign logo_alt = ''
+  endif
+  assign has_text = false
+  if block.settings.title_text != blank or block.settings.badge_text != blank or block.settings.subtitle != blank
+    assign has_text = true
+  endif
+-%}
+
+<a
+  href="{{ routes.root_url }}"
+  class="cb-header__brand"
+  {% if block.settings.keep_text_visible %}
+    data-keep-text
+  {% endif %}
+  {{ block.shopify_attributes }}
+>
+  {%- if block.settings.logo != blank -%}
+    <span
+      class="cb-header__logo-box"
+      style="--cbhd-logo-bg: {{ block.settings.logo_background }}; --cbhd-logo-height: {{ block.settings.logo_height }}px;"
+    >
+      {{
+        block.settings.logo
+        | image_url: width: 480
+        | image_tag: widths: '200, 320, 480', sizes: '200px', alt: logo_alt
+      }}
+    </span>
+  {%- else -%}
+    <span class="cb-header__shop-name">{{ shop.name | escape }}</span>
+  {%- endif -%}
+
+  {%- if has_text -%}
+    <span class="cb-header__brand-text">
+      {%- if block.settings.title_text != blank or block.settings.badge_text != blank -%}
+        <span class="cb-header__brand-line">
+          {%- if block.settings.title_text != blank -%}
+            <span class="cb-header__brand-title">{{ block.settings.title_text | escape }}</span>
+          {%- endif -%}
+          {%- if block.settings.badge_text != blank -%}
+            <span class="cb-header__brand-badge">{{ block.settings.badge_text | escape }}</span>
+          {%- endif -%}
+        </span>
+      {%- endif -%}
+      {%- if block.settings.subtitle != blank -%}
+        <span class="cb-header__brand-subtitle">{{ block.settings.subtitle | escape }}</span>
+      {%- endif -%}
+    </span>
+  {%- endif -%}
+</a>
+
+{% stylesheet %}
+  .cb-header__brand {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .cb-header__brand:focus-visible {
+    outline: 2px solid var(--cbhd-text);
+    outline-offset: 4px;
+  }
+
+  .cb-header__logo-box {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    min-width: 120px;
+    padding: 6px 16px;
+    border-radius: 6px;
+    background: var(--cbhd-logo-bg, #fff);
+  }
+
+  .cb-header__logo-box img {
+    display: block;
+    width: auto;
+    max-width: 200px;
+    height: var(--cbhd-logo-height, 28px);
+    object-fit: contain;
+  }
+
+  .cb-header__shop-name {
+    font-family: var(--cbhd-font-heading);
+    font-weight: var(--cbhd-font-heading-weight);
+    font-size: 18px;
+    line-height: 1.1;
+    color: var(--cbhd-text);
+  }
+
+  .cb-header__brand-text {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+    padding-left: 14px;
+    border-left: 1px solid var(--cbhd-border);
+  }
+
+  .cb-header__brand-line {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .cb-header__brand-title {
+    font-family: var(--cbhd-font-heading);
+    font-weight: var(--cbhd-font-heading-weight);
+    font-size: 14px;
+    line-height: 1.2;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--cbhd-text);
+  }
+
+  .cb-header__brand-badge {
+    padding: 2px 7px;
+    border: 1px solid color-mix(in srgb, var(--cbhd-accent) 50%, transparent);
+    border-radius: 4px;
+    background: color-mix(in srgb, var(--cbhd-accent) 15%, transparent);
+    font-family: var(--cbhd-font-body);
+    font-weight: var(--cbhd-font-body-strong);
+    font-size: 10px;
+    line-height: 1.3;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: color-mix(in srgb, var(--cbhd-accent) 55%, #fff);
+  }
+
+  .cb-header__brand-subtitle {
+    max-width: 16ch;
+    font-family: var(--cbhd-font-body);
+    font-weight: var(--cbhd-font-body-weight);
+    font-size: 11px;
+    line-height: 1.25;
+    color: var(--cbhd-muted);
+  }
+
+  @media screen and (max-width: 749px) {
+    .cb-header__logo-box {
+      min-width: 0;
+      padding: 5px 10px;
+    }
+
+    .cb-header__logo-box img {
+      height: calc(var(--cbhd-logo-height, 28px) * 0.8);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Logo",
+  "tag": null,
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo",
+      "info": "Without a logo, the store name is shown."
+    },
+    {
+      "type": "color",
+      "id": "logo_background",
+      "label": "Logo background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "logo_height",
+      "label": "Logo height",
+      "min": 16,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 28
+    },
+    {
+      "type": "text",
+      "id": "title_text",
+      "label": "Title",
+      "info": "Shown in capitals beside the logo. Hidden on phones.",
+      "default": "Pro shop"
+    },
+    {
+      "type": "checkbox",
+      "id": "keep_text_visible",
+      "label": "Keep the title beside the logo",
+      "info": "When space is tight, the menu switches to the menu button before the title is hidden. Turn off to hide the title first and keep the menu visible.",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge",
+      "default": "Papakura"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Specialist Workshop & Rigging Lab"
+    }
+  ],
+  "presets": [{ "name": "[CB] Logo" }]
+}
+{% endschema %}

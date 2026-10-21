@@ -1,0 +1,51 @@
+{%- if block.settings.meta_text != blank -%}
+  {%- if block.settings.link != blank -%}
+    <a href="{{ block.settings.link }}" class="cb-footer__meta" {{ block.shopify_attributes }}>
+      {{- block.settings.meta_text | escape -}}
+    </a>
+  {%- else -%}
+    <p class="cb-footer__meta" {{ block.shopify_attributes }}>{{ block.settings.meta_text | escape }}</p>
+  {%- endif -%}
+{%- endif -%}
+
+{% stylesheet %}
+  .cb-footer__meta {
+    margin: 0;
+    font-family: var(--cbft-font-body);
+    font-weight: var(--cbft-font-body-weight);
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--cbft-muted);
+    text-decoration: none;
+  }
+
+  a.cb-footer__meta:hover {
+    color: var(--cbft-text);
+  }
+
+  a.cb-footer__meta:focus-visible {
+    outline: 2px solid var(--cbft-text);
+    outline-offset: 2px;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Bottom text",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "meta_text",
+      "label": "Text",
+      "default": "Papakura, Auckland"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link"
+    }
+  ],
+  "presets": [{ "name": "[CB] Bottom text" }]
+}
+{% endschema %}

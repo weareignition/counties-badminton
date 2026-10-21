@@ -1,0 +1,58 @@
+{%- if block.settings.body_text != blank -%}
+  <div
+    class="cb-guides__text"
+    style="--cbg-text-size: {{ block.settings.size }}px;"
+    {{ block.shopify_attributes }}
+  >
+    {{ block.settings.body_text }}
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  .cb-guides__text {
+    max-width: 60ch;
+    font-family: var(--cbg-font-body);
+    font-weight: var(--cbg-font-body-weight);
+    font-size: var(--cbg-text-size, 14px);
+    line-height: 1.6;
+    color: var(--cbg-muted);
+  }
+
+  .cb-guides__text > * {
+    margin: 0;
+  }
+
+  .cb-guides__text > * + * {
+    margin-top: 0.75em;
+  }
+
+  .cb-guides__text a {
+    color: var(--cbg-text);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Text",
+  "tag": null,
+  "settings": [
+    {
+      "type": "richtext",
+      "id": "body_text",
+      "label": "Text",
+      "default": "<p>Tell customers what these guides cover.</p>"
+    },
+    {
+      "type": "range",
+      "id": "size",
+      "label": "Size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    }
+  ],
+  "presets": [{ "name": "[CB] Text" }]
+}
+{% endschema %}

@@ -1,0 +1,32 @@
+<div class="cb-footer__links" {{ block.shopify_attributes }}>
+  {% content_for 'blocks' %}
+</div>
+
+{% stylesheet %}
+  /* Columns share the space evenly; on phones they fall back to two per row. */
+  .cb-footer__links {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 32px 24px;
+    min-width: 0;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Link columns",
+  "tag": null,
+  "blocks": [{ "type": "_cb-footer-menu" }],
+  "presets": [
+    {
+      "name": "[CB] Link columns",
+      "blocks": {
+        "column_1": { "type": "_cb-footer-menu" },
+        "column_2": { "type": "_cb-footer-menu" },
+        "column_3": { "type": "_cb-footer-menu" }
+      },
+      "block_order": ["column_1", "column_2", "column_3"]
+    }
+  ]
+}
+{% endschema %}

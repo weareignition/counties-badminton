@@ -1,0 +1,290 @@
+{%- liquid
+  assign s = section.settings
+  assign font_scope = '#cb-footer-' | append: section.id
+-%}
+
+{% render 'cb-font-styles',
+  selector: font_scope,
+  prefix: 'cbft',
+  heading_font: s.heading_font,
+  body_font: s.body_font
+%}
+
+<div
+  id="cb-footer-{{ section.id }}"
+  class="cb-footer"
+  style="
+    --cbft-bg: {{ s.background_color }};
+    --cbft-text: {{ s.text_color }};
+    --cbft-soft: {{ s.text_color | color_modify: 'alpha', 0.8 }};
+    --cbft-muted: {{ s.text_color | color_modify: 'alpha', 0.55 }};
+    --cbft-border: {{ s.border_color }};
+    --cbft-accent: {{ s.accent_color }};
+    --cbft-brand-w: {{ s.brand_width }}%;
+    --cbft-gap: {{ s.column_gap }}px;
+    --cbft-max-width: {{ s.max_width }}px;
+    --cbft-pt: {{ s.padding_top }}px;
+    --cbft-pb: {{ s.padding_bottom }}px;
+  "
+>
+  <div class="cb-footer__inner">
+    {% content_for 'blocks' %}
+  </div>
+</div>
+
+{% stylesheet %}
+  .cb-footer {
+    color: var(--cbft-text);
+    background: var(--cbft-bg);
+    padding: calc(var(--cbft-pt) * 0.75) 16px calc(var(--cbft-pb) * 0.75);
+  }
+
+  /* Blocks wrap: everything is full width on small screens. */
+  .cb-footer__inner {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px var(--cbft-gap);
+    max-width: var(--cbft-max-width);
+    margin-inline: auto;
+  }
+
+  .cb-footer__inner > * {
+    flex: 1 1 100%;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-footer {
+      padding: var(--cbft-pt) 32px var(--cbft-pb);
+    }
+  }
+
+  /* Desktop: brand column and link columns side by side, bottom bar on its own row. */
+  @media screen and (min-width: 990px) {
+    .cb-footer {
+      padding-inline: 48px;
+    }
+
+    .cb-footer__inner {
+      row-gap: 56px;
+    }
+
+    .cb-footer__inner > .cb-footer__brand {
+      flex: 0 1 var(--cbft-brand-w);
+    }
+
+    .cb-footer__inner > .cb-footer__links {
+      flex: 1 1 0%;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Footer",
+  "tag": "div",
+  "class": "section-wrapper",
+  "enabled_on": {
+    "groups": ["footer"]
+  },
+  "blocks": [
+    { "type": "_cb-footer-brand" },
+    { "type": "_cb-footer-links" },
+    { "type": "_cb-footer-bottom" }
+  ],
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "brand_width",
+      "label": "Brand column width",
+      "info": "Desktop only.",
+      "min": 25,
+      "max": 50,
+      "step": 1,
+      "unit": "%",
+      "default": 38
+    },
+    {
+      "type": "range",
+      "id": "column_gap",
+      "label": "Column gap",
+      "min": 24,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width",
+      "min": 960,
+      "max": 1800,
+      "step": 20,
+      "unit": "px",
+      "default": 1400
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "info": "Used for the name and column headings.",
+      "default": "space_grotesk_n7"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "info": "Used for the text, links and bottom bar.",
+      "default": "inter_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#0c0c0c"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Divider",
+      "default": "#ffffff14"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "default": "#d71f27"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Footer",
+      "blocks": {
+        "brand": {
+          "type": "_cb-footer-brand",
+          "blocks": {
+            "logo": {
+              "type": "_cb-footer-logo",
+              "settings": { "brand_name": "Counties Manukau", "tagline": "Badminton Pro Shop" }
+            },
+            "text": {
+              "type": "_cb-footer-text",
+              "settings": {
+                "body_text": "<p>Counties Manukau Badminton Association pro shop & certified electronic stringing lab. Run by competitive players, certified coaches, and master stringers at Papakura Badminton Hall.</p>"
+              }
+            },
+            "badge": {
+              "type": "_cb-footer-badge",
+              "settings": { "icon": "certified", "badge_text": "Specialist Workshop Certified • 41R Elliot St, Papakura" }
+            }
+          },
+          "block_order": ["logo", "text", "badge"]
+        },
+        "links": {
+          "type": "_cb-footer-links",
+          "blocks": {
+            "equipment": {
+              "type": "_cb-footer-menu",
+              "settings": { "menu_heading": "Specialist Equipment" },
+              "blocks": {
+                "link_1": { "type": "_cb-footer-link", "settings": { "link_label": "Rackets (All Brands)" } },
+                "link_2": { "type": "_cb-footer-link", "settings": { "link_label": "Interactive Racket Finder" } },
+                "link_3": { "type": "_cb-footer-link", "settings": { "link_label": "Certified Stringing Specs" } },
+                "link_4": { "type": "_cb-footer-link", "settings": { "link_label": "Racket Demo Programme" } }
+              },
+              "block_order": ["link_1", "link_2", "link_3", "link_4"]
+            },
+            "services": {
+              "type": "_cb-footer-menu",
+              "settings": { "menu_heading": "CMBA Services" },
+              "blocks": {
+                "link_1": { "type": "_cb-footer-link", "settings": { "link_label": "Papakura Workshop & Pick-up" } },
+                "link_2": { "type": "_cb-footer-link", "settings": { "link_label": "Court Booking & CMBA Club" } },
+                "link_3": { "type": "_cb-footer-link", "settings": { "link_label": "Junior Coaching & Squads" } },
+                "link_4": { "type": "_cb-footer-link", "settings": { "link_label": "Senior Representative Teams" } }
+              },
+              "block_order": ["link_1", "link_2", "link_3", "link_4"]
+            },
+            "care": {
+              "type": "_cb-footer-menu",
+              "settings": { "menu_heading": "Customer Care" },
+              "blocks": {
+                "link_1": { "type": "_cb-footer-link", "settings": { "link_label": "String Tension Guide" } },
+                "link_2": { "type": "_cb-footer-link", "settings": { "link_label": "Terms & Warranty" } },
+                "link_3": { "type": "_cb-footer-link", "settings": { "link_label": "Click & Collect FAQ" } },
+                "link_4": { "type": "_cb-footer-link", "settings": { "link_label": "Contact Head Stringer" } }
+              },
+              "block_order": ["link_1", "link_2", "link_3", "link_4"]
+            }
+          },
+          "block_order": ["equipment", "services", "care"]
+        },
+        "bottom": {
+          "type": "_cb-footer-bottom",
+          "blocks": {
+            "copyright": {
+              "type": "_cb-footer-copyright",
+              "settings": {
+                "show_year": true,
+                "copyright_text": "Counties Manukau Badminton Association (CMBA). 41R Elliot Street, Papakura. All rights reserved."
+              }
+            },
+            "gst": {
+              "type": "_cb-footer-meta",
+              "settings": { "meta_text": "GST Registered NZ (NZBN: 9429042978392)" }
+            },
+            "location": {
+              "type": "_cb-footer-meta",
+              "settings": { "meta_text": "Papakura, Auckland" }
+            }
+          },
+          "block_order": ["copyright", "gst", "location"]
+        }
+      },
+      "block_order": ["brand", "links", "bottom"]
+    }
+  ]
+}
+{% endschema %}

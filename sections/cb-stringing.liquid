@@ -1,0 +1,334 @@
+{%- liquid
+  assign s = section.settings
+  assign font_scope = '#cb-string-' | append: section.id
+-%}
+
+{% render 'cb-font-styles',
+  selector: font_scope,
+  prefix: 'cbs',
+  heading_font: s.heading_font,
+  body_font: s.body_font
+%}
+
+<section
+  id="cb-string-{{ section.id }}"
+  class="cb-string{% if s.media_first_mobile %} cb-string--media-first{% endif %}"
+  style="
+    --cbs-bg: {{ s.background_color }};
+    --cbs-card: {{ s.card_background_color }};
+    --cbs-border: {{ s.border_color }};
+    --cbs-surface: {{ s.text_color | color_modify: 'alpha', 0.04 }};
+    --cbs-text: {{ s.text_color }};
+    --cbs-muted: {{ s.text_color | color_modify: 'alpha', 0.6 }};
+    --cbs-accent: {{ s.accent_color }};
+    --cbs-accent-text: {{ s.accent_text_color }};
+    --cbs-radius: {{ s.card_radius }}px;
+    --cbs-max-width: {{ s.max_width }}px;
+    --cbs-gap: {{ s.column_gap }}px;
+    --cbs-align: {{ s.vertical_alignment }};
+    --cbs-media-grow: {{ s.media_width }};
+    --cbs-content-grow: {{ 100 | minus: s.media_width }};
+    --cbs-pt: {{ s.padding_top }}px;
+    --cbs-pb: {{ s.padding_bottom }}px;
+  "
+>
+  <div class="cb-string__inner">
+    {% content_for 'blocks' %}
+  </div>
+</section>
+
+{% stylesheet %}
+  .cb-string {
+    color: var(--cbs-text);
+    background: var(--cbs-bg);
+    padding: calc(var(--cbs-pt) * 0.6) 16px calc(var(--cbs-pb) * 0.6);
+  }
+
+  .cb-string__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    max-width: var(--cbs-max-width);
+    margin-inline: auto;
+  }
+
+  .cb-string--media-first .cb-string__media {
+    order: -1;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-string {
+      padding: calc(var(--cbs-pt) * 0.8) 32px calc(var(--cbs-pb) * 0.8);
+    }
+  }
+
+  /* Side by side on desktop; each block keeps its width share whichever side it's on. */
+  @media screen and (min-width: 990px) {
+    .cb-string {
+      padding: var(--cbs-pt) 48px var(--cbs-pb);
+    }
+
+    .cb-string__inner {
+      flex-direction: row;
+      align-items: var(--cbs-align, center);
+      gap: var(--cbs-gap);
+    }
+
+    .cb-string__inner > .cb-string__media {
+      flex: var(--cbs-media-grow) 1 0%;
+    }
+
+    .cb-string__inner > .cb-string__content {
+      flex: var(--cbs-content-grow) 1 0%;
+    }
+
+    .cb-string--media-first .cb-string__media {
+      order: 0;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Stringing",
+  "tag": "div",
+  "class": "section-wrapper",
+  "blocks": [
+    { "type": "_cb-string-media" },
+    { "type": "_cb-string-content" }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "paragraph",
+      "content": "Reorder the media card and content blocks to swap sides."
+    },
+    {
+      "type": "range",
+      "id": "media_width",
+      "label": "Media card width",
+      "info": "Desktop only.",
+      "min": 30,
+      "max": 65,
+      "step": 1,
+      "unit": "%",
+      "default": 46
+    },
+    {
+      "type": "range",
+      "id": "column_gap",
+      "label": "Column gap",
+      "min": 24,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 96
+    },
+    {
+      "type": "select",
+      "id": "vertical_alignment",
+      "label": "Content position",
+      "options": [
+        { "value": "flex-start", "label": "Top" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "checkbox",
+      "id": "media_first_mobile",
+      "label": "Show media card first on mobile",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width",
+      "min": 960,
+      "max": 1800,
+      "step": 20,
+      "unit": "px",
+      "default": 1400
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Card corner radius",
+      "min": 0,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "info": "Used for the heading and feature titles.",
+      "default": "space_grotesk_n7"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "info": "Used for the badges, text, captions, button and note.",
+      "default": "inter_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "id": "card_background_color",
+      "label": "Card background",
+      "default": "#181818"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Borders and dividers",
+      "default": "#ffffff14"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "default": "#d71f27"
+    },
+    {
+      "type": "color",
+      "id": "accent_text_color",
+      "label": "Text on accent",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Stringing",
+      "category": "t:categories.storytelling",
+      "blocks": {
+        "media": {
+          "type": "_cb-string-media",
+          "settings": {
+            "badge_text": "Precision workshop",
+            "caption": "Papakura Hall Stringing Bench (41R Elliot St)",
+            "caption_note": "Victor Electronic 6-Point Mount"
+          }
+        },
+        "content": {
+          "type": "_cb-string-content",
+          "blocks": {
+            "badge": {
+              "type": "_cb-string-badge",
+              "settings": { "badge_text": "Master stringer workshop" }
+            },
+            "heading": {
+              "type": "_cb-string-heading",
+              "settings": { "heading_text": "Professional stringing. Seven days a week." }
+            },
+            "text": {
+              "type": "_cb-string-text",
+              "settings": {
+                "body_text": "<p>Factory pre-strung rackets come with loose, generic nylon that deadens touch and control. Every frame at CMBA is hand-mounted on our electronic constant-pull machines at 41R Elliot Street. Choose Yonex BG80, BG66UM, Victor VBS, or Ashaway with tension calibrated specifically to your swing and arm comfort.</p>"
+              }
+            },
+            "features": {
+              "type": "_cb-string-features",
+              "blocks": {
+                "feature_1": {
+                  "type": "_cb-string-feature",
+                  "settings": {
+                    "icon": "timer",
+                    "feature_title": "24-Hour Express Turnaround",
+                    "feature_text": "Drop off before 6pm on club night, pick up strung and calibrated for your match tomorrow."
+                  }
+                },
+                "feature_2": {
+                  "type": "_cb-string-feature",
+                  "settings": {
+                    "icon": "gauge",
+                    "feature_title": "Certified 6-Point Electronic Pull (±0.2 lbs accuracy)",
+                    "feature_text": "Prevents frame warping, head distortion, and grommet crushing with genuine micro-tension accuracy."
+                  }
+                },
+                "feature_3": {
+                  "type": "_cb-string-feature",
+                  "settings": {
+                    "icon": "sliders",
+                    "feature_title": "Custom Tension Calibration (20 to 32 lbs)",
+                    "feature_text": "Not sure whether to pull 24 or 28 lbs? Our certified master stringers match tension to your technique to protect elbow health."
+                  }
+                }
+              },
+              "block_order": ["feature_1", "feature_2", "feature_3"]
+            },
+            "actions": {
+              "type": "_cb-string-actions",
+              "blocks": {
+                "button": {
+                  "type": "_cb-string-button",
+                  "settings": { "label": "Explore Stringing Lab & Book Tension", "style": "primary", "show_arrow": true }
+                },
+                "note": {
+                  "type": "_cb-string-note",
+                  "settings": { "note_text": "41R Elliot St Pro Shop • Walk-ins & Online Booking" }
+                }
+              },
+              "block_order": ["button", "note"]
+            }
+          },
+          "block_order": ["badge", "heading", "text", "features", "actions"]
+        }
+      },
+      "block_order": ["media", "content"]
+    }
+  ]
+}
+{% endschema %}

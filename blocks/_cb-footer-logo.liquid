@@ -1,0 +1,138 @@
+{%- liquid
+  # The logo is decorative when the brand name is shown beside it (the link already reads the name).
+  assign logo_alt = shop.name
+  if block.settings.brand_name != blank
+    assign logo_alt = ''
+  endif
+-%}
+
+<a href="{{ routes.root_url }}" class="cb-footer__lockup" {{ block.shopify_attributes }}>
+  {%- if block.settings.logo != blank -%}
+    <span
+      class="cb-footer__logo-box"
+      style="--cbft-logo-bg: {{ block.settings.logo_background }}; --cbft-logo-height: {{ block.settings.logo_height }}px;"
+    >
+      {{
+        block.settings.logo
+        | image_url: width: 480
+        | image_tag: widths: '200, 320, 480', sizes: '200px', loading: 'lazy', alt: logo_alt
+      }}
+    </span>
+  {%- endif -%}
+  {%- if block.settings.brand_name != blank or block.settings.tagline != blank -%}
+    <span class="cb-footer__lockup-text">
+      {%- if block.settings.brand_name != blank -%}
+        <span class="cb-footer__brand-name">{{ block.settings.brand_name | escape }}</span>
+      {%- endif -%}
+      {%- if block.settings.tagline != blank -%}
+        <span class="cb-footer__tagline">{{ block.settings.tagline | escape }}</span>
+      {%- endif -%}
+    </span>
+  {%- endif -%}
+</a>
+
+{% stylesheet %}
+  .cb-footer__lockup {
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+    max-width: 100%;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .cb-footer__lockup:focus-visible {
+    outline: 2px solid var(--cbft-text);
+    outline-offset: 4px;
+  }
+
+  .cb-footer__logo-box {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    min-width: 140px;
+    padding: 7px 18px;
+    border-radius: 4px;
+    background: var(--cbft-logo-bg, #fff);
+  }
+
+  .cb-footer__logo-box img {
+    display: block;
+    width: auto;
+    max-width: 220px;
+    height: var(--cbft-logo-height, 26px);
+    object-fit: contain;
+  }
+
+  .cb-footer__lockup-text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .cb-footer__brand-name {
+    font-family: var(--cbft-font-heading);
+    font-weight: var(--cbft-font-heading-weight);
+    font-size: 15px;
+    line-height: 1.2;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--cbft-text);
+  }
+
+  .cb-footer__tagline {
+    font-family: var(--cbft-font-body);
+    font-weight: var(--cbft-font-body-weight);
+    font-size: 11px;
+    line-height: 1.3;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--cbft-muted);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Logo",
+  "tag": null,
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    },
+    {
+      "type": "color",
+      "id": "logo_background",
+      "label": "Logo background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "logo_height",
+      "label": "Logo height",
+      "min": 16,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 26
+    },
+    {
+      "type": "text",
+      "id": "brand_name",
+      "label": "Name",
+      "info": "Shown in capitals beside the logo.",
+      "default": "Counties Manukau"
+    },
+    {
+      "type": "text",
+      "id": "tagline",
+      "label": "Tagline",
+      "default": "Badminton Pro Shop"
+    }
+  ],
+  "presets": [{ "name": "[CB] Logo" }]
+}
+{% endschema %}

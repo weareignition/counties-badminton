@@ -1,0 +1,115 @@
+{%- liquid
+  assign link = block.settings.link | default: routes.all_products_collection_url
+-%}
+
+{%- if block.settings.label != blank -%}
+  <a
+    href="{{ link }}"
+    class="cb-hero__button cb-hero__button--{{ block.settings.style }}"
+    {% if block.settings.open_in_new_tab %}
+      target="_blank" rel="noopener"
+    {% endif %}
+    {{ block.shopify_attributes }}
+  >
+    {{- block.settings.label | escape -}}
+    {%- if block.settings.show_arrow -%}
+      <svg class="cb-hero__button-arrow" width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    {%- endif -%}
+  </a>
+{%- endif -%}
+
+{% stylesheet %}
+  .cb-hero__button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 48px;
+    padding: 12px 22px;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    font-family: var(--cbh-font-body);
+    font-size: 14px;
+    font-weight: var(--cbh-font-body-strong);
+    line-height: 1.2;
+    text-decoration: none;
+    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  }
+
+  .cb-hero__button--primary {
+    background: var(--cbh-accent);
+    color: var(--cbh-accent-text);
+  }
+
+  .cb-hero__button--primary:hover {
+    background: color-mix(in srgb, var(--cbh-accent) 85%, #000);
+  }
+
+  .cb-hero__button--secondary {
+    background: var(--cbh-surface);
+    border-color: var(--cbh-border);
+    color: var(--cbh-text);
+  }
+
+  .cb-hero__button--secondary:hover {
+    border-color: color-mix(in srgb, var(--cbh-text) 35%, transparent);
+    background: color-mix(in srgb, var(--cbh-text) 8%, transparent);
+  }
+
+  .cb-hero__button:focus-visible {
+    outline: 2px solid var(--cbh-text);
+    outline-offset: 3px;
+  }
+
+  .cb-hero__button-arrow {
+    transition: transform 0.2s ease;
+  }
+
+  .cb-hero__button:hover .cb-hero__button-arrow {
+    transform: translateX(3px);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Button",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "Shop now"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link"
+    },
+    {
+      "type": "checkbox",
+      "id": "open_in_new_tab",
+      "label": "Open in new tab",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "style",
+      "label": "Style",
+      "options": [
+        { "value": "primary", "label": "Primary (accent)" },
+        { "value": "secondary", "label": "Secondary (outline)" }
+      ],
+      "default": "primary"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrow",
+      "label": "Show arrow",
+      "default": false
+    }
+  ],
+  "presets": [{ "name": "[CB] Button" }]
+}
+{% endschema %}

@@ -1,0 +1,34 @@
+<div class="cb-tactics__header" {{ block.shopify_attributes }}>
+  {% content_for 'blocks' %}
+</div>
+
+{% stylesheet %}
+  .cb-tactics__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px 24px;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Header",
+  "tag": null,
+  "blocks": [
+    { "type": "_cb-tactics-eyebrow" },
+    { "type": "_cb-tactics-note" }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Header",
+      "blocks": {
+        "eyebrow": { "type": "_cb-tactics-eyebrow" },
+        "note": { "type": "_cb-tactics-note" }
+      },
+      "block_order": ["eyebrow", "note"]
+    }
+  ]
+}
+{% endschema %}

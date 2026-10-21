@@ -1,0 +1,365 @@
+{%- liquid
+  assign s = section.settings
+  assign font_scope = '#cb-frames-' | append: section.id
+-%}
+
+{% render 'cb-font-styles',
+  selector: font_scope,
+  prefix: 'cbp',
+  heading_font: s.heading_font,
+  body_font: s.body_font
+%}
+
+<section
+  id="cb-frames-{{ section.id }}"
+  class="cb-frames"
+  data-cb-frames
+  style="
+    --cbp-bg: {{ s.background_color }};
+    --cbp-card: {{ s.card_background_color }};
+    --cbp-border: {{ s.border_color }};
+    --cbp-border-hover: {{ s.text_color | color_modify: 'alpha', 0.25 }};
+    --cbp-surface: {{ s.text_color | color_modify: 'alpha', 0.04 }};
+    --cbp-surface-strong: {{ s.text_color | color_modify: 'alpha', 0.06 }};
+    --cbp-text: {{ s.text_color }};
+    --cbp-muted: {{ s.text_color | color_modify: 'alpha', 0.6 }};
+    --cbp-accent: {{ s.accent_color }};
+    --cbp-accent-text: {{ s.accent_text_color }};
+    --cbp-image-bg: {{ s.image_background_color }};
+    --cbp-perk: {{ s.perk_color }};
+    --cbp-star: {{ s.star_color }};
+    --cbp-star-empty: {{ s.text_color | color_modify: 'alpha', 0.2 }};
+    --cbp-radius: {{ s.card_radius }}px;
+    --cbp-max-width: {{ s.max_width }}px;
+    --cbp-stack-gap: {{ s.stack_gap }}px;
+    --cbp-pt: {{ s.padding_top }}px;
+    --cbp-pb: {{ s.padding_bottom }}px;
+  "
+>
+  <div class="cb-frames__inner">
+    {% content_for 'blocks' %}
+  </div>
+</section>
+
+{% stylesheet %}
+  .cb-frames {
+    color: var(--cbp-text);
+    background: var(--cbp-bg);
+    padding: calc(var(--cbp-pt) * 0.6) 16px calc(var(--cbp-pb) * 0.6);
+    /* Keeps the section clear of the sticky header when other sections scroll to it. */
+    scroll-margin-top: var(--header-height, 0px);
+  }
+
+  .cb-frames__inner {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--cbp-stack-gap) * 0.75);
+    max-width: var(--cbp-max-width);
+    margin-inline: auto;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-frames {
+      padding: calc(var(--cbp-pt) * 0.8) 32px calc(var(--cbp-pb) * 0.8);
+    }
+
+    .cb-frames__inner {
+      gap: var(--cbp-stack-gap);
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .cb-frames {
+      padding: var(--cbp-pt) 48px var(--cbp-pb);
+    }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  (() => {
+    const ROOT = '[data-cb-frames]';
+
+    const applyFilter = (root, value) => {
+      for (const pill of root.querySelectorAll('[data-cb-filter]')) {
+        pill.setAttribute('aria-pressed', String(pill.dataset.cbFilter === value));
+      }
+
+      let shown = 0;
+      for (const card of root.querySelectorAll('[data-cb-filter-keys]')) {
+        const match = value === 'all' || card.dataset.cbFilterKeys.split(' ').includes(value);
+        card.hidden = !match;
+        if (match) shown += 1;
+      }
+
+      const empty = root.querySelector('[data-cb-frames-empty]');
+      if (empty) empty.hidden = shown > 0;
+    };
+
+    document.addEventListener('click', (event) => {
+      const pill = event.target.closest?.('[data-cb-filter]');
+      const root = pill?.closest(ROOT);
+      if (root) applyFilter(root, pill.dataset.cbFilter);
+    });
+
+    // In the theme editor, show a card when it's selected even if the active filter hides it.
+    document.addEventListener('shopify:block:select', (event) => {
+      const card = event.target.closest?.('[data-cb-filter-keys]');
+      const root = card?.closest(ROOT);
+      if (root && card.hidden) applyFilter(root, 'all');
+    });
+
+    // Other sections (e.g. [CB] Playing tactics) can filter this grid by dispatching
+    // a bubbling 'cb:frames-filter' event on it with { detail: { value } }.
+    document.addEventListener('cb:frames-filter', (event) => {
+      const root = event.target.closest?.(ROOT);
+      if (root) applyFilter(root, event.detail?.value || 'all');
+    });
+  })();
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "[CB] Featured frames",
+  "tag": "div",
+  "class": "section-wrapper",
+  "blocks": [
+    { "type": "_cb-frames-header" },
+    { "type": "_cb-frames-grid" },
+    { "type": "_cb-frames-callout" }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width",
+      "min": 960,
+      "max": 1800,
+      "step": 20,
+      "unit": "px",
+      "default": 1400
+    },
+    {
+      "type": "range",
+      "id": "stack_gap",
+      "label": "Space between groups",
+      "min": 8,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Card corner radius",
+      "min": 0,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "info": "Used for the heading, product titles, prices and the callout title.",
+      "default": "space_grotesk_n7"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "info": "Used for labels, filters, specs, buttons and small text.",
+      "default": "inter_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "id": "card_background_color",
+      "label": "Card background",
+      "default": "#181818"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Borders and dividers",
+      "default": "#ffffff14"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "default": "#d71f27"
+    },
+    {
+      "type": "color",
+      "id": "accent_text_color",
+      "label": "Text on accent",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "image_background_color",
+      "label": "Product image background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "perk_color",
+      "label": "Perk tag",
+      "default": "#22c55e"
+    },
+    {
+      "type": "color",
+      "id": "star_color",
+      "label": "Rating stars",
+      "default": "#f5b301"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Featured frames",
+      "category": "t:categories.products",
+      "blocks": {
+        "header": {
+          "type": "_cb-frames-header",
+          "blocks": {
+            "eyebrow": {
+              "type": "_cb-frames-eyebrow",
+              "settings": { "eyebrow_text": "Association curated" }
+            },
+            "heading": {
+              "type": "_cb-frames-heading",
+              "settings": { "heading_text": "Featured Specialist Frames" }
+            },
+            "filters": {
+              "type": "_cb-frames-filters",
+              "blocks": {
+                "filter_1": { "type": "_cb-frames-filter", "settings": { "pill_label": "Head-Heavy" } },
+                "filter_2": { "type": "_cb-frames-filter", "settings": { "pill_label": "Speed" } },
+                "filter_3": { "type": "_cb-frames-filter", "settings": { "pill_label": "All-Round" } }
+              },
+              "block_order": ["filter_1", "filter_2", "filter_3"]
+            }
+          },
+          "block_order": ["eyebrow", "heading", "filters"]
+        },
+        "grid": {
+          "type": "_cb-frames-grid",
+          "blocks": {
+            "card_1": {
+              "type": "_cb-frames-card",
+              "settings": {
+                "card_title": "Thruster Ryuga II Pro",
+                "custom_price": "339",
+                "vendor_label": "Victor",
+                "badge_text": "Tournament pro",
+                "badge_style": "dark",
+                "specs": "4U (83g), Head-Heavy, Stiff",
+                "filter_keys": "Head-Heavy"
+              }
+            },
+            "card_2": {
+              "type": "_cb-frames-card",
+              "settings": {
+                "card_title": "Astrox 88D Pro Gen 3",
+                "custom_price": "359",
+                "vendor_label": "Yonex Japan",
+                "badge_text": "New gen 3",
+                "badge_style": "accent",
+                "specs": "4U (83g), Head-Heavy, Extra Stiff",
+                "filter_keys": "Head-Heavy"
+              }
+            },
+            "card_3": {
+              "type": "_cb-frames-card",
+              "settings": {
+                "card_title": "Auraspeed 100X Ultra",
+                "custom_price": "329",
+                "vendor_label": "Victor",
+                "badge_text": "Speed series",
+                "badge_style": "dark",
+                "specs": "4U (83g), Even / Speed, Stiff",
+                "filter_keys": "Speed"
+              }
+            },
+            "card_4": {
+              "type": "_cb-frames-card",
+              "settings": {
+                "card_title": "Phantom X-Speed II",
+                "custom_price": "229",
+                "vendor_label": "Ashaway USA",
+                "badge_text": "Best value",
+                "badge_style": "muted",
+                "specs": "4U (84g), Even Balance, Medium Flex",
+                "filter_keys": "All-Round"
+              }
+            }
+          },
+          "block_order": ["card_1", "card_2", "card_3", "card_4"]
+        },
+        "callout": {
+          "type": "_cb-frames-callout",
+          "settings": {
+            "icon": "racket",
+            "callout_title": "Want to test before you buy?",
+            "callout_text": "Borrow any of our demo frames on Papakura courts for 30 minutes during shop hours.",
+            "button_label": "Learn about Demo Program"
+          }
+        }
+      },
+      "block_order": ["header", "grid", "callout"]
+    }
+  ]
+}
+{% endschema %}

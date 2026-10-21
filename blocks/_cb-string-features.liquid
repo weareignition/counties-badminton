@@ -1,0 +1,33 @@
+<ul class="cb-string__features" role="list" {{ block.shopify_attributes }}>
+  {% content_for 'blocks' %}
+</ul>
+
+{% stylesheet %}
+  .cb-string__features {
+    display: flex;
+    flex-direction: column;
+    align-self: stretch;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Feature list",
+  "tag": null,
+  "blocks": [{ "type": "_cb-string-feature" }],
+  "presets": [
+    {
+      "name": "[CB] Feature list",
+      "blocks": {
+        "feature_1": { "type": "_cb-string-feature", "settings": { "icon": "timer" } },
+        "feature_2": { "type": "_cb-string-feature", "settings": { "icon": "gauge" } },
+        "feature_3": { "type": "_cb-string-feature", "settings": { "icon": "sliders" } }
+      },
+      "block_order": ["feature_1", "feature_2", "feature_3"]
+    }
+  ]
+}
+{% endschema %}

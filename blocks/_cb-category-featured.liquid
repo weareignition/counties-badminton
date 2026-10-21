@@ -1,0 +1,258 @@
+{%- liquid
+  assign linked_collection = block.settings.collection
+  assign image = block.settings.image | default: linked_collection.featured_image
+  assign card_title = block.settings.card_title | default: linked_collection.title
+  assign url = block.settings.link | default: linked_collection.url | default: routes.collections_url
+  assign link_label = block.settings.link_label | replace: '[count]', linked_collection.products_count
+-%}
+
+<a
+  href="{{ url }}"
+  class="cb-category__card cb-category-featured"
+  style="--cbc-image-ratio: {{ block.settings.image_ratio }};"
+  {{ block.shopify_attributes }}
+>
+  <div class="cb-category-featured__media">
+    {%- if image != blank -%}
+      {{
+        image
+        | image_url: width: 1600
+        | image_tag:
+          widths: '400, 600, 800, 1000, 1200, 1600',
+          sizes: '(min-width: 990px) 55vw, 100vw',
+          loading: 'lazy',
+          class: 'cb-category__image'
+      }}
+    {%- else -%}
+      {{ 'collection-1' | placeholder_svg_tag: 'cb-category__image cb-category__image--placeholder' }}
+    {%- endif -%}
+
+    {%- if block.settings.badge_text != blank -%}
+      <span class="cb-category__badge cb-category__badge--{{ block.settings.badge_style }}">
+        {{- block.settings.badge_text | escape -}}
+      </span>
+    {%- endif -%}
+
+    {%- if block.settings.image_label != blank -%}
+      <span class="cb-category-featured__label">{{ block.settings.image_label | escape }}</span>
+    {%- endif -%}
+  </div>
+
+  <div class="cb-category-featured__body">
+    {%- if card_title != blank -%}
+      <div class="cb-category-featured__title-row">
+        <h3 class="cb-category-featured__title">{{ card_title | escape }}</h3>
+        <svg class="cb-category__arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    {%- endif -%}
+
+    {%- if block.settings.description != blank -%}
+      <p class="cb-category-featured__description">
+        {{- block.settings.description | escape | newline_to_br -}}
+      </p>
+    {%- endif -%}
+
+    {%- if link_label != blank -%}
+      <span class="cb-category__cta cb-category__cta--{{ block.settings.link_style }}">
+        {{- link_label | escape -}}
+        <svg class="cb-category__arrow" width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+    {%- endif -%}
+  </div>
+</a>
+
+{% stylesheet %}
+  .cb-category-featured {
+    flex-direction: column;
+    gap: 16px;
+    padding: 14px;
+  }
+
+  /* Grows to fill the card when the card list beside it is taller. */
+  .cb-category-featured__media {
+    position: relative;
+    flex: 1 0 auto;
+    aspect-ratio: var(--cbc-image-ratio, 16 / 10);
+    overflow: hidden;
+    border-radius: calc(var(--cbc-radius) * 0.6);
+    background: var(--cbc-surface);
+  }
+
+  .cb-category-featured .cb-category__badge {
+    top: 10px;
+    left: 10px;
+    padding: 4px 8px;
+    font-size: 10px;
+  }
+
+  .cb-category-featured__label {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    z-index: 1;
+    max-width: calc(100% - 20px);
+    padding: 5px 9px;
+    border: 1px solid rgb(255 255 255 / 0.15);
+    border-radius: 4px;
+    background: rgb(0 0 0 / 0.7);
+    backdrop-filter: blur(6px);
+    color: #fff;
+    font-family: var(--cbc-font-body);
+    font-weight: var(--cbc-font-body-strong);
+    font-size: 11px;
+    line-height: 1.25;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .cb-category-featured__body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 0 4px 4px;
+  }
+
+  .cb-category-featured__title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    align-self: stretch;
+  }
+
+  .cb-category-featured__title-row .cb-category__arrow {
+    color: var(--cbc-muted);
+  }
+
+  .cb-category-featured:hover .cb-category-featured__title-row .cb-category__arrow {
+    color: var(--cbc-text);
+  }
+
+  .cb-category-featured__title {
+    margin: 0;
+    font-family: var(--cbc-font-heading);
+    font-weight: var(--cbc-font-heading-weight);
+    font-size: clamp(20px, 3vw, 26px);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    color: var(--cbc-text);
+  }
+
+  .cb-category-featured__description {
+    margin: 0;
+    max-width: 56ch;
+    font-family: var(--cbc-font-body);
+    font-weight: var(--cbc-font-body-weight);
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--cbc-muted);
+  }
+
+  .cb-category-featured .cb-category__cta {
+    margin-top: 6px;
+    font-size: 13px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-category-featured {
+      gap: 20px;
+      padding: 20px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Featured card",
+  "tag": null,
+  "settings": [
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection",
+      "info": "Leave the image, title or link empty to use the collection's."
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "Image shape",
+      "options": [
+        { "value": "1 / 1", "label": "Square" },
+        { "value": "4 / 3", "label": "4:3" },
+        { "value": "3 / 2", "label": "3:2" },
+        { "value": "16 / 10", "label": "16:10" },
+        { "value": "16 / 9", "label": "16:9" }
+      ],
+      "default": "16 / 10"
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge",
+      "default": "Featured"
+    },
+    {
+      "type": "select",
+      "id": "badge_style",
+      "label": "Badge style",
+      "options": [
+        { "value": "accent", "label": "Accent" },
+        { "value": "dark", "label": "Dark" },
+        { "value": "light", "label": "Light" }
+      ],
+      "default": "accent"
+    },
+    {
+      "type": "text",
+      "id": "image_label",
+      "label": "Image label",
+      "info": "Shown in the bottom-right corner of the image."
+    },
+    {
+      "type": "text",
+      "id": "card_title",
+      "label": "Title",
+      "default": "Category"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description"
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Link text",
+      "info": "Use [count] to show how many products are in the collection.",
+      "default": "Shop now"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link"
+    },
+    {
+      "type": "select",
+      "id": "link_style",
+      "label": "Link color",
+      "options": [
+        { "value": "accent", "label": "Accent" },
+        { "value": "text", "label": "Text" }
+      ],
+      "default": "accent"
+    }
+  ],
+  "presets": [{ "name": "[CB] Featured card" }]
+}
+{% endschema %}

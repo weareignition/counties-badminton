@@ -1,0 +1,97 @@
+{%- if block.settings.label != blank -%}
+  <a
+    href="{{ block.settings.link | default: routes.all_products_collection_url }}"
+    class="cb-header__button cb-header__button--{{ block.settings.style }}{% unless block.settings.show_on_mobile %} cb-header__button--hide-mobile{% endunless %}"
+    {{ block.shopify_attributes }}
+  >
+    {{- block.settings.label | escape -}}
+  </a>
+{%- endif -%}
+
+{% stylesheet %}
+  .cb-header__button {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    min-height: 38px;
+    padding: 9px 16px;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    font-family: var(--cbhd-font-body);
+    font-weight: var(--cbhd-font-body-strong);
+    font-size: 13px;
+    line-height: 1.2;
+    white-space: nowrap;
+    text-decoration: none;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .cb-header__button--primary {
+    background: var(--cbhd-accent);
+    color: var(--cbhd-accent-text);
+  }
+
+  .cb-header__button--primary:hover {
+    background: color-mix(in srgb, var(--cbhd-accent) 85%, #000);
+  }
+
+  .cb-header__button--secondary {
+    border-color: var(--cbhd-border);
+    background: var(--cbhd-field-bg);
+    color: var(--cbhd-text);
+  }
+
+  .cb-header__button--secondary:hover {
+    border-color: var(--cbhd-border-hover);
+  }
+
+  .cb-header__button:focus-visible {
+    outline: 2px solid var(--cbhd-text);
+    outline-offset: 2px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .cb-header__button--hide-mobile {
+      display: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Button",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "Find My Racket"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link"
+    },
+    {
+      "type": "select",
+      "id": "style",
+      "label": "Style",
+      "options": [
+        { "value": "primary", "label": "Primary (accent)" },
+        { "value": "secondary", "label": "Secondary (outline)" }
+      ],
+      "default": "primary"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_on_mobile",
+      "label": "Show on phones",
+      "info": "Off by default to save space; the mobile menu has its own button.",
+      "default": false
+    }
+  ],
+  "presets": [{ "name": "[CB] Button" }]
+}
+{% endschema %}

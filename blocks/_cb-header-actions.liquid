@@ -1,0 +1,47 @@
+{%- comment -%}
+  Uses the theme's own header actions, so the account sign-in, live cart count and cart drawer keep working.
+{%- endcomment -%}
+<div class="cb-header__actions" {{ block.shopify_attributes }}>
+  {% render 'header-actions', display_style: 'icon', customer_account_menu: block.settings.customer_account_menu %}
+</div>
+
+{% stylesheet %}
+  .cb-header__actions {
+    --color-account-icon: var(--cbhd-text);
+    --cart-bubble-background: var(--cbhd-accent);
+    --cart-bubble-text: var(--cbhd-accent-text);
+
+    display: flex;
+    flex: none;
+    align-items: center;
+    color: var(--cbhd-text);
+  }
+
+  .cb-header__actions header-actions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  /* The theme colours these buttons with its own (light) colour scheme; use the header's text colour. */
+  .cb-header__actions .header-actions__action,
+  .cb-header__actions .header-actions__action:hover {
+    color: var(--cbhd-text);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Account & cart",
+  "tag": null,
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "customer_account_menu",
+      "label": "Customer account menu",
+      "default": "customer-account-main-menu"
+    }
+  ],
+  "presets": [{ "name": "[CB] Account & cart" }]
+}
+{% endschema %}

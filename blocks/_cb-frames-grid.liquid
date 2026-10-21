@@ -1,0 +1,150 @@
+<div class="cb-frames__grid-wrap" {{ block.shopify_attributes }}>
+  <div
+    class="cb-frames__grid cb-frames__grid--{{ block.settings.mobile_layout }}"
+    style="
+      --cbp-columns: {{ block.settings.columns }};
+      --cbp-grid-gap: {{ block.settings.gap }}px;
+      --cbp-image-ratio: {{ block.settings.image_ratio }};
+      --cbp-image-fit: {{ block.settings.image_fit }};
+    "
+  >
+    {% content_for 'blocks' %}
+  </div>
+  <p class="cb-frames__empty" data-cb-frames-empty hidden>{{ block.settings.empty_text | escape }}</p>
+</div>
+
+{% stylesheet %}
+  .cb-frames__grid {
+    display: grid;
+    grid-template-columns: repeat(var(--cbp-columns, 4), minmax(0, 1fr));
+    gap: var(--cbp-grid-gap, 16px);
+  }
+
+  @media screen and (max-width: 989px) {
+    .cb-frames__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .cb-frames__grid--stack {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    /* Swipeable row that bleeds to the screen edges (the section has 16px side padding on mobile). */
+    .cb-frames__grid--swipe {
+      grid-template-columns: none;
+      grid-auto-flow: column;
+      grid-auto-columns: min(78%, 300px);
+      margin-inline: -16px;
+      padding: 0 16px 4px;
+      overflow-x: auto;
+      overscroll-behavior-x: contain;
+      scroll-snap-type: x mandatory;
+      scroll-padding-inline: 16px;
+      scrollbar-width: none;
+    }
+
+    .cb-frames__grid--swipe::-webkit-scrollbar {
+      display: none;
+    }
+
+    .cb-frames__grid--swipe > * {
+      scroll-snap-align: start;
+    }
+  }
+
+  .cb-frames__empty {
+    margin: 0;
+    padding: 32px 16px;
+    border: 1px dashed var(--cbp-border);
+    border-radius: var(--cbp-radius);
+    font-family: var(--cbp-font-body);
+    font-size: 13px;
+    text-align: center;
+    color: var(--cbp-muted);
+  }
+
+  .cb-frames__empty[hidden] {
+    display: none;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Product grid",
+  "tag": null,
+  "blocks": [{ "type": "_cb-frames-card" }],
+  "settings": [
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Columns on desktop",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "select",
+      "id": "mobile_layout",
+      "label": "Mobile layout",
+      "options": [
+        { "value": "swipe", "label": "Swipe sideways" },
+        { "value": "stack", "label": "Stack" }
+      ],
+      "default": "swipe"
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Gap",
+      "min": 8,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "Image shape",
+      "options": [
+        { "value": "1 / 1", "label": "Square" },
+        { "value": "4 / 5", "label": "Portrait" },
+        { "value": "3 / 4", "label": "Tall" },
+        { "value": "4 / 3", "label": "Landscape" }
+      ],
+      "default": "1 / 1"
+    },
+    {
+      "type": "select",
+      "id": "image_fit",
+      "label": "Image fit",
+      "options": [
+        { "value": "contain", "label": "Fit whole image" },
+        { "value": "cover", "label": "Fill and crop" }
+      ],
+      "default": "contain"
+    },
+    {
+      "type": "text",
+      "id": "empty_text",
+      "label": "No matches message",
+      "default": "No frames match this filter."
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Product grid",
+      "blocks": {
+        "card_1": { "type": "_cb-frames-card" },
+        "card_2": { "type": "_cb-frames-card" },
+        "card_3": { "type": "_cb-frames-card" },
+        "card_4": { "type": "_cb-frames-card" }
+      },
+      "block_order": ["card_1", "card_2", "card_3", "card_4"]
+    }
+  ]
+}
+{% endschema %}

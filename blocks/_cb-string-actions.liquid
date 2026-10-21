@@ -1,0 +1,48 @@
+<div class="cb-string__actions" {{ block.shopify_attributes }}>
+  {% content_for 'blocks' %}
+</div>
+
+{% stylesheet %}
+  .cb-string__actions {
+    display: flex;
+    flex-direction: column;
+    align-self: stretch;
+    align-items: stretch;
+    gap: 12px;
+    margin-top: 4px;
+  }
+
+  /* Full-width button on mobile */
+  .cb-string__actions > .cb-string__button {
+    justify-content: center;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-string__actions {
+      flex-flow: row wrap;
+      align-items: center;
+      gap: 14px 20px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Actions",
+  "tag": null,
+  "blocks": [
+    { "type": "_cb-string-button" },
+    { "type": "_cb-string-note" }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Actions",
+      "blocks": {
+        "button": { "type": "_cb-string-button" },
+        "note": { "type": "_cb-string-note" }
+      },
+      "block_order": ["button", "note"]
+    }
+  ]
+}
+{% endschema %}

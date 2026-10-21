@@ -1,0 +1,87 @@
+<div
+  class="cb-category__grid"
+  style="
+    --cbc-grid-gap: {{ block.settings.gap }}px;
+    --cbc-featured-grow: {{ block.settings.featured_width }};
+    --cbc-list-grow: {{ 100 | minus: block.settings.featured_width }};
+  "
+  {{ block.shopify_attributes }}
+>
+  {% content_for 'blocks' %}
+</div>
+
+{% stylesheet %}
+  .cb-category__grid {
+    display: flex;
+    flex-direction: column;
+    gap: var(--cbc-grid-gap, 16px);
+  }
+
+  @media screen and (min-width: 990px) {
+    .cb-category__grid {
+      flex-direction: row;
+      align-items: stretch;
+    }
+
+    .cb-category__grid > .cb-category-featured {
+      flex: var(--cbc-featured-grow) 1 0%;
+    }
+
+    .cb-category__grid > .cb-category__list {
+      flex: var(--cbc-list-grow) 1 0%;
+      min-width: 0;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Category grid",
+  "tag": null,
+  "blocks": [
+    { "type": "_cb-category-featured" },
+    { "type": "_cb-category-list" }
+  ],
+  "settings": [
+    {
+      "type": "range",
+      "id": "featured_width",
+      "label": "Featured card width",
+      "info": "Desktop only. On smaller screens the cards stack.",
+      "min": 40,
+      "max": 70,
+      "step": 1,
+      "unit": "%",
+      "default": 58
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Gap",
+      "min": 8,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Category grid",
+      "blocks": {
+        "featured": { "type": "_cb-category-featured" },
+        "list": {
+          "type": "_cb-category-list",
+          "blocks": {
+            "card_1": { "type": "_cb-category-card" },
+            "card_2": { "type": "_cb-category-card" },
+            "card_3": { "type": "_cb-category-card" }
+          },
+          "block_order": ["card_1", "card_2", "card_3"]
+        }
+      },
+      "block_order": ["featured", "list"]
+    }
+  ]
+}
+{% endschema %}

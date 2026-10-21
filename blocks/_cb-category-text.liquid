@@ -1,0 +1,59 @@
+{%- if block.settings.body_text != blank -%}
+  <div
+    class="cb-category__text"
+    style="--cbc-text-size: {{ block.settings.size }}px;"
+    {{ block.shopify_attributes }}
+  >
+    {{ block.settings.body_text }}
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  .cb-category__text {
+    margin-top: 12px;
+    max-width: 60ch;
+    font-family: var(--cbc-font-body);
+    font-weight: var(--cbc-font-body-weight);
+    font-size: var(--cbc-text-size, 13px);
+    line-height: 1.55;
+    color: var(--cbc-muted);
+  }
+
+  .cb-category__text > * {
+    margin: 0;
+  }
+
+  .cb-category__text > * + * {
+    margin-top: 0.75em;
+  }
+
+  .cb-category__text a {
+    color: var(--cbc-text);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Text",
+  "tag": null,
+  "settings": [
+    {
+      "type": "richtext",
+      "id": "body_text",
+      "label": "Text",
+      "default": "<p>Tell customers what makes these categories special.</p>"
+    },
+    {
+      "type": "range",
+      "id": "size",
+      "label": "Size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 13
+    }
+  ],
+  "presets": [{ "name": "[CB] Text" }]
+}
+{% endschema %}

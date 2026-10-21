@@ -1,0 +1,40 @@
+{%- if block.settings.message != blank -%}
+  <li
+    class="cb-announce__item{% unless block.settings.show_on_mobile %} cb-announce__item--desktop{% endunless %}"
+    {{ block.shopify_attributes }}
+  >
+    {%- if block.settings.link != blank -%}
+      <a href="{{ block.settings.link }}" class="cb-announce__link">{{ block.settings.message | escape }}</a>
+    {%- else -%}
+      {{- block.settings.message | escape -}}
+    {%- endif -%}
+  </li>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "[CB] Message",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "message",
+      "label": "Message",
+      "default": "Free click & collect"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_on_mobile",
+      "label": "Show on mobile",
+      "info": "Turn off longer messages so the bar stays on one line on phones.",
+      "default": true
+    }
+  ],
+  "presets": [{ "name": "[CB] Message" }]
+}
+{% endschema %}

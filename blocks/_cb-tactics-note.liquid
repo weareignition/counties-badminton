@@ -1,0 +1,30 @@
+{%- if block.settings.note_text != blank -%}
+  <p class="cb-tactics__note" {{ block.shopify_attributes }}>{{ block.settings.note_text | escape }}</p>
+{%- endif -%}
+
+{% stylesheet %}
+  .cb-tactics__note {
+    margin: 0;
+    font-family: var(--cbt-font-body);
+    font-weight: var(--cbt-font-body-weight);
+    font-size: 12px;
+    line-height: 1.4;
+    color: var(--cbt-muted);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Note",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "note_text",
+      "label": "Text",
+      "default": "Click a style card to filter collection below"
+    }
+  ],
+  "presets": [{ "name": "[CB] Note" }]
+}
+{% endschema %}

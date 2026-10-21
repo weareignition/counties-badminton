@@ -1,0 +1,38 @@
+<div class="cb-string__content" {{ block.shopify_attributes }}>
+  {% content_for 'blocks' %}
+</div>
+
+{% stylesheet %}
+  .cb-string__content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    min-width: 0;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Content",
+  "tag": null,
+  "blocks": [
+    { "type": "_cb-string-badge" },
+    { "type": "_cb-string-heading" },
+    { "type": "_cb-string-text" },
+    { "type": "_cb-string-features" },
+    { "type": "_cb-string-actions" }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Content",
+      "blocks": {
+        "badge": { "type": "_cb-string-badge" },
+        "heading": { "type": "_cb-string-heading" },
+        "text": { "type": "_cb-string-text" }
+      },
+      "block_order": ["badge", "heading", "text"]
+    }
+  ]
+}
+{% endschema %}

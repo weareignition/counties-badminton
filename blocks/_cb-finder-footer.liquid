@@ -1,0 +1,63 @@
+<div
+  class="cb-finder__footer{% if block.settings.show_divider %} cb-finder__footer--divider{% endif %}"
+  {{ block.shopify_attributes }}
+>
+  {% content_for 'blocks' %}
+</div>
+
+{% stylesheet %}
+  .cb-finder__footer {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+
+  .cb-finder__footer--divider {
+    padding-top: 28px;
+    border-top: 1px solid var(--cbf-border);
+  }
+
+  /* Full-width button on mobile */
+  .cb-finder__footer > .cb-finder__button {
+    justify-content: center;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-finder__footer {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Footer",
+  "tag": null,
+  "blocks": [
+    { "type": "_cb-finder-note" },
+    { "type": "_cb-finder-button" }
+  ],
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_divider",
+      "label": "Show divider above",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Footer",
+      "blocks": {
+        "note": { "type": "_cb-finder-note" },
+        "button": { "type": "_cb-finder-button" }
+      },
+      "block_order": ["note", "button"]
+    }
+  ]
+}
+{% endschema %}

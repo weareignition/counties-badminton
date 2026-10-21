@@ -1,0 +1,68 @@
+<div
+  class="cb-guides__header cb-guides__header--{{ block.settings.alignment }}"
+  style="--cbg-header-width: {{ block.settings.max_width }}px;"
+  {{ block.shopify_attributes }}
+>
+  {% content_for 'blocks' %}
+</div>
+
+{% stylesheet %}
+  .cb-guides__header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    max-width: var(--cbg-header-width, 720px);
+  }
+
+  .cb-guides__header--center {
+    align-items: center;
+    align-self: center;
+    text-align: center;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Header",
+  "tag": null,
+  "blocks": [
+    { "type": "_cb-guides-eyebrow" },
+    { "type": "_cb-guides-heading" },
+    { "type": "_cb-guides-text" }
+  ],
+  "settings": [
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width",
+      "min": 400,
+      "max": 1000,
+      "step": 20,
+      "unit": "px",
+      "default": 720
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Header",
+      "blocks": {
+        "eyebrow": { "type": "_cb-guides-eyebrow" },
+        "heading": { "type": "_cb-guides-heading" },
+        "text": { "type": "_cb-guides-text" }
+      },
+      "block_order": ["eyebrow", "heading", "text"]
+    }
+  ]
+}
+{% endschema %}

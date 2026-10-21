@@ -1,0 +1,76 @@
+{%- if block.settings.badge_text != blank -%}
+  <p class="cb-info__badge cb-info__badge--{{ block.settings.style }}" {{ block.shopify_attributes }}>
+    {%- if block.settings.show_dot -%}
+      <span class="cb-info__badge-dot" aria-hidden="true"></span>
+    {%- endif -%}
+    {{- block.settings.badge_text | escape -}}
+  </p>
+{%- endif -%}
+
+{% stylesheet %}
+  .cb-info__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    max-width: 100%;
+    margin: 0;
+    padding: 6px 12px;
+    border: 1px solid var(--cbi-border);
+    border-radius: 999px;
+    font-family: var(--cbi-font-body);
+    font-weight: var(--cbi-font-body-strong);
+    font-size: 11px;
+    line-height: 1.3;
+  }
+
+  .cb-info__badge--dark {
+    background: var(--cbi-card);
+    color: var(--cbi-text);
+  }
+
+  .cb-info__badge--accent {
+    border-color: color-mix(in srgb, var(--cbi-accent) 45%, transparent);
+    background: color-mix(in srgb, var(--cbi-accent) 14%, transparent);
+    color: color-mix(in srgb, var(--cbi-accent) 55%, #fff);
+  }
+
+  .cb-info__badge-dot {
+    flex: none;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--cbi-accent);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Badge",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Text",
+      "default": "Badge"
+    },
+    {
+      "type": "select",
+      "id": "style",
+      "label": "Style",
+      "options": [
+        { "value": "dark", "label": "Dark" },
+        { "value": "accent", "label": "Accent tint" }
+      ],
+      "default": "dark"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dot",
+      "label": "Show accent dot",
+      "default": false
+    }
+  ],
+  "presets": [{ "name": "[CB] Badge" }]
+}
+{% endschema %}

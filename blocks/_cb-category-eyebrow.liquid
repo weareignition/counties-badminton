@@ -1,0 +1,35 @@
+{%- if block.settings.eyebrow_text != blank -%}
+  <p class="cb-category__eyebrow" {{ block.shopify_attributes }}>
+    {{- block.settings.eyebrow_text | escape -}}
+  </p>
+{%- endif -%}
+
+{% stylesheet %}
+  .cb-category__eyebrow {
+    margin: 0 0 10px;
+    font-family: var(--cbc-font-body);
+    font-weight: var(--cbc-font-body-strong);
+    font-size: 11px;
+    line-height: 1.3;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--cbc-accent);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Eyebrow",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow_text",
+      "label": "Text",
+      "info": "Shown in capitals.",
+      "default": "Shop by category"
+    }
+  ],
+  "presets": [{ "name": "[CB] Eyebrow" }]
+}
+{% endschema %}

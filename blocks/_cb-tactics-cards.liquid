@@ -1,0 +1,91 @@
+<div
+  class="cb-tactics__cards{% if block.settings.show_numbers %} cb-tactics__cards--numbered{% endif %}"
+  style="
+    --cbt-columns: {{ block.settings.columns }};
+    --cbt-grid-gap: {{ block.settings.gap }}px;
+    --cbt-prefix: '{{ block.settings.number_prefix | remove: "'" | escape }}';
+  "
+  {{ block.shopify_attributes }}
+>
+  {% content_for 'blocks' %}
+</div>
+
+{% stylesheet %}
+  .cb-tactics__cards {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--cbt-grid-gap, 16px);
+    counter-reset: cb-tactic;
+  }
+
+  @media screen and (min-width: 600px) {
+    .cb-tactics__cards {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media screen and (min-width: 1100px) {
+    .cb-tactics__cards {
+      grid-template-columns: repeat(var(--cbt-columns, 4), minmax(0, 1fr));
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Style cards",
+  "tag": null,
+  "blocks": [{ "type": "_cb-tactics-card" }],
+  "settings": [
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Columns on desktop",
+      "info": "Tablets show 2 per row, phones 1.",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Gap",
+      "min": 8,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Numbering"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_numbers",
+      "label": "Number the cards",
+      "info": "Adds e.g. STYLE 01 / before each label, in card order.",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "number_prefix",
+      "label": "Number prefix",
+      "default": "Style"
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Style cards",
+      "blocks": {
+        "card_1": { "type": "_cb-tactics-card" },
+        "card_2": { "type": "_cb-tactics-card" },
+        "card_3": { "type": "_cb-tactics-card" },
+        "card_4": { "type": "_cb-tactics-card" }
+      },
+      "block_order": ["card_1", "card_2", "card_3", "card_4"]
+    }
+  ]
+}
+{% endschema %}

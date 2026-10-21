@@ -1,0 +1,290 @@
+{%- liquid
+  assign s = section.settings
+  assign font_scope = '#cb-tactics-' | append: section.id
+-%}
+
+{% render 'cb-font-styles',
+  selector: font_scope,
+  prefix: 'cbt',
+  heading_font: s.heading_font,
+  body_font: s.body_font
+%}
+
+<section
+  id="cb-tactics-{{ section.id }}"
+  class="cb-tactics"
+  data-cb-tactics
+  style="
+    --cbt-bg: {{ s.background_color }};
+    --cbt-card: {{ s.card_background_color }};
+    --cbt-border: {{ s.border_color }};
+    --cbt-text: {{ s.text_color }};
+    --cbt-soft: {{ s.text_color | color_modify: 'alpha', 0.85 }};
+    --cbt-muted: {{ s.text_color | color_modify: 'alpha', 0.55 }};
+    --cbt-glow: {{ s.text_color | color_modify: 'alpha', 0.05 }};
+    --cbt-accent: {{ s.accent_color }};
+    --cbt-radius: {{ s.card_radius }}px;
+    --cbt-max-width: {{ s.max_width }}px;
+    --cbt-stack-gap: {{ s.stack_gap }}px;
+    --cbt-pt: {{ s.padding_top }}px;
+    --cbt-pb: {{ s.padding_bottom }}px;
+  "
+>
+  <div class="cb-tactics__inner">
+    {% content_for 'blocks' %}
+  </div>
+</section>
+
+{% stylesheet %}
+  .cb-tactics {
+    color: var(--cbt-text);
+    background: var(--cbt-bg);
+    padding: calc(var(--cbt-pt) * 0.75) 16px calc(var(--cbt-pb) * 0.75);
+  }
+
+  .cb-tactics__inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--cbt-stack-gap);
+    max-width: var(--cbt-max-width);
+    margin-inline: auto;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-tactics {
+      padding: var(--cbt-pt) 32px var(--cbt-pb);
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .cb-tactics {
+      padding-inline: 48px;
+    }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  (() => {
+    // A style card with a filter value filters the next [CB] Featured frames section further down the
+    // page and scrolls to it. Without such a section (or a filter value) the card simply opens its link.
+    document.addEventListener('click', (event) => {
+      const card = event.target.closest?.('[data-cb-tactic]');
+      const root = card?.closest('[data-cb-tactics]');
+      if (!root || event.metaKey || event.ctrlKey || event.shiftKey) return;
+
+      const target = [...document.querySelectorAll('[data-cb-frames]')].find(
+        (frames) => root.compareDocumentPosition(frames) & Node.DOCUMENT_POSITION_FOLLOWING
+      );
+      if (!target) return;
+
+      event.preventDefault();
+      for (const other of root.querySelectorAll('.cb-tactic')) {
+        const active = other === card;
+        other.classList.toggle('is-active', active);
+        if (active) other.setAttribute('aria-current', 'true');
+        else other.removeAttribute('aria-current');
+      }
+      target.dispatchEvent(new CustomEvent('cb:frames-filter', { bubbles: true, detail: { value: card.dataset.cbTactic } }));
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  })();
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "[CB] Playing tactics",
+  "tag": "div",
+  "class": "section-wrapper",
+  "blocks": [
+    { "type": "_cb-tactics-header" },
+    { "type": "_cb-tactics-cards" }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width",
+      "min": 960,
+      "max": 1800,
+      "step": 20,
+      "unit": "px",
+      "default": 1400
+    },
+    {
+      "type": "range",
+      "id": "stack_gap",
+      "label": "Space between header and cards",
+      "min": 8,
+      "max": 64,
+      "step": 2,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Card corner radius",
+      "min": 0,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 6
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "info": "Used for the card titles.",
+      "default": "space_grotesk_n7"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "info": "Used for the eyebrow, labels, descriptions and links.",
+      "default": "inter_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "id": "card_background_color",
+      "label": "Card background",
+      "default": "#181818"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Borders and dividers",
+      "default": "#ffffff14"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "default": "#d71f27"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Playing tactics",
+      "category": "t:categories.collections",
+      "blocks": {
+        "header": {
+          "type": "_cb-tactics-header",
+          "blocks": {
+            "eyebrow": { "type": "_cb-tactics-eyebrow", "settings": { "eyebrow_text": "Choose by playing tactics" } },
+            "note": { "type": "_cb-tactics-note", "settings": { "note_text": "Click a style card to filter collection below" } }
+          },
+          "block_order": ["eyebrow", "note"]
+        },
+        "cards": {
+          "type": "_cb-tactics-cards",
+          "blocks": {
+            "card_1": {
+              "type": "_cb-tactics-card",
+              "settings": {
+                "icon": "zap",
+                "tactic_label": "Rapid drive",
+                "tactic_title": "Speed & Drive",
+                "tactic_text": "Fast exchanges, rapid doubles defense, light swing inertia & aerodynamic head-light frames.",
+                "custom_count": "16 Frames",
+                "cta_label": "Browse Speed",
+                "filter_value": "Speed"
+              }
+            },
+            "card_2": {
+              "type": "_cb-tactics-card",
+              "settings": {
+                "icon": "arrows",
+                "tactic_label": "Rear-court power",
+                "tactic_title": "Attack & Smash",
+                "tactic_text": "Steep offensive smashes, explosive baseline clears, heavy momentum & stiff power shafts.",
+                "custom_count": "18 Frames",
+                "cta_label": "Browse Attack",
+                "filter_value": "Attack",
+                "highlight": true
+              }
+            },
+            "card_3": {
+              "type": "_cb-tactics-card",
+              "settings": {
+                "icon": "crosshair",
+                "tactic_label": "Tactical touch",
+                "tactic_title": "Control & Balanced",
+                "tactic_text": "Tactical placement, net touch, sharp spinning slices, even balance & predictable stringbed hold.",
+                "custom_count": "10 Frames",
+                "cta_label": "Browse Control",
+                "filter_value": "Control"
+              }
+            },
+            "card_4": {
+              "type": "_cb-tactics-card",
+              "settings": {
+                "icon": "shield",
+                "tactic_label": "Foundation",
+                "tactic_title": "Beginner & Club",
+                "tactic_text": "Forgiving oversized sweet spots, flexible shafts for easy depth, lightweight and arm protection.",
+                "custom_count": "8 Frames",
+                "cta_label": "Browse Beginner",
+                "filter_value": "Beginner"
+              }
+            }
+          },
+          "block_order": ["card_1", "card_2", "card_3", "card_4"]
+        }
+      },
+      "block_order": ["header", "cards"]
+    }
+  ]
+}
+{% endschema %}

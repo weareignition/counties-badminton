@@ -1,0 +1,53 @@
+<div
+  class="cb-hero__buttons{% if block.settings.stack_mobile %} cb-hero__buttons--stack{% endif %}"
+  {{ block.shopify_attributes }}
+>
+  {% content_for 'blocks' %}
+</div>
+
+{% stylesheet %}
+  .cb-hero__buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  @media screen and (max-width: 559px) {
+    .cb-hero__buttons--stack {
+      flex-direction: column;
+      align-self: stretch;
+    }
+
+    .cb-hero__buttons--stack > .cb-hero__button {
+      justify-content: center;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Button group",
+  "tag": null,
+  "blocks": [{ "type": "_cb-hero-button" }],
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "stack_mobile",
+      "label": "Full-width buttons on mobile",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Button group",
+      "blocks": {
+        "button_1": {
+          "type": "_cb-hero-button",
+          "settings": { "label": "Shop now", "style": "primary" }
+        }
+      },
+      "block_order": ["button_1"]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,460 @@
+{%- liquid
+  assign s = section.settings
+  assign font_scope = '#cb-header-' | append: section.id
+-%}
+
+{% render 'cb-font-styles',
+  selector: font_scope,
+  prefix: 'cbhd',
+  heading_font: s.heading_font,
+  body_font: s.body_font
+%}
+
+<div
+  id="cb-header-{{ section.id }}"
+  class="cb-header{% if s.show_border %} cb-header--border{% endif %}"
+  {% if s.sticky %}
+    data-sticky
+  {% endif %}
+  style="
+    --cbhd-bg: {{ s.background_color }};
+    --cbhd-text: {{ s.text_color }};
+    --cbhd-soft: {{ s.text_color | color_modify: 'alpha', 0.82 }};
+    --cbhd-muted: {{ s.text_color | color_modify: 'alpha', 0.55 }};
+    --cbhd-border: {{ s.border_color }};
+    --cbhd-border-hover: {{ s.text_color | color_modify: 'alpha', 0.25 }};
+    --cbhd-surface: {{ s.text_color | color_modify: 'alpha', 0.06 }};
+    --cbhd-field-bg: {{ s.field_background_color }};
+    --cbhd-accent: {{ s.accent_color }};
+    --cbhd-accent-text: {{ s.accent_text_color }};
+    --cbhd-max-width: {{ s.max_width }}px;
+    --cbhd-py: {{ s.padding_block }}px;
+  "
+>
+  <div class="cb-header__bar">
+    {% content_for 'blocks' %}
+  </div>
+</div>
+
+<script>
+  /*
+   * Runs as soon as the header is parsed, before first paint:
+   * - Tries layouts from roomiest to most compact and keeps the first one that fits: shrink search to an icon,
+   *   tighten the menu spacing, switch to the menu button, and only then hide the logo text.
+   *   (With "Keep the title beside the logo" off, the logo text is hidden first to keep the menu inline.)
+   * - Keeps the theme's --header-height / --header-group-height up to date (the theme only measures its own header).
+   */
+  (function () {
+    window.cbHeaderInit =
+      window.cbHeaderInit ||
+      function (header) {
+        var bar = header.querySelector('.cb-header__bar');
+        if (!bar) return;
+        var SEARCH = 'cb-header--search-icon';
+        var TIGHT = 'cb-header--tight-menu';
+        var COMPACT = 'cb-header--compact';
+        var NO_TEXT = 'cb-header--no-brand-text';
+        var all = [SEARCH, TIGHT, COMPACT, NO_TEXT];
+        var keepText = !!header.querySelector('.cb-header__brand[data-keep-text]');
+        var inline = keepText
+          ? [[], [SEARCH], [SEARCH, TIGHT]]
+          : [[], [NO_TEXT], [NO_TEXT, SEARCH], [NO_TEXT, SEARCH, TIGHT]];
+        var layouts = inline.concat([[COMPACT], [COMPACT, SEARCH], [COMPACT, SEARCH, NO_TEXT]]);
+
+        function apply(layout) {
+          for (var i = 0; i < all.length; i++) header.classList.toggle(all[i], layout.indexOf(all[i]) !== -1);
+        }
+
+        function fits() {
+          var nav = header.querySelector('.cb-header__nav');
+          var menu = nav && nav.querySelector('.cb-header__menu');
+          var menuShown = nav && menu && menu.children.length && nav.offsetParent !== null;
+          if (menuShown && menu.scrollWidth > nav.clientWidth + 1) return false;
+          return bar.scrollWidth <= bar.clientWidth + 1;
+        }
+
+        function fit() {
+          for (var i = 0; i < layouts.length; i++) {
+            apply(layouts[i]);
+            if (fits()) break;
+          }
+
+          // Close the mobile menu if the inline menu came back (e.g. the window got wider).
+          var burger = header.querySelector('.cb-header__burger');
+          var drawer = header.querySelector('.cb-header__drawer[open]');
+          if (drawer && burger && burger.offsetParent === null) drawer.open = false;
+        }
+
+        function setHeights() {
+          var group = document.getElementById('header-group');
+          var total = 0;
+          if (group) {
+            for (var i = 0; i < group.children.length; i++) total += group.children[i].offsetHeight;
+          }
+          document.body.style.setProperty('--header-height', header.offsetHeight + 'px');
+          document.body.style.setProperty('--header-group-height', (total || header.offsetHeight) + 'px');
+        }
+
+        function update() {
+          fit();
+          setHeights();
+        }
+
+        update();
+        if ('ResizeObserver' in window) new ResizeObserver(update).observe(bar);
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(update);
+      };
+
+    var header = document.getElementById('cb-header-{{ section.id }}');
+    if (header) window.cbHeaderInit(header);
+  })();
+</script>
+
+{% stylesheet %}
+  .cb-header {
+    position: relative;
+    z-index: 20;
+    background: var(--cbhd-bg);
+    color: var(--cbhd-text);
+  }
+
+  .cb-header--border {
+    border-bottom: 1px solid var(--cbhd-border);
+  }
+
+  .cb-header__bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 60px;
+    max-width: var(--cbhd-max-width);
+    margin-inline: auto;
+    padding: var(--cbhd-py) 16px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-header__bar {
+      gap: 16px;
+      padding-inline: 32px;
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .cb-header__bar {
+      padding-inline: 48px;
+    }
+  }
+
+  /* Sticky: the same approach as the theme's own header, so only this bar sticks (the announcement scrolls away). */
+  #header-group:has(.cb-header[data-sticky]) {
+    display: contents;
+  }
+
+  .cb-header-section:has(> .cb-header[data-sticky]) {
+    position: sticky;
+    top: 0;
+    z-index: var(--layer-menu-drawer, 40);
+  }
+
+  /* Fitting steps, added by the script above when the menu doesn't fit. */
+  .cb-header--no-brand-text .cb-header__brand-text {
+    display: none;
+  }
+
+  .cb-header--search-icon .cb-header__search-field {
+    justify-content: center;
+    width: 40px;
+    padding: 0;
+    border-color: transparent;
+    background: transparent;
+    color: var(--cbhd-text);
+  }
+
+  .cb-header--search-icon .cb-header__search-placeholder {
+    display: none;
+  }
+
+  .cb-header--tight-menu .cb-header__menu {
+    gap: 16px;
+  }
+
+  .cb-header--compact .cb-header__nav {
+    display: none;
+  }
+
+  .cb-header--compact .cb-header__drawer {
+    display: block;
+  }
+
+  .cb-header--compact .cb-header__nav-block {
+    order: -1;
+    flex: 0 0 auto;
+  }
+
+  .cb-header--compact .cb-header__brand {
+    margin-right: auto;
+  }
+
+  /*
+   * Tablets and phones always use the menu button (also covers first paint and no JavaScript).
+   * Prefixed with .cb-header so these beat the blocks' own defaults whatever order the stylesheets load in.
+   */
+  @media screen and (max-width: 989px) {
+    .cb-header .cb-header__nav {
+      display: none;
+    }
+
+    .cb-header .cb-header__drawer {
+      display: block;
+    }
+
+    .cb-header .cb-header__nav-block {
+      order: -1;
+      flex: 0 0 auto;
+    }
+
+    .cb-header .cb-header__brand {
+      margin-right: auto;
+    }
+  }
+
+  /* Phones: no room for the logo text or the full search field. */
+  @media screen and (max-width: 749px) {
+    .cb-header .cb-header__brand-text,
+    .cb-header .cb-header__search-placeholder {
+      display: none;
+    }
+
+    .cb-header .cb-header__search-field {
+      justify-content: center;
+      width: 40px;
+      padding: 0;
+      border-color: transparent;
+      background: transparent;
+      color: var(--cbhd-text);
+    }
+  }
+
+  /* The theme scrolls the page inside .page-wrapper, so lock that while the mobile menu is open. */
+  html.cb-header-drawer-open,
+  html.cb-header-drawer-open .page-wrapper {
+    overflow: hidden;
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  (() => {
+    const DROPDOWN = '.cb-header__dropdown';
+    const DRAWER = '.cb-header__drawer';
+    const canHover = () => window.matchMedia('(hover: hover)').matches;
+    let closeTimer;
+
+    const closeDropdowns = (except) => {
+      for (const dropdown of document.querySelectorAll(`${DROPDOWN}[open]`)) {
+        if (dropdown !== except) dropdown.open = false;
+      }
+    };
+
+    // Dropdowns open on hover (as well as click) on devices with a mouse.
+    document.addEventListener('mouseover', (event) => {
+      const dropdown = event.target.closest?.(DROPDOWN);
+      if (!dropdown || !canHover()) return;
+      clearTimeout(closeTimer);
+      closeDropdowns(dropdown);
+      dropdown.open = true;
+    });
+
+    document.addEventListener('mouseout', (event) => {
+      const dropdown = event.target.closest?.(DROPDOWN);
+      if (!dropdown || !canHover() || dropdown.contains(event.relatedTarget)) return;
+      closeTimer = setTimeout(() => {
+        dropdown.open = false;
+      }, 200);
+    });
+
+    // One dropdown at a time; lock page scrolling while the mobile menu is open.
+    document.addEventListener(
+      'toggle',
+      (event) => {
+        const element = event.target;
+        if (!(element instanceof HTMLDetailsElement)) return;
+        if (element.matches(DROPDOWN) && element.open) closeDropdowns(element);
+        if (element.matches(DRAWER)) document.documentElement.classList.toggle('cb-header-drawer-open', element.open);
+      },
+      true
+    );
+
+    document.addEventListener('click', (event) => {
+      for (const dropdown of document.querySelectorAll(`${DROPDOWN}[open]`)) {
+        if (!dropdown.contains(event.target)) dropdown.open = false;
+      }
+
+      // The search field opens the theme's predictive search window.
+      const trigger = event.target.closest?.('[data-cb-search-trigger]');
+      const modal = document.getElementById('search-modal');
+      if (trigger && modal && typeof modal.showDialog === 'function') {
+        event.preventDefault();
+        modal.showDialog();
+      }
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key !== 'Escape') return;
+      const open = document.querySelector(`${DROPDOWN}[open], ${DRAWER}[open]`);
+      if (!open) return;
+      open.open = false;
+      open.querySelector('summary')?.focus();
+    });
+
+    // Theme editor: set the header up again after its section re-renders.
+    document.addEventListener('shopify:section:load', (event) => {
+      for (const header of event.target.querySelectorAll('.cb-header')) window.cbHeaderInit?.(header);
+    });
+  })();
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "[CB] Header",
+  "tag": "div",
+  "class": "cb-header-section",
+  "enabled_on": {
+    "groups": ["header"]
+  },
+  "blocks": [
+    { "type": "_cb-header-logo" },
+    { "type": "_cb-header-nav" },
+    { "type": "_cb-header-search" },
+    { "type": "_cb-header-button" },
+    { "type": "_cb-header-actions" }
+  ],
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "sticky",
+      "label": "Sticky header",
+      "info": "The header stays at the top while scrolling; the announcement bar scrolls away.",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_border",
+      "label": "Show bottom border",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "padding_block",
+      "label": "Top and bottom padding",
+      "min": 4,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width",
+      "min": 960,
+      "max": 1920,
+      "step": 20,
+      "unit": "px",
+      "default": 1920
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "info": "Used for the logo title.",
+      "default": "space_grotesk_n7"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "info": "Used for the menu, search and buttons.",
+      "default": "inter_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text and icons",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Borders",
+      "default": "#ffffff1f"
+    },
+    {
+      "type": "color",
+      "id": "field_background_color",
+      "label": "Search field background",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "default": "#d71f27"
+    },
+    {
+      "type": "color",
+      "id": "accent_text_color",
+      "label": "Text on accent",
+      "default": "#ffffff"
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Header",
+      "blocks": {
+        "logo": {
+          "type": "_cb-header-logo",
+          "settings": {
+            "title_text": "Pro shop",
+            "badge_text": "Papakura",
+            "subtitle": "Specialist Workshop & Rigging Lab"
+          }
+        },
+        "nav": {
+          "type": "_cb-header-nav",
+          "settings": { "menu": "main-menu", "drawer_button_label": "Find My Racket" }
+        },
+        "search": {
+          "type": "_cb-header-search",
+          "settings": { "placeholder": "Search frame, tension..." }
+        },
+        "button": {
+          "type": "_cb-header-button",
+          "settings": { "label": "Find My Racket", "style": "primary" }
+        },
+        "actions": {
+          "type": "_cb-header-actions"
+        }
+      },
+      "block_order": ["logo", "nav", "search", "button", "actions"]
+    }
+  ]
+}
+{% endschema %}

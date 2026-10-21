@@ -1,0 +1,66 @@
+{%- if block.settings.heading_text != blank -%}
+  <{{ block.settings.tag }}
+    class="cb-guides__heading"
+    style="--cbg-heading-size: {{ block.settings.size }}px;"
+    {{ block.shopify_attributes }}
+  >
+    {{- block.settings.heading_text -}}
+  </{{ block.settings.tag }}>
+{%- endif -%}
+
+{% stylesheet %}
+  .cb-guides__heading {
+    margin: 0;
+    font-family: var(--cbg-font-heading);
+    font-weight: var(--cbg-font-heading-weight);
+    font-size: clamp(30px, 6.5vw, var(--cbg-heading-size, 48px));
+    line-height: 1.06;
+    letter-spacing: -0.02em;
+    color: var(--cbg-text);
+    text-wrap: balance;
+  }
+
+  .cb-guides__heading em {
+    font-style: normal;
+    color: var(--cbg-accent);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Heading",
+  "tag": null,
+  "settings": [
+    {
+      "type": "inline_richtext",
+      "id": "heading_text",
+      "label": "Heading",
+      "info": "Italic text is shown in the accent color.",
+      "default": "We don’t expect you to know what 4U, head-heavy or 26 lbs means. That’s our job."
+    },
+    {
+      "type": "range",
+      "id": "size",
+      "label": "Desktop size",
+      "min": 28,
+      "max": 72,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "select",
+      "id": "tag",
+      "label": "HTML tag",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" },
+        { "value": "p", "label": "Paragraph" }
+      ],
+      "default": "h2"
+    }
+  ],
+  "presets": [{ "name": "[CB] Heading" }]
+}
+{% endschema %}

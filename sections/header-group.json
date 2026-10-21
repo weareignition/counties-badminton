@@ -11,6 +11,144 @@
   "type": "header",
   "name": "t:names.header",
   "sections": {
+    "cb_announcement": {
+      "type": "cb-announcement",
+      "blocks": {
+        "message_1": {
+          "type": "_cb-announce-message",
+          "settings": {
+            "message": "Badminton specialists",
+            "link": "",
+            "show_on_mobile": true
+          },
+          "blocks": {}
+        },
+        "message_2": {
+          "type": "_cb-announce-message",
+          "settings": {
+            "message": "Professional stringing",
+            "link": "",
+            "show_on_mobile": true
+          },
+          "blocks": {}
+        },
+        "message_3": {
+          "type": "_cb-announce-message",
+          "settings": {
+            "message": "Click & collect Papakura",
+            "link": "",
+            "show_on_mobile": false
+          },
+          "blocks": {}
+        },
+        "message_4": {
+          "type": "_cb-announce-message",
+          "settings": {
+            "message": "41R Elliot Street",
+            "link": "",
+            "show_on_mobile": false
+          },
+          "blocks": {}
+        },
+        "message_5": {
+          "type": "_cb-announce-message",
+          "settings": {
+            "message": "Workshop open Mon–Sun 9am - 8pm",
+            "link": "",
+            "show_on_mobile": false
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "message_1",
+        "message_2",
+        "message_3",
+        "message_4",
+        "message_5"
+      ],
+      "settings": {
+        "separator": "•",
+        "body_font": "inter_n4",
+        "font_size": 12,
+        "padding": 7,
+        "max_width": 1600,
+        "background_color": "#d71f27",
+        "text_color": "#ffffff"
+      }
+    },
+    "cb_header": {
+      "type": "cb-header",
+      "blocks": {
+        "logo": {
+          "type": "_cb-header-logo",
+          "settings": {
+            "logo": "shopify://shop_images/Counties_Manukau_Badminton_Association.png",
+            "logo_background": "#ffffff",
+            "logo_height": 28,
+            "title_text": "Pro shop",
+            "badge_text": "Papakura",
+            "subtitle": "Specialist Workshop & Rigging Lab"
+          },
+          "blocks": {}
+        },
+        "nav": {
+          "type": "_cb-header-nav",
+          "settings": {
+            "menu": "main-menu",
+            "drawer_button_label": "Find My Racket",
+            "drawer_button_link": ""
+          },
+          "blocks": {}
+        },
+        "search": {
+          "type": "_cb-header-search",
+          "settings": {
+            "placeholder": "Search frame, tension...",
+            "field_width": 180
+          },
+          "blocks": {}
+        },
+        "button": {
+          "type": "_cb-header-button",
+          "settings": {
+            "label": "Find My Racket",
+            "link": "",
+            "style": "primary",
+            "show_on_mobile": false
+          },
+          "blocks": {}
+        },
+        "actions": {
+          "type": "_cb-header-actions",
+          "settings": {
+            "customer_account_menu": "customer-account-main-menu"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "logo",
+        "nav",
+        "search",
+        "button",
+        "actions"
+      ],
+      "settings": {
+        "sticky": true,
+        "show_border": false,
+        "padding_block": 14,
+        "max_width": 1920,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "#121212",
+        "text_color": "#ffffff",
+        "border_color": "#ffffff1f",
+        "field_background_color": "#1a1a1a",
+        "accent_color": "#d71f27",
+        "accent_text_color": "#ffffff"
+      }
+    },
     "header_announcements_9jGBFp": {
       "type": "header-announcements",
       "blocks": {
@@ -23,7 +161,8 @@
             "font_size": "0.75rem",
             "weight": "",
             "letter_spacing": "normal",
-            "case": "none"
+            "case": "none",
+            "text_color": ""
           },
           "blocks": {}
         }
@@ -31,14 +170,16 @@
       "block_order": [
         "announcement_BxgCk9"
       ],
+      "disabled": true,
       "name": "t:names.announcement_bar",
       "settings": {
         "speed": 5,
         "section_width": "page-width",
+        "background_color": "",
         "divider_width": 1,
+        "divider_color": "{{ settings.color_palette.color3 }}",
         "padding-block-start": 15,
-        "padding-block-end": 15,
-        "divider_color": "{{ settings.color_palette.color3 }}"
+        "padding-block-end": 15
       }
     },
     "header_section": {
@@ -59,6 +200,8 @@
           "static": true,
           "settings": {
             "menu": "main-menu",
+            "background_color": "{{ settings.color_palette.background }}",
+            "text_color": "",
             "type_font_primary_size": "0.875rem",
             "menu_font_style": "inverse",
             "type_font_primary_link": "body",
@@ -68,6 +211,8 @@
             "featured_collections_aspect_ratio": "16 / 9",
             "image_border_radius": 0,
             "navigation_bar": false,
+            "background_color_navigation_bar": "{{ settings.color_palette.background }}",
+            "text_color_navigation_bar": "",
             "drawer_accordion": false,
             "drawer_accordion_expand_first": false,
             "drawer_dividers": false
@@ -75,10 +220,12 @@
           "blocks": {}
         }
       },
+      "disabled": true,
       "settings": {
         "logo_position": "left",
         "menu_position": "left",
         "menu_row": "top",
+        "customer_account_menu": "customer-account-main-menu",
         "show_search": true,
         "search_position": "right",
         "search_row": "top",
@@ -94,14 +241,35 @@
         "enable_sticky_header": "always",
         "divider_width": 0,
         "divider_size": "page-width",
+        "divider_color": "",
         "border_width": 0,
+        "bottom_border_color": "",
+        "actions_display_style": "icon",
+        "actions_font_size": "0.875rem",
+        "actions_font": "body",
+        "actions_text_case": "none",
+        "background_color_top": "",
+        "text_color_top": "",
+        "background_color_bottom": "",
+        "text_color_bottom": "",
+        "bubble_style": "default",
+        "bubble_background_color": "",
+        "bubble_text_color": "",
         "enable_transparent_header_home": false,
+        "home_inverse_logo": false,
+        "text_color_transparent_home": "",
         "enable_transparent_header_product": false,
-        "enable_transparent_header_collection": false
+        "product_inverse_logo": false,
+        "text_color_transparent_product": "",
+        "enable_transparent_header_collection": false,
+        "collection_inverse_logo": false,
+        "text_color_transparent_collection": ""
       }
     }
   },
   "order": [
+    "cb_announcement",
+    "cb_header",
     "header_announcements_9jGBFp",
     "header_section"
   ]

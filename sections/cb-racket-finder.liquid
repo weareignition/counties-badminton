@@ -1,0 +1,268 @@
+{%- liquid
+  assign s = section.settings
+  assign font_scope = '#cb-finder-' | append: section.id
+-%}
+
+{% render 'cb-font-styles',
+  selector: font_scope,
+  prefix: 'cbf',
+  heading_font: s.heading_font,
+  body_font: s.body_font
+%}
+
+<section
+  id="cb-finder-{{ section.id }}"
+  class="cb-finder"
+  style="
+    --cbf-bg: {{ s.background_color }};
+    --cbf-card: {{ s.card_background_color }};
+    --cbf-border: {{ s.border_color }};
+    --cbf-text: {{ s.text_color }};
+    --cbf-muted: {{ s.text_color | color_modify: 'alpha', 0.6 }};
+    --cbf-accent: {{ s.accent_color }};
+    --cbf-accent-text: {{ s.accent_text_color }};
+    --cbf-radius: {{ s.card_radius }}px;
+    --cbf-max-width: {{ s.max_width }}px;
+    --cbf-stack-gap: {{ s.stack_gap }}px;
+    --cbf-pt: {{ s.padding_top }}px;
+    --cbf-pb: {{ s.padding_bottom }}px;
+  "
+>
+  <div class="cb-finder__inner">
+    {% content_for 'blocks' %}
+  </div>
+</section>
+
+{% stylesheet %}
+  .cb-finder {
+    color: var(--cbf-text);
+    background: var(--cbf-bg);
+    padding: calc(var(--cbf-pt) * 0.6) 16px calc(var(--cbf-pb) * 0.6);
+  }
+
+  .cb-finder__inner {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--cbf-stack-gap) * 0.75);
+    max-width: var(--cbf-max-width);
+    margin-inline: auto;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-finder {
+      padding: calc(var(--cbf-pt) * 0.8) 32px calc(var(--cbf-pb) * 0.8);
+    }
+
+    .cb-finder__inner {
+      gap: var(--cbf-stack-gap);
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .cb-finder {
+      padding: var(--cbf-pt) 48px var(--cbf-pb);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Racket finder",
+  "tag": "div",
+  "class": "section-wrapper",
+  "blocks": [
+    { "type": "_cb-finder-header" },
+    { "type": "_cb-finder-steps" },
+    { "type": "_cb-finder-footer" }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width",
+      "min": 960,
+      "max": 1800,
+      "step": 20,
+      "unit": "px",
+      "default": 1400
+    },
+    {
+      "type": "range",
+      "id": "stack_gap",
+      "label": "Space between groups",
+      "min": 8,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Card corner radius",
+      "min": 0,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "info": "Used for the heading, step numbers and step names.",
+      "default": "space_grotesk_n7"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "info": "Used for the badge, text, step labels, note and button.",
+      "default": "inter_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#080808"
+    },
+    {
+      "type": "color",
+      "id": "card_background_color",
+      "label": "Card background",
+      "default": "#141414"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Borders and dividers",
+      "default": "#ffffff1a"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "default": "#d71f27"
+    },
+    {
+      "type": "color",
+      "id": "accent_text_color",
+      "label": "Text on accent",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Racket finder",
+      "category": "t:categories.banners",
+      "blocks": {
+        "header": {
+          "type": "_cb-finder-header",
+          "blocks": {
+            "badge": {
+              "type": "_cb-finder-badge",
+              "settings": { "badge_text": "Guided equipment fitting" }
+            },
+            "heading": {
+              "type": "_cb-finder-heading",
+              "settings": { "heading_text": "Not sure which racket suits you?" }
+            },
+            "text": {
+              "type": "_cb-finder-text",
+              "settings": {
+                "body_text": "<p>Tell us how you play and we'll recommend the frames we'd actually put in your hand on the shop floor at 41R Elliot Street.</p>"
+              }
+            }
+          },
+          "block_order": ["badge", "heading", "text"]
+        },
+        "steps": {
+          "type": "_cb-finder-steps",
+          "blocks": {
+            "step_1": {
+              "type": "_cb-finder-step",
+              "settings": { "step_label": "Step one", "step_name": "Your level", "highlight": true }
+            },
+            "step_2": {
+              "type": "_cb-finder-step",
+              "settings": { "step_label": "Step two", "step_name": "Play style" }
+            },
+            "step_3": {
+              "type": "_cb-finder-step",
+              "settings": { "step_label": "Step three", "step_name": "Swing & feel" }
+            },
+            "step_4": {
+              "type": "_cb-finder-step",
+              "settings": { "step_label": "Step four", "step_name": "Budget" }
+            }
+          },
+          "block_order": ["step_1", "step_2", "step_3", "step_4"]
+        },
+        "footer": {
+          "type": "_cb-finder-footer",
+          "blocks": {
+            "note": {
+              "type": "_cb-finder-note",
+              "settings": {
+                "icon": "check",
+                "note_text": "Takes less than 2 minutes. No generic algorithm, vetted by CMBA head stringer."
+              }
+            },
+            "button": {
+              "type": "_cb-finder-button",
+              "settings": { "label": "Launch Racket Finder", "style": "primary", "show_arrow": true }
+            }
+          },
+          "block_order": ["note", "button"]
+        }
+      },
+      "block_order": ["header", "steps", "footer"]
+    }
+  ]
+}
+{% endschema %}

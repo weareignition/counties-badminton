@@ -1,0 +1,93 @@
+<div
+  class="cb-category__header{% if block.settings.layout == 'split' %} cb-category__header--split{% endif %}{% if block.settings.show_divider %} cb-category__header--divider{% endif %}"
+  style="--cbc-header-aside: {{ block.settings.text_width }}px;"
+  {{ block.shopify_attributes }}
+>
+  {% content_for 'blocks' %}
+</div>
+
+{% stylesheet %}
+  .cb-category__header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: end;
+  }
+
+  .cb-category__header--divider {
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--cbc-border);
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-category__header--split {
+      grid-template-columns: minmax(0, 1fr) minmax(0, var(--cbc-header-aside, 360px));
+      grid-auto-flow: row dense;
+      column-gap: 48px;
+    }
+
+    /* Text blocks move to the right column, bottom-aligned with the heading. */
+    .cb-category__header--split > * {
+      grid-column: 1;
+    }
+
+    .cb-category__header--split > .cb-category__text {
+      grid-column: 2;
+      grid-row: span 2;
+      align-self: end;
+      margin-top: 0;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Header",
+  "tag": null,
+  "blocks": [
+    { "type": "_cb-category-eyebrow" },
+    { "type": "_cb-category-heading" },
+    { "type": "_cb-category-text" }
+  ],
+  "settings": [
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Text position",
+      "options": [
+        { "value": "split", "label": "Right of heading" },
+        { "value": "stacked", "label": "Below heading" }
+      ],
+      "default": "split",
+      "info": "On mobile, text always sits below the heading."
+    },
+    {
+      "type": "range",
+      "id": "text_width",
+      "label": "Text column width",
+      "min": 240,
+      "max": 520,
+      "step": 20,
+      "unit": "px",
+      "default": 360,
+      "visible_if": "{{ block.settings.layout == 'split' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_divider",
+      "label": "Show divider below",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Header",
+      "blocks": {
+        "eyebrow": { "type": "_cb-category-eyebrow" },
+        "heading": { "type": "_cb-category-heading" },
+        "text": { "type": "_cb-category-text" }
+      },
+      "block_order": ["eyebrow", "heading", "text"]
+    }
+  ]
+}
+{% endschema %}

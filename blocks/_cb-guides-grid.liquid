@@ -1,0 +1,110 @@
+<div
+  class="cb-guides__grid cb-guides__grid--{{ block.settings.mobile_layout }}"
+  style="--cbg-columns: {{ block.settings.columns }}; --cbg-grid-gap: {{ block.settings.gap }}px;"
+  {{ block.shopify_attributes }}
+>
+  {% content_for 'blocks' %}
+</div>
+
+{% stylesheet %}
+  .cb-guides__grid {
+    display: grid;
+    grid-template-columns: repeat(var(--cbg-columns, 3), minmax(0, 1fr));
+    gap: var(--cbg-grid-gap, 16px);
+  }
+
+  @media screen and (max-width: 989px) {
+    .cb-guides__grid--stack {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    /* An odd last card takes the full row instead of sitting alone at half width. */
+    .cb-guides__grid--stack > :last-child:nth-child(odd) {
+      grid-column: 1 / -1;
+    }
+
+    /* Swipeable row that bleeds to the screen edges (matches the section's side padding). */
+    .cb-guides__grid--swipe {
+      grid-template-columns: none;
+      grid-auto-flow: column;
+      grid-auto-columns: min(80%, 340px);
+      margin-inline: -32px;
+      padding: 0 32px 4px;
+      overflow-x: auto;
+      overscroll-behavior-x: contain;
+      scroll-snap-type: x mandatory;
+      scroll-padding-inline: 32px;
+      scrollbar-width: none;
+    }
+
+    .cb-guides__grid--swipe::-webkit-scrollbar {
+      display: none;
+    }
+
+    .cb-guides__grid--swipe > * {
+      scroll-snap-align: start;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .cb-guides__grid--stack {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .cb-guides__grid--swipe {
+      margin-inline: -16px;
+      padding-inline: 16px;
+      scroll-padding-inline: 16px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Guide grid",
+  "tag": null,
+  "blocks": [{ "type": "_cb-guides-card" }],
+  "settings": [
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Columns on desktop",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "select",
+      "id": "mobile_layout",
+      "label": "Mobile and tablet layout",
+      "options": [
+        { "value": "stack", "label": "Stack" },
+        { "value": "swipe", "label": "Swipe sideways" }
+      ],
+      "default": "stack"
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Gap",
+      "min": 8,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Guide grid",
+      "blocks": {
+        "card_1": { "type": "_cb-guides-card" },
+        "card_2": { "type": "_cb-guides-card" },
+        "card_3": { "type": "_cb-guides-card" }
+      },
+      "block_order": ["card_1", "card_2", "card_3"]
+    }
+  ]
+}
+{% endschema %}

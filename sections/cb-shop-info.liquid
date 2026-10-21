@@ -1,0 +1,350 @@
+{%- liquid
+  assign s = section.settings
+  assign font_scope = '#cb-info-' | append: section.id
+-%}
+
+{% render 'cb-font-styles',
+  selector: font_scope,
+  prefix: 'cbi',
+  heading_font: s.heading_font,
+  body_font: s.body_font
+%}
+
+<section
+  id="cb-info-{{ section.id }}"
+  class="cb-info"
+  style="
+    --cbi-bg: {{ s.background_color }};
+    --cbi-card: {{ s.card_background_color }};
+    --cbi-tile: {{ s.tile_background_color }};
+    --cbi-border: {{ s.border_color }};
+    --cbi-border-hover: {{ s.text_color | color_modify: 'alpha', 0.25 }};
+    --cbi-text: {{ s.text_color }};
+    --cbi-muted: {{ s.text_color | color_modify: 'alpha', 0.6 }};
+    --cbi-accent: {{ s.accent_color }};
+    --cbi-accent-text: {{ s.accent_text_color }};
+    --cbi-success: {{ s.success_color }};
+    --cbi-radius: {{ s.card_radius }}px;
+    --cbi-max-width: {{ s.max_width }}px;
+    --cbi-gap: {{ s.column_gap }}px;
+    --cbi-align: {{ s.vertical_alignment }};
+    --cbi-card-grow: {{ s.card_width }};
+    --cbi-content-grow: {{ 100 | minus: s.card_width }};
+    --cbi-pt: {{ s.padding_top }}px;
+    --cbi-pb: {{ s.padding_bottom }}px;
+  "
+>
+  <div class="cb-info__inner">
+    {% content_for 'blocks' %}
+  </div>
+</section>
+
+{% stylesheet %}
+  .cb-info {
+    color: var(--cbi-text);
+    background: var(--cbi-bg);
+    padding: calc(var(--cbi-pt) * 0.6) 16px calc(var(--cbi-pb) * 0.6);
+  }
+
+  .cb-info__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    max-width: var(--cbi-max-width);
+    margin-inline: auto;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-info {
+      padding: calc(var(--cbi-pt) * 0.8) 32px calc(var(--cbi-pb) * 0.8);
+    }
+  }
+
+  /* Side by side on desktop; each block keeps its width share whichever side it's on. */
+  @media screen and (min-width: 990px) {
+    .cb-info {
+      padding: var(--cbi-pt) 48px var(--cbi-pb);
+    }
+
+    .cb-info__inner {
+      flex-direction: row;
+      align-items: var(--cbi-align, center);
+      gap: var(--cbi-gap);
+    }
+
+    .cb-info__inner > .cb-info__content {
+      flex: var(--cbi-content-grow) 1 0%;
+    }
+
+    .cb-info__inner > .cb-info__stockist {
+      flex: var(--cbi-card-grow) 1 0%;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Shop info",
+  "tag": "div",
+  "class": "section-wrapper",
+  "blocks": [
+    { "type": "_cb-info-content" },
+    { "type": "_cb-info-stockist" }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "paragraph",
+      "content": "Reorder the content and stockist card blocks to swap sides."
+    },
+    {
+      "type": "range",
+      "id": "card_width",
+      "label": "Stockist card width",
+      "info": "Desktop only.",
+      "min": 30,
+      "max": 55,
+      "step": 1,
+      "unit": "%",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "column_gap",
+      "label": "Column gap",
+      "min": 24,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "select",
+      "id": "vertical_alignment",
+      "label": "Vertical alignment",
+      "options": [
+        { "value": "flex-start", "label": "Top" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width",
+      "min": 960,
+      "max": 1800,
+      "step": 20,
+      "unit": "px",
+      "default": 1400
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Card corner radius",
+      "min": 0,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "info": "Used for the heading, address, hours, card title and brand names.",
+      "default": "space_grotesk_n7"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "info": "Used for badges, text, labels, notes and buttons.",
+      "default": "inter_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "id": "card_background_color",
+      "label": "Card background",
+      "default": "#181818"
+    },
+    {
+      "type": "color",
+      "id": "tile_background_color",
+      "label": "Brand tile background",
+      "default": "#141414"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Borders and dividers",
+      "default": "#ffffff14"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "default": "#d71f27"
+    },
+    {
+      "type": "color",
+      "id": "accent_text_color",
+      "label": "Text on accent",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "success_color",
+      "label": "Green notes",
+      "default": "#22c55e"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Shop info",
+      "category": "t:categories.storytelling",
+      "blocks": {
+        "content": {
+          "type": "_cb-info-content",
+          "blocks": {
+            "badges": {
+              "type": "_cb-info-badges",
+              "blocks": {
+                "badge_1": {
+                  "type": "_cb-info-badge",
+                  "settings": { "badge_text": "Non-Profit Community Association", "style": "dark", "show_dot": true }
+                },
+                "badge_2": {
+                  "type": "_cb-info-badge",
+                  "settings": { "badge_text": "Official 41R Elliot St Pro Shop", "style": "accent", "show_dot": false }
+                }
+              },
+              "block_order": ["badge_1", "badge_2"]
+            },
+            "heading": {
+              "type": "_cb-info-heading",
+              "settings": { "heading_text": "Strung by players who play and coaches who coach." }
+            },
+            "text": {
+              "type": "_cb-info-text",
+              "settings": {
+                "body_text": "<p>When you shop here, 100% of proceeds directly support Counties Manukau Badminton Association (CMBA), junior squad coaching, subsidized school racquets, court resurfacing, and representative teams across South Auckland.</p>"
+              }
+            },
+            "details": {
+              "type": "_cb-info-details",
+              "blocks": {
+                "detail_1": {
+                  "type": "_cb-info-detail",
+                  "settings": {
+                    "detail_label": "Physical workshop & courts",
+                    "detail_value": "41R Elliot Street, Papakura",
+                    "detail_note": "Opposite Central Park • Free parking on site",
+                    "note_style": "muted"
+                  }
+                },
+                "detail_2": {
+                  "type": "_cb-info-detail",
+                  "settings": {
+                    "detail_label": "Workshop & pickup hours",
+                    "detail_value": "Monday – Sunday: 9:00 AM – 8:00 PM",
+                    "detail_note": "Click & Collect ready in under 24 hrs",
+                    "note_style": "success"
+                  }
+                }
+              },
+              "block_order": ["detail_1", "detail_2"]
+            },
+            "buttons": {
+              "type": "_cb-info-buttons",
+              "blocks": {
+                "button_1": {
+                  "type": "_cb-info-button",
+                  "settings": {
+                    "label": "Get Directions to Papakura Hall",
+                    "directions_address": "41R Elliot Street, Papakura, Auckland",
+                    "style": "primary",
+                    "icon": "directions"
+                  }
+                },
+                "button_2": {
+                  "type": "_cb-info-button",
+                  "settings": { "label": "Book a Court at CMBA", "style": "secondary", "icon": "none" }
+                }
+              },
+              "block_order": ["button_1", "button_2"]
+            }
+          },
+          "block_order": ["badges", "heading", "text", "details", "buttons"]
+        },
+        "stockist": {
+          "type": "_cb-info-stockist",
+          "settings": {
+            "card_label": "Official stockist",
+            "stockist_title": "Authorized Specialist Stockist",
+            "stockist_text": "Every racket sold at CMBA Pro Shop is sourced directly through official New Zealand distributors with verified authentic serial numbers and full manufacturer warranty."
+          },
+          "blocks": {
+            "brand_1": { "type": "_cb-info-brand", "settings": { "brand_name": "Yonex", "caption": "NZ Authorized Dealer" } },
+            "brand_2": { "type": "_cb-info-brand", "settings": { "brand_name": "Victor", "caption": "Official Association Rig" } },
+            "brand_3": { "type": "_cb-info-brand", "settings": { "brand_name": "Ashaway", "caption": "Specialist Strings & Rigs" } },
+            "brand_4": { "type": "_cb-info-brand", "settings": { "brand_name": "Babolat", "caption": "Certified Range" } }
+          },
+          "block_order": ["brand_1", "brand_2", "brand_3", "brand_4"]
+        }
+      },
+      "block_order": ["content", "stockist"]
+    }
+  ]
+}
+{% endschema %}

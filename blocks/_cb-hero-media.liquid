@@ -1,0 +1,169 @@
+{%- liquid
+  assign image = block.settings.image
+  assign mobile_image = block.settings.image_mobile | default: image
+-%}
+
+<div
+  class="cb-hero__media"
+  style="
+    --cbh-ratio: {{ block.settings.aspect_ratio }};
+    --cbh-ratio-mobile: {{ block.settings.aspect_ratio_mobile }};
+    --cbh-radius: {{ block.settings.radius }}px;
+    --cbh-focal: {{ image.presentation.focal_point | default: 'center' }};
+  "
+  {{ block.shopify_attributes }}
+>
+  <div class="cb-hero__media-frame">
+    {%- if image != blank -%}
+      <picture>
+        {%- if block.settings.image_mobile != blank -%}
+          <source
+            media="(max-width: 749px)"
+            srcset="{{ mobile_image | image_url: width: 750 }} 750w, {{ mobile_image | image_url: width: 1100 }} 1100w"
+            sizes="100vw"
+          >
+        {%- endif -%}
+        {{
+          image
+          | image_url: width: 2000
+          | image_tag:
+            widths: '480, 750, 1000, 1400, 2000',
+            sizes: '(min-width: 990px) 45vw, 100vw',
+            loading: 'eager',
+            fetchpriority: 'high',
+            class: 'cb-hero__image'
+        }}
+      </picture>
+    {%- else -%}
+      {{ 'lifestyle-2' | placeholder_svg_tag: 'cb-hero__image cb-hero__image--placeholder' }}
+    {%- endif -%}
+
+    <div class="cb-hero__labels">
+      {% content_for 'blocks' %}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .cb-hero__media {
+    min-width: 0;
+  }
+
+  .cb-hero__media-frame {
+    position: relative;
+    aspect-ratio: var(--cbh-ratio-mobile, 4 / 3);
+    overflow: hidden;
+    border-radius: var(--cbh-radius, 12px);
+    border: 1px solid var(--cbh-border);
+    background: var(--cbh-surface);
+    box-shadow: 0 30px 60px -30px rgb(0 0 0 / 0.6);
+  }
+
+  .cb-hero__media-frame picture {
+    display: contents;
+  }
+
+  .cb-hero__image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: var(--cbh-focal, center);
+  }
+
+  .cb-hero__image--placeholder {
+    fill: var(--cbh-muted);
+    background: var(--cbh-surface);
+  }
+
+  /* Top labels form the first row, bottom labels the last; ::after forces the break between them. */
+  .cb-hero__labels {
+    position: absolute;
+    inset: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: space-between;
+    align-items: flex-start;
+    gap: 8px;
+    pointer-events: none;
+  }
+
+  .cb-hero__labels::after {
+    content: '';
+    flex-basis: 100%;
+    order: 2;
+    height: 0;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-hero__labels {
+      inset: 16px;
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .cb-hero__media-frame {
+      aspect-ratio: var(--cbh-ratio, 4 / 3);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Media group",
+  "tag": null,
+  "blocks": [{ "type": "_cb-hero-label" }],
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Mobile image",
+      "info": "Optional. Uses the main image if empty."
+    },
+    {
+      "type": "select",
+      "id": "aspect_ratio",
+      "label": "Desktop aspect ratio",
+      "options": [
+        { "value": "1 / 1", "label": "Square" },
+        { "value": "5 / 4", "label": "5:4" },
+        { "value": "4 / 3", "label": "4:3" },
+        { "value": "3 / 2", "label": "3:2" },
+        { "value": "16 / 9", "label": "16:9" },
+        { "value": "4 / 5", "label": "Portrait 4:5" }
+      ],
+      "default": "4 / 3"
+    },
+    {
+      "type": "select",
+      "id": "aspect_ratio_mobile",
+      "label": "Mobile aspect ratio",
+      "options": [
+        { "value": "1 / 1", "label": "Square" },
+        { "value": "4 / 3", "label": "4:3" },
+        { "value": "3 / 2", "label": "3:2" },
+        { "value": "16 / 9", "label": "16:9" },
+        { "value": "4 / 5", "label": "Portrait 4:5" }
+      ],
+      "default": "4 / 3"
+    },
+    {
+      "type": "range",
+      "id": "radius",
+      "label": "Corner radius",
+      "min": 0,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    }
+  ],
+  "presets": [{ "name": "[CB] Media group" }]
+}
+{% endschema %}

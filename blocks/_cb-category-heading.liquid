@@ -1,0 +1,66 @@
+{%- if block.settings.heading_text != blank -%}
+  <{{ block.settings.tag }}
+    class="cb-category__heading"
+    style="--cbc-heading-size: {{ block.settings.size }}px;"
+    {{ block.shopify_attributes }}
+  >
+    {{- block.settings.heading_text -}}
+  </{{ block.settings.tag }}>
+{%- endif -%}
+
+{% stylesheet %}
+  .cb-category__heading {
+    margin: 0;
+    font-family: var(--cbc-font-heading);
+    font-weight: var(--cbc-font-heading-weight);
+    font-size: clamp(28px, 6vw, var(--cbc-heading-size, 40px));
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--cbc-text);
+    text-wrap: balance;
+  }
+
+  .cb-category__heading em {
+    font-style: normal;
+    color: var(--cbc-accent);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Heading",
+  "tag": null,
+  "settings": [
+    {
+      "type": "inline_richtext",
+      "id": "heading_text",
+      "label": "Heading",
+      "info": "Italic text is shown in the accent color.",
+      "default": "Shop badminton gear"
+    },
+    {
+      "type": "range",
+      "id": "size",
+      "label": "Desktop size",
+      "min": 24,
+      "max": 64,
+      "step": 2,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "select",
+      "id": "tag",
+      "label": "HTML tag",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" },
+        { "value": "p", "label": "Paragraph" }
+      ],
+      "default": "h2"
+    }
+  ],
+  "presets": [{ "name": "[CB] Heading" }]
+}
+{% endschema %}

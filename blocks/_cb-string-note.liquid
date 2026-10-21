@@ -1,0 +1,30 @@
+{%- if block.settings.note_text != blank -%}
+  <p class="cb-string__note" {{ block.shopify_attributes }}>{{ block.settings.note_text | escape }}</p>
+{%- endif -%}
+
+{% stylesheet %}
+  .cb-string__note {
+    margin: 0;
+    font-family: var(--cbs-font-body);
+    font-weight: var(--cbs-font-body-weight);
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--cbs-muted);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Note",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "note_text",
+      "label": "Text",
+      "default": "Walk-ins & online booking"
+    }
+  ],
+  "presets": [{ "name": "[CB] Note" }]
+}
+{% endschema %}

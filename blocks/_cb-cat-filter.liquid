@@ -1,0 +1,489 @@
+{%- liquid
+  assign source = collection | default: section.settings.collection
+  assign wanted = block.settings.filter_label | strip
+  assign filter = source.filters | where: 'label', wanted | first
+  assign title = block.settings.title_text | default: filter.label | default: wanted
+  assign form_id = 'cb-cat-form-' | append: section.id
+-%}
+
+{%- if filter -%}
+  <details
+    id="cb-cat-filter-{{ block.id }}"
+    class="cb-cat-filter{% if block.settings.numbered %} cb-cat-filter--numbered{% endif %}"
+    {% unless block.settings.collapsed %}
+      open
+    {% endunless %}
+    {{ block.shopify_attributes }}
+  >
+    <summary class="cb-cat-filter__title">
+      <span class="cb-cat-filter__name">{{ title | escape }}</span>
+      <svg class="cb-cat-filter__chevron" width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+        <path d="m3 7.5 3-3 3 3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </summary>
+
+    <div class="cb-cat-filter__body">
+      {%- if filter.type == 'price_range' -%}
+        {%- liquid
+          assign symbol = 0 | money | remove: '0' | remove: '.' | remove: ',' | strip
+          assign slider_max = filter.range_max | plus: 99 | divided_by: 100
+          assign current_cents = filter.max_value.value | default: filter.range_max
+          assign slider_value = current_cents | divided_by: 100
+          assign percent = 100
+          if slider_max > 0
+            assign percent = slider_value | times: 100 | divided_by: slider_max
+          endif
+        -%}
+        <div class="cb-cat-price" style="--cbk-price-pct: {{ percent }}%;" data-symbol="{{ symbol }}">
+          <input
+            class="cb-cat-price__range"
+            type="range"
+            form="{{ form_id }}"
+            name="{{ filter.max_value.param_name }}"
+            min="0"
+            max="{{ slider_max }}"
+            step="1"
+            value="{{ slider_value }}"
+            data-cb-price-max="{{ slider_max }}"
+            aria-label="{{ title | escape }}"
+          >
+          <div class="cb-cat-price__labels">
+            <span>{{ 0 | money }}</span>
+            <span class="cb-cat-price__current">
+              {{- block.settings.price_prefix | escape }}
+              <strong data-cb-price-label>{{ current_cents | money }}</strong>
+              {{ cart.currency.iso_code -}}
+            </span>
+          </div>
+        </div>
+      {%- elsif block.settings.display == 'buttons' -%}
+        <div
+          class="cb-cat-chips cb-cat-chips--{{ block.settings.button_style }}"
+          style="--cbk-chip-columns: {{ block.settings.button_columns }};"
+        >
+          {%- for value in filter.values -%}
+            {%- liquid
+              assign unavailable = false
+              if value.count == 0 and value.active == false
+                assign unavailable = true
+              endif
+            -%}
+            <label class="cb-cat-chip{% if unavailable %} is-disabled{% endif %}">
+              <input
+                class="cb-cat-chip__input"
+                type="checkbox"
+                form="{{ form_id }}"
+                name="{{ value.param_name }}"
+                value="{{ value.value }}"
+                {% if value.active %}
+                  checked
+                {% endif %}
+                {% if unavailable %}
+                  disabled
+                {% endif %}
+              >
+              <span class="cb-cat-chip__text">{{ value.label | escape }}</span>
+            </label>
+          {%- endfor -%}
+        </div>
+      {%- else -%}
+        <ul class="cb-cat-checks" role="list">
+          {%- for value in filter.values -%}
+            {%- liquid
+              assign unavailable = false
+              if value.count == 0 and value.active == false
+                assign unavailable = true
+              endif
+            -%}
+            <li>
+              <label class="cb-cat-check{% if unavailable %} is-disabled{% endif %}">
+                <input
+                  class="cb-cat-check__input"
+                  type="checkbox"
+                  form="{{ form_id }}"
+                  name="{{ value.param_name }}"
+                  value="{{ value.value }}"
+                  {% if value.active %}
+                    checked
+                  {% endif %}
+                  {% if unavailable %}
+                    disabled
+                  {% endif %}
+                >
+                <span class="cb-cat-check__box" aria-hidden="true">
+                  <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="m2.5 6.2 2.3 2.3 4.7-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </span>
+                <span class="cb-cat-check__label">{{ value.label | escape }}</span>
+                {%- if block.settings.show_counts -%}
+                  <span class="cb-cat-check__count">{{ value.count }}</span>
+                {%- endif -%}
+              </label>
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+
+      {%- if block.settings.note != blank -%}
+        <p class="cb-cat-filter__note">{{ block.settings.note | escape }}</p>
+      {%- endif -%}
+    </div>
+  </details>
+{%- elsif request.design_mode -%}
+  <div class="cb-cat-filter cb-cat-filter--missing" {{ block.shopify_attributes }}>
+    <p>
+      “{{ wanted | escape }}” isn’t a filter on this collection yet. Add it in the Search &amp; Discovery app → Filters (the name must match), or change this block’s filter name. Only you see this message.
+    </p>
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  .cb-cat-filter {
+    padding: 16px 0;
+    border-bottom: 1px solid var(--cbk-border);
+  }
+
+  .cb-cat-filter__title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    list-style: none;
+    cursor: pointer;
+    font-family: var(--cbk-font-body);
+    font-weight: var(--cbk-font-body-strong);
+    font-size: 11px;
+    line-height: 1.3;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--cbk-text);
+  }
+
+  .cb-cat-filter__title::-webkit-details-marker {
+    display: none;
+  }
+
+  .cb-cat-filter__title:focus-visible {
+    outline: 2px solid var(--cbk-text);
+    outline-offset: 3px;
+  }
+
+  /* "01 / " numbering, counted across the numbered filter blocks only. */
+  .cb-cat-filter--numbered {
+    counter-increment: cb-cat-filter;
+  }
+
+  .cb-cat-filter--numbered .cb-cat-filter__name::before {
+    content: counter(cb-cat-filter, decimal-leading-zero) ' / ';
+  }
+
+  .cb-cat-filter__chevron {
+    flex: none;
+    color: var(--cbk-muted);
+    transition: transform 0.2s ease;
+  }
+
+  .cb-cat-filter:not([open]) .cb-cat-filter__chevron {
+    transform: rotate(180deg);
+  }
+
+  .cb-cat-filter__body {
+    padding-top: 14px;
+  }
+
+  .cb-cat-filter__note {
+    margin: 10px 0 0;
+    font-family: var(--cbk-font-body);
+    font-size: 11px;
+    line-height: 1.5;
+    color: var(--cbk-muted);
+  }
+
+  .cb-cat-filter--missing p {
+    margin: 0;
+    padding: 10px 12px;
+    border: 1px dashed var(--cbk-border);
+    border-radius: 4px;
+    font-family: var(--cbk-font-body);
+    font-size: 11px;
+    line-height: 1.5;
+    color: var(--cbk-muted);
+  }
+
+  /* Checkbox list */
+  .cb-cat-checks {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .cb-cat-check {
+    position: relative;
+    display: grid;
+    grid-template-columns: 14px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-family: var(--cbk-font-body);
+    font-size: 12px;
+    line-height: 1.35;
+    color: var(--cbk-soft);
+  }
+
+  .cb-cat-check__input,
+  .cb-cat-chip__input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+  }
+
+  .cb-cat-check__box {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 14px;
+    height: 14px;
+    border: 1px solid var(--cbk-border-strong);
+    border-radius: 2px;
+    background: var(--cbk-surface);
+    color: transparent;
+  }
+
+  .cb-cat-check__input:checked + .cb-cat-check__box {
+    border-color: var(--cbk-accent);
+    background: var(--cbk-accent);
+    color: #fff;
+  }
+
+  .cb-cat-check__input:focus-visible + .cb-cat-check__box {
+    outline: 2px solid var(--cbk-text);
+    outline-offset: 2px;
+  }
+
+  .cb-cat-check:hover .cb-cat-check__label {
+    color: var(--cbk-text);
+  }
+
+  .cb-cat-check__count {
+    font-size: 11px;
+    color: var(--cbk-muted);
+  }
+
+  .cb-cat-check.is-disabled,
+  .cb-cat-chip.is-disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+
+  /* Buttons */
+  .cb-cat-chips {
+    display: grid;
+    grid-template-columns: repeat(var(--cbk-chip-columns, 2), minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .cb-cat-chip {
+    position: relative;
+    cursor: pointer;
+  }
+
+  .cb-cat-chip__text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 34px;
+    padding: 6px 8px;
+    border: 1px solid var(--cbk-border);
+    border-radius: 2px;
+    background: var(--cbk-card);
+    font-family: var(--cbk-font-body);
+    font-size: 11px;
+    line-height: 1.25;
+    text-align: center;
+    color: var(--cbk-soft);
+    transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+  }
+
+  .cb-cat-chip:hover .cb-cat-chip__text {
+    border-color: var(--cbk-border-strong);
+    color: var(--cbk-text);
+  }
+
+  .cb-cat-chips--filled .cb-cat-chip__input:checked + .cb-cat-chip__text {
+    border-color: var(--cbk-accent);
+    background: var(--cbk-accent);
+    font-weight: var(--cbk-font-body-strong);
+    color: #fff;
+  }
+
+  .cb-cat-chips--outline .cb-cat-chip__input:checked + .cb-cat-chip__text {
+    border-color: var(--cbk-accent);
+    background: color-mix(in srgb, var(--cbk-accent) 12%, var(--cbk-card));
+    font-weight: var(--cbk-font-body-strong);
+    color: var(--cbk-text);
+  }
+
+  .cb-cat-chip__input:focus-visible + .cb-cat-chip__text {
+    outline: 2px solid var(--cbk-text);
+    outline-offset: 2px;
+  }
+
+  /* Price slider (maximum price). Two classes so the theme's global input background and radius don't win. */
+  .cb-cat-price .cb-cat-price__range {
+    width: 100%;
+    height: 18px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    cursor: pointer;
+    appearance: none;
+  }
+
+  .cb-cat-price__range::-webkit-slider-runnable-track {
+    height: 2px;
+    border-radius: 2px;
+    background: linear-gradient(to right, var(--cbk-border-strong) var(--cbk-price-pct), var(--cbk-border) var(--cbk-price-pct));
+  }
+
+  .cb-cat-price__range::-moz-range-track {
+    height: 2px;
+    border-radius: 2px;
+    background: var(--cbk-border);
+  }
+
+  .cb-cat-price__range::-moz-range-progress {
+    height: 2px;
+    background: var(--cbk-border-strong);
+  }
+
+  .cb-cat-price__range::-webkit-slider-thumb {
+    width: 14px;
+    height: 14px;
+    margin-top: -6px;
+    border: 0;
+    border-radius: 50%;
+    background: var(--cbk-accent);
+    appearance: none;
+  }
+
+  .cb-cat-price__range::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border: 0;
+    border-radius: 50%;
+    background: var(--cbk-accent);
+  }
+
+  .cb-cat-price__range:focus-visible {
+    outline: 2px solid var(--cbk-text);
+    outline-offset: 4px;
+  }
+
+  .cb-cat-price__labels {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: 10px;
+    font-family: var(--cbk-font-body);
+    font-size: 11px;
+    color: var(--cbk-muted);
+  }
+
+  .cb-cat-price__current strong {
+    font-weight: var(--cbk-font-body-strong);
+    color: var(--cbk-text);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Filter",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "filter_label",
+      "label": "Filter name",
+      "info": "Must match the filter's name in the Search & Discovery app, e.g. Price, Availability, Play style. Price filters show as a slider.",
+      "default": "Price"
+    },
+    {
+      "type": "text",
+      "id": "title_text",
+      "label": "Heading",
+      "info": "Leave empty to use the filter name."
+    },
+    {
+      "type": "select",
+      "id": "display",
+      "label": "Show values as",
+      "options": [
+        { "value": "list", "label": "Checkbox list" },
+        { "value": "buttons", "label": "Buttons" }
+      ],
+      "default": "list"
+    },
+    {
+      "type": "select",
+      "id": "button_columns",
+      "label": "Buttons per row",
+      "options": [
+        { "value": "2", "label": "2" },
+        { "value": "3", "label": "3" }
+      ],
+      "default": "2",
+      "visible_if": "{{ block.settings.display == 'buttons' }}"
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Selected button style",
+      "options": [
+        { "value": "filled", "label": "Filled" },
+        { "value": "outline", "label": "Outline" }
+      ],
+      "default": "filled",
+      "visible_if": "{{ block.settings.display == 'buttons' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_counts",
+      "label": "Show product counts",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "numbered",
+      "label": "Number this filter",
+      "info": "Adds 01 / , 02 / … in order.",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "collapsed",
+      "label": "Start collapsed",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "note",
+      "label": "Note",
+      "info": "Small text under the values."
+    },
+    {
+      "type": "text",
+      "id": "price_prefix",
+      "label": "Price label",
+      "info": "Price slider only.",
+      "default": "Up to"
+    }
+  ],
+  "presets": [{ "name": "[CB] Filter" }]
+}
+{% endschema %}

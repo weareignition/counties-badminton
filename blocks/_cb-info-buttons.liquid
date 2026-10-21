@@ -1,0 +1,36 @@
+<div class="cb-info__buttons" {{ block.shopify_attributes }}>
+  {% content_for 'blocks' %}
+</div>
+
+{% stylesheet %}
+  .cb-info__buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  /* Full-width buttons on phones */
+  @media screen and (max-width: 559px) {
+    .cb-info__buttons {
+      flex-direction: column;
+      align-self: stretch;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Buttons",
+  "tag": null,
+  "blocks": [{ "type": "_cb-info-button" }],
+  "presets": [
+    {
+      "name": "[CB] Buttons",
+      "blocks": {
+        "button_1": { "type": "_cb-info-button" }
+      },
+      "block_order": ["button_1"]
+    }
+  ]
+}
+{% endschema %}

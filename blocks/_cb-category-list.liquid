@@ -1,0 +1,53 @@
+<div
+  class="cb-category__list"
+  style="--cbc-list-gap: {{ block.settings.gap }}px;"
+  {{ block.shopify_attributes }}
+>
+  {% content_for 'blocks' %}
+</div>
+
+{% stylesheet %}
+  .cb-category__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--cbc-list-gap, 16px);
+  }
+
+  @media screen and (min-width: 990px) {
+    /* Cards share the featured card's height evenly. */
+    .cb-category__list > .cb-category-card {
+      flex: 1 1 0%;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Card list",
+  "tag": null,
+  "blocks": [{ "type": "_cb-category-card" }],
+  "settings": [
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Gap",
+      "min": 8,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Card list",
+      "blocks": {
+        "card_1": { "type": "_cb-category-card" },
+        "card_2": { "type": "_cb-category-card" },
+        "card_3": { "type": "_cb-category-card" }
+      },
+      "block_order": ["card_1", "card_2", "card_3"]
+    }
+  ]
+}
+{% endschema %}

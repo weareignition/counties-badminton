@@ -1,0 +1,34 @@
+<div class="cb-info__details" {{ block.shopify_attributes }}>
+  {% content_for 'blocks' %}
+</div>
+
+{% stylesheet %}
+  .cb-info__details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 18px 24px;
+    align-self: stretch;
+    padding: 18px 20px;
+    background: var(--cbi-card);
+    border: 1px solid var(--cbi-border);
+    border-radius: var(--cbi-radius);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Details card",
+  "tag": null,
+  "blocks": [{ "type": "_cb-info-detail" }],
+  "presets": [
+    {
+      "name": "[CB] Details card",
+      "blocks": {
+        "detail_1": { "type": "_cb-info-detail" },
+        "detail_2": { "type": "_cb-info-detail" }
+      },
+      "block_order": ["detail_1", "detail_2"]
+    }
+  ]
+}
+{% endschema %}

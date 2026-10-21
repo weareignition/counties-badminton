@@ -1,0 +1,67 @@
+<ol
+  class="cb-finder__steps"
+  style="--cbf-steps-gap: {{ block.settings.gap }}px; --cbf-steps-mobile-cols: {{ block.settings.mobile_columns }};"
+  {{ block.shopify_attributes }}
+>
+  {% content_for 'blocks' %}
+</ol>
+
+{% stylesheet %}
+  /* Step numbers (01, 02…) come from this counter, so they stay in order when steps are added or moved. */
+  .cb-finder__steps {
+    display: grid;
+    grid-template-columns: repeat(var(--cbf-steps-mobile-cols, 2), minmax(0, 1fr));
+    gap: var(--cbf-steps-gap, 16px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: cb-finder-step;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-finder__steps {
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Steps",
+  "tag": null,
+  "blocks": [{ "type": "_cb-finder-step" }],
+  "settings": [
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Gap",
+      "min": 8,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "mobile_columns",
+      "label": "Columns on mobile",
+      "options": [
+        { "value": "1", "label": "1" },
+        { "value": "2", "label": "2" }
+      ],
+      "default": "2"
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Steps",
+      "blocks": {
+        "step_1": { "type": "_cb-finder-step", "settings": { "step_label": "Step one", "highlight": true } },
+        "step_2": { "type": "_cb-finder-step", "settings": { "step_label": "Step two" } },
+        "step_3": { "type": "_cb-finder-step", "settings": { "step_label": "Step three" } }
+      },
+      "block_order": ["step_1", "step_2", "step_3"]
+    }
+  ]
+}
+{% endschema %}

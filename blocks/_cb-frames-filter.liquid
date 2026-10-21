@@ -1,0 +1,28 @@
+{%- if block.settings.pill_label != blank -%}
+  <button
+    type="button"
+    class="cb-frames__pill"
+    data-cb-filter="{{ block.settings.pill_label | handleize }}"
+    aria-pressed="false"
+    {{ block.shopify_attributes }}
+  >
+    {{- block.settings.pill_label | escape -}}
+  </button>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "[CB] Filter",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "pill_label",
+      "label": "Label",
+      "info": "Shows the product cards whose filter categories or product tags match this label.",
+      "default": "Head-Heavy"
+    }
+  ],
+  "presets": [{ "name": "[CB] Filter" }]
+}
+{% endschema %}

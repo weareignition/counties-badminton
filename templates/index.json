@@ -9,274 +9,1177 @@
  */
 {
   "sections": {
-    "hero_jVaWmY": {
-      "type": "hero",
+    "cb_hero_paP4ny": {
+      "type": "cb-hero",
       "blocks": {
-        "text_YLPk4p": {
-          "type": "text",
-          "name": "t:names.heading",
+        "cb_hero_content_cfihBc": {
+          "type": "_cb-hero-content",
           "settings": {
-            "text": "<p>Browse our latest products</p>",
-            "width": "fit-content",
-            "max_width": "normal",
-            "alignment": "left",
-            "type_preset": "h2",
-            "font": "var(--font-body--family)",
-            "font_size": "1rem",
-            "line_height": "normal",
-            "letter_spacing": "normal",
-            "case": "none",
-            "wrap": "pretty",
-            "text_color": "{{ settings.color_palette.background }}",
-            "background": false,
-            "background_color": "#00000026",
-            "corner_radius": 0,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
+            "gap": 24,
+            "alignment": "start"
           },
-          "blocks": {}
+          "blocks": {
+            "cb_hero_badge_jR8XFi": {
+              "type": "_cb-hero-badge",
+              "settings": {
+                "badge_text": "Counties Manukau Badminton Association Official Store",
+                "show_dot": true
+              },
+              "blocks": {}
+            },
+            "cb_hero_heading_LtngVJ": {
+              "type": "_cb-hero-heading",
+              "settings": {
+                "heading_text": "Built for badminton.",
+                "size": 64,
+                "tag": "h1"
+              },
+              "blocks": {}
+            },
+            "cb_hero_text_jV8iHn": {
+              "type": "_cb-hero-text",
+              "settings": {
+                "body_text": "<p>Expert-selected rackets, gear and professional stringing from people who actually play, coach and string.</p>",
+                "size": 18,
+                "max_width": 52
+              },
+              "blocks": {}
+            },
+            "cb_hero_buttons_HCmJgA": {
+              "type": "_cb-hero-buttons",
+              "settings": {
+                "stack_mobile": true
+              },
+              "blocks": {
+                "cb_hero_button_ydNibg": {
+                  "type": "_cb-hero-button",
+                  "settings": {
+                    "label": "Find My Racket",
+                    "link": "",
+                    "open_in_new_tab": false,
+                    "style": "primary",
+                    "show_arrow": true
+                  },
+                  "blocks": {}
+                },
+                "cb_hero_button_yPtTP4": {
+                  "type": "_cb-hero-button",
+                  "settings": {
+                    "label": "Shop Rackets",
+                    "link": "",
+                    "open_in_new_tab": false,
+                    "style": "secondary",
+                    "show_arrow": false
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "cb_hero_button_ydNibg",
+                "cb_hero_button_yPtTP4"
+              ]
+            },
+            "cb_hero_features_m3GLUi": {
+              "type": "_cb-hero-features",
+              "settings": {
+                "show_divider": true
+              },
+              "blocks": {
+                "cb_hero_feature_3wJeEA": {
+                  "type": "_cb-hero-feature",
+                  "settings": {
+                    "icon": "check",
+                    "feature_text": "Expert Advice"
+                  },
+                  "blocks": {}
+                },
+                "cb_hero_feature_NEVbaP": {
+                  "type": "_cb-hero-feature",
+                  "settings": {
+                    "icon": "sliders",
+                    "feature_text": "Professional Stringing"
+                  },
+                  "blocks": {}
+                },
+                "cb_hero_feature_pyjWdw": {
+                  "type": "_cb-hero-feature",
+                  "settings": {
+                    "icon": "calendar",
+                    "feature_text": "Open 7 Days"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "cb_hero_feature_3wJeEA",
+                "cb_hero_feature_NEVbaP",
+                "cb_hero_feature_pyjWdw"
+              ]
+            }
+          },
+          "block_order": [
+            "cb_hero_badge_jR8XFi",
+            "cb_hero_heading_LtngVJ",
+            "cb_hero_text_jV8iHn",
+            "cb_hero_buttons_HCmJgA",
+            "cb_hero_features_m3GLUi"
+          ]
         },
-        "button_H9gpTf": {
-          "type": "button",
-          "name": "t:names.button",
+        "cb_hero_media_YgVFNe": {
+          "type": "_cb-hero-media",
           "settings": {
-            "label": "Shop all",
-            "link": "shopify://collections/all",
-            "open_in_new_tab": false,
-            "style_class": "button-custom",
-            "custom_button_background": "rgba(0, 0, 0, 0)",
-            "custom_button_text": "{{ settings.color_palette.background }}",
-            "custom_button_border": "{{ settings.color_palette.background }}",
-            "width": "fit-content",
-            "custom_width": 100,
-            "width_mobile": "fit-content",
-            "custom_width_mobile": 100
+            "image": "shopify://shop_images/hero-img.webp",
+            "image_mobile": "shopify://shop_images/hero-img.webp",
+            "aspect_ratio": "4 / 3",
+            "aspect_ratio_mobile": "4 / 3",
+            "radius": 12
+          },
+          "blocks": {
+            "cb_hero_label_VCR9UG": {
+              "type": "_cb-hero-label",
+              "settings": {
+                "label_text": "41R Elliot St Pro Shop",
+                "position": "bottom-left",
+                "style": "dark"
+              },
+              "blocks": {}
+            },
+            "cb_hero_label_zyMRrr": {
+              "type": "_cb-hero-label",
+              "settings": {
+                "label_text": "Master Rigging Lab",
+                "position": "bottom-right",
+                "style": "accent"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "cb_hero_label_VCR9UG",
+            "cb_hero_label_zyMRrr"
+          ]
+        }
+      },
+      "block_order": [
+        "cb_hero_content_cfihBc",
+        "cb_hero_media_YgVFNe"
+      ],
+      "name": "[CB] Hero",
+      "settings": {
+        "content_width": 55,
+        "column_gap": 40,
+        "max_width": 1400,
+        "media_first_mobile": false,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "#141414",
+        "glow_color": "#3a0c10",
+        "text_color": "#ffffff",
+        "accent_color": "#d71f27",
+        "accent_text_color": "#ffffff",
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
+    },
+    "cb_shop_category_e7qpYi": {
+      "type": "cb-shop-category",
+      "blocks": {
+        "cb_category_header_fFnMgG": {
+          "type": "_cb-category-header",
+          "settings": {
+            "layout": "split",
+            "text_width": 360,
+            "show_divider": true
+          },
+          "blocks": {
+            "cb_category_eyebrow_xMwN9B": {
+              "type": "_cb-category-eyebrow",
+              "settings": {
+                "eyebrow_text": "Shop by category"
+              },
+              "blocks": {}
+            },
+            "cb_category_heading_Pdh3UT": {
+              "type": "_cb-category-heading",
+              "settings": {
+                "heading_text": "Shop badminton gear",
+                "size": 40,
+                "tag": "h2"
+              },
+              "blocks": {}
+            },
+            "cb_category_text_HdUYq6": {
+              "type": "_cb-category-text",
+              "settings": {
+                "body_text": "<p>Curated directly by Counties Manukau stringers and players. Tested on Papakura courts.</p>",
+                "size": 13
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "cb_category_eyebrow_xMwN9B",
+            "cb_category_heading_Pdh3UT",
+            "cb_category_text_HdUYq6"
+          ]
+        },
+        "cb_category_grid_DLBP6C": {
+          "type": "_cb-category-grid",
+          "settings": {
+            "featured_width": 58,
+            "gap": 16
+          },
+          "blocks": {
+            "cb_category_featured_cQMC86": {
+              "type": "_cb-category-featured",
+              "settings": {
+                "collection": "rackets",
+                "image": "shopify://shop_images/Counties_Manukau_Racket_Wall.png",
+                "image_ratio": "16 / 10",
+                "badge_text": "Core specialty",
+                "badge_style": "accent",
+                "image_label": "Victor • Yonex • Ashaway",
+                "card_title": "Rackets",
+                "description": "Power, speed & control frames calibrated for singles attack and fast doubles exchanges. Tested at 41R Elliot St.",
+                "link_label": "Explore 40+ Frames",
+                "link": "",
+                "link_style": "accent"
+              },
+              "blocks": {}
+            },
+            "cb_category_list_p4pQbV": {
+              "type": "_cb-category-list",
+              "settings": {
+                "gap": 16
+              },
+              "blocks": {
+                "cb_category_card_haXgRk": {
+                  "type": "_cb-category-card",
+                  "settings": {
+                    "collection": "",
+                    "image": "shopify://shop_images/Court_Footwear_and_Accessories.png",
+                    "badge_text": "Grip & stability",
+                    "badge_style": "dark",
+                    "card_title": "Court Footwear",
+                    "description": "Grip, lateral stability and ankle support engineered specifically for wooden courts.",
+                    "link_label": "View Footwear",
+                    "link": "",
+                    "link_style": "text"
+                  },
+                  "blocks": {}
+                },
+                "cb_category_card_yw789a": {
+                  "type": "_cb-category-card",
+                  "settings": {
+                    "collection": "shuttles",
+                    "image": "shopify://shop_images/Match_Shuttles_and_Tubes.png",
+                    "badge_text": "Flight tested",
+                    "badge_style": "dark",
+                    "card_title": "Match Shuttles",
+                    "description": "Tournament feather & high-durability hybrid shuttles for club nights and match play.",
+                    "link_label": "Bulk & Club Shuttles",
+                    "link": "",
+                    "link_style": "text"
+                  },
+                  "blocks": {}
+                },
+                "cb_category_card_cHxrCf": {
+                  "type": "_cb-category-card",
+                  "settings": {
+                    "collection": "stringing",
+                    "image": "shopify://shop_images/Court_Footwear_and_Accessories.png",
+                    "badge_text": "24h lab",
+                    "badge_style": "accent",
+                    "card_title": "Stringing",
+                    "description": "Electronic linear tension pull, custom string selection and 24-hour turnaround at Papakura.",
+                    "link_label": "Book Stringing",
+                    "link": "",
+                    "link_style": "text"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "cb_category_card_haXgRk",
+                "cb_category_card_yw789a",
+                "cb_category_card_cHxrCf"
+              ]
+            }
+          },
+          "block_order": [
+            "cb_category_featured_cQMC86",
+            "cb_category_list_p4pQbV"
+          ]
+        }
+      },
+      "block_order": [
+        "cb_category_header_fFnMgG",
+        "cb_category_grid_DLBP6C"
+      ],
+      "name": "[CB] Shop by category",
+      "settings": {
+        "max_width": 1400,
+        "stack_gap": 32,
+        "card_radius": 10,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "#121212",
+        "card_background_color": "#181818",
+        "text_color": "#ffffff",
+        "accent_color": "#d71f27",
+        "accent_text_color": "#ffffff",
+        "padding_top": 64,
+        "padding_bottom": 64
+      }
+    },
+    "cb_racket_finder_dizNGR": {
+      "type": "cb-racket-finder",
+      "blocks": {
+        "cb_finder_header_FQpH3h": {
+          "type": "_cb-finder-header",
+          "settings": {
+            "alignment": "left",
+            "max_width": 640
+          },
+          "blocks": {
+            "cb_finder_badge_UU9NCL": {
+              "type": "_cb-finder-badge",
+              "settings": {
+                "badge_text": "Guided equipment fitting",
+                "show_dot": true
+              },
+              "blocks": {}
+            },
+            "cb_finder_heading_B8xcCd": {
+              "type": "_cb-finder-heading",
+              "settings": {
+                "heading_text": "Not sure which racket suits you?",
+                "size": 56,
+                "tag": "h2"
+              },
+              "blocks": {}
+            },
+            "cb_finder_text_W6Uc69": {
+              "type": "_cb-finder-text",
+              "settings": {
+                "body_text": "<p>Tell us how you play and we'll recommend the frames we'd actually put in your hand on the shop floor at 41R Elliot Street.</p>",
+                "size": 15
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "cb_finder_badge_UU9NCL",
+            "cb_finder_heading_B8xcCd",
+            "cb_finder_text_W6Uc69"
+          ]
+        },
+        "cb_finder_steps_PpzLBw": {
+          "type": "_cb-finder-steps",
+          "settings": {
+            "gap": 16,
+            "mobile_columns": "2"
+          },
+          "blocks": {
+            "cb_finder_step_xPzF4M": {
+              "type": "_cb-finder-step",
+              "settings": {
+                "step_label": "Step one",
+                "step_name": "Your level",
+                "highlight": true
+              },
+              "blocks": {}
+            },
+            "cb_finder_step_VgQqLz": {
+              "type": "_cb-finder-step",
+              "settings": {
+                "step_label": "Step two",
+                "step_name": "Play style",
+                "highlight": false
+              },
+              "blocks": {}
+            },
+            "cb_finder_step_L9667q": {
+              "type": "_cb-finder-step",
+              "settings": {
+                "step_label": "Step three",
+                "step_name": "Swing & feel",
+                "highlight": false
+              },
+              "blocks": {}
+            },
+            "cb_finder_step_gUKibj": {
+              "type": "_cb-finder-step",
+              "settings": {
+                "step_label": "Step four",
+                "step_name": "Budget",
+                "highlight": false
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "cb_finder_step_xPzF4M",
+            "cb_finder_step_VgQqLz",
+            "cb_finder_step_L9667q",
+            "cb_finder_step_gUKibj"
+          ]
+        },
+        "cb_finder_footer_4FRWre": {
+          "type": "_cb-finder-footer",
+          "settings": {
+            "show_divider": true
+          },
+          "blocks": {
+            "cb_finder_note_qQCqjd": {
+              "type": "_cb-finder-note",
+              "settings": {
+                "icon": "check",
+                "note_text": "Takes less than 2 minutes. No generic algorithm, vetted by CMBA head stringer."
+              },
+              "blocks": {}
+            },
+            "cb_finder_button_L3giMQ": {
+              "type": "_cb-finder-button",
+              "settings": {
+                "label": "Launch Racket Finder",
+                "link": "",
+                "open_in_new_tab": false,
+                "style": "primary",
+                "show_arrow": true
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "cb_finder_note_qQCqjd",
+            "cb_finder_button_L3giMQ"
+          ]
+        }
+      },
+      "block_order": [
+        "cb_finder_header_FQpH3h",
+        "cb_finder_steps_PpzLBw",
+        "cb_finder_footer_4FRWre"
+      ],
+      "name": "[CB] Racket finder",
+      "settings": {
+        "max_width": 1400,
+        "stack_gap": 40,
+        "card_radius": 12,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "#080808",
+        "card_background_color": "#141414",
+        "border_color": "#ffffff1a",
+        "text_color": "#ffffff",
+        "accent_color": "#d71f27",
+        "accent_text_color": "#ffffff",
+        "padding_top": 64,
+        "padding_bottom": 64
+      }
+    },
+    "cb_featured_frames_HmLqyJ": {
+      "type": "cb-featured-frames",
+      "blocks": {
+        "cb_frames_header_n3VhiR": {
+          "type": "_cb-frames-header",
+          "settings": {
+            "show_divider": true
+          },
+          "blocks": {
+            "cb_frames_eyebrow_T89pp7": {
+              "type": "_cb-frames-eyebrow",
+              "settings": {
+                "eyebrow_text": "Association curated"
+              },
+              "blocks": {}
+            },
+            "cb_frames_heading_dgetK9": {
+              "type": "_cb-frames-heading",
+              "settings": {
+                "heading_text": "Featured Specialist Frames",
+                "size": 36,
+                "tag": "h2"
+              },
+              "blocks": {}
+            },
+            "cb_frames_filters_396nxY": {
+              "type": "_cb-frames-filters",
+              "settings": {
+                "filter_label": "Filter by:",
+                "all_label": "All"
+              },
+              "blocks": {
+                "cb_frames_filter_agQzMw": {
+                  "type": "_cb-frames-filter",
+                  "settings": {
+                    "pill_label": "Head-Heavy"
+                  },
+                  "blocks": {}
+                },
+                "cb_frames_filter_YwMEhB": {
+                  "type": "_cb-frames-filter",
+                  "settings": {
+                    "pill_label": "Speed"
+                  },
+                  "blocks": {}
+                },
+                "cb_frames_filter_gfzCMB": {
+                  "type": "_cb-frames-filter",
+                  "settings": {
+                    "pill_label": "All-Round"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "cb_frames_filter_agQzMw",
+                "cb_frames_filter_YwMEhB",
+                "cb_frames_filter_gfzCMB"
+              ]
+            }
+          },
+          "block_order": [
+            "cb_frames_eyebrow_T89pp7",
+            "cb_frames_heading_dgetK9",
+            "cb_frames_filters_396nxY"
+          ]
+        },
+        "cb_frames_grid_VTe8kz": {
+          "type": "_cb-frames-grid",
+          "settings": {
+            "columns": 4,
+            "mobile_layout": "swipe",
+            "gap": 16,
+            "image_ratio": "1 / 1",
+            "image_fit": "contain",
+            "empty_text": "No frames match this filter."
+          },
+          "blocks": {
+            "cb_frames_card_xTtP7b": {
+              "type": "_cb-frames-card",
+              "settings": {
+                "product": "",
+                "image": "shopify://shop_images/Victor_Thruster_Ryuga_II_Pro.png",
+                "use_custom_title": true,
+                "card_title": "Thruster Ryuga II Pro",
+                "vendor_label": "Victor",
+                "badge_text": "Tournament pro",
+                "badge_style": "dark",
+                "stock_label": "In Stock Papakura",
+                "show_perk": true,
+                "perk_text": "Free Custom String",
+                "show_rating": true,
+                "show_currency": true,
+                "custom_price": "$339",
+                "custom_rating": 4.9,
+                "custom_rating_count": 26,
+                "specs": "4U (83g), Head-Heavy, Stiff",
+                "filter_keys": "Head-Heavy",
+                "button_label": "Configure String & Tension",
+                "button_link": ""
+              },
+              "blocks": {}
+            },
+            "cb_frames_card_AVigxM": {
+              "type": "_cb-frames-card",
+              "settings": {
+                "product": "",
+                "image": "shopify://shop_images/Yonex_Astrox_88D_Pro_Gen_3.png",
+                "use_custom_title": false,
+                "card_title": "Astrox 88D Pro Gen 3",
+                "vendor_label": "Yonex Japan",
+                "badge_text": "New gen 3",
+                "badge_style": "accent",
+                "stock_label": "In Stock Papakura",
+                "show_perk": true,
+                "perk_text": "Free Custom String",
+                "show_rating": true,
+                "show_currency": true,
+                "custom_price": "$359",
+                "custom_rating": 5,
+                "custom_rating_count": 42,
+                "specs": "4U (83g), Head-Heavy, Extra Stiff",
+                "filter_keys": "Head-Heavy",
+                "button_label": "Configure String & Tension",
+                "button_link": ""
+              },
+              "blocks": {}
+            },
+            "cb_frames_card_M9iFCT": {
+              "type": "_cb-frames-card",
+              "settings": {
+                "product": "",
+                "image": "shopify://shop_images/Victor_Auraspeed_100X_Ultra.png",
+                "use_custom_title": false,
+                "card_title": "Auraspeed 100X Ultra",
+                "vendor_label": "Victor",
+                "badge_text": "Speed series",
+                "badge_style": "dark",
+                "stock_label": "In Stock Papakura",
+                "show_perk": true,
+                "perk_text": "Free Custom String",
+                "show_rating": true,
+                "show_currency": true,
+                "custom_price": "329",
+                "custom_rating": 4.8,
+                "custom_rating_count": 19,
+                "specs": "4U (83g), Even / Speed, Stiff",
+                "filter_keys": "Speed",
+                "button_label": "Configure String & Tension",
+                "button_link": ""
+              },
+              "blocks": {}
+            },
+            "cb_frames_card_w6Kw6Q": {
+              "type": "_cb-frames-card",
+              "settings": {
+                "product": "",
+                "image": "shopify://shop_images/Ashaway_Phantom_X-Speed_II.png",
+                "use_custom_title": false,
+                "card_title": "Phantom X-Speed II",
+                "vendor_label": "Ashaway USA",
+                "badge_text": "Best value",
+                "badge_style": "muted",
+                "stock_label": "In Stock Papakura",
+                "show_perk": true,
+                "perk_text": "Free Custom String",
+                "show_rating": true,
+                "show_currency": true,
+                "custom_price": "$229",
+                "custom_rating": 4.9,
+                "custom_rating_count": 31,
+                "specs": "4U (84g), Even Balance, Medium Flex",
+                "filter_keys": "All-Round",
+                "button_label": "Configure String & Tension",
+                "button_link": ""
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "cb_frames_card_xTtP7b",
+            "cb_frames_card_AVigxM",
+            "cb_frames_card_M9iFCT",
+            "cb_frames_card_w6Kw6Q"
+          ]
+        },
+        "cb_frames_callout_NiBANT": {
+          "type": "_cb-frames-callout",
+          "settings": {
+            "icon": "racket",
+            "callout_title": "Want to test before you buy?",
+            "callout_text": "Borrow any of our demo frames on Papakura courts for 30 minutes during shop hours.",
+            "button_label": "Learn about Demo Program",
+            "button_link": ""
           },
           "blocks": {}
         }
       },
       "block_order": [
-        "text_YLPk4p",
-        "button_H9gpTf"
+        "cb_frames_header_n3VhiR",
+        "cb_frames_grid_VTe8kz",
+        "cb_frames_callout_NiBANT"
       ],
-      "name": "t:names.hero",
+      "name": "[CB] Featured frames",
       "settings": {
-        "media_type_1": "image",
-        "media_type_2": "image",
-        "link": "",
-        "open_in_new_tab": false,
-        "content_direction": "column",
-        "vertical_on_mobile": true,
-        "horizontal_alignment": "space-between",
-        "vertical_alignment": "flex-end",
-        "align_baseline": true,
-        "horizontal_alignment_flex_direction_column": "center",
-        "vertical_alignment_flex_direction_column": "flex-end",
-        "gap": 24,
-        "section_width": "page-width",
-        "section_height": "medium",
-        "section_height_custom": 50,
-        "toggle_overlay": true,
-        "overlay_color": "#12121266",
-        "overlay_style": "solid",
-        "gradient_direction": "to bottom",
-        "blurred_reflection": false,
-        "reflection_opacity": 75,
-        "padding-block-start": 100,
-        "padding-block-end": 72
+        "max_width": 1400,
+        "stack_gap": 32,
+        "card_radius": 10,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "#121212",
+        "card_background_color": "#181818",
+        "border_color": "#ffffff14",
+        "text_color": "#ffffff",
+        "accent_color": "#d71f27",
+        "accent_text_color": "#ffffff",
+        "image_background_color": "#ffffff",
+        "perk_color": "#22c55e",
+        "star_color": "#f5b301",
+        "padding_top": 64,
+        "padding_bottom": 64
       }
     },
-    "product_list_fa6P9H": {
-      "type": "product-list",
+    "cb_stringing_pJ9cXx": {
+      "type": "cb-stringing",
       "blocks": {
-        "static-header": {
-          "type": "_product-list-content",
-          "name": "t:names.header",
-          "static": true,
+        "cb_string_media_dGJDrN": {
+          "type": "_cb-string-media",
           "settings": {
-            "content_direction": "row",
-            "vertical_on_mobile": false,
-            "horizontal_alignment": "space-between",
-            "vertical_alignment": "flex-end",
-            "align_baseline": true,
-            "horizontal_alignment_flex_direction_column": "flex-start",
-            "vertical_alignment_flex_direction_column": "center",
-            "gap": 12,
-            "width": "fill",
-            "custom_width": 100,
-            "width_mobile": "fill",
-            "custom_width_mobile": 100,
-            "height": "fit",
-            "custom_height": 100,
-            "background_media": "none",
-            "video_position": "cover",
-            "background_image_position": "cover",
-            "border": "none",
-            "border_width": 1,
-            "border_opacity": 100,
-            "border_radius": 0,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
+            "image": "shopify://shop_images/Victor_Electronic_6-Point_Stringing_Machine_at_41R_Elliot_Street_Papakura.webp",
+            "image_ratio": "15 / 16",
+            "image_ratio_mobile": "4 / 3",
+            "badge_text": "Precision workshop",
+            "caption": "Papakura Hall Stringing Bench (41R Elliot St)",
+            "show_pin": true,
+            "caption_note": "Victor Electronic 6-Point Mount"
           },
-          "blocks": {
-            "product_list_text_YFtzcL": {
-              "type": "_product-list-text",
-              "name": "t:names.collection_title",
-              "settings": {
-                "text": "<h3>{{ closest.collection.title }}</h3>",
-                "width": "fit-content",
-                "max_width": "normal",
-                "alignment": "left",
-                "type_preset": "h4",
-                "font": "var(--font-body--family)",
-                "font_size": "",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "product_list_button_MWeP9V": {
-              "type": "_product-list-button",
-              "name": "t:names.product_list_button",
-              "settings": {
-                "label": "View all",
-                "open_in_new_tab": false,
-                "style_class": "button-unstyled",
-                "width": "fit-content",
-                "custom_width": 100,
-                "width_mobile": "fit-content",
-                "custom_width_mobile": 100
-              },
-              "blocks": {}
-            }
-          },
-          "block_order": [
-            "product_list_text_YFtzcL",
-            "product_list_button_MWeP9V"
-          ]
+          "blocks": {}
         },
-        "static-product-card": {
-          "type": "_product-card",
-          "name": "t:names.product_card",
-          "static": true,
-          "settings": {
-            "product_card_gap": 4,
-            "border": "none",
-            "border_width": 1,
-            "border_opacity": 100,
-            "border_radius": 0,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
+        "cb_string_content_PX7zHe": {
+          "type": "_cb-string-content",
+          "settings": {},
           "blocks": {
-            "product_card_gallery_677WP3": {
-              "type": "_product-card-gallery",
-              "name": "t:names.product_card_media",
+            "cb_string_badge_acWakN": {
+              "type": "_cb-string-badge",
               "settings": {
-                "image_ratio": "adapt",
-                "border": "none",
-                "border_width": 1,
-                "border_opacity": 100,
-                "border_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
+                "badge_text": "Master stringer workshop",
+                "show_dot": true
               },
               "blocks": {}
             },
-            "product_title_YXxMTj": {
-              "type": "product-title",
-              "name": "t:names.product_title",
+            "cb_string_heading_w8ibaV": {
+              "type": "_cb-string-heading",
               "settings": {
-                "width": "100%",
-                "max_width": "normal",
-                "alignment": "left",
-                "type_preset": "paragraph",
-                "font": "var(--font-body--family)",
-                "font_size": "1rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 4,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
+                "heading_text": "Professional stringing. Seven days a week.",
+                "size": 44,
+                "tag": "h2"
               },
               "blocks": {}
             },
-            "price_JQzVV4": {
-              "type": "price",
-              "name": "t:names.product_price",
+            "cb_string_text_dw6KWJ": {
+              "type": "_cb-string-text",
               "settings": {
-                "show_sale_price_first": true,
-                "show_installments": false,
-                "show_tax_info": false,
-                "type_preset": "h6",
-                "width": "100%",
-                "alignment": "left",
-                "font": "var(--font-body--family)",
-                "font_size": "1rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
+                "body_text": "<p>Factory pre-strung rackets come with loose, generic nylon that deadens touch and control. Every frame at CMBA is hand-mounted on our electronic constant-pull machines at 41R Elliot Street. Choose Yonex BG80, BG66UM, Victor VBS, or Ashaway with tension calibrated specifically to your swing and arm comfort.</p>",
+                "size": 14
               },
               "blocks": {}
+            },
+            "cb_string_features_GjWDLX": {
+              "type": "_cb-string-features",
+              "settings": {},
+              "blocks": {
+                "cb_string_feature_3ceepc": {
+                  "type": "_cb-string-feature",
+                  "settings": {
+                    "icon": "timer",
+                    "feature_title": "24-Hour Express Turnaround",
+                    "feature_text": "Drop off before 6pm on club night, pick up strung and calibrated for your match tomorrow."
+                  },
+                  "blocks": {}
+                },
+                "cb_string_feature_aqeqLr": {
+                  "type": "_cb-string-feature",
+                  "settings": {
+                    "icon": "gauge",
+                    "feature_title": "Certified 6-Point Electronic Pull (±0.2 lbs accuracy)",
+                    "feature_text": "Prevents frame warping, head distortion, and grommet crushing with genuine micro-tension accuracy."
+                  },
+                  "blocks": {}
+                },
+                "cb_string_feature_UGYNDX": {
+                  "type": "_cb-string-feature",
+                  "settings": {
+                    "icon": "sliders",
+                    "feature_title": "Custom Tension Calibration (20 to 32 lbs)",
+                    "feature_text": "Not sure whether to pull 24 or 28 lbs? Our certified master stringers match tension to your technique to protect elbow health."
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "cb_string_feature_3ceepc",
+                "cb_string_feature_aqeqLr",
+                "cb_string_feature_UGYNDX"
+              ]
+            },
+            "cb_string_actions_Hcy4hY": {
+              "type": "_cb-string-actions",
+              "settings": {},
+              "blocks": {
+                "cb_string_button_9EQDJA": {
+                  "type": "_cb-string-button",
+                  "settings": {
+                    "label": "Explore Stringing Lab & Book Tension",
+                    "link": "",
+                    "open_in_new_tab": false,
+                    "style": "primary",
+                    "show_arrow": true
+                  },
+                  "blocks": {}
+                },
+                "cb_string_note_WChDPh": {
+                  "type": "_cb-string-note",
+                  "settings": {
+                    "note_text": "41R Elliot St Pro Shop • Walk-ins & Online Booking"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "cb_string_button_9EQDJA",
+                "cb_string_note_WChDPh"
+              ]
             }
           },
           "block_order": [
-            "product_card_gallery_677WP3",
-            "product_title_YXxMTj",
-            "price_JQzVV4"
+            "cb_string_badge_acWakN",
+            "cb_string_heading_w8ibaV",
+            "cb_string_text_dw6KWJ",
+            "cb_string_features_GjWDLX",
+            "cb_string_actions_Hcy4hY"
           ]
         }
       },
-      "name": "t:names.featured_collection",
+      "block_order": [
+        "cb_string_media_dGJDrN",
+        "cb_string_content_PX7zHe"
+      ],
+      "name": "[CB] Stringing",
       "settings": {
-        "collection": "all",
-        "layout_type": "grid",
-        "carousel_on_mobile": false,
-        "max_products": 8,
-        "columns": 4,
-        "mobile_columns": "2",
-        "mobile_card_size": "60cqw",
-        "columns_gap": 8,
-        "rows_gap": 24,
-        "icons_style": "arrow",
-        "icons_shape": "none",
-        "section_width": "page-width",
-        "horizontal_alignment": "flex-start",
-        "gap": 28,
-        "padding-block-start": 48,
-        "padding-block-end": 48
+        "media_width": 46,
+        "column_gap": 96,
+        "vertical_alignment": "center",
+        "media_first_mobile": true,
+        "max_width": 1400,
+        "card_radius": 12,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "#080808",
+        "card_background_color": "#181818",
+        "border_color": "#ffffff14",
+        "text_color": "#ffffff",
+        "accent_color": "#d71f27",
+        "accent_text_color": "#ffffff",
+        "padding_top": 64,
+        "padding_bottom": 64
+      }
+    },
+    "cb_guides_cqHriN": {
+      "type": "cb-guides",
+      "blocks": {
+        "cb_guides_header_qBwG63": {
+          "type": "_cb-guides-header",
+          "settings": {
+            "alignment": "left",
+            "max_width": 720
+          },
+          "blocks": {
+            "cb_guides_eyebrow_Gt37Pa": {
+              "type": "_cb-guides-eyebrow",
+              "settings": {
+                "eyebrow_text": "Technical guidance"
+              },
+              "blocks": {}
+            },
+            "cb_guides_heading_CJyaVr": {
+              "type": "_cb-guides-heading",
+              "settings": {
+                "heading_text": "We don’t expect you to know what 4U, head-heavy or 26&nbsp;lbs means. That’s our job.",
+                "size": 48,
+                "tag": "h2"
+              },
+              "blocks": {}
+            },
+            "cb_guides_text_E6aGjc": {
+              "type": "_cb-guides-text",
+              "settings": {
+                "body_text": "<p>Read technical briefings straight from Counties Manukau stringers and coaching staff to demystify badminton gear.</p>",
+                "size": 14
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "cb_guides_eyebrow_Gt37Pa",
+            "cb_guides_heading_CJyaVr",
+            "cb_guides_text_E6aGjc"
+          ]
+        },
+        "cb_guides_grid_JaENfB": {
+          "type": "_cb-guides-grid",
+          "settings": {
+            "columns": 3,
+            "mobile_layout": "stack",
+            "gap": 16
+          },
+          "blocks": {
+            "cb_guides_card_NKCJeA": {
+              "type": "_cb-guides-card",
+              "settings": {
+                "article": "",
+                "use_custom_text": false,
+                "card_title": "Choosing Your First Racket",
+                "summary": "A 3U racket (85-89g) delivers heavier smash weight, but demands shoulder strength during 3-set matches. A 4U racket (80-84g) provides much quicker net defense without sacrificing punch if strung right.",
+                "icon": "player",
+                "label": "Player guide",
+                "link_label": "Read full weight guide",
+                "link": ""
+              },
+              "blocks": {}
+            },
+            "cb_guides_card_GbigKk": {
+              "type": "_cb-guides-card",
+              "settings": {
+                "article": "",
+                "use_custom_text": false,
+                "card_title": "String Tension Guide: Why higher tension shrinks sweet spot",
+                "summary": "Pro players string at 28-32 lbs for surgical shuttle placement. But if your hitting timing isn't millimeter-perfect, high tension robs power and transfers harsh vibrations straight to your elbow joint.",
+                "icon": "strings",
+                "label": "String lab insight",
+                "link_label": "Read tension recommendations",
+                "link": ""
+              },
+              "blocks": {}
+            },
+            "cb_guides_card_fPWHne": {
+              "type": "_cb-guides-card",
+              "settings": {
+                "article": "",
+                "use_custom_text": false,
+                "card_title": "Choosing Court Shoes: Why running shoes cause rolled ankles",
+                "summary": "Running shoes are built for forward stride with tall foam stacks. Badminton requires rapid 45-degree lateral lunges, requiring low-profile gum outsoles and anti-torsion carbon shank plates.",
+                "icon": "shoe",
+                "label": "Injury prevention",
+                "link_label": "Read court footwear guide",
+                "link": ""
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "cb_guides_card_NKCJeA",
+            "cb_guides_card_GbigKk",
+            "cb_guides_card_fPWHne"
+          ]
+        }
+      },
+      "block_order": [
+        "cb_guides_header_qBwG63",
+        "cb_guides_grid_JaENfB"
+      ],
+      "name": "[CB] Technical guides",
+      "settings": {
+        "max_width": 1400,
+        "stack_gap": 40,
+        "card_radius": 10,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "#121212",
+        "card_background_color": "#181818",
+        "border_color": "#ffffff14",
+        "text_color": "#ffffff",
+        "accent_color": "#d71f27",
+        "padding_top": 64,
+        "padding_bottom": 64
+      }
+    },
+    "cb_shop_info_pkyUMq": {
+      "type": "cb-shop-info",
+      "blocks": {
+        "cb_info_content_f6q49g": {
+          "type": "_cb-info-content",
+          "settings": {},
+          "blocks": {
+            "cb_info_badges_D9Nk4d": {
+              "type": "_cb-info-badges",
+              "settings": {},
+              "blocks": {
+                "cb_info_badge_97fy7c": {
+                  "type": "_cb-info-badge",
+                  "settings": {
+                    "badge_text": "Non-Profit Community Association",
+                    "style": "dark",
+                    "show_dot": true
+                  },
+                  "blocks": {}
+                },
+                "cb_info_badge_QFwnLY": {
+                  "type": "_cb-info-badge",
+                  "settings": {
+                    "badge_text": "Official 41R Elliot St Pro Shop",
+                    "style": "accent",
+                    "show_dot": false
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "cb_info_badge_97fy7c",
+                "cb_info_badge_QFwnLY"
+              ]
+            },
+            "cb_info_heading_NnykP7": {
+              "type": "_cb-info-heading",
+              "settings": {
+                "heading_text": "Strung by players who play and coaches who coach.",
+                "size": 44,
+                "tag": "h2"
+              },
+              "blocks": {}
+            },
+            "cb_info_text_htMeyz": {
+              "type": "_cb-info-text",
+              "settings": {
+                "body_text": "<p>When you shop here, 100% of proceeds directly support Counties Manukau Badminton Association (CMBA), junior squad coaching, subsidized school racquets, court resurfacing, and representative teams across South Auckland.</p>",
+                "size": 14
+              },
+              "blocks": {}
+            },
+            "cb_info_details_Vm33jd": {
+              "type": "_cb-info-details",
+              "settings": {},
+              "blocks": {
+                "cb_info_detail_qTWFzx": {
+                  "type": "_cb-info-detail",
+                  "settings": {
+                    "detail_label": "Physical workshop & courts",
+                    "detail_value": "41R Elliot Street, Papakura",
+                    "detail_note": "Opposite Central Park • Free parking on site",
+                    "note_style": "muted"
+                  },
+                  "blocks": {}
+                },
+                "cb_info_detail_F7kmzF": {
+                  "type": "_cb-info-detail",
+                  "settings": {
+                    "detail_label": "Workshop & pickup hours",
+                    "detail_value": "Monday – Sunday: 9:00 AM – 8:00 PM",
+                    "detail_note": "Click & Collect ready in under 24 hrs",
+                    "note_style": "success"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "cb_info_detail_qTWFzx",
+                "cb_info_detail_F7kmzF"
+              ]
+            },
+            "cb_info_buttons_mn4ffx": {
+              "type": "_cb-info-buttons",
+              "settings": {},
+              "blocks": {
+                "cb_info_button_Dh4hkJ": {
+                  "type": "_cb-info-button",
+                  "settings": {
+                    "label": "Get Directions to Papakura Hall",
+                    "link": "",
+                    "directions_address": "41R Elliot Street, Papakura, Auckland",
+                    "open_in_new_tab": false,
+                    "style": "primary",
+                    "icon": "directions"
+                  },
+                  "blocks": {}
+                },
+                "cb_info_button_nbd7NN": {
+                  "type": "_cb-info-button",
+                  "settings": {
+                    "label": "Book a Court at CMBA",
+                    "link": "",
+                    "directions_address": "",
+                    "open_in_new_tab": false,
+                    "style": "secondary",
+                    "icon": "none"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "cb_info_button_Dh4hkJ",
+                "cb_info_button_nbd7NN"
+              ]
+            }
+          },
+          "block_order": [
+            "cb_info_badges_D9Nk4d",
+            "cb_info_heading_NnykP7",
+            "cb_info_text_htMeyz",
+            "cb_info_details_Vm33jd",
+            "cb_info_buttons_mn4ffx"
+          ]
+        },
+        "cb_info_stockist_NdAJjy": {
+          "type": "_cb-info-stockist",
+          "settings": {
+            "logo_background": "#ffffff",
+            "logo_height": 24,
+            "card_label": "Official stockist",
+            "stockist_title": "Authorized Specialist Stockist",
+            "stockist_text": "Every racket sold at CMBA Pro Shop is sourced directly through official New Zealand distributors with verified authentic serial numbers and full manufacturer warranty.",
+            "brand_columns": "2"
+          },
+          "blocks": {
+            "cb_info_brand_B3TRCW": {
+              "type": "_cb-info-brand",
+              "settings": {
+                "brand_name": "Yonex",
+                "caption": "NZ Authorized Dealer",
+                "link": ""
+              },
+              "blocks": {}
+            },
+            "cb_info_brand_4VwgF7": {
+              "type": "_cb-info-brand",
+              "settings": {
+                "brand_name": "Victor",
+                "caption": "Official Association Rig",
+                "link": ""
+              },
+              "blocks": {}
+            },
+            "cb_info_brand_J6TXpy": {
+              "type": "_cb-info-brand",
+              "settings": {
+                "brand_name": "Ashaway",
+                "caption": "Specialist Strings & Rigs",
+                "link": ""
+              },
+              "blocks": {}
+            },
+            "cb_info_brand_iTyRUW": {
+              "type": "_cb-info-brand",
+              "settings": {
+                "brand_name": "Babolat",
+                "caption": "Certified Range",
+                "link": ""
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "cb_info_brand_B3TRCW",
+            "cb_info_brand_4VwgF7",
+            "cb_info_brand_J6TXpy",
+            "cb_info_brand_iTyRUW"
+          ]
+        }
+      },
+      "block_order": [
+        "cb_info_content_f6q49g",
+        "cb_info_stockist_NdAJjy"
+      ],
+      "name": "[CB] Shop info",
+      "settings": {
+        "card_width": 40,
+        "column_gap": 64,
+        "vertical_alignment": "center",
+        "max_width": 1400,
+        "card_radius": 10,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "#121212",
+        "card_background_color": "#181818",
+        "tile_background_color": "#141414",
+        "border_color": "#ffffff14",
+        "text_color": "#ffffff",
+        "accent_color": "#d71f27",
+        "accent_text_color": "#ffffff",
+        "success_color": "#22c55e",
+        "padding_top": 64,
+        "padding_bottom": 64
       }
     }
   },
   "order": [
-    "hero_jVaWmY",
-    "product_list_fa6P9H"
+    "cb_hero_paP4ny",
+    "cb_shop_category_e7qpYi",
+    "cb_racket_finder_dizNGR",
+    "cb_featured_frames_HmLqyJ",
+    "cb_stringing_pJ9cXx",
+    "cb_guides_cqHriN",
+    "cb_shop_info_pkyUMq"
   ]
 }

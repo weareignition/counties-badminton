@@ -1,0 +1,208 @@
+{%- assign image = block.settings.image -%}
+
+<figure
+  class="cb-string__media"
+  style="
+    --cbs-ratio: {{ block.settings.image_ratio }};
+    --cbs-ratio-mobile: {{ block.settings.image_ratio_mobile }};
+    --cbs-focal: {{ image.presentation.focal_point | default: 'center' }};
+  "
+  {{ block.shopify_attributes }}
+>
+  <div class="cb-string__media-frame">
+    {%- if image != blank -%}
+      {{
+        image
+        | image_url: width: 1600
+        | image_tag:
+          widths: '400, 600, 800, 1000, 1200, 1600',
+          sizes: '(min-width: 990px) 45vw, 100vw',
+          loading: 'lazy',
+          class: 'cb-string__image'
+      }}
+    {%- else -%}
+      {{ 'lifestyle-1' | placeholder_svg_tag: 'cb-string__image cb-string__image--placeholder' }}
+    {%- endif -%}
+
+    {%- if block.settings.badge_text != blank -%}
+      <span class="cb-string__media-badge">{{ block.settings.badge_text | escape }}</span>
+    {%- endif -%}
+  </div>
+
+  {%- if block.settings.caption != blank or block.settings.caption_note != blank -%}
+    <figcaption class="cb-string__caption">
+      {%- if block.settings.caption != blank -%}
+        <span class="cb-string__caption-main">
+          {%- if block.settings.show_pin -%}
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 21s-7-6.1-7-11.5a7 7 0 0 1 14 0C19 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>
+            </svg>
+          {%- endif -%}
+          {{- block.settings.caption | escape -}}
+        </span>
+      {%- endif -%}
+      {%- if block.settings.caption_note != blank -%}
+        <span class="cb-string__caption-note">{{ block.settings.caption_note | escape }}</span>
+      {%- endif -%}
+    </figcaption>
+  {%- endif -%}
+</figure>
+
+{% stylesheet %}
+  .cb-string__media {
+    min-width: 0;
+    margin: 0;
+    padding: 10px;
+    background: var(--cbs-card);
+    border: 1px solid var(--cbs-border);
+    border-radius: var(--cbs-radius);
+  }
+
+  /* Stacked layouts (below 990px) use the mobile shape so the photo doesn't fill the screen. */
+  .cb-string__media-frame {
+    position: relative;
+    aspect-ratio: var(--cbs-ratio-mobile, 4 / 3);
+    overflow: hidden;
+    border-radius: calc(var(--cbs-radius) * 0.67);
+    background: var(--cbs-surface);
+  }
+
+  @media screen and (min-width: 990px) {
+    .cb-string__media-frame {
+      aspect-ratio: var(--cbs-ratio, 15 / 16);
+    }
+  }
+
+  .cb-string__image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: var(--cbs-focal, center);
+  }
+
+  .cb-string__image--placeholder {
+    fill: var(--cbs-muted);
+  }
+
+  .cb-string__media-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    max-width: calc(100% - 24px);
+    padding: 6px 10px;
+    border: 1px solid rgb(255 255 255 / 0.15);
+    border-radius: 5px;
+    background: rgb(10 10 10 / 0.8);
+    backdrop-filter: blur(6px);
+    font-family: var(--cbs-font-body);
+    font-weight: var(--cbs-font-body-strong);
+    font-size: 10px;
+    line-height: 1.25;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #fff;
+  }
+
+  .cb-string__caption {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px 16px;
+    padding: 12px 6px 4px;
+  }
+
+  .cb-string__caption-main {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--cbs-font-body);
+    font-weight: var(--cbs-font-body-weight);
+    font-size: 12px;
+    line-height: 1.4;
+    color: var(--cbs-text);
+  }
+
+  .cb-string__caption-main svg {
+    flex: none;
+    color: var(--cbs-accent);
+  }
+
+  .cb-string__caption-note {
+    font-family: var(--cbs-font-body);
+    font-weight: var(--cbs-font-body-weight);
+    font-size: 11px;
+    line-height: 1.4;
+    color: var(--cbs-muted);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Media card",
+  "tag": null,
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "Image shape",
+      "options": [
+        { "value": "1 / 1", "label": "Square" },
+        { "value": "15 / 16", "label": "Slightly tall" },
+        { "value": "4 / 5", "label": "Portrait" },
+        { "value": "3 / 4", "label": "Tall" },
+        { "value": "4 / 3", "label": "Landscape" }
+      ],
+      "default": "15 / 16"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio_mobile",
+      "label": "Mobile image shape",
+      "info": "Used on phones and tablets, where the card sits above the content.",
+      "options": [
+        { "value": "1 / 1", "label": "Square" },
+        { "value": "4 / 3", "label": "Landscape" },
+        { "value": "3 / 2", "label": "Wide" },
+        { "value": "16 / 9", "label": "Widescreen" },
+        { "value": "4 / 5", "label": "Portrait" }
+      ],
+      "default": "4 / 3"
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge",
+      "info": "Shown in capitals in the image's top-left corner.",
+      "default": "Precision workshop"
+    },
+    {
+      "type": "text",
+      "id": "caption",
+      "label": "Caption",
+      "default": "Papakura Hall Stringing Bench (41R Elliot St)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_pin",
+      "label": "Show location pin",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "caption_note",
+      "label": "Caption note",
+      "info": "Shown on the right of the caption.",
+      "default": "Victor Electronic 6-Point Mount"
+    }
+  ],
+  "presets": [{ "name": "[CB] Media card" }]
+}
+{% endschema %}

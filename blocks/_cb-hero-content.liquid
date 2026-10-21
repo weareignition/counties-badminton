@@ -1,0 +1,68 @@
+<div
+  class="cb-hero__content cb-hero__content--{{ block.settings.alignment }}"
+  style="--cbh-content-gap: {{ block.settings.gap }}px;"
+  {{ block.shopify_attributes }}
+>
+  {% content_for 'blocks' %}
+</div>
+
+{% stylesheet %}
+  .cb-hero__content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--cbh-content-gap, 24px);
+    min-width: 0;
+  }
+
+  .cb-hero__content--center {
+    align-items: center;
+    text-align: center;
+  }
+
+  @media screen and (min-width: 990px) {
+    .cb-hero__content--center {
+      align-items: flex-start;
+      text-align: start;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Content group",
+  "tag": null,
+  "blocks": [
+    { "type": "_cb-hero-badge" },
+    { "type": "_cb-hero-heading" },
+    { "type": "_cb-hero-text" },
+    { "type": "_cb-hero-buttons" },
+    { "type": "_cb-hero-features" },
+    { "type": "@theme" },
+    { "type": "@app" }
+  ],
+  "settings": [
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Space between blocks",
+      "min": 8,
+      "max": 64,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Mobile alignment",
+      "options": [
+        { "value": "start", "label": "Left" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "start"
+    }
+  ],
+  "presets": [{ "name": "[CB] Content group" }]
+}
+{% endschema %}

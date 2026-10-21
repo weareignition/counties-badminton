@@ -1,0 +1,67 @@
+{%- if block.settings.badge_text != blank -%}
+  <p class="cb-footer__badge" {{ block.shopify_attributes }}>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      {%- case block.settings.icon -%}
+        {%- when 'certified' -%}
+          <path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76z"/><path d="m9 12 2 2 4-4"/>
+        {%- when 'shield' -%}
+          <path d="M12 3 4.5 6v5.5c0 4.6 3.2 8.1 7.5 9.5 4.3-1.4 7.5-4.9 7.5-9.5V6z"/><path d="m9 12 2 2 4-4"/>
+        {%- when 'pin' -%}
+          <path d="M12 21s-7-6.1-7-11.5a7 7 0 0 1 14 0C19 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>
+        {%- when 'star' -%}
+          <path d="m12 3.5 2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/>
+        {%- when 'check' -%}
+          <circle cx="12" cy="12" r="9"/><path d="m8.5 12 2.5 2.5 4.5-5"/>
+      {%- endcase -%}
+    </svg>
+    <span>{{ block.settings.badge_text | escape }}</span>
+  </p>
+{%- endif -%}
+
+{% stylesheet %}
+  .cb-footer__badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    font-family: var(--cbft-font-body);
+    font-weight: var(--cbft-font-body-weight);
+    font-size: 13px;
+    line-height: 1.45;
+    color: var(--cbft-muted);
+  }
+
+  .cb-footer__badge svg {
+    flex: none;
+    color: var(--cbft-accent);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Badge line",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "icon",
+      "label": "Icon",
+      "options": [
+        { "value": "certified", "label": "Certified" },
+        { "value": "shield", "label": "Shield" },
+        { "value": "check", "label": "Check" },
+        { "value": "pin", "label": "Location" },
+        { "value": "star", "label": "Star" }
+      ],
+      "default": "certified"
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Text",
+      "default": "Specialist Workshop Certified"
+    }
+  ],
+  "presets": [{ "name": "[CB] Badge line" }]
+}
+{% endschema %}

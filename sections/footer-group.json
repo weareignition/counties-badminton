@@ -11,6 +11,255 @@
   "type": "footer",
   "name": "t:names.footer",
   "sections": {
+    "cb_footer": {
+      "type": "cb-footer",
+      "blocks": {
+        "brand": {
+          "type": "_cb-footer-brand",
+          "settings": {},
+          "blocks": {
+            "logo": {
+              "type": "_cb-footer-logo",
+              "settings": {
+                "logo": "shopify://shop_images/Counties_Manukau_Badminton_Association.png",
+                "logo_background": "#ffffff",
+                "logo_height": 26,
+                "brand_name": "Counties Manukau",
+                "tagline": "Badminton Pro Shop"
+              },
+              "blocks": {}
+            },
+            "text": {
+              "type": "_cb-footer-text",
+              "settings": {
+                "body_text": "<p>Counties Manukau Badminton Association pro shop & certified electronic stringing lab. Run by competitive players, certified coaches, and master stringers at Papakura Badminton Hall.</p>"
+              },
+              "blocks": {}
+            },
+            "badge": {
+              "type": "_cb-footer-badge",
+              "settings": {
+                "icon": "certified",
+                "badge_text": "Specialist Workshop Certified • 41R Elliot St, Papakura"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "logo",
+            "text",
+            "badge"
+          ]
+        },
+        "links": {
+          "type": "_cb-footer-links",
+          "settings": {},
+          "blocks": {
+            "equipment": {
+              "type": "_cb-footer-menu",
+              "settings": {
+                "menu_heading": "Specialist Equipment",
+                "menu": ""
+              },
+              "blocks": {
+                "link_1": {
+                  "type": "_cb-footer-link",
+                  "settings": {
+                    "link_label": "Rackets (All Brands)",
+                    "link": ""
+                  },
+                  "blocks": {}
+                },
+                "link_2": {
+                  "type": "_cb-footer-link",
+                  "settings": {
+                    "link_label": "Interactive Racket Finder",
+                    "link": ""
+                  },
+                  "blocks": {}
+                },
+                "link_3": {
+                  "type": "_cb-footer-link",
+                  "settings": {
+                    "link_label": "Certified Stringing Specs",
+                    "link": ""
+                  },
+                  "blocks": {}
+                },
+                "link_4": {
+                  "type": "_cb-footer-link",
+                  "settings": {
+                    "link_label": "Racket Demo Programme",
+                    "link": ""
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "link_1",
+                "link_2",
+                "link_3",
+                "link_4"
+              ]
+            },
+            "services": {
+              "type": "_cb-footer-menu",
+              "settings": {
+                "menu_heading": "CMBA Services",
+                "menu": ""
+              },
+              "blocks": {
+                "link_1": {
+                  "type": "_cb-footer-link",
+                  "settings": {
+                    "link_label": "Papakura Workshop & Pick-up",
+                    "link": ""
+                  },
+                  "blocks": {}
+                },
+                "link_2": {
+                  "type": "_cb-footer-link",
+                  "settings": {
+                    "link_label": "Court Booking & CMBA Club",
+                    "link": ""
+                  },
+                  "blocks": {}
+                },
+                "link_3": {
+                  "type": "_cb-footer-link",
+                  "settings": {
+                    "link_label": "Junior Coaching & Squads",
+                    "link": ""
+                  },
+                  "blocks": {}
+                },
+                "link_4": {
+                  "type": "_cb-footer-link",
+                  "settings": {
+                    "link_label": "Senior Representative Teams",
+                    "link": ""
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "link_1",
+                "link_2",
+                "link_3",
+                "link_4"
+              ]
+            },
+            "care": {
+              "type": "_cb-footer-menu",
+              "settings": {
+                "menu_heading": "Customer Care",
+                "menu": ""
+              },
+              "blocks": {
+                "link_1": {
+                  "type": "_cb-footer-link",
+                  "settings": {
+                    "link_label": "String Tension Guide",
+                    "link": ""
+                  },
+                  "blocks": {}
+                },
+                "link_2": {
+                  "type": "_cb-footer-link",
+                  "settings": {
+                    "link_label": "Terms & Warranty",
+                    "link": ""
+                  },
+                  "blocks": {}
+                },
+                "link_3": {
+                  "type": "_cb-footer-link",
+                  "settings": {
+                    "link_label": "Click & Collect FAQ",
+                    "link": ""
+                  },
+                  "blocks": {}
+                },
+                "link_4": {
+                  "type": "_cb-footer-link",
+                  "settings": {
+                    "link_label": "Contact Head Stringer",
+                    "link": ""
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "link_1",
+                "link_2",
+                "link_3",
+                "link_4"
+              ]
+            }
+          },
+          "block_order": [
+            "equipment",
+            "services",
+            "care"
+          ]
+        },
+        "bottom": {
+          "type": "_cb-footer-bottom",
+          "settings": {
+            "show_divider": true
+          },
+          "blocks": {
+            "copyright": {
+              "type": "_cb-footer-copyright",
+              "settings": {
+                "show_year": true,
+                "copyright_text": "Counties Manukau Badminton Association (CMBA). 41R Elliot Street, Papakura. All rights reserved."
+              },
+              "blocks": {}
+            },
+            "gst": {
+              "type": "_cb-footer-meta",
+              "settings": {
+                "meta_text": "GST Registered NZ (NZBN: 9429042978392)",
+                "link": ""
+              },
+              "blocks": {}
+            },
+            "location": {
+              "type": "_cb-footer-meta",
+              "settings": {
+                "meta_text": "Papakura, Auckland",
+                "link": ""
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "copyright",
+            "gst",
+            "location"
+          ]
+        }
+      },
+      "block_order": [
+        "brand",
+        "links",
+        "bottom"
+      ],
+      "settings": {
+        "brand_width": 38,
+        "column_gap": 64,
+        "max_width": 1400,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "#0c0c0c",
+        "text_color": "#ffffff",
+        "border_color": "#ffffff14",
+        "accent_color": "#d71f27",
+        "padding_top": 56,
+        "padding_bottom": 40
+      }
+    },
     "footer": {
       "type": "footer",
       "blocks": {
@@ -32,6 +281,7 @@
             "height": "fit",
             "custom_height": 100,
             "background_media": "none",
+            "background_color": "",
             "video_position": "cover",
             "background_image_position": "cover",
             "toggle_overlay": false,
@@ -41,6 +291,7 @@
             "border": "none",
             "border_width": 1,
             "border_opacity": 100,
+            "border_color": "",
             "border_radius": 0,
             "link": "",
             "open_in_new_tab": false,
@@ -66,6 +317,7 @@
                 "letter_spacing": "normal",
                 "case": "none",
                 "wrap": "pretty",
+                "text_color": "",
                 "background": false,
                 "background_color": "#00000026",
                 "corner_radius": 0,
@@ -91,6 +343,7 @@
                 "letter_spacing": "normal",
                 "case": "none",
                 "wrap": "pretty",
+                "text_color": "",
                 "background": false,
                 "background_color": "#00000026",
                 "corner_radius": 0,
@@ -108,18 +361,21 @@
                 "width": "fill",
                 "custom_width": 100,
                 "heading": "",
+                "heading_text_color": "",
                 "heading_preset": "h3",
                 "border_style": "all",
                 "input_style": "custom",
                 "border_width": 1,
                 "border_radius": 100,
                 "input_background_color": "{{ settings.color_palette.color1 }}",
+                "input_text_color": "",
                 "input_border_color": "",
                 "input_type_preset": "paragraph",
                 "style_class": "button-secondary",
                 "custom_button_background": "{{ settings.color_palette.foreground }}",
                 "custom_button_text": "{{ settings.color_palette.background }}",
                 "custom_button_border": "{{ settings.color_palette.background }}",
+                "link_text_color": "",
                 "display_type": "text",
                 "label": "Sign up",
                 "integrated_button": false,
@@ -147,13 +403,16 @@
             "show_as_accordion": false,
             "accordion_icon": "plus",
             "accordion_dividers": false,
+            "background_color": "",
+            "text_color": "",
             "heading_preset": "paragraph",
             "link_preset": "paragraph",
             "padding-block-start": 0,
             "padding-block-end": 0,
             "padding-inline-start": 0,
             "padding-inline-end": 0
-          }
+          },
+          "blocks": {}
         },
         "menu_main": {
           "type": "menu",
@@ -164,13 +423,16 @@
             "show_as_accordion": false,
             "accordion_icon": "plus",
             "accordion_dividers": false,
+            "background_color": "",
+            "text_color": "",
             "heading_preset": "paragraph",
             "link_preset": "paragraph",
             "padding-block-start": 0,
             "padding-block-end": 0,
             "padding-inline-start": 0,
             "padding-inline-end": 0
-          }
+          },
+          "blocks": {}
         }
       },
       "block_order": [
@@ -178,6 +440,7 @@
         "menu_footer",
         "menu_main"
       ],
+      "disabled": true,
       "name": "t:names.footer",
       "settings": {
         "section_width": "page-width",
@@ -194,26 +457,40 @@
           "type": "footer-copyright",
           "settings": {
             "show_powered_by": true,
+            "text_color": "",
             "font_size": "0.75rem",
             "case": "none"
-          }
+          },
+          "blocks": {}
         },
         "policy_list": {
           "type": "footer-policy-list",
           "settings": {
+            "text_color": "",
             "font_size": "0.75rem",
             "case": "none"
-          }
+          },
+          "blocks": {}
         },
         "social_icons": {
           "type": "social-links",
           "settings": {
+            "icon_color": "",
             "facebook_url": "https://www.facebook.com",
             "instagram_url": "https://www.instagram.com",
             "youtube_url": "https://www.youtube.com",
             "tiktok_url": "https://www.tiktok.com",
-            "twitter_url": "https://www.twitter.com"
-          }
+            "twitter_url": "https://www.twitter.com",
+            "threads_url": "",
+            "linkedin_url": "",
+            "bluesky_url": "",
+            "snapchat_url": "",
+            "pinterest_url": "",
+            "tumblr_url": "",
+            "vimeo_url": "",
+            "custom_url": ""
+          },
+          "blocks": {}
         }
       },
       "block_order": [
@@ -221,17 +498,20 @@
         "policy_list",
         "social_icons"
       ],
+      "disabled": true,
       "settings": {
         "section_width": "page-width",
         "gap": 24,
         "background_color": "{{ settings.color_palette.color1 }}",
         "divider_thickness": 1,
+        "divider_color": "",
         "padding-block-start": 12,
         "padding-block-end": 16
       }
     }
   },
   "order": [
+    "cb_footer",
     "footer",
     "utilities"
   ]

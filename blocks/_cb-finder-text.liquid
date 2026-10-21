@@ -1,0 +1,58 @@
+{%- if block.settings.body_text != blank -%}
+  <div
+    class="cb-finder__text"
+    style="--cbf-text-size: {{ block.settings.size }}px;"
+    {{ block.shopify_attributes }}
+  >
+    {{ block.settings.body_text }}
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  .cb-finder__text {
+    max-width: 56ch;
+    font-family: var(--cbf-font-body);
+    font-weight: var(--cbf-font-body-weight);
+    font-size: var(--cbf-text-size, 15px);
+    line-height: 1.6;
+    color: var(--cbf-muted);
+  }
+
+  .cb-finder__text > * {
+    margin: 0;
+  }
+
+  .cb-finder__text > * + * {
+    margin-top: 0.75em;
+  }
+
+  .cb-finder__text a {
+    color: var(--cbf-text);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Text",
+  "tag": null,
+  "settings": [
+    {
+      "type": "richtext",
+      "id": "body_text",
+      "label": "Text",
+      "default": "<p>Tell customers how the racket finder helps them choose.</p>"
+    },
+    {
+      "type": "range",
+      "id": "size",
+      "label": "Size",
+      "min": 13,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 15
+    }
+  ],
+  "presets": [{ "name": "[CB] Text" }]
+}
+{% endschema %}

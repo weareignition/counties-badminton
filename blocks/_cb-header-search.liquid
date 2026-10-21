@@ -1,0 +1,91 @@
+{%- comment -%}
+  Looks like a search field; opens the theme's predictive search window (the search page without JavaScript).
+{%- endcomment -%}
+<div
+  class="cb-header__search"
+  style="--cbhd-search-width: {{ block.settings.field_width }}px;"
+  {{ block.shopify_attributes }}
+>
+  <a
+    href="{{ routes.search_url }}"
+    class="cb-header__search-field"
+    data-cb-search-trigger
+    aria-haspopup="dialog"
+    aria-label="{{ 'content.search_input_label' | t }}"
+  >
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+      <circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/>
+    </svg>
+    <span class="cb-header__search-placeholder" aria-hidden="true">{{ block.settings.placeholder | escape }}</span>
+  </a>
+</div>
+
+{% stylesheet %}
+  .cb-header__search {
+    flex: none;
+  }
+
+  .cb-header__search-field {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    width: var(--cbhd-search-width, 220px);
+    height: 40px;
+    padding: 0 12px;
+    border: 1px solid var(--cbhd-border);
+    border-radius: 6px;
+    background: var(--cbhd-field-bg);
+    font-family: var(--cbhd-font-body);
+    font-weight: var(--cbhd-font-body-weight);
+    font-size: 13px;
+    color: var(--cbhd-muted);
+    text-decoration: none;
+    transition: border-color 0.2s ease;
+  }
+
+  .cb-header__search-field:hover {
+    border-color: var(--cbhd-border-hover);
+  }
+
+  .cb-header__search-field:focus-visible {
+    outline: 2px solid var(--cbhd-text);
+    outline-offset: 2px;
+  }
+
+  .cb-header__search-field svg {
+    flex: none;
+  }
+
+  .cb-header__search-placeholder {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Search",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "Placeholder",
+      "default": "Search frame, tension..."
+    },
+    {
+      "type": "range",
+      "id": "field_width",
+      "label": "Field width",
+      "info": "On smaller screens the field becomes a search icon.",
+      "min": 160,
+      "max": 320,
+      "step": 10,
+      "unit": "px",
+      "default": 180
+    }
+  ],
+  "presets": [{ "name": "[CB] Search" }]
+}
+{% endschema %}

@@ -1,0 +1,68 @@
+{%- if block.settings.body_text != blank -%}
+  <div
+    class="cb-hero__text"
+    style="--cbh-text-size: {{ block.settings.size }}px; --cbh-text-max: {{ block.settings.max_width }}ch;"
+    {{ block.shopify_attributes }}
+  >
+    {{ block.settings.body_text }}
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  .cb-hero__text {
+    max-width: var(--cbh-text-max, 52ch);
+    font-family: var(--cbh-font-body);
+    font-weight: var(--cbh-font-body-weight);
+    font-size: clamp(15px, 2.2vw, var(--cbh-text-size, 18px));
+    line-height: 1.55;
+    color: var(--cbh-muted);
+  }
+
+  .cb-hero__text > * {
+    margin: 0;
+  }
+
+  .cb-hero__text > * + * {
+    margin-top: 0.75em;
+  }
+
+  .cb-hero__text a {
+    color: var(--cbh-text);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Text",
+  "tag": null,
+  "settings": [
+    {
+      "type": "richtext",
+      "id": "body_text",
+      "label": "Text",
+      "default": "<p>Tell customers what makes your store special.</p>"
+    },
+    {
+      "type": "range",
+      "id": "size",
+      "label": "Desktop size",
+      "min": 14,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max line length",
+      "min": 30,
+      "max": 80,
+      "step": 2,
+      "unit": "ch",
+      "default": 52
+    }
+  ],
+  "presets": [{ "name": "[CB] Text" }]
+}
+{% endschema %}

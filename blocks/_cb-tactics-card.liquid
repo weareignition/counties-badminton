@@ -1,0 +1,311 @@
+{%- liquid
+  assign linked_collection = block.settings.collection
+  assign url = block.settings.link | default: linked_collection.url | default: routes.all_products_collection_url
+
+  # Count: the collection's real product count once one is chosen; the typed text before that.
+  assign count_text = block.settings.custom_count
+  if linked_collection != blank
+    assign count_text = linked_collection.products_count | append: ' ' | append: block.settings.count_label
+  endif
+-%}
+
+<a
+  href="{{ url }}"
+  class="cb-tactic{% if block.settings.highlight %} is-active{% endif %}"
+  {% if block.settings.filter_value != blank %}
+    data-cb-tactic="{{ block.settings.filter_value | handleize }}"
+  {% endif %}
+  {% if block.settings.highlight %}
+    aria-current="true"
+  {% endif %}
+  {{ block.shopify_attributes }}
+>
+  <div class="cb-tactic__top">
+    <p class="cb-tactic__label">{{ block.settings.tactic_label | escape }}</p>
+    <span class="cb-tactic__icon" aria-hidden="true">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        {%- case block.settings.icon -%}
+          {%- when 'zap' -%}
+            <path d="M13 2 4 14h7l-1 8 9-12h-7z"/>
+          {%- when 'arrows' -%}
+            <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+          {%- when 'crosshair' -%}
+            <circle cx="12" cy="12" r="9"/><path d="M22 12h-4M6 12H2M12 6V2M12 22v-4"/>
+          {%- when 'shield' -%}
+            <path d="M12 3 4.5 6v5.5c0 4.6 3.2 8.1 7.5 9.5 4.3-1.4 7.5-4.9 7.5-9.5V6z"/>
+          {%- when 'feather' -%}
+            <path d="M20.2 12.2a6 6 0 0 0-8.5-8.5L5 10.5V19h8.5z"/><path d="M16 8 2 22M17.5 15H9"/>
+          {%- when 'target' -%}
+            <circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>
+          {%- when 'racket' -%}
+            <ellipse cx="9" cy="9" rx="5" ry="6.2" transform="rotate(-45 9 9)"/><path d="m12.6 12.6 7.4 7.4"/>
+          {%- when 'star' -%}
+            <path d="m12 3.5 2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/>
+        {%- endcase -%}
+      </svg>
+    </span>
+  </div>
+
+  {%- if block.settings.tactic_title != blank -%}
+    <h3 class="cb-tactic__title">{{ block.settings.tactic_title | escape }}</h3>
+  {%- endif -%}
+  {%- if block.settings.tactic_text != blank -%}
+    <p class="cb-tactic__text">{{ block.settings.tactic_text | escape }}</p>
+  {%- endif -%}
+
+  <div class="cb-tactic__footer">
+    <span class="cb-tactic__count">{{ count_text | escape }}</span>
+    {%- if block.settings.cta_label != blank -%}
+      <span class="cb-tactic__cta">
+        {{- block.settings.cta_label | escape -}}
+        <svg class="cb-tactic__arrow" width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+    {%- endif -%}
+  </div>
+</a>
+
+{% stylesheet %}
+  .cb-tactic {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 0;
+    padding: 18px 18px 16px;
+    overflow: hidden;
+    background: var(--cbt-card);
+    border: 1px solid var(--cbt-border);
+    border-radius: var(--cbt-radius);
+    color: inherit;
+    text-decoration: none;
+    counter-increment: cb-tactic;
+    transition: border-color 0.2s ease;
+  }
+
+  /* Soft glow in the top-right corner; turns red on hover and on the active card. */
+  .cb-tactic::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 160px;
+    height: 130px;
+    background: radial-gradient(circle at top right, var(--cbt-glow), transparent 70%);
+    pointer-events: none;
+    transition: background 0.2s ease;
+  }
+
+  .cb-tactic:hover,
+  .cb-tactic.is-active {
+    border-color: color-mix(in srgb, var(--cbt-accent) 70%, transparent);
+  }
+
+  .cb-tactic:hover::before,
+  .cb-tactic.is-active::before {
+    background: radial-gradient(circle at top right, color-mix(in srgb, var(--cbt-accent) 28%, transparent), transparent 70%);
+  }
+
+  .cb-tactic:focus-visible {
+    outline: 2px solid var(--cbt-text);
+    outline-offset: 3px;
+  }
+
+  .cb-tactic__top {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .cb-tactic__label {
+    margin: 0;
+    font-family: var(--cbt-font-body);
+    font-weight: var(--cbt-font-body-strong);
+    font-size: 10px;
+    line-height: 1.4;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--cbt-accent);
+  }
+
+  /* Automatic numbering: "Style 01 / " before the label (see the section's Numbering settings). */
+  .cb-tactics__cards--numbered .cb-tactic__label::before {
+    content: var(--cbt-prefix) ' ' counter(cb-tactic, decimal-leading-zero) ' / ';
+  }
+
+  .cb-tactic__icon {
+    display: inline-flex;
+    flex: none;
+    color: var(--cbt-muted);
+    transition: color 0.2s ease;
+  }
+
+  .cb-tactic:hover .cb-tactic__icon,
+  .cb-tactic.is-active .cb-tactic__icon {
+    color: var(--cbt-accent);
+  }
+
+  .cb-tactic__title {
+    position: relative;
+    margin: 6px 0 0;
+    font-family: var(--cbt-font-heading);
+    font-weight: var(--cbt-font-heading-weight);
+    font-size: 17px;
+    line-height: 1.25;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    color: var(--cbt-text);
+  }
+
+  .cb-tactic__text {
+    position: relative;
+    margin: 0;
+    font-family: var(--cbt-font-body);
+    font-weight: var(--cbt-font-body-weight);
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--cbt-muted);
+  }
+
+  .cb-tactic__footer {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: auto;
+    padding-top: 14px;
+    border-top: 1px solid var(--cbt-border);
+  }
+
+  .cb-tactic__count {
+    font-family: var(--cbt-font-body);
+    font-weight: var(--cbt-font-body-weight);
+    font-size: 12px;
+    color: var(--cbt-muted);
+  }
+
+  .cb-tactic__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--cbt-font-body);
+    font-weight: var(--cbt-font-body-strong);
+    font-size: 12px;
+    white-space: nowrap;
+    color: var(--cbt-text);
+    transition: color 0.2s ease;
+  }
+
+  .cb-tactic:hover .cb-tactic__cta,
+  .cb-tactic.is-active .cb-tactic__cta {
+    color: var(--cbt-accent);
+  }
+
+  .cb-tactic__arrow {
+    transition: transform 0.2s ease;
+  }
+
+  .cb-tactic:hover .cb-tactic__arrow {
+    transform: translateX(3px);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Style card",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "icon",
+      "label": "Icon",
+      "options": [
+        { "value": "zap", "label": "Lightning" },
+        { "value": "arrows", "label": "Arrows" },
+        { "value": "crosshair", "label": "Crosshair" },
+        { "value": "shield", "label": "Shield" },
+        { "value": "feather", "label": "Feather" },
+        { "value": "target", "label": "Target" },
+        { "value": "racket", "label": "Racket" },
+        { "value": "star", "label": "Star" }
+      ],
+      "default": "zap"
+    },
+    {
+      "type": "text",
+      "id": "tactic_label",
+      "label": "Label",
+      "info": "Shown in red capitals, after the automatic number (e.g. STYLE 01 / RAPID DRIVE).",
+      "default": "Rapid drive"
+    },
+    {
+      "type": "text",
+      "id": "tactic_title",
+      "label": "Title",
+      "default": "Speed & Drive"
+    },
+    {
+      "type": "textarea",
+      "id": "tactic_text",
+      "label": "Description"
+    },
+    {
+      "type": "checkbox",
+      "id": "highlight",
+      "label": "Highlight this card",
+      "info": "Red border, icon and link, as on hover.",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Link and count"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection",
+      "info": "The card links here and shows how many products it has."
+    },
+    {
+      "type": "text",
+      "id": "count_label",
+      "label": "Count label",
+      "info": "Shown after the collection's product count.",
+      "default": "Frames"
+    },
+    {
+      "type": "text",
+      "id": "custom_count",
+      "label": "Count text without a collection",
+      "info": "e.g. 16 Frames. Replaced by the real count once a collection is chosen."
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Link text",
+      "default": "Browse"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link",
+      "info": "Leave empty to use the collection."
+    },
+    {
+      "type": "header",
+      "content": "Filtering"
+    },
+    {
+      "type": "text",
+      "id": "filter_value",
+      "label": "Filter value",
+      "info": "If a [CB] Featured frames section is further down the page, clicking the card filters it by this value (its filter buttons, card categories or product tags) instead of opening the link."
+    }
+  ],
+  "presets": [{ "name": "[CB] Style card" }]
+}
+{% endschema %}

@@ -1,0 +1,154 @@
+{%- liquid
+  assign s = section.settings
+  assign font_scope = '#cb-announce-' | append: section.id
+  assign separator = s.separator | remove: "'"
+-%}
+
+{% render 'cb-font-styles',
+  selector: font_scope,
+  prefix: 'cba',
+  heading_font: s.body_font,
+  body_font: s.body_font
+%}
+
+<div
+  id="cb-announce-{{ section.id }}"
+  class="cb-announce"
+  style="
+    --cba-bg: {{ s.background_color }};
+    --cba-text: {{ s.text_color }};
+    --cba-sep: '{{ separator | escape }}';
+    --cba-size: {{ s.font_size }}px;
+    --cba-py: {{ s.padding }}px;
+    --cba-max-width: {{ s.max_width }}px;
+  "
+>
+  <ul class="cb-announce__list" role="list">
+    {% content_for 'blocks' %}
+  </ul>
+</div>
+
+{% stylesheet %}
+  .cb-announce {
+    padding: var(--cba-py) 16px;
+    background: var(--cba-bg);
+    color: var(--cba-text);
+  }
+
+  .cb-announce__list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 2px 8px;
+    max-width: var(--cba-max-width);
+    margin: 0 auto;
+    padding: 0;
+    list-style: none;
+    font-family: var(--cba-font-body);
+    font-weight: var(--cba-font-body-weight);
+    font-size: var(--cba-size);
+    line-height: 1.4;
+    text-align: center;
+  }
+
+  .cb-announce__item + .cb-announce__item::before {
+    content: var(--cba-sep);
+    margin-right: 8px;
+    opacity: 0.85;
+  }
+
+  .cb-announce__link {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .cb-announce__item--desktop {
+      display: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Announcement bar",
+  "tag": "div",
+  "class": "cb-announce-section",
+  "enabled_on": {
+    "groups": ["header"]
+  },
+  "blocks": [{ "type": "_cb-announce-message" }],
+  "settings": [
+    {
+      "type": "text",
+      "id": "separator",
+      "label": "Separator",
+      "info": "Shown between messages.",
+      "default": "•"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Font",
+      "default": "inter_n4"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Text size",
+      "min": 10,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "label": "Top and bottom padding",
+      "min": 4,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 7
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width",
+      "min": 960,
+      "max": 1920,
+      "step": 20,
+      "unit": "px",
+      "default": 1600
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#d71f27"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Announcement bar",
+      "blocks": {
+        "message_1": { "type": "_cb-announce-message", "settings": { "message": "Badminton specialists", "show_on_mobile": true } },
+        "message_2": { "type": "_cb-announce-message", "settings": { "message": "Professional stringing", "show_on_mobile": true } },
+        "message_3": { "type": "_cb-announce-message", "settings": { "message": "Click & collect Papakura", "show_on_mobile": false } },
+        "message_4": { "type": "_cb-announce-message", "settings": { "message": "41R Elliot Street", "show_on_mobile": false } },
+        "message_5": { "type": "_cb-announce-message", "settings": { "message": "Workshop open Mon–Sun 9am - 8pm", "show_on_mobile": false } }
+      },
+      "block_order": ["message_1", "message_2", "message_3", "message_4", "message_5"]
+    }
+  ]
+}
+{% endschema %}

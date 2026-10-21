@@ -1,0 +1,31 @@
+{%- if block.settings.link_label != blank -%}
+  <li class="cb-footer__link-item" {{ block.shopify_attributes }}>
+    {%- if block.settings.link != blank -%}
+      <a href="{{ block.settings.link }}" class="cb-footer__link">{{ block.settings.link_label | escape }}</a>
+    {%- else -%}
+      <span class="cb-footer__link">{{ block.settings.link_label | escape }}</span>
+    {%- endif -%}
+  </li>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "[CB] Link",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Label",
+      "default": "Link"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link",
+      "info": "Without a link, the label shows as plain text."
+    }
+  ],
+  "presets": [{ "name": "[CB] Link" }]
+}
+{% endschema %}

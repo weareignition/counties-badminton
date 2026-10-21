@@ -1,0 +1,56 @@
+<div
+  class="cb-hero__features{% if block.settings.show_divider %} cb-hero__features--divider{% endif %}"
+  {{ block.shopify_attributes }}
+>
+  {% content_for 'blocks' %}
+</div>
+
+{% stylesheet %}
+  .cb-hero__features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 16px 24px;
+    align-self: stretch;
+    margin: 0;
+    padding: 0;
+  }
+
+  .cb-hero__features--divider {
+    margin-top: 12px;
+    padding-top: 28px;
+    border-top: 1px solid var(--cbh-border);
+  }
+
+  @media screen and (max-width: 559px) {
+    .cb-hero__features {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Feature group",
+  "tag": null,
+  "blocks": [{ "type": "_cb-hero-feature" }],
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_divider",
+      "label": "Show divider above",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Feature group",
+      "blocks": {
+        "feature_1": { "type": "_cb-hero-feature", "settings": { "icon": "check", "feature_text": "Expert Advice" } },
+        "feature_2": { "type": "_cb-hero-feature", "settings": { "icon": "sliders", "feature_text": "Professional Stringing" } },
+        "feature_3": { "type": "_cb-hero-feature", "settings": { "icon": "calendar", "feature_text": "Open 7 Days" } }
+      },
+      "block_order": ["feature_1", "feature_2", "feature_3"]
+    }
+  ]
+}
+{% endschema %}

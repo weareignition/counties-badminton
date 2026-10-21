@@ -1,0 +1,101 @@
+<div class="cb-info-detail" {{ block.shopify_attributes }}>
+  {%- if block.settings.detail_label != blank -%}
+    <p class="cb-info-detail__label">{{ block.settings.detail_label | escape }}</p>
+  {%- endif -%}
+  {%- if block.settings.detail_value != blank -%}
+    <p class="cb-info-detail__value">{{ block.settings.detail_value | escape }}</p>
+  {%- endif -%}
+  {%- if block.settings.detail_note != blank -%}
+    <p class="cb-info-detail__note cb-info-detail__note--{{ block.settings.note_style }}">
+      {{- block.settings.detail_note | escape -}}
+    </p>
+  {%- endif -%}
+</div>
+
+{% stylesheet %}
+  .cb-info-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .cb-info-detail__label {
+    margin: 0 0 4px;
+    font-family: var(--cbi-font-body);
+    font-weight: var(--cbi-font-body-strong);
+    font-size: 10px;
+    line-height: 1.3;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--cbi-muted);
+  }
+
+  .cb-info-detail__value {
+    margin: 0;
+    font-family: var(--cbi-font-heading);
+    font-weight: var(--cbi-font-heading-weight);
+    font-size: 15px;
+    line-height: 1.3;
+    color: var(--cbi-text);
+  }
+
+  .cb-info-detail__note {
+    margin: 0;
+    font-family: var(--cbi-font-body);
+    font-weight: var(--cbi-font-body-weight);
+    font-size: 12px;
+    line-height: 1.45;
+  }
+
+  .cb-info-detail__note--muted {
+    color: var(--cbi-muted);
+  }
+
+  .cb-info-detail__note--success {
+    color: var(--cbi-success);
+  }
+
+  .cb-info-detail__note--accent {
+    color: var(--cbi-accent);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Detail",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "detail_label",
+      "label": "Label",
+      "info": "Shown in small capitals.",
+      "default": "Opening hours"
+    },
+    {
+      "type": "text",
+      "id": "detail_value",
+      "label": "Value",
+      "default": "Monday – Sunday: 9:00 AM – 8:00 PM"
+    },
+    {
+      "type": "text",
+      "id": "detail_note",
+      "label": "Note"
+    },
+    {
+      "type": "select",
+      "id": "note_style",
+      "label": "Note color",
+      "options": [
+        { "value": "muted", "label": "Muted" },
+        { "value": "success", "label": "Green" },
+        { "value": "accent", "label": "Accent" }
+      ],
+      "default": "muted"
+    }
+  ],
+  "presets": [{ "name": "[CB] Detail" }]
+}
+{% endschema %}

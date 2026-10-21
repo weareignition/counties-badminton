@@ -1,0 +1,1846 @@
+{%- liquid
+  assign s = section.settings
+  assign source = collection
+  assign on_collection = true
+  if source == blank
+    assign source = s.collection
+    assign on_collection = false
+  endif
+  # Off collection pages with no collection picked, show the store's Rackets collection.
+  if source == blank
+    assign source = collections['rackets']
+  endif
+
+  assign font_scope = '#cb-cat-' | append: section.id
+  assign form_id = 'cb-cat-form-' | append: section.id
+  assign heading = s.title_text | default: source.title
+  assign current_sort = source.sort_by | default: source.default_sort_by
+
+  # Active filters (for "Clear all" and the mobile Filters button).
+  assign active_count = 0
+  for filter in source.filters
+    if filter.type == 'price_range'
+      if filter.min_value.value != blank or filter.max_value.value != blank
+        assign active_count = active_count | plus: 1
+      endif
+    else
+      assign active_count = active_count | plus: filter.active_values.size
+    endif
+  endfor
+
+  assign clear_url = source.url
+  if source.sort_by != blank
+    assign clear_url = clear_url | append: '?sort_by=' | append: source.sort_by
+  endif
+
+  # Quick-filter pills: the values of one Search & Discovery filter, one at a time (collection pages only).
+  assign quick_label = s.quick_filter | strip
+  assign quick_filter = nil
+  if on_collection
+    assign quick_filter = source.filters | where: 'label', quick_label | first
+  endif
+
+  # Known brands, matched as whole words in product titles ("Li Ning Axforce" → Li-Ning).
+  assign brand_names = s.brand_names | split: ','
+-%}
+
+{%- if source != blank or request.design_mode -%}
+  {% render 'cb-font-styles',
+    selector: font_scope,
+    prefix: 'cbk',
+    heading_font: s.heading_font,
+    body_font: s.body_font
+  %}
+
+  <div
+    id="cb-cat-{{ section.id }}"
+    class="cb-cat"
+    data-cb-cat
+    data-section-id="{{ section.id }}"
+    style="
+      --cbk-bg: {{ s.background_color }};
+      --cbk-card: {{ s.card_background_color }};
+      --cbk-border: {{ s.border_color }};
+      --cbk-border-strong: {{ s.text_color | color_modify: 'alpha', 0.25 }};
+      --cbk-surface: {{ s.text_color | color_modify: 'alpha', 0.04 }};
+      --cbk-surface-strong: {{ s.text_color | color_modify: 'alpha', 0.07 }};
+      --cbk-text: {{ s.text_color }};
+      --cbk-soft: {{ s.text_color | color_modify: 'alpha', 0.8 }};
+      --cbk-muted: {{ s.text_color | color_modify: 'alpha', 0.5 }};
+      --cbk-accent: {{ s.accent_color }};
+      --cbk-image-bg: {{ s.image_background_color }};
+      --cbk-success: {{ s.success_color }};
+      --cbk-columns: {{ s.columns }};
+      --cbk-sidebar-w: {{ s.sidebar_width }}px;
+      --cbk-image-ratio: {{ s.image_ratio }};
+      --cbk-image-fit: {{ s.image_fit }};
+      --cbk-max-width: {{ s.max_width }}px;
+      --cbk-pt: {{ s.padding_top }}px;
+      --cbk-pb: {{ s.padding_bottom }}px;
+    "
+  >
+    <div class="cb-cat__inner">
+      {%- if source == blank -%}
+        <p class="cb-cat__hint cb-cat__hint--empty">
+          Choose a collection in this section’s settings (Products → Collection). Shoppers don’t see this section until it has one. Only you see this message.
+        </p>
+      {%- else -%}
+        <form id="{{ form_id }}" class="cb-cat__topbar" action="{{ source.url }}" method="get">
+          <div class="cb-cat__titlebar">
+            <{{ s.heading_tag }} class="cb-cat__title">{{ heading | escape }}</{{ s.heading_tag }}>
+            {%- if s.show_count -%}
+              <span class="cb-cat__count">{{ source.products_count }} {{ s.count_label | escape }}</span>
+            {%- endif -%}
+          </div>
+
+          {%- if quick_filter -%}
+            <nav class="cb-cat__pills" aria-label="{{ quick_filter.label | escape }}">
+              <a
+                href="{{ quick_filter.url_to_remove }}"
+                class="cb-cat__pill{% if quick_filter.active_values.size == 0 %} is-active{% endif %}"
+                data-cb-cat-link
+              >
+                {{- s.all_label | escape -}}
+              </a>
+              {%- for value in quick_filter.values -%}
+                {%- liquid
+                  assign href = quick_filter.url_to_remove
+                  unless value.active
+                    assign joiner = '?'
+                    if href contains '?'
+                      assign joiner = '&'
+                    endif
+                    assign encoded = value.value | url_encode
+                    assign href = href | append: joiner | append: value.param_name | append: '=' | append: encoded
+                  endunless
+                -%}
+                <a
+                  href="{{ href }}"
+                  class="cb-cat__pill{% if value.active %} is-active{% endif %}"
+                  data-cb-cat-link
+                >
+                  {{- value.label | escape -}}
+                </a>
+              {%- endfor -%}
+            </nav>
+          {%- elsif request.design_mode and on_collection and quick_label != blank -%}
+            <p class="cb-cat__hint">
+              Style buttons appear once this collection has a “{{ quick_label | escape }}” filter (Search &amp; Discovery app → Filters). Only you see this.
+            </p>
+          {%- elsif request.design_mode and on_collection == false -%}
+            <p class="cb-cat__hint">
+              Showing “{{ source.title | escape }}” without filters or sorting: Shopify only allows those on a collection page. Add this section to a collection template (e.g. Collections → rackets) for the full version. Only you see this.
+            </p>
+          {%- endif -%}
+
+          <div class="cb-cat__tools">
+            {%- if on_collection -%}
+              <button
+                type="button"
+                class="cb-cat__filters-toggle"
+                data-cb-cat-open
+                aria-controls="cb-cat-sidebar-{{ section.id }}"
+                aria-expanded="false"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>
+                {{ s.filter_heading | escape }}
+                {%- if active_count > 0 %} ({{ active_count }}){% endif %}
+              </button>
+            {%- endif -%}
+
+            {%- if s.show_sort and on_collection -%}
+              <label class="cb-cat__sort">
+                <span>{{ s.sort_label | escape }}</span>
+                <select name="sort_by" class="cb-cat__sort-select">
+                  {%- for option in source.sort_options -%}
+                    <option
+                      value="{{ option.value }}"
+                      {% if option.value == current_sort %}
+                        selected
+                      {% endif %}
+                    >
+                      {{- option.name | escape -}}
+                    </option>
+                  {%- endfor -%}
+                </select>
+              </label>
+            {%- endif -%}
+
+            {%- if s.show_view_toggle -%}
+              <div class="cb-cat__views" role="group" aria-label="Layout">
+                <button type="button" class="cb-cat__view" data-cb-cat-view="grid" aria-pressed="true" aria-label="Grid view">
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="2" y="2" width="5" height="5"/><rect x="9" y="2" width="5" height="5"/><rect x="2" y="9" width="5" height="5"/><rect x="9" y="9" width="5" height="5"/></svg>
+                </button>
+                <button type="button" class="cb-cat__view" data-cb-cat-view="list" aria-pressed="false" aria-label="List view">
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="2" y="2.5" width="12" height="4"/><rect x="2" y="9.5" width="12" height="4"/></svg>
+                </button>
+              </div>
+            {%- endif -%}
+          </div>
+
+          {%- if on_collection -%}
+            <button type="submit" class="cb-cat__submit">{{ s.filter_heading | escape }}</button>
+          {%- endif -%}
+        </form>
+
+        <div class="cb-cat__body{% if on_collection %} cb-cat__body--sidebar{% endif %}">
+          {%- if on_collection -%}
+            <div class="cb-cat__backdrop" data-cb-cat-close></div>
+            <aside id="cb-cat-sidebar-{{ section.id }}" class="cb-cat__sidebar" aria-label="{{ s.filter_heading | escape }}">
+              <div class="cb-cat__sidebar-head">
+                <p class="cb-cat__sidebar-title">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>
+                  {{- s.filter_heading | escape -}}
+                </p>
+                {%- if active_count > 0 -%}
+                  <a href="{{ clear_url }}" class="cb-cat__clear" data-cb-cat-link>{{ s.clear_label | escape }}</a>
+                {%- endif -%}
+                <button type="button" class="cb-cat__sidebar-close" data-cb-cat-close aria-label="{{ 'actions.close' | t }}">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+                </button>
+              </div>
+              <div class="cb-cat__filters">
+                {% content_for 'blocks' %}
+              </div>
+            </aside>
+          {%- endif -%}
+
+          <div class="cb-cat__results" tabindex="-1">
+            {%- paginate source.products by s.products_per_page -%}
+              {%- if source.products.size > 0 -%}
+                <ul class="cb-cat__grid" role="list" data-cb-cat-grid data-view="grid">
+                  {%- for product in source.products -%}
+                    {%- liquid
+                      assign variant = product.selected_or_first_available_variant
+                      assign card_title = product.metafields.custom.short_title.value | default: product.title
+                      assign brand = product.metafields.custom.brand.value
+                      if brand == blank and product.vendor != shop.name
+                        assign brand = product.vendor
+                      endif
+                      if brand == blank
+                        assign title_key = product.title | handleize | prepend: '-' | append: '-'
+                        for name in brand_names
+                          assign name_key = name | strip | handleize
+                          if name_key != blank
+                            assign name_key = '-' | append: name_key | append: '-'
+                            if title_key contains name_key
+                              assign brand = name | strip
+                              break
+                            endif
+                          endif
+                        endfor
+                      endif
+                      if brand == blank
+                        assign brand = product.title | split: ' ' | first
+                      endif
+                      assign badge = product.metafields.custom.card_badge.value
+                      assign badge_accent = product.metafields.custom.card_badge_highlight.value
+                      assign tag_text = product.metafields.custom.card_tag.value
+                      assign specs = product.metafields.custom.card_specs.value
+
+                      assign price = product.price | money
+                      if product.price_varies
+                        assign price = 'content.price_from' | t: price: price
+                      endif
+
+                      assign stock_state = 'out'
+                      assign stock_text = 'content.product_badge_sold_out' | t
+                      if product.available
+                        assign stock_state = 'in'
+                        assign stock_text = s.stock_label
+                        if variant.inventory_management == 'shopify' and variant.inventory_quantity > 0 and variant.inventory_quantity <= s.low_stock_threshold
+                          assign stock_state = 'low'
+                          assign stock_text = s.low_stock_label | replace: '[count]', variant.inventory_quantity
+                        endif
+                      endif
+
+                      assign quick_collect = false
+                      if s.quick_collect_tag != blank and product.has_only_default_variant and product.available
+                        if product.tags contains s.quick_collect_tag
+                          assign quick_collect = true
+                        endif
+                      endif
+                    -%}
+                    <li class="cb-cat__item">
+                      <article class="cb-cat-card">
+                        <div class="cb-cat-card__media">
+                          <a href="{{ product.url }}" class="cb-cat-card__image-link" tabindex="-1" aria-hidden="true">
+                            {%- if product.featured_media -%}
+                              {{
+                                product.featured_media
+                                | image_url: width: 700
+                                | image_tag:
+                                  widths: '240, 360, 480, 600, 700',
+                                  sizes: '(min-width: 1400px) 260px, (min-width: 750px) 30vw, 50vw',
+                                  loading: 'lazy',
+                                  alt: '',
+                                  class: 'cb-cat-card__image'
+                              }}
+                            {%- else -%}
+                              {{ 'product-1' | placeholder_svg_tag: 'cb-cat-card__image cb-cat-card__image--placeholder' }}
+                            {%- endif -%}
+                          </a>
+                          {%- if badge != blank -%}
+                            <span class="cb-cat-card__badge{% if badge_accent %} cb-cat-card__badge--accent{% endif %}">{{ badge | escape }}</span>
+                          {%- endif -%}
+                          {%- if s.show_wishlist -%}
+                            <button
+                              type="button"
+                              class="cb-cat-card__fav"
+                              data-cb-cat-fav="{{ product.id }}"
+                              aria-pressed="false"
+                              aria-label="Save to favourites: {{ card_title | escape }}"
+                            >
+                              <svg width="13" height="13" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-9.2-9.4C1.6 7.6 3.9 4 7.4 4c2 0 3.4 1 4.6 2.6C13.2 5 14.6 4 16.6 4c3.5 0 5.8 3.6 4.6 7.1-1.7 4.8-9.2 9.4-9.2 9.4z"/></svg>
+                            </button>
+                          {%- endif -%}
+                        </div>
+
+                        <div class="cb-cat-card__body">
+                          <div class="cb-cat-card__meta">
+                            <span class="cb-cat-card__brand">{{ brand | escape }}</span>
+                            {%- if tag_text != blank -%}
+                              <span class="cb-cat-card__tag">{{ tag_text | escape }}</span>
+                            {%- endif -%}
+                          </div>
+                          <h3 class="cb-cat-card__title"><a href="{{ product.url }}">{{ card_title | escape }}</a></h3>
+                          {%- if specs != blank -%}
+                            <p class="cb-cat-card__specs">{{ specs | escape }}</p>
+                          {%- endif -%}
+
+                          <div class="cb-cat-card__row">
+                            <p class="cb-cat-card__price">
+                              <span class="cb-cat-card__amount">{{ price }}</span>
+                              {%- if product.compare_at_price > product.price -%}
+                                <s class="cb-cat-card__compare">{{ product.compare_at_price | money_without_trailing_zeros }}</s>
+                              {%- endif -%}
+                              <span class="cb-cat-card__currency">{{ cart.currency.iso_code }}</span>
+                            </p>
+                            <span class="cb-cat-card__stock cb-cat-card__stock--{{ stock_state }}">{{ stock_text | escape }}</span>
+                          </div>
+
+                          {%- if quick_collect -%}
+                            {%- form 'product', product, class: 'cb-cat-card__form' -%}
+                              <input type="hidden" name="id" value="{{ variant.id }}">
+                              <button type="submit" class="cb-cat-card__button cb-cat-card__button--accent">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8h12l-1 12H7z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
+                                {{- s.quick_label | escape -}}
+                              </button>
+                            {%- endform -%}
+                          {%- else -%}
+                            <a href="{{ product.url }}" class="cb-cat-card__button">
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>
+                              {{- s.button_label | escape -}}
+                            </a>
+                          {%- endif -%}
+                        </div>
+                      </article>
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              {%- else -%}
+                <div class="cb-cat__empty">
+                  <p>{{ s.empty_text | escape }}</p>
+                  {%- if active_count > 0 -%}
+                    <a href="{{ clear_url }}" data-cb-cat-link>{{ s.clear_label | escape }}</a>
+                  {%- endif -%}
+                </div>
+              {%- endif -%}
+
+              {%- if paginate.items > 0 -%}
+                {%- liquid
+                  assign from = paginate.current_offset | plus: 1
+                  assign to = paginate.current_offset | plus: paginate.page_size
+                  if to > paginate.items
+                    assign to = paginate.items
+                  endif
+                  assign showing = s.showing_text | replace: '[from]', from | replace: '[to]', to | replace: '[total]', paginate.items
+                  assign current_page = paginate.current_page | append: ''
+                -%}
+                <div class="cb-cat__footer">
+                  <p class="cb-cat__showing">{{ showing | escape }}</p>
+                  {%- if paginate.pages > 1 -%}
+                    <nav class="cb-cat__pagination" aria-label="{{ 'content.pagination.nav_label' | t }}">
+                      {%- if paginate.previous -%}
+                        <a href="{{ paginate.previous.url }}" class="cb-cat__page cb-cat__page--step" data-cb-cat-link="page">{{ 'content.pagination.previous' | t }}</a>
+                      {%- else -%}
+                        <span class="cb-cat__page cb-cat__page--step is-disabled" aria-disabled="true">{{ 'content.pagination.previous' | t }}</span>
+                      {%- endif -%}
+                      {%- for part in paginate.parts -%}
+                        {%- if part.is_link -%}
+                          <a href="{{ part.url }}" class="cb-cat__page" data-cb-cat-link="page">{{ part.title }}</a>
+                        {%- elsif part.title == current_page -%}
+                          <span class="cb-cat__page is-current" aria-current="page">{{ part.title }}</span>
+                        {%- else -%}
+                          <span class="cb-cat__page cb-cat__page--gap">{{ part.title }}</span>
+                        {%- endif -%}
+                      {%- endfor -%}
+                      {%- if paginate.next -%}
+                        <a href="{{ paginate.next.url }}" class="cb-cat__page cb-cat__page--step" data-cb-cat-link="page">{{ 'content.pagination.next' | t }}</a>
+                      {%- else -%}
+                        <span class="cb-cat__page cb-cat__page--step is-disabled" aria-disabled="true">{{ 'content.pagination.next' | t }}</span>
+                      {%- endif -%}
+                    </nav>
+                  {%- endif -%}
+                </div>
+              {%- endif -%}
+            {%- endpaginate -%}
+          </div>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  .cb-cat {
+    color: var(--cbk-text);
+    background: var(--cbk-bg);
+    padding: calc(var(--cbk-pt) * 0.6) 16px calc(var(--cbk-pb) * 0.6);
+    /* Paging scrolls back to the top bar; keep it clear of a sticky header. */
+    scroll-margin-top: var(--header-height, 0px);
+  }
+
+  .cb-cat__inner {
+    max-width: var(--cbk-max-width);
+    margin-inline: auto;
+  }
+
+  /* Top bar */
+  .cb-cat__topbar {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px 20px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--cbk-border);
+  }
+
+  .cb-cat__titlebar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .cb-cat__title {
+    margin: 0;
+    font-family: var(--cbk-font-heading);
+    font-weight: var(--cbk-font-heading-weight);
+    font-size: 22px;
+    line-height: 1.1;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    color: var(--cbk-text);
+  }
+
+  .cb-cat__count,
+  .cb-cat__pill,
+  .cb-cat__sort-select,
+  .cb-cat__filters-toggle {
+    font-family: var(--cbk-font-body);
+  }
+
+  .cb-cat__count {
+    padding: 4px 10px;
+    border: 1px solid var(--cbk-border);
+    border-radius: 2px;
+    background: var(--cbk-card);
+    font-weight: var(--cbk-font-body-strong);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--cbk-soft);
+  }
+
+  .cb-cat__pills {
+    display: flex;
+    gap: 6px;
+    min-width: 0;
+    max-width: 100%;
+    margin: -4px;
+    padding: 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .cb-cat__pills::-webkit-scrollbar {
+    display: none;
+  }
+
+  .cb-cat__pill {
+    flex: none;
+    padding: 7px 12px;
+    border: 1px solid var(--cbk-border);
+    border-radius: 2px;
+    background: var(--cbk-card);
+    font-size: 11px;
+    line-height: 1.2;
+    white-space: nowrap;
+    color: var(--cbk-soft);
+    text-decoration: none;
+    transition: border-color 0.2s ease, color 0.2s ease;
+  }
+
+  .cb-cat__pill:hover {
+    border-color: var(--cbk-border-strong);
+    color: var(--cbk-text);
+  }
+
+  .cb-cat__pill.is-active {
+    border-color: var(--cbk-accent);
+    background: var(--cbk-accent);
+    font-weight: var(--cbk-font-body-strong);
+    color: #fff;
+  }
+
+  .cb-cat__hint {
+    margin: 0;
+    font-family: var(--cbk-font-body);
+    font-size: 11px;
+    color: var(--cbk-muted);
+  }
+
+  .cb-cat__hint--empty {
+    padding: 40px 20px;
+    border: 1px dashed var(--cbk-border);
+    border-radius: 4px;
+    font-size: 13px;
+    text-align: center;
+  }
+
+  .cb-cat__tools {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 14px;
+    margin-left: auto;
+  }
+
+  .cb-cat__sort {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--cbk-font-body);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--cbk-muted);
+  }
+
+  .cb-cat__sort-select {
+    padding: 8px 30px 8px 12px;
+    border: 1px solid var(--cbk-border);
+    border-radius: 2px;
+    background: var(--cbk-card) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12' fill='none' stroke='%23999' stroke-width='1.6' stroke-linecap='round'%3E%3Cpath d='m3 4.5 3 3 3-3'/%3E%3C/svg%3E") no-repeat right 10px center;
+    font-weight: var(--cbk-font-body-strong);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--cbk-text);
+    cursor: pointer;
+    appearance: none;
+  }
+
+  .cb-cat__views {
+    display: flex;
+    overflow: hidden;
+    border: 1px solid var(--cbk-border);
+    border-radius: 2px;
+  }
+
+  .cb-cat__view {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 30px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--cbk-muted);
+    cursor: pointer;
+  }
+
+  .cb-cat__view[aria-pressed='true'] {
+    background: var(--cbk-surface-strong);
+    color: var(--cbk-text);
+  }
+
+  .cb-cat__view:focus-visible,
+  .cb-cat__sort-select:focus-visible,
+  .cb-cat__pill:focus-visible,
+  .cb-cat__filters-toggle:focus-visible {
+    outline: 2px solid var(--cbk-text);
+    outline-offset: 2px;
+  }
+
+  .cb-cat__filters-toggle {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    min-height: 32px;
+    margin: 0;
+    padding: 6px 12px;
+    border: 1px solid var(--cbk-border);
+    border-radius: 2px;
+    background: var(--cbk-card);
+    font-weight: var(--cbk-font-body-strong);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--cbk-text);
+    cursor: pointer;
+  }
+
+  .cb-cat__submit {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  /* Body: sidebar + results */
+  .cb-cat__body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
+    padding-top: 24px;
+  }
+
+  .cb-cat__sidebar {
+    counter-reset: cb-cat-filter;
+  }
+
+  .cb-cat__sidebar-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-bottom: 4px;
+  }
+
+  .cb-cat__sidebar-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 auto 0 0;
+    font-family: var(--cbk-font-body);
+    font-weight: var(--cbk-font-body-strong);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--cbk-text);
+  }
+
+  .cb-cat__sidebar-title svg {
+    color: var(--cbk-accent);
+  }
+
+  .cb-cat__clear {
+    font-family: var(--cbk-font-body);
+    font-weight: var(--cbk-font-body-strong);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--cbk-accent);
+    text-decoration: none;
+  }
+
+  .cb-cat__sidebar-close {
+    display: none;
+  }
+
+  .cb-cat__backdrop {
+    display: none;
+  }
+
+  /* Product grid */
+  .cb-cat__results {
+    min-width: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  /* Focus lands here after paging (not a control, so no ring). */
+  .cb-cat__results:focus {
+    outline: none;
+  }
+
+  .cb-cat[aria-busy='true'] .cb-cat__results {
+    opacity: 0.45;
+    pointer-events: none;
+  }
+
+  .cb-cat__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .cb-cat__item {
+    min-width: 0;
+  }
+
+  .cb-cat-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+    border: 1px solid var(--cbk-border);
+    border-radius: 2px;
+    background: var(--cbk-card);
+    transition: border-color 0.2s ease;
+  }
+
+  .cb-cat-card:hover {
+    border-color: var(--cbk-border-strong);
+  }
+
+  .cb-cat-card__media {
+    position: relative;
+    aspect-ratio: var(--cbk-image-ratio, 4 / 5);
+    background: var(--cbk-image-bg);
+  }
+
+  .cb-cat-card__image-link {
+    position: absolute;
+    inset: 0;
+  }
+
+  .cb-cat-card__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 8%;
+    object-fit: var(--cbk-image-fit, contain);
+  }
+
+  .cb-cat-card__image--placeholder {
+    fill: rgb(0 0 0 / 0.2);
+  }
+
+  .cb-cat-card__badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    max-width: calc(100% - 56px);
+    padding: 3px 7px;
+    border-radius: 2px;
+    background: #1c1c1c;
+    font-family: var(--cbk-font-body);
+    font-weight: var(--cbk-font-body-strong);
+    font-size: 9px;
+    line-height: 1.3;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #fff;
+  }
+
+  .cb-cat-card__badge--accent {
+    background: var(--cbk-accent);
+  }
+
+  .cb-cat-card__fav {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: rgb(0 0 0 / 0.55);
+    color: #fff;
+    fill: none;
+    cursor: pointer;
+  }
+
+  .cb-cat-card__fav[aria-pressed='true'] {
+    background: var(--cbk-accent);
+  }
+
+  .cb-cat-card__fav[aria-pressed='true'] svg {
+    fill: currentColor;
+  }
+
+  .cb-cat-card__fav:focus-visible {
+    outline: 2px solid var(--cbk-accent);
+    outline-offset: 2px;
+  }
+
+  .cb-cat-card__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 6px;
+    padding: 14px;
+  }
+
+  .cb-cat-card__meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    font-family: var(--cbk-font-body);
+    font-weight: var(--cbk-font-body-strong);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .cb-cat-card__brand {
+    color: var(--cbk-muted);
+  }
+
+  .cb-cat-card__tag {
+    text-align: right;
+    color: var(--cbk-accent);
+  }
+
+  .cb-cat-card__title {
+    margin: 0;
+    font-family: var(--cbk-font-heading);
+    font-weight: var(--cbk-font-heading-weight);
+    font-size: 15px;
+    line-height: 1.25;
+    text-transform: uppercase;
+    color: var(--cbk-text);
+  }
+
+  .cb-cat-card__title a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .cb-cat-card__title a:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .cb-cat-card__title a:focus-visible {
+    outline: 2px solid var(--cbk-text);
+    outline-offset: 2px;
+  }
+
+  .cb-cat-card__specs {
+    margin: 0;
+    font-family: var(--cbk-font-body);
+    font-size: 10px;
+    line-height: 1.4;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--cbk-muted);
+  }
+
+  .cb-cat-card__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px 10px;
+    margin-top: auto;
+    padding-top: 12px;
+    border-top: 1px solid var(--cbk-border);
+  }
+
+  .cb-cat-card__price {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    margin: 0;
+  }
+
+  .cb-cat-card__amount {
+    font-family: var(--cbk-font-heading);
+    font-weight: var(--cbk-font-heading-weight);
+    font-size: 16px;
+    color: var(--cbk-text);
+  }
+
+  .cb-cat-card__compare {
+    font-family: var(--cbk-font-body);
+    font-size: 11px;
+    color: var(--cbk-muted);
+  }
+
+  .cb-cat-card__currency {
+    font-family: var(--cbk-font-body);
+    font-weight: var(--cbk-font-body-strong);
+    font-size: 9px;
+    color: var(--cbk-muted);
+  }
+
+  .cb-cat-card__stock {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-family: var(--cbk-font-body);
+    font-size: 10px;
+    color: var(--cbk-muted);
+  }
+
+  .cb-cat-card__stock--in {
+    color: var(--cbk-success);
+  }
+
+  .cb-cat-card__stock--in::before {
+    content: '';
+    flex: none;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  .cb-cat-card__stock--low {
+    font-weight: var(--cbk-font-body-strong);
+    color: var(--cbk-accent);
+  }
+
+  .cb-cat-card__form {
+    margin: 0;
+  }
+
+  .cb-cat-card__button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    min-height: 38px;
+    margin: 12px 0 0;
+    padding: 9px 12px;
+    border: 1px solid var(--cbk-border);
+    border-radius: 2px;
+    background: var(--cbk-surface-strong);
+    font-family: var(--cbk-font-body);
+    font-weight: var(--cbk-font-body-strong);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--cbk-text);
+    text-decoration: none;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+  }
+
+  .cb-cat-card__button svg {
+    flex: none;
+  }
+
+  .cb-cat-card__button:hover {
+    border-color: var(--cbk-border-strong);
+  }
+
+  .cb-cat-card__button--accent {
+    border-color: var(--cbk-accent);
+    background: var(--cbk-accent);
+    color: #fff;
+  }
+
+  .cb-cat-card__button--accent:hover {
+    background: color-mix(in srgb, var(--cbk-accent) 85%, #000);
+  }
+
+  .cb-cat-card__button:focus-visible {
+    outline: 2px solid var(--cbk-text);
+    outline-offset: 2px;
+  }
+
+  /* List view (toggle) */
+  .cb-cat__grid[data-view='list'] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .cb-cat__grid[data-view='list'] .cb-cat-card {
+    flex-direction: row;
+  }
+
+  .cb-cat__grid[data-view='list'] .cb-cat-card__media {
+    flex: none;
+    width: clamp(120px, 30%, 240px);
+    aspect-ratio: auto;
+    min-height: 180px;
+  }
+
+  .cb-cat__grid[data-view='list'] .cb-cat-card__body {
+    padding: 16px 18px;
+  }
+
+  .cb-cat__grid[data-view='list'] .cb-cat-card__button {
+    align-self: flex-start;
+    width: auto;
+    padding-inline: 20px;
+  }
+
+  .cb-cat__empty {
+    padding: 48px 20px;
+    border: 1px dashed var(--cbk-border);
+    border-radius: 4px;
+    font-family: var(--cbk-font-body);
+    font-size: 13px;
+    text-align: center;
+    color: var(--cbk-muted);
+  }
+
+  .cb-cat__empty p {
+    margin: 0 0 10px;
+  }
+
+  .cb-cat__empty a {
+    color: var(--cbk-accent);
+  }
+
+  /* Footer: count + pagination */
+  .cb-cat__footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px 20px;
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px solid var(--cbk-border);
+  }
+
+  .cb-cat__showing {
+    margin: 0;
+    font-family: var(--cbk-font-body);
+    font-size: 12px;
+    color: var(--cbk-muted);
+  }
+
+  .cb-cat__pagination {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .cb-cat__page {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+    height: 32px;
+    padding: 0 10px;
+    border: 1px solid var(--cbk-border);
+    border-radius: 2px;
+    background: var(--cbk-card);
+    font-family: var(--cbk-font-body);
+    font-size: 12px;
+    color: var(--cbk-soft);
+    text-decoration: none;
+  }
+
+  a.cb-cat__page:hover {
+    border-color: var(--cbk-border-strong);
+    color: var(--cbk-text);
+  }
+
+  .cb-cat__page.is-current {
+    border-color: var(--cbk-accent);
+    background: var(--cbk-accent);
+    font-weight: var(--cbk-font-body-strong);
+    color: #fff;
+  }
+
+  .cb-cat__page.is-disabled {
+    opacity: 0.4;
+  }
+
+  .cb-cat__page--gap {
+    min-width: 0;
+    padding: 0 2px;
+    border: 0;
+    background: none;
+  }
+
+  a.cb-cat__page:focus-visible {
+    outline: 2px solid var(--cbk-text);
+    outline-offset: 2px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-cat {
+      padding: calc(var(--cbk-pt) * 0.8) 32px calc(var(--cbk-pb) * 0.8);
+    }
+
+    .cb-cat__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+  }
+
+  /* Below 1100px the filters slide in from the left. */
+  @media screen and (max-width: 1099px) {
+    /* The page scrolls in .page-wrapper on large screens and the window on phones; lock both. */
+    html.cb-cat-filters-open,
+    html.cb-cat-filters-open .page-wrapper {
+      overflow: hidden;
+    }
+
+    .cb-cat__filters-toggle {
+      display: inline-flex;
+    }
+
+    .cb-cat__pills {
+      order: 3;
+      flex-basis: 100%;
+    }
+
+    .cb-cat__sidebar {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 61;
+      width: min(340px, 88vw);
+      padding: 20px;
+      overflow-y: auto;
+      background: var(--cbk-bg);
+      border-right: 1px solid var(--cbk-border);
+      transform: translateX(-100%);
+      visibility: hidden;
+      transition: transform 0.25s ease, visibility 0.25s;
+    }
+
+    /* Visible at once when opening (so focus can move in); closing keeps it visible while it slides out. */
+    .cb-cat--filters-open .cb-cat__sidebar {
+      transform: none;
+      visibility: visible;
+      transition: transform 0.25s ease, visibility 0s;
+    }
+
+    .cb-cat--filters-open .cb-cat__backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 60;
+      display: block;
+      background: rgb(0 0 0 / 0.55);
+    }
+
+    .cb-cat__sidebar-close {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      margin: 0;
+      padding: 0;
+      border: 1px solid var(--cbk-border);
+      border-radius: 2px;
+      background: transparent;
+      color: var(--cbk-text);
+      cursor: pointer;
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .cb-cat {
+      padding: var(--cbk-pt) 48px var(--cbk-pb);
+    }
+  }
+
+  @media screen and (min-width: 1100px) {
+    .cb-cat__body--sidebar {
+      grid-template-columns: var(--cbk-sidebar-w, 220px) minmax(0, 1fr);
+      gap: 32px;
+    }
+
+    .cb-cat__grid {
+      gap: 20px;
+    }
+  }
+
+  @media screen and (min-width: 1400px) {
+    .cb-cat__grid {
+      grid-template-columns: repeat(var(--cbk-columns, 4), minmax(0, 1fr));
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .cb-cat__grid[data-view='list'] .cb-cat-card__media {
+      min-height: 150px;
+    }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  (() => {
+    const ROOT = '[data-cb-cat]';
+    const VIEW_KEY = 'cb-cat-view';
+    const FAV_KEY = 'cb-cat-favourites';
+
+    const read = (key, fallback) => {
+      try {
+        return JSON.parse(localStorage.getItem(key)) ?? fallback;
+      } catch {
+        return fallback;
+      }
+    };
+    const write = (key, value) => {
+      try {
+        localStorage.setItem(key, JSON.stringify(value));
+      } catch {}
+    };
+
+    const setView = (root, view) => {
+      const grid = root.querySelector('[data-cb-cat-grid]');
+      if (grid) grid.dataset.view = view;
+      for (const button of root.querySelectorAll('[data-cb-cat-view]')) {
+        button.setAttribute('aria-pressed', String(button.dataset.cbCatView === view));
+      }
+    };
+
+    const setFavourites = (root) => {
+      const favourites = read(FAV_KEY, []);
+      for (const button of root.querySelectorAll('[data-cb-cat-fav]')) {
+        button.setAttribute('aria-pressed', String(favourites.includes(button.dataset.cbCatFav)));
+      }
+    };
+
+    const init = (root) => {
+      setView(root, read(VIEW_KEY, 'grid'));
+      setFavourites(root);
+    };
+
+    // Phone/tablet filter panel. The page behind it is locked while any panel is open.
+    const syncScrollLock = () => {
+      document.documentElement.classList.toggle('cb-cat-filters-open', !!document.querySelector('.cb-cat--filters-open'));
+    };
+
+    const setDrawer = (root, open) => {
+      root.classList.toggle('cb-cat--filters-open', open);
+      root.querySelector('[data-cb-cat-open]')?.setAttribute('aria-expanded', String(open));
+      syncScrollLock();
+    };
+
+    const closeDrawer = (root) => {
+      const hadFocus = root.querySelector('.cb-cat__sidebar')?.contains(document.activeElement);
+      setDrawer(root, false);
+      if (hadFocus) root.querySelector('[data-cb-cat-open]')?.focus({ preventScroll: true });
+    };
+
+    // A selector for the same control in the re-rendered section, so keyboard focus survives the swap.
+    const FOCUS_KEYS = ['[data-cb-cat-open]', '.cb-cat__sidebar-close', '[data-cb-cat-view="grid"]', '[data-cb-cat-view="list"]', '.cb-cat__clear'];
+    const focusSelector = (element) => {
+      if (element.name) {
+        const name = `[name="${CSS.escape(element.name)}"]`;
+        return element.type === 'checkbox' ? `${name}[value="${CSS.escape(element.value)}"]` : name;
+      }
+      if (element.id) return `#${CSS.escape(element.id)}`;
+      return FOCUS_KEYS.find((selector) => element.matches(selector)) || null;
+    };
+
+    const pending = new Map();
+
+    // Fetches the section for a new URL (Section Rendering API) and swaps it in without a page reload.
+    // A newer request for the same section cancels the older one, so quick clicks can't land out of order.
+    const load = async (root, url, { push = true, scroll = false } = {}) => {
+      const id = root.dataset.sectionId;
+      const target = new URL(url, location.href);
+      target.searchParams.delete('section_id');
+      const request = new URL(target);
+      request.searchParams.set('section_id', id);
+
+      pending.get(id)?.abort();
+      const controller = new AbortController();
+      pending.set(id, controller);
+      root.setAttribute('aria-busy', 'true');
+
+      try {
+        const response = await fetch(request, { signal: controller.signal });
+        if (!response.ok) throw new Error(String(response.status));
+        const doc = new DOMParser().parseFromString(await response.text(), 'text/html');
+        const fresh = doc.querySelector(ROOT);
+        if (!fresh) throw new Error('Section missing');
+
+        // Carry over what the shopper changed on the page: collapsed filters, the open panel and focus.
+        const current = document.querySelector(`${ROOT}[data-section-id="${CSS.escape(id)}"]`) || root;
+        for (const details of current.querySelectorAll('details.cb-cat-filter:not([open])')) {
+          fresh.querySelector(`#${CSS.escape(details.id)}`)?.removeAttribute('open');
+        }
+        const drawerOpen = current.classList.contains('cb-cat--filters-open');
+        const hadFocus = current.contains(document.activeElement);
+        const focus = hadFocus ? focusSelector(document.activeElement) : null;
+
+        current.replaceWith(fresh);
+        setDrawer(fresh, drawerOpen);
+        init(fresh);
+        if (hadFocus) {
+          // The same control if it still exists, else the panel's close button or the results.
+          const next = (focus && fresh.querySelector(focus)) || fresh.querySelector(drawerOpen ? '.cb-cat__sidebar-close' : '.cb-cat__results');
+          next?.focus({ preventScroll: true });
+        }
+        if (push) history.pushState({ cbCat: true }, '', target);
+        if (scroll) fresh.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } catch (error) {
+        if (error.name === 'AbortError') return;
+        window.location.href = target.href;
+      } finally {
+        if (pending.get(id) === controller) pending.delete(id);
+      }
+    };
+
+    // Builds the URL from the form, including the sidebar inputs linked to it with form="…".
+    const formUrl = (form) => {
+      const params = new URLSearchParams();
+      for (const element of form.elements) {
+        if (!element.name || element.disabled || element.value === '') continue;
+        if ((element.type === 'checkbox' || element.type === 'radio') && !element.checked) continue;
+        if (element.dataset.cbPriceMax && Number(element.value) >= Number(element.dataset.cbPriceMax)) continue;
+        params.append(element.name, element.value);
+      }
+      const query = params.toString();
+      return (form.getAttribute('action') || location.pathname) + (query ? `?${query}` : '');
+    };
+
+    const ownForm = (form) => form?.id?.startsWith('cb-cat-form-') ? form : null;
+
+    document.addEventListener('change', (event) => {
+      const form = ownForm(event.target.form);
+      const root = form?.closest(ROOT);
+      if (root) load(root, formUrl(form));
+    });
+
+    document.addEventListener('submit', (event) => {
+      const form = ownForm(event.target);
+      const root = form?.closest(ROOT);
+      if (!root) return;
+      event.preventDefault();
+      load(root, formUrl(form));
+    });
+
+    // Live label + track fill while dragging the price slider.
+    document.addEventListener('input', (event) => {
+      const range = event.target.closest?.('.cb-cat-price__range');
+      if (!range) return;
+      const wrap = range.closest('.cb-cat-price');
+      wrap.style.setProperty('--cbk-price-pct', `${(range.value / range.max) * 100}%`);
+      const label = wrap.querySelector('[data-cb-price-label]');
+      if (label) label.textContent = `${wrap.dataset.symbol}${Number(range.value).toFixed(2)}`;
+    });
+
+    document.addEventListener('click', (event) => {
+      const link = event.target.closest?.('a[data-cb-cat-link]');
+      if (link) {
+        const root = link.closest(ROOT);
+        if (!root || event.metaKey || event.ctrlKey || event.shiftKey) return;
+        event.preventDefault();
+        load(root, link.href, { scroll: link.dataset.cbCatLink === 'page' });
+        return;
+      }
+
+      const viewButton = event.target.closest?.('[data-cb-cat-view]');
+      if (viewButton) {
+        write(VIEW_KEY, viewButton.dataset.cbCatView);
+        for (const root of document.querySelectorAll(ROOT)) setView(root, viewButton.dataset.cbCatView);
+        return;
+      }
+
+      const favourite = event.target.closest?.('[data-cb-cat-fav]');
+      if (favourite) {
+        const favourites = new Set(read(FAV_KEY, []));
+        const id = favourite.dataset.cbCatFav;
+        if (favourites.has(id)) favourites.delete(id);
+        else favourites.add(id);
+        write(FAV_KEY, [...favourites]);
+        for (const root of document.querySelectorAll(ROOT)) setFavourites(root);
+        return;
+      }
+
+      const opener = event.target.closest?.('[data-cb-cat-open]');
+      if (opener) {
+        const root = opener.closest(ROOT);
+        if (!root) return;
+        setDrawer(root, true);
+        root.querySelector('.cb-cat__sidebar-close')?.focus({ preventScroll: true });
+        return;
+      }
+
+      const closer = event.target.closest?.('[data-cb-cat-close]');
+      if (closer) {
+        const root = closer.closest(ROOT);
+        if (root) closeDrawer(root);
+      }
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key !== 'Escape') return;
+      for (const root of document.querySelectorAll('.cb-cat--filters-open')) closeDrawer(root);
+    });
+
+    window.addEventListener('popstate', () => {
+      for (const root of document.querySelectorAll(ROOT)) load(root, location.href, { push: false });
+    });
+
+    const initAll = () => document.querySelectorAll(ROOT).forEach(init);
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initAll);
+    else initAll();
+    document.addEventListener('shopify:section:load', (event) => {
+      event.target.querySelectorAll(ROOT).forEach(init);
+      syncScrollLock();
+    });
+    document.addEventListener('shopify:section:unload', () => setTimeout(syncScrollLock));
+  })();
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "[CB] Racket catalogue",
+  "tag": "div",
+  "class": "section-wrapper",
+  "blocks": [
+    {
+      "type": "_cb-cat-filter"
+    },
+    {
+      "type": "_cb-cat-promo"
+    }
+  ],
+  "disabled_on": {
+    "groups": [
+      "header",
+      "footer"
+    ]
+  },
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Best on a collection template (e.g. Collections → rackets): filters, sorting and pagination use that collection, and the sidebar blocks show its Search & Discovery filters. On other pages it shows a collection's products with page numbers only, because Shopify only allows filters and sorting on collection pages."
+    },
+    {
+      "type": "header",
+      "content": "Top bar"
+    },
+    {
+      "type": "text",
+      "id": "title_text",
+      "label": "Title",
+      "info": "Leave empty to use the collection title.",
+      "default": "All frames"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Title tag",
+      "options": [
+        {
+          "value": "h1",
+          "label": "H1"
+        },
+        {
+          "value": "h2",
+          "label": "H2"
+        }
+      ],
+      "default": "h1"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_count",
+      "label": "Show product count",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "count_label",
+      "label": "Count label",
+      "default": "products"
+    },
+    {
+      "type": "text",
+      "id": "quick_filter",
+      "label": "Style buttons filter",
+      "info": "Name of a Search & Discovery filter whose values show as buttons beside the title (one at a time), e.g. Play style.",
+      "default": "Play style"
+    },
+    {
+      "type": "text",
+      "id": "all_label",
+      "label": "\"All\" button",
+      "default": "All styles"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sort",
+      "label": "Show sorting",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "sort_label",
+      "label": "Sorting label",
+      "default": "Sort by:"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_toggle",
+      "label": "Show grid/list toggle",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Filters"
+    },
+    {
+      "type": "text",
+      "id": "filter_heading",
+      "label": "Filters heading",
+      "default": "Filter by spec"
+    },
+    {
+      "type": "text",
+      "id": "clear_label",
+      "label": "Clear filters label",
+      "default": "Clear all"
+    },
+    {
+      "type": "header",
+      "content": "Products"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection",
+      "info": "Used on pages that aren't collection pages. Leave empty to show the Rackets collection."
+    },
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "label": "Products per page",
+      "min": 4,
+      "max": 48,
+      "step": 4,
+      "default": 8
+    },
+    {
+      "type": "select",
+      "id": "columns",
+      "label": "Columns on large screens",
+      "options": [
+        {
+          "value": "3",
+          "label": "3"
+        },
+        {
+          "value": "4",
+          "label": "4"
+        }
+      ],
+      "default": "4"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "Image shape",
+      "options": [
+        {
+          "value": "4 / 5",
+          "label": "Portrait"
+        },
+        {
+          "value": "1 / 1",
+          "label": "Square"
+        },
+        {
+          "value": "3 / 4",
+          "label": "Tall"
+        }
+      ],
+      "default": "4 / 5"
+    },
+    {
+      "type": "select",
+      "id": "image_fit",
+      "label": "Image fit",
+      "options": [
+        {
+          "value": "contain",
+          "label": "Fit whole image"
+        },
+        {
+          "value": "cover",
+          "label": "Fill and crop"
+        }
+      ],
+      "default": "contain"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_wishlist",
+      "label": "Show save (heart) button",
+      "info": "Saves favourites in the shopper's browser.",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Card button",
+      "info": "Links to the product page.",
+      "default": "Configure setup"
+    },
+    {
+      "type": "text",
+      "id": "quick_collect_tag",
+      "label": "Quick collect tag",
+      "info": "Products with this tag (and no variants) get an add-to-cart button instead.",
+      "default": "quick-collect"
+    },
+    {
+      "type": "text",
+      "id": "quick_label",
+      "label": "Quick collect button",
+      "default": "Quick collect"
+    },
+    {
+      "type": "text",
+      "id": "stock_label",
+      "label": "In stock label",
+      "default": "In Stock Papakura"
+    },
+    {
+      "type": "range",
+      "id": "low_stock_threshold",
+      "label": "Low stock at or below",
+      "info": "0 turns low-stock labels off.",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "text",
+      "id": "low_stock_label",
+      "label": "Low stock label",
+      "info": "[count] is replaced with the number left.",
+      "default": "[count] In Stock Papakura"
+    },
+    {
+      "type": "text",
+      "id": "brand_names",
+      "label": "Brand names",
+      "info": "Separate with commas. Products whose vendor is your store name show the brand from this list found in their title, or else the title's first word.",
+      "default": "Yonex, Victor, Li-Ning, Babolat, Ashaway, Hundred, Apacs, Carlton, Felet, Kawasaki, Mizuno, Forza, RSL"
+    },
+    {
+      "type": "paragraph",
+      "content": "Optional product metafields (namespace custom): short_title, brand, card_badge, card_badge_highlight (true/false), card_tag, card_specs. Each one overrides what the card shows by default."
+    },
+    {
+      "type": "header",
+      "content": "Results"
+    },
+    {
+      "type": "text",
+      "id": "showing_text",
+      "label": "Results text",
+      "info": "[from], [to] and [total] are replaced.",
+      "default": "Showing [from]–[to] of [total] calibrated rackets"
+    },
+    {
+      "type": "text",
+      "id": "empty_text",
+      "label": "No results text",
+      "default": "No rackets match these filters."
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "sidebar_width",
+      "label": "Filters column width",
+      "min": 180,
+      "max": 300,
+      "step": 10,
+      "unit": "px",
+      "default": 220
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width",
+      "min": 1200,
+      "max": 1920,
+      "step": 20,
+      "unit": "px",
+      "default": 1400
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "info": "Used for the title, product names and prices.",
+      "default": "space_grotesk_n7"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "inter_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#0b0b0b"
+    },
+    {
+      "type": "color",
+      "id": "card_background_color",
+      "label": "Card background",
+      "default": "#141414"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Borders",
+      "default": "#ffffff1a"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "default": "#d71f27"
+    },
+    {
+      "type": "color",
+      "id": "image_background_color",
+      "label": "Product image background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "success_color",
+      "label": "In stock",
+      "default": "#22c55e"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Racket catalogue",
+      "category": "t:categories.products",
+      "blocks": {
+        "play_style": {
+          "type": "_cb-cat-filter",
+          "settings": {
+            "filter_label": "Play style",
+            "display": "list"
+          }
+        },
+        "player_level": {
+          "type": "_cb-cat-filter",
+          "settings": {
+            "filter_label": "Player level",
+            "display": "buttons",
+            "button_columns": "2",
+            "button_style": "filled"
+          }
+        },
+        "balance": {
+          "type": "_cb-cat-filter",
+          "settings": {
+            "filter_label": "Balance",
+            "title_text": "Balance & swing",
+            "display": "list"
+          }
+        },
+        "weight": {
+          "type": "_cb-cat-filter",
+          "settings": {
+            "filter_label": "Frame weight",
+            "display": "buttons",
+            "button_columns": "3",
+            "button_style": "outline",
+            "note": "4U is standard for fast modern competitive badminton"
+          }
+        },
+        "price": {
+          "type": "_cb-cat-filter",
+          "settings": {
+            "filter_label": "Price",
+            "title_text": "Price range (NZD)"
+          }
+        },
+        "brand": {
+          "type": "_cb-cat-filter",
+          "settings": {
+            "filter_label": "Brand",
+            "title_text": "Brand (optional filter)",
+            "numbered": false
+          }
+        },
+        "promo": {
+          "type": "_cb-cat-promo",
+          "settings": {
+            "icon": "tools",
+            "promo_title": "Certified restring service",
+            "promo_text": "Add any string of your choice. Our Papakura master stringers prepare your tension calibration before dispatch or pickup.",
+            "footer_label": "Electronic constant pull",
+            "footer_value": "±0.5 lbs precision"
+          }
+        }
+      },
+      "block_order": [
+        "play_style",
+        "player_level",
+        "balance",
+        "weight",
+        "price",
+        "brand",
+        "promo"
+      ]
+    }
+  ]
+}
+{% endschema %}

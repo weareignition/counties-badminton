@@ -1,0 +1,194 @@
+<div
+  class="cb-info__stockist"
+  style="
+    --cbi-logo-bg: {{ block.settings.logo_background }};
+    --cbi-logo-height: {{ block.settings.logo_height }}px;
+    --cbi-brand-columns: {{ block.settings.brand_columns }};
+  "
+  {{ block.shopify_attributes }}
+>
+  {%- if block.settings.logo != blank or block.settings.card_label != blank -%}
+    <div class="cb-info__stockist-top">
+      {%- if block.settings.logo != blank -%}
+        <span class="cb-info__logo">
+          {{
+            block.settings.logo
+            | image_url: width: 480
+            | image_tag: widths: '240, 360, 480', sizes: '240px', loading: 'lazy'
+          }}
+        </span>
+      {%- endif -%}
+      {%- if block.settings.card_label != blank -%}
+        <span class="cb-info__stockist-label">{{ block.settings.card_label | escape }}</span>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  {%- if block.settings.stockist_title != blank -%}
+    <p class="cb-info__stockist-title">{{ block.settings.stockist_title | escape }}</p>
+  {%- endif -%}
+  {%- if block.settings.stockist_text != blank -%}
+    <p class="cb-info__stockist-text">{{ block.settings.stockist_text | escape }}</p>
+  {%- endif -%}
+
+  <div class="cb-info__brands">
+    {% content_for 'blocks' %}
+  </div>
+</div>
+
+{% stylesheet %}
+  .cb-info__stockist {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-width: 0;
+    padding: 20px;
+    background: var(--cbi-card);
+    border: 1px solid var(--cbi-border);
+    border-radius: var(--cbi-radius);
+  }
+
+  .cb-info__stockist-top {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 6px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--cbi-border);
+  }
+
+  .cb-info__logo {
+    display: inline-flex;
+    align-items: center;
+    max-width: 60%;
+    padding: 6px 12px;
+    border-radius: 4px;
+    background: var(--cbi-logo-bg);
+  }
+
+  .cb-info__logo img {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    height: var(--cbi-logo-height, 24px);
+    object-fit: contain;
+  }
+
+  .cb-info__stockist-label {
+    margin-left: auto;
+    font-family: var(--cbi-font-body);
+    font-weight: var(--cbi-font-body-strong);
+    font-size: 10px;
+    line-height: 1.3;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--cbi-muted);
+  }
+
+  .cb-info__stockist-title {
+    margin: 0;
+    font-family: var(--cbi-font-heading);
+    font-weight: var(--cbi-font-heading-weight);
+    font-size: 18px;
+    line-height: 1.25;
+    color: var(--cbi-text);
+  }
+
+  .cb-info__stockist-text {
+    margin: 0;
+    font-family: var(--cbi-font-body);
+    font-weight: var(--cbi-font-body-weight);
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--cbi-muted);
+  }
+
+  .cb-info__brands {
+    display: grid;
+    grid-template-columns: repeat(var(--cbi-brand-columns, 2), minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 6px;
+  }
+
+  @media screen and (max-width: 559px) {
+    .cb-info__brands {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-info__stockist {
+      padding: 22px 24px 24px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Stockist card",
+  "tag": null,
+  "blocks": [{ "type": "_cb-info-brand" }],
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    },
+    {
+      "type": "color",
+      "id": "logo_background",
+      "label": "Logo background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "logo_height",
+      "label": "Logo height",
+      "min": 16,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "text",
+      "id": "card_label",
+      "label": "Label",
+      "info": "Shown in capitals in the top-right corner.",
+      "default": "Official stockist"
+    },
+    {
+      "type": "text",
+      "id": "stockist_title",
+      "label": "Title",
+      "default": "Authorized Specialist Stockist"
+    },
+    {
+      "type": "textarea",
+      "id": "stockist_text",
+      "label": "Text"
+    },
+    {
+      "type": "select",
+      "id": "brand_columns",
+      "label": "Brand tiles per row",
+      "options": [
+        { "value": "2", "label": "2" },
+        { "value": "3", "label": "3" },
+        { "value": "4", "label": "4" }
+      ],
+      "default": "2"
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Stockist card",
+      "blocks": {
+        "brand_1": { "type": "_cb-info-brand" },
+        "brand_2": { "type": "_cb-info-brand" }
+      },
+      "block_order": ["brand_1", "brand_2"]
+    }
+  ]
+}
+{% endschema %}

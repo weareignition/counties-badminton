@@ -1,0 +1,66 @@
+{%- if block.settings.heading_text != blank -%}
+  <{{ block.settings.tag }}
+    class="cb-frames__heading"
+    style="--cbp-heading-size: {{ block.settings.size }}px;"
+    {{ block.shopify_attributes }}
+  >
+    {{- block.settings.heading_text -}}
+  </{{ block.settings.tag }}>
+{%- endif -%}
+
+{% stylesheet %}
+  .cb-frames__heading {
+    margin: 0;
+    font-family: var(--cbp-font-heading);
+    font-weight: var(--cbp-font-heading-weight);
+    font-size: clamp(26px, 5.5vw, var(--cbp-heading-size, 36px));
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--cbp-text);
+    text-wrap: balance;
+  }
+
+  .cb-frames__heading em {
+    font-style: normal;
+    color: var(--cbp-accent);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Heading",
+  "tag": null,
+  "settings": [
+    {
+      "type": "inline_richtext",
+      "id": "heading_text",
+      "label": "Heading",
+      "info": "Italic text is shown in the accent color.",
+      "default": "Featured Specialist Frames"
+    },
+    {
+      "type": "range",
+      "id": "size",
+      "label": "Desktop size",
+      "min": 24,
+      "max": 56,
+      "step": 2,
+      "unit": "px",
+      "default": 36
+    },
+    {
+      "type": "select",
+      "id": "tag",
+      "label": "HTML tag",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" },
+        { "value": "p", "label": "Paragraph" }
+      ],
+      "default": "h2"
+    }
+  ],
+  "presets": [{ "name": "[CB] Heading" }]
+}
+{% endschema %}
