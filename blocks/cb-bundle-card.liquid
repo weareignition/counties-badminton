@@ -1,0 +1,509 @@
+{%- comment -%}
+  A bundle card that works in any section that accepts theme blocks, and in [CB] Bundles.
+  By default it shows the linked products: the first one's photo, their titles as the list, and their total price.
+  Custom photo, item lines and price are opt-in. Colours come from --cbbu-* variables when the parent section sets
+  them ([CB] Bundles does), otherwise the dark defaults below.
+{%- endcomment -%}
+{%- liquid
+  assign items = block.settings.products
+  assign first = items | first
+
+  assign total = 0
+  for item in items
+    assign total = total | plus: item.price
+  endfor
+  assign price_text = ''
+  if block.settings.use_custom_price and block.settings.custom_price != blank
+    assign custom_cents = block.settings.custom_price | times: 100
+    assign price_text = custom_cents | money_without_trailing_zeros
+  elsif items.size > 0
+    assign price_text = total | money_without_trailing_zeros
+  endif
+
+  assign image = block.settings.image | default: first.featured_image
+  assign url = block.settings.button_link | default: first.url
+
+  assign font_scope = '#cb-bundle-' | append: block.id
+
+  assign use_custom_items = false
+  if block.settings.use_custom_items and block.settings.custom_items != blank
+    assign use_custom_items = true
+    assign custom_lines = block.settings.custom_items | newline_to_br | split: '<br />'
+  endif
+-%}
+
+{% render 'cb-font-styles',
+  selector: font_scope,
+  prefix: 'cbbu',
+  heading_font: block.settings.heading_font,
+  body_font: block.settings.body_font
+%}
+
+<article
+  id="cb-bundle-{{ block.id }}"
+  class="cb-bundle"
+  style="
+    --cb-bundle-card-label-size: {{ block.settings.label_size }}px;
+    --cb-bundle-card-label-weight: {{ block.settings.label_weight }};
+    --cb-bundle-card-price-size: {{ block.settings.price_size }}px;
+    --cb-bundle-card-price-weight: {{ block.settings.price_weight }};
+    --cb-bundle-card-title-size: {{ block.settings.title_size }}px;
+    --cb-bundle-card-title-weight: {{ block.settings.title_weight }};
+    --cb-bundle-card-items-size: {{ block.settings.items_size }}px;
+    --cb-bundle-card-items-weight: {{ block.settings.items_weight }};
+    --cb-bundle-card-button-size: {{ block.settings.button_size }}px;
+    --cb-bundle-card-button-weight: {{ block.settings.button_weight }};
+  "
+  {{ block.shopify_attributes }}
+>
+  <a class="cb-bundle__media{% if block.settings.image == blank %} cb-bundle__media--product{% endif %}" {% if url != blank %}href="{{ url }}"{% endif %} tabindex="-1" aria-hidden="true">
+    {%- if image != blank -%}
+      {{
+        image
+        | image_url: width: 600
+        | image_tag:
+          widths: '300, 450, 600',
+          sizes: '(min-width: 990px) 300px, (min-width: 750px) 45vw, 90vw',
+          loading: 'lazy',
+          alt: ''
+      }}
+    {%- else -%}
+      {{ 'product-1' | placeholder_svg_tag: 'cb-bundle__placeholder' }}
+    {%- endif -%}
+  </a>
+
+  {%- if block.settings.label != blank -%}
+    <p class="cb-bundle__label">{{ block.settings.label | escape }}</p>
+  {%- endif -%}
+  {%- if price_text != blank -%}
+    <p class="cb-bundle__price">{{ price_text }}</p>
+  {%- endif -%}
+  {%- if block.settings.bundle_title != blank -%}
+    <h3 class="cb-bundle__title">{{ block.settings.bundle_title | escape }}</h3>
+  {%- endif -%}
+
+  {%- if use_custom_items or items.size > 0 -%}
+    <ul class="cb-bundle__items" role="list">
+      {%- if use_custom_items -%}
+        {%- for line in custom_lines -%}
+          {%- assign text = line | strip -%}
+          {%- if text != blank -%}<li>{{ text | escape }}</li>{%- endif -%}
+        {%- endfor -%}
+      {%- else -%}
+        {%- for item in items -%}
+          <li><a href="{{ item.url }}">{{ item.title | escape }}</a></li>
+        {%- endfor -%}
+      {%- endif -%}
+    </ul>
+  {%- endif -%}
+
+  {%- if block.settings.button_label != blank and url != blank -%}
+    <a class="cb-bundle__button" href="{{ url }}">{{ block.settings.button_label | escape }}</a>
+  {%- endif -%}
+</article>
+
+{% stylesheet %}
+  .cb-bundle {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 0;
+    padding: 20px;
+    border-radius: var(--cbbu-radius, 8px);
+    background: var(--cbbu-card, #1b1b1b);
+    color: var(--cbbu-text, #ffffff);
+    text-align: left;
+  }
+
+  .cb-bundle__media {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    aspect-ratio: 296 / 153;
+    overflow: hidden;
+    border: 1px solid var(--cbbu-frame, rgb(255 255 255 / 0.08));
+    border-radius: 6px;
+    background: var(--cbbu-card, #1b1b1b);
+  }
+
+  .cb-bundle__media img {
+    width: auto;
+    max-width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  /* Dark surround: a product photo sits on a square light tile, full height, centred in the dark frame, so
+     transparent and non-square product photos match the rest. A custom photo shows as it is. */
+  .cb-bundle__media--product img {
+    aspect-ratio: 1;
+    background: var(--cbbu-photo, #ffffff);
+  }
+
+  .cb-bundle__placeholder {
+    width: 60%;
+    height: 100%;
+    fill: rgb(255 255 255 / 0.15);
+  }
+
+  .cb-bundle .cb-bundle__label {
+    margin: 16px 0 0;
+    font-family: var(--cbbu-font-body);
+    font-weight: var(--cb-bundle-card-label-weight, var(--cbbu-font-body-strong));
+    font-size: var(--cb-bundle-card-label-size, 10px);
+    line-height: 1.3;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--cbbu-accent, #d71f27);
+  }
+
+  .cb-bundle .cb-bundle__price {
+    margin: 10px 0 0;
+    font-family: var(--cbbu-font-heading);
+    font-weight: var(--cb-bundle-card-price-weight, var(--cbbu-font-heading-weight));
+    font-size: calc(var(--cb-bundle-card-price-size, 32px) * 28 / 32);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    color: var(--cbbu-accent, #d71f27);
+  }
+
+  .cb-bundle .cb-bundle__title {
+    margin: 12px 0 0;
+    font-family: var(--cbbu-font-heading);
+    font-weight: var(--cb-bundle-card-title-weight, var(--cbbu-font-heading-medium-weight));
+    font-size: var(--cb-bundle-card-title-size, 20px);
+    line-height: 1.2;
+    letter-spacing: 0;
+    color: var(--cbbu-text, #ffffff);
+  }
+
+  .cb-bundle__items {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 14px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .cb-bundle__items li {
+    position: relative;
+    padding-left: 16px;
+    font-family: var(--cbbu-font-body);
+    font-weight: var(--cb-bundle-card-items-weight, var(--cbbu-font-body-weight));
+    font-size: var(--cb-bundle-card-items-size, 13px);
+    line-height: 1.5;
+    letter-spacing: -0.015em;
+    color: var(--cbbu-soft, #eaeae8);
+  }
+
+  .cb-bundle__items li::before {
+    content: '';
+    position: absolute;
+    top: 0.62em;
+    left: 2px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  .cb-bundle__items a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .cb-bundle__items a:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .cb-bundle__hint {
+    margin: 14px 0 0;
+    font-size: 12px;
+    color: var(--cbbu-soft, #eaeae8);
+  }
+
+  .cb-bundle__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 43px;
+    margin-top: 18px;
+    padding: 0 18px;
+    border-radius: 3px;
+    background: var(--cbbu-accent, #d71f27);
+    font-family: var(--cbbu-font-body);
+    font-weight: var(--cb-bundle-card-button-weight, var(--cbbu-font-body-strong));
+    font-size: var(--cb-bundle-card-button-size, 13px);
+    line-height: 1.2;
+    text-decoration: none;
+    color: #ffffff;
+    transition: background-color 0.2s ease;
+  }
+
+  .cb-bundle__button:hover {
+    background: color-mix(in srgb, var(--cbbu-accent, #d71f27) 88%, #000);
+  }
+
+  .cb-bundle__button:focus-visible {
+    outline: 2px solid var(--cbbu-text, #ffffff);
+    outline-offset: 3px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-bundle {
+      padding: 24px;
+    }
+
+    .cb-bundle .cb-bundle__price {
+      font-size: var(--cb-bundle-card-price-size, 32px);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Bundle card",
+  "tag": null,
+  "settings": [
+    {
+      "type": "product_list",
+      "id": "products",
+      "label": "Bundle products",
+      "info": "Their titles make the list, their total is the price, and the first one's photo is shown.",
+      "limit": 6
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Level label",
+      "info": "Small red text above the price.",
+      "default": "Starter"
+    },
+    {
+      "type": "text",
+      "id": "bundle_title",
+      "label": "Title",
+      "default": "Starter Bundle"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Custom photo",
+      "info": "Leave empty to use the first product's photo."
+    },
+    {
+      "type": "header",
+      "content": "Custom text"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_custom_items",
+      "label": "Use custom item lines",
+      "info": "Off: the list shows the products' titles.",
+      "default": false
+    },
+    {
+      "type": "textarea",
+      "id": "custom_items",
+      "label": "Item lines",
+      "info": "One per line.",
+      "visible_if": "{{ block.settings.use_custom_items }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_custom_price",
+      "label": "Use a bundle price",
+      "info": "Off: the price is the products' total.",
+      "default": false
+    },
+    {
+      "type": "number",
+      "id": "custom_price",
+      "label": "Bundle price ($)",
+      "visible_if": "{{ block.settings.use_custom_price }}"
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button",
+      "default": "Shop Starter Bundle"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link",
+      "info": "Leave empty to open the first product."
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "info": "The chosen style sets the price weight; the title uses its medium style.",
+      "default": "space_grotesk_n7"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "inter_n4"
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "label_size",
+      "label": "Level label size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "label_weight",
+      "label": "Level label weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "price_size",
+      "label": "Price size",
+      "info": "Scaled down on phones.",
+      "min": 16,
+      "max": 112,
+      "step": 1,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "select",
+      "id": "price_weight",
+      "label": "Price weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Title size",
+      "min": 10,
+      "max": 56,
+      "step": 0.5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Title weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "items_size",
+      "label": "Item list size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "select",
+      "id": "items_weight",
+      "label": "Item list weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "button_size",
+      "label": "Button text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "select",
+      "id": "button_weight",
+      "label": "Button text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    }
+  ],
+  "presets": [{ "name": "[CB] Bundle card" }]
+}
+{% endschema %}

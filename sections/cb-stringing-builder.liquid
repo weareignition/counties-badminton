@@ -1,0 +1,533 @@
+{%- comment -%}
+  Stringing builder: the shared [CB] Subheader, Heading and Paragraph (static blocks) with a badge, then the
+  string, tension and add-button columns. The button adds the racket (from the [CB] Product form on the page, with
+  its option picks; else this product's first available variant) and the chosen string, saving the tension and racket
+  on the string's cart line.
+{%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign font_scope = '#cb-sb-' | append: section.id
+  assign racket = product.selected_or_first_available_variant
+-%}
+
+{% render 'cb-font-styles',
+  selector: font_scope,
+  prefix: 'cbsb',
+  heading_font: s.heading_font,
+  body_font: s.body_font
+%}
+
+<cb-stringing
+  id="cb-sb-{{ section.id }}"
+  class="cb-sb"
+  data-add-racket="{{ s.add_racket }}"
+  {% if product != blank %}
+    data-racket-id="{{ racket.id }}"
+    data-racket-title="{{ product.title | escape }}"
+    data-product-id="{{ product.id }}"
+  {% endif %}
+  data-no-string="{{ s.no_string_message | escape }}"
+  style="
+    --cbsb-bg: {{ s.background_color }};
+    --cbsb-panel: {{ s.panel_color }};
+    --cbsb-col: {{ s.column_color }};
+    --cbsb-option: {{ s.option_color }};
+    --cbsb-note: {{ s.note_color }};
+    --cbsb-text: {{ s.text_color }};
+    --cbsb-muted: {{ s.muted_text_color }};
+    --cbsb-grey: {{ s.muted_text_color }};
+    --cbsb-label: {{ s.label_color }};
+    --cbsb-accent: {{ s.accent_color }};
+    --cbsb-max-width: {{ s.max_width }}px;
+    --cbsb-side: {{ s.side_padding }}px;
+    --cbsb-panel-padding: {{ s.panel_padding }}px;
+    --cbsb-gap: {{ s.column_gap }}px;
+    --cbsb-pt: {{ s.padding_top }}px;
+    --cbsb-pb: {{ s.padding_bottom }}px;
+    --cb-stringing-builder-badge-size: {{ s.badge_size }}px;
+    --cb-stringing-builder-badge-weight: {{ s.badge_weight }};
+  "
+>
+  <span id="stringing-builder" class="cb-sb__anchor"></span>
+  <div class="cb-sb__panel">
+    <div class="cb-sb__header">
+      <div class="cb-sb__intro">
+        {%- content_for 'block', type: 'cb-subheader', id: 'subheader' -%}
+        {%- content_for 'block', type: 'cb-heading', id: 'heading' -%}
+        {%- content_for 'block', type: 'cb-paragraph', id: 'paragraph' -%}
+      </div>
+      {%- if s.badge_text != blank -%}
+        <p class="cb-sb__badge">
+          {%- if s.badge_icon != blank -%}
+            {%- render 'cb-icon-upload', image: s.badge_icon, size: 12, tint: true -%}
+          {%- else -%}
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M8 12.5l2.7 2.7L16 9.5"/></svg>
+          {%- endif -%}
+          <span>{{ s.badge_text | escape }}</span>
+        </p>
+      {%- endif -%}
+    </div>
+
+    <div class="cb-sb__cols">
+      {%- content_for 'blocks' -%}
+    </div>
+  </div>
+</cb-stringing>
+
+<script type="module">
+  import { cbAddToCart } from '{{ 'cb-cart-add.js' | asset_url }}';
+
+  if (!customElements.get('cb-stringing')) {
+    customElements.define(
+      'cb-stringing',
+      class extends HTMLElement {
+        connectedCallback() {
+          this.addEventListener('click', this.onClick);
+          this.addEventListener('change', this.onChange);
+        }
+
+        disconnectedCallback() {
+          this.removeEventListener('click', this.onClick);
+          this.removeEventListener('change', this.onChange);
+        }
+
+        onChange = (event) => {
+          const input = event.target;
+          if (input instanceof HTMLInputElement && input.matches('[data-cb-sb-recommend]')) {
+            this.classList.toggle('cb-sb--recommend', input.checked);
+          }
+        };
+
+        onClick = (event) => {
+          const button = event.target.closest('[data-cb-sb-add]');
+          if (button) this.add(button);
+        };
+
+        message(text) {
+          const out = this.querySelector('[data-cb-sb-message]');
+          if (!out) return;
+          out.textContent = text || '';
+          out.hidden = !text;
+        }
+
+        async add(button) {
+          if (button.getAttribute('aria-busy') === 'true') return;
+          const string = this.querySelector('.cb-sb-string__input:checked');
+          if (!string) {
+            this.message(this.dataset.noString);
+            return;
+          }
+
+          const recommend = this.querySelector('[data-cb-sb-recommend]:checked');
+          const tension = recommend ? recommend.value : this.querySelector('.cb-sb-tension__input:checked')?.value;
+          const properties = {};
+          if (tension) properties.Tension = tension;
+          if (this.dataset.racketTitle) properties['For racket'] = this.dataset.racketTitle;
+
+          const items = [];
+          if (this.dataset.addRacket === 'true') {
+            const form = document.querySelector('cb-pdp');
+            if (form && typeof form.lineItem === 'function') items.push(form.lineItem());
+            else if (this.dataset.racketId) items.push({ id: this.dataset.racketId, quantity: 1 });
+          }
+          items.push({ id: string.value, quantity: 1, properties });
+          const labour = this.querySelector('[data-cb-sb-labour]');
+          if (labour instanceof HTMLInputElement && labour.value) items.push({ id: labour.value, quantity: 1, properties });
+
+          button.setAttribute('aria-busy', 'true');
+          this.message('');
+          const label = button.querySelector('[data-cb-sb-add-text]');
+          const original = label?.textContent;
+          const result = await cbAddToCart(this, items, { productId: this.dataset.productId, sourceName: 'cb-stringing' });
+          button.removeAttribute('aria-busy');
+          if (!result.ok) {
+            this.message(result.message || 'Could not add to cart. Please try again.');
+            return;
+          }
+          if (label && button.dataset.added) {
+            label.textContent = button.dataset.added;
+            setTimeout(() => { label.textContent = original; }, 2000);
+          }
+        }
+      }
+    );
+  }
+</script>
+
+{% stylesheet %}
+  .cb-sb {
+    display: block;
+    color: var(--cbsb-text);
+    background: var(--cbsb-bg);
+    padding: var(--cbsb-pt) 16px var(--cbsb-pb);
+  }
+
+  .cb-sb__anchor {
+    display: block;
+    scroll-margin-top: calc(var(--header-height, 72px) + 16px);
+  }
+
+  .cb-sb__panel {
+    max-width: var(--cbsb-max-width);
+    box-sizing: border-box;
+    margin-inline: auto;
+    padding: 16px;
+    border-radius: 3px;
+    background: var(--cbsb-panel);
+  }
+
+  .cb-sb__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 12px 24px;
+    margin-bottom: 18px;
+  }
+
+  .cb-sb__intro {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  .cb-sb__intro > .cb-heading + .cb-paragraph {
+    margin-top: -4px;
+  }
+
+  .cb-sb .cb-sb__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    min-height: 22px;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0 10px;
+    border-radius: 3px;
+    background: var(--cbsb-note);
+    font-family: var(--cbsb-font-body);
+    font-weight: var(--cb-stringing-builder-badge-weight, 500);
+    font-size: var(--cb-stringing-builder-badge-size, 10px);
+    line-height: 1.2;
+    color: var(--cbsb-text);
+  }
+
+  .cb-sb__badge svg,
+  .cb-sb__badge .cb-icon-upload {
+    flex: none;
+    color: var(--cbsb-accent);
+  }
+
+  .cb-sb__cols {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--cbsb-gap);
+  }
+
+  /* Shared by the three column blocks. */
+  .cb-sb-col {
+    min-width: 0;
+    box-sizing: border-box;
+    padding: 18px 16px 15px;
+    border-radius: 3px;
+    background: var(--cbsb-col);
+  }
+
+  .cb-sb .cb-sb-col__label {
+    margin: 0;
+    font-family: var(--cbsb-font-body);
+    font-weight: var(--cb-sb-col-label-weight, var(--cbsb-font-body-strong));
+    font-size: var(--cb-sb-col-label-size, 8px);
+    line-height: 1.3;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--cbsb-label);
+  }
+
+  .cb-sb .cb-sb-col__title {
+    margin: 12px 0 9px;
+    font-family: var(--cbsb-font-heading);
+    font-weight: var(--cb-sb-col-title-weight, var(--cbsb-font-heading-weight));
+    font-size: var(--cb-sb-col-title-size, 11px);
+    line-height: 1.3;
+    letter-spacing: 0;
+    color: var(--cbsb-text);
+  }
+
+  .cb-sb .cb-sb-col__label + :not(.cb-sb-col__title) {
+    margin-top: 12px;
+  }
+
+  .cb-sb .cb-sb-col__hint {
+    margin: 0;
+    padding: 10px 12px;
+    border: 1px dashed rgb(255 255 255 / 0.2);
+    border-radius: 4px;
+    font-size: 11px;
+    color: rgb(255 255 255 / 0.6);
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-sb {
+      padding-inline: var(--cbsb-side);
+    }
+
+    .cb-sb__panel {
+      padding: var(--cbsb-panel-padding);
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    /* One equal column per block. */
+    .cb-sb__cols {
+      grid-auto-columns: minmax(0, 1fr);
+      grid-auto-flow: column;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Stringing builder",
+  "tag": "section",
+  "class": "section-wrapper",
+  "blocks": [{ "type": "_cb-sb-strings" }, { "type": "_cb-sb-tension" }, { "type": "_cb-sb-guide" }],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "add_racket",
+      "label": "Add the racket too",
+      "info": "On a product page the button adds this product (with its option picks) and the string.",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "no_string_message",
+      "label": "Message when no string is chosen",
+      "default": "Choose a string first."
+    },
+    {
+      "type": "header",
+      "content": "Badge"
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge text",
+      "info": "Leave empty to hide the badge.",
+      "default": "Victor C-7032 calibrated"
+    },
+    {
+      "type": "image_picker",
+      "id": "badge_icon",
+      "label": "Badge icon",
+      "info": "Optional. Upload your own SVG to replace the tick."
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Maximum width",
+      "min": 800,
+      "max": 1800,
+      "step": 20,
+      "unit": "px",
+      "default": 1520
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Side space",
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "panel_padding",
+      "label": "Panel padding",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "column_gap",
+      "label": "Space between columns",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Fonts"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "space_grotesk_n7"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "inter_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#0b0b0b"
+    },
+    {
+      "type": "color",
+      "id": "panel_color",
+      "label": "Panel",
+      "default": "#181818"
+    },
+    {
+      "type": "color",
+      "id": "column_color",
+      "label": "Columns",
+      "default": "#1c1c1c"
+    },
+    {
+      "type": "color",
+      "id": "option_color",
+      "label": "Choices",
+      "default": "#212121"
+    },
+    {
+      "type": "color",
+      "id": "note_color",
+      "label": "Note and badge",
+      "default": "#262626"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "muted_text_color",
+      "label": "Muted text",
+      "default": "#a1a1aa"
+    },
+    {
+      "type": "color",
+      "id": "label_color",
+      "label": "Column labels",
+      "default": "#f2aaa0"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "default": "#d71f27"
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "badge_size",
+      "label": "Badge text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "badge_weight",
+      "label": "Badge text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Stringing builder",
+      "blocks": {
+        "subheader": {
+          "type": "cb-subheader",
+          "static": true,
+          "settings": { "subheader_text": "Professional stringing", "size": 8, "letter_spacing": 10 }
+        },
+        "heading": {
+          "type": "cb-heading",
+          "static": true,
+          "settings": { "heading_text": "Set it up for how you play.", "size": 28, "line_height": 115 }
+        },
+        "paragraph": {
+          "type": "cb-paragraph",
+          "static": true,
+          "settings": {
+            "body_text": "<p>Precision electronic tensioning on calibrated constant-pull machines at our Papakura workshop.</p>",
+            "size": 12,
+            "line_height": 160
+          }
+        },
+        "strings": { "type": "_cb-sb-strings", "settings": {} },
+        "tension": { "type": "_cb-sb-tension", "settings": {} },
+        "guide": { "type": "_cb-sb-guide", "settings": {} }
+      },
+      "block_order": ["strings", "tension", "guide"]
+    }
+  ]
+}
+{% endschema %}

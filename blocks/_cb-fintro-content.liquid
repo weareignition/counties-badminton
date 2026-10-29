@@ -1,0 +1,95 @@
+<div class="cb-fintro__content cb-fintro__content--{{ block.settings.alignment }}" {{ block.shopify_attributes }}>
+  {% content_for 'blocks' %}
+</div>
+
+{% stylesheet %}
+  .cb-fintro__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 0;
+    text-align: center;
+  }
+
+  .cb-fintro__content--left {
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  /* Spacing follows the design; it sits on each following element, so blocks can be reordered or removed. */
+  .cb-fintro__content > * + .cb-heading {
+    margin-top: 22px;
+  }
+
+  .cb-fintro__content > * + .cb-paragraph {
+    margin-top: 22px;
+  }
+
+  .cb-fintro__content > * + .cb-fintro__meta {
+    margin-top: 14px;
+  }
+
+  .cb-fintro__content > * + .cb-fintro__buttons {
+    margin-top: 28px;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Content",
+  "tag": null,
+  "blocks": [
+    { "type": "_cb-fintro-badge" },
+    { "type": "cb-heading" },
+    { "type": "cb-paragraph" },
+    { "type": "cb-button" },
+    { "type": "_cb-fintro-meta" },
+    { "type": "_cb-fintro-buttons" }
+  ],
+  "settings": [
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Alignment",
+      "options": [
+        { "value": "center", "label": "Center" },
+        { "value": "left", "label": "Left" }
+      ],
+      "default": "center"
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Content",
+      "blocks": {
+        "badge": { "type": "_cb-fintro-badge" },
+        "heading": {
+          "type": "cb-heading",
+          "settings": {
+            "heading_text": "Find the racket that fits your game.",
+            "size": 48,
+            "mobile_scale": 70,
+            "line_height": 118,
+            "wrap": "wrap",
+            "max_width": 720
+          }
+        },
+        "text": {
+          "type": "cb-paragraph",
+          "settings": {
+            "body_text": "<p>Answer a few quick questions and we’ll narrow down the frames we’d put in your hand at the Pro Shop.</p>",
+            "size": 16,
+            "mobile_sizing": "custom",
+            "mobile_size": 15,
+            "wrap": "pretty",
+            "max_width_unit": "px",
+            "max_width_px": 580
+          }
+        },
+        "meta": { "type": "_cb-fintro-meta" }
+      },
+      "block_order": ["badge", "heading", "text", "meta"]
+    }
+  ]
+}
+{% endschema %}

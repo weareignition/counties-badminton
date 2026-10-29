@@ -1,0 +1,455 @@
+{%- comment -%}
+  A brand card: brand name (or logo) with a badge, a title, text and a link. With no custom link, the link searches
+  the store for products whose titles contain the brand name and the search word (e.g. Victor shoes).
+{%- endcomment -%}
+{%- liquid
+  assign brand = block.settings.brand_name | strip
+
+  assign link = block.settings.link
+  if link == blank and brand != blank
+    assign query = 'title:"' | append: brand | append: '"'
+    assign word = block.settings.search_word | strip
+    if word != blank
+      assign query = query | append: ' AND title:' | append: word | append: '*'
+    endif
+    assign encoded_query = query | url_encode
+    assign link = routes.search_url | append: '?type=product&q=' | append: encoded_query
+  endif
+
+  assign link_label = block.settings.link_label | replace: '[brand]', brand | strip
+  assign logo = block.settings.logo
+  assign logo_height_2x = block.settings.logo_height | times: 2
+  assign logo_style = '--cbbs-logo-height: ' | append: block.settings.logo_height | append: 'px;'
+  assign logo_class = 'cb-bspot-card__logo'
+  if block.settings.logo_white
+    assign logo_class = logo_class | append: ' cb-bspot-card__logo--white'
+  endif
+-%}
+
+<article
+  class="cb-bspot-card"
+  style="
+    --cb-bspot-card-brand-size: {{ block.settings.brand_size }}px;
+    --cb-bspot-card-brand-weight: {{ block.settings.brand_weight }};
+    --cb-bspot-card-badge-size: {{ block.settings.badge_size }}px;
+    --cb-bspot-card-badge-weight: {{ block.settings.badge_weight }};
+    --cb-bspot-card-title-size: {{ block.settings.title_size }}px;
+    --cb-bspot-card-title-weight: {{ block.settings.title_weight }};
+    --cb-bspot-card-text-size: {{ block.settings.text_size }}px;
+    --cb-bspot-card-text-weight: {{ block.settings.text_weight }};
+    --cb-bspot-card-link-size: {{ block.settings.link_size }}px;
+    --cb-bspot-card-link-weight: {{ block.settings.link_weight }};
+  "
+  {{ block.shopify_attributes }}
+>
+  {%- if brand != blank or logo != blank or block.settings.badge != blank -%}
+    <div class="cb-bspot-card__top">
+      {%- if logo != blank -%}
+        <h3 class="cb-bspot-card__brand cb-bspot-card__brand--logo">
+          {{-
+            logo
+            | image_url: height: logo_height_2x
+            | image_tag:
+              height: block.settings.logo_height,
+              alt: brand,
+              loading: 'lazy',
+              class: logo_class,
+              style: logo_style
+          -}}
+        </h3>
+      {%- elsif brand != blank -%}
+        <h3 class="cb-bspot-card__brand">{{ brand | escape }}</h3>
+      {%- endif -%}
+      {%- if block.settings.badge != blank -%}
+        <span class="cb-bspot-card__badge">{{ block.settings.badge | escape }}</span>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  <div class="cb-bspot-card__body">
+    {%- if block.settings.card_title != blank -%}
+      <p class="cb-bspot-card__title">{{ block.settings.card_title | escape }}</p>
+    {%- endif -%}
+    {%- if block.settings.card_text != blank -%}
+      <p class="cb-bspot-card__text">{{ block.settings.card_text | escape | newline_to_br }}</p>
+    {%- endif -%}
+  </div>
+
+  {%- if link_label != blank and link != blank -%}
+    <a class="cb-bspot-card__link" href="{{ link }}">
+      <span>{{ link_label | escape }}</span>
+      <svg width="11" height="11" viewBox="4 4 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+      </svg>
+    </a>
+  {%- endif -%}
+</article>
+
+{% stylesheet %}
+  .cb-bspot-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    padding: calc(var(--cbbs-card-pad) * 0.67);
+    border-radius: var(--cbbs-radius);
+    background: var(--cbbs-card);
+    color: var(--cbbs-text);
+  }
+
+  .cb-bspot-card__top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px 16px;
+    min-height: 26px;
+  }
+
+  .cb-bspot-card__brand {
+    margin: 0;
+    font-family: var(--cbbs-font-heading);
+    font-weight: var(--cb-bspot-card-brand-weight, var(--cbbs-font-heading-medium-weight));
+    font-size: var(--cb-bspot-card-brand-size, 22px);
+    line-height: 26px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--cbbs-text);
+  }
+
+  .cb-bspot-card__brand--logo {
+    line-height: 0;
+  }
+
+  .cb-bspot-card__logo {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    height: var(--cbbs-logo-height, 24px);
+  }
+
+  .cb-bspot-card__logo--white {
+    filter: brightness(0) invert(1);
+  }
+
+  .cb-bspot-card__badge {
+    flex: none;
+    padding: 4px 9px;
+    border-radius: 2px;
+    background: var(--cbbs-badge);
+    font-family: var(--cbbs-font-body);
+    font-weight: var(--cb-bspot-card-badge-weight, var(--cbbs-font-body-strong));
+    font-size: var(--cb-bspot-card-badge-size, 9px);
+    line-height: 14px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--cbbs-muted);
+  }
+
+  .cb-bspot-card__body {
+    flex: 1 1 auto;
+  }
+
+  /* The gap sits on the wrapper div: Horizon's base.css zeroes margin-top on a first-child p. */
+  .cb-bspot-card__top + .cb-bspot-card__body {
+    margin-top: 15px;
+  }
+
+  .cb-bspot-card__title {
+    margin: 0;
+    font-family: var(--cbbs-font-heading);
+    font-weight: var(--cb-bspot-card-title-weight, var(--cbbs-font-heading-regular-weight));
+    font-size: var(--cb-bspot-card-title-size, 18px);
+    line-height: 1.3;
+    color: var(--cbbs-text);
+  }
+
+  .cb-bspot-card__text {
+    margin: 8px 0 0;
+    font-family: var(--cbbs-font-body);
+    font-weight: var(--cb-bspot-card-text-weight, var(--cbbs-font-body-weight));
+    font-size: var(--cb-bspot-card-text-size, 14px);
+    line-height: 1.55;
+    letter-spacing: -0.01em;
+    color: var(--cbbs-muted);
+  }
+
+  .cb-bspot-card__link {
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start;
+    gap: 7px;
+    margin-top: 30px;
+    font-family: var(--cbbs-font-body);
+    font-weight: var(--cb-bspot-card-link-weight, var(--cbbs-font-body-strong));
+    font-size: var(--cb-bspot-card-link-size, 11px);
+    line-height: 18px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--cbbs-accent);
+  }
+
+  .cb-bspot-card__link svg {
+    flex: none;
+    transition: transform 0.2s ease;
+  }
+
+  .cb-bspot-card__link:hover svg {
+    transform: translateX(3px);
+  }
+
+  .cb-bspot-card__link:focus-visible {
+    outline: 2px solid var(--cbbs-accent);
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cb-bspot-card__link svg {
+      transition: none;
+    }
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-bspot-card {
+      padding: var(--cbbs-card-pad);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Brand card",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Brand"
+    },
+    {
+      "type": "text",
+      "id": "brand_name",
+      "label": "Brand name",
+      "info": "Shown in capitals. Also used for the automatic link and for [brand] in the link text.",
+      "default": "Victor"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo",
+      "info": "Optional. Shown instead of the brand name text."
+    },
+    {
+      "type": "range",
+      "id": "logo_height",
+      "label": "Logo height",
+      "min": 12,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 24,
+      "visible_if": "{{ block.settings.logo != blank }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "logo_white",
+      "label": "Show logo in white",
+      "info": "For dark logos on the dark card.",
+      "default": false,
+      "visible_if": "{{ block.settings.logo != blank }}"
+    },
+    {
+      "type": "text",
+      "id": "badge",
+      "label": "Badge",
+      "info": "Small tag on the right, shown in capitals. Leave empty to hide.",
+      "default": "Court specialist"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "card_title",
+      "label": "Title",
+      "default": "Precision Court Engineering"
+    },
+    {
+      "type": "textarea",
+      "id": "card_text",
+      "label": "Text",
+      "default": "Engineered specifically for badminton movement, Victor footwear delivers responsive court feel, lateral stability, and reliable traction during rapid changes of direction."
+    },
+    {
+      "type": "header",
+      "content": "Link"
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Link text",
+      "info": "[brand] is replaced by the brand name. Leave empty to hide the link.",
+      "default": "Explore [brand] range"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Custom link",
+      "info": "Leave empty to show the store's products whose titles contain the brand name and the search word below."
+    },
+    {
+      "type": "text",
+      "id": "search_word",
+      "label": "Search word",
+      "info": "Used when there's no custom link. \"shoe\" finds shoe and shoes. Leave empty to show all the brand's products.",
+      "default": "shoe"
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "brand_size",
+      "label": "Brand name size",
+      "min": 10,
+      "max": 56,
+      "step": 0.5,
+      "unit": "px",
+      "default": 22
+    },
+    {
+      "type": "select",
+      "id": "brand_weight",
+      "label": "Brand name weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "badge_size",
+      "label": "Badge size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 9
+    },
+    {
+      "type": "select",
+      "id": "badge_weight",
+      "label": "Badge weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Title size",
+      "min": 10,
+      "max": 56,
+      "step": 0.5,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Title weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "text_weight",
+      "label": "Text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "link_size",
+      "label": "Link text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "select",
+      "id": "link_weight",
+      "label": "Link text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    }
+  ],
+  "presets": [{ "name": "[CB] Brand card" }]
+}
+{% endschema %}

@@ -14,25 +14,30 @@
   <a
     href="{{ link }}"
     class="cb-info__button cb-info__button--{{ block.settings.style }}"
+    style="--cb-info-button-label-size: {{ block.settings.label_size }}px; --cb-info-button-label-weight: {{ block.settings.label_weight }};"
     {% if new_tab %}
       target="_blank" rel="noopener"
     {% endif %}
     {{ block.shopify_attributes }}
   >
-    {%- unless block.settings.icon == 'none' -%}
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        {%- case block.settings.icon -%}
-          {%- when 'directions' -%}
-            <path d="M12 2.5 21.5 12 12 21.5 2.5 12z"/><path d="M9 14v-3h6M12.5 8.5 15 11l-2.5 2.5"/>
-          {%- when 'calendar' -%}
-            <rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/>
-          {%- when 'pin' -%}
-            <path d="M12 21s-7-6.1-7-11.5a7 7 0 0 1 14 0C19 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>
-          {%- when 'phone' -%}
-            <path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/>
-        {%- endcase -%}
-      </svg>
-    {%- endunless -%}
+    {%- if block.settings.custom_icon != blank or block.settings.icon != 'none' -%}
+      {%- if block.settings.custom_icon != blank -%}
+        {%- render 'cb-icon-upload', image: block.settings.custom_icon, size: 16, tint: block.settings.custom_icon_tint -%}
+      {%- else -%}
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          {%- case block.settings.icon -%}
+            {%- when 'directions' -%}
+              <path d="M12 2.5 21.5 12 12 21.5 2.5 12z"/><path d="M9 14v-3h6M12.5 8.5 15 11l-2.5 2.5"/>
+            {%- when 'calendar' -%}
+              <rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/>
+            {%- when 'pin' -%}
+              <path d="M12 21s-7-6.1-7-11.5a7 7 0 0 1 14 0C19 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>
+            {%- when 'phone' -%}
+              <path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/>
+          {%- endcase -%}
+        </svg>
+      {%- endif -%}
+    {%- endif -%}
     {{- block.settings.label | escape -}}
   </a>
 {%- endif -%}
@@ -48,8 +53,8 @@
     border: 1px solid transparent;
     border-radius: 6px;
     font-family: var(--cbi-font-body);
-    font-weight: var(--cbi-font-body-strong);
-    font-size: 13px;
+    font-weight: var(--cb-info-button-label-weight, var(--cbi-font-body-strong));
+    font-size: var(--cb-info-button-label-size, 13px);
     line-height: 1.2;
     text-decoration: none;
     transition: background-color 0.2s ease, border-color 0.2s ease;
@@ -134,6 +139,52 @@
         { "value": "phone", "label": "Phone" }
       ],
       "default": "none"
+    },
+    {
+      "type": "image_picker",
+      "id": "custom_icon",
+      "label": "Custom icon",
+      "info": "Upload your own SVG (or PNG). It replaces the built-in icon above."
+    },
+    {
+      "type": "checkbox",
+      "id": "custom_icon_tint",
+      "label": "Colour it like the built-in icons",
+      "info": "For one-colour SVGs: uses this section's icon colour. Turn off to keep the file's own colours.",
+      "default": true,
+      "visible_if": "{{ block.settings.custom_icon != blank }}"
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "label_size",
+      "label": "Button text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "select",
+      "id": "label_weight",
+      "label": "Button text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
     }
   ],
   "presets": [{ "name": "[CB] Button" }]

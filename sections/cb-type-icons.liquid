@@ -1,0 +1,266 @@
+{%- liquid
+  assign s = section.settings
+  assign font_scope = '#cb-ticons-' | append: section.id
+-%}
+
+{% render 'cb-font-styles',
+  selector: font_scope,
+  prefix: 'cbtc',
+  heading_font: s.heading_font,
+  body_font: s.body_font
+%}
+
+<section
+  id="cb-ticons-{{ section.id }}"
+  class="cb-ticons"
+  style="
+    --cbtc-bg: {{ s.background_color }};
+    --cbtc-card: {{ s.card_background_color }};
+    --cbtc-text: {{ s.text_color }};
+    --cbtc-muted: {{ s.muted_text_color }};
+    --cbtc-accent: {{ s.accent_color }};
+    --cbtc-radius: {{ s.card_radius }}px;
+    --cbtc-max-width: {{ s.max_width }}px;
+    --cbtc-stack-gap: {{ s.stack_gap }}px;
+    --cbtc-pt: {{ s.padding_top }}px;
+    --cbtc-pb: {{ s.padding_bottom }}px;
+  "
+>
+  <div class="cb-ticons__inner">
+    {% content_for 'blocks' %}
+  </div>
+</section>
+
+{% stylesheet %}
+  .cb-ticons {
+    color: var(--cbtc-text);
+    background: var(--cbtc-bg);
+    padding: calc(var(--cbtc-pt) * 0.75) 16px calc(var(--cbtc-pb) * 0.75);
+  }
+
+  .cb-ticons__inner {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--cbtc-stack-gap) * 0.8);
+    max-width: var(--cbtc-max-width);
+    margin-inline: auto;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-ticons {
+      padding: var(--cbtc-pt) 32px var(--cbtc-pb);
+    }
+
+    .cb-ticons__inner {
+      gap: var(--cbtc-stack-gap);
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .cb-ticons {
+      padding-inline: 48px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Shop by type icons",
+  "tag": "div",
+  "class": "section-wrapper",
+  "blocks": [
+    { "type": "_cb-ticon-header" },
+    { "type": "_cb-ticon-cards" }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width",
+      "min": 960,
+      "max": 1800,
+      "step": 20,
+      "unit": "px",
+      "default": 1400
+    },
+    {
+      "type": "range",
+      "id": "stack_gap",
+      "label": "Space between header and cards",
+      "min": 8,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Card corner radius",
+      "min": 0,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 5
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "info": "Used for the heading (bold) and card titles (regular).",
+      "default": "space_grotesk_n7"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "inter_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#0b0b0b"
+    },
+    {
+      "type": "color",
+      "id": "card_background_color",
+      "label": "Cards",
+      "default": "#181818"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "muted_text_color",
+      "label": "Card text",
+      "default": "#a1a1aa"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "info": "Eyebrow and icons.",
+      "default": "#d71f27"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Shop by type icons",
+      "category": "t:categories.collections",
+      "blocks": {
+        "header": {
+          "type": "_cb-ticon-header",
+          "settings": { "text_position": "right" },
+          "blocks": {
+            "eyebrow": { "type": "cb-subheader", "settings": { "subheader_text": "Shop by type", "letter_spacing": 0 } },
+            "heading": {
+              "type": "cb-heading",
+              "settings": { "heading_text": "Gear up for the court.", "wrap": "wrap" }
+            },
+            "text": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>Shirts, shorts, compression and support gear for training and match play, available online and at the Papakura Pro Shop.</p>",
+                "letter_spacing": -1,
+                "max_width_unit": "px",
+                "max_width_px": 440
+              }
+            }
+          },
+          "block_order": ["eyebrow", "heading", "text"]
+        },
+        "cards": {
+          "type": "_cb-ticon-cards",
+          "blocks": {
+            "apparel": {
+              "type": "_cb-ticon-card",
+              "settings": {
+                "icon": "hanger",
+                "card_title": "Badminton Apparel",
+                "card_text": "Shirts, shorts and clothing for training and match play.",
+                "link_label": "Explore",
+                "link": "shopify://collections/clothing"
+              }
+            },
+            "compression": {
+              "type": "_cb-ticon-card",
+              "settings": {
+                "icon": "compress",
+                "card_title": "Compression Gear",
+                "card_text": "Compression products for players who use them as part of their court setup.",
+                "link_label": "Explore",
+                "link": "shopify://collections/accessories"
+              }
+            },
+            "supports": {
+              "type": "_cb-ticon-card",
+              "settings": {
+                "icon": "shield",
+                "card_title": "Support Sleeves",
+                "card_text": "McDavid support sleeves and related support products.",
+                "link_label": "Explore",
+                "link": "shopify://collections/accessories"
+              }
+            },
+            "all": {
+              "type": "_cb-ticon-card",
+              "settings": {
+                "icon": "shapes",
+                "card_title": "All Apparel & Support",
+                "card_text": "Browse the complete category and accessories.",
+                "link_label": "View all"
+              }
+            }
+          },
+          "block_order": ["apparel", "compression", "supports", "all"]
+        }
+      },
+      "block_order": ["header", "cards"]
+    }
+  ]
+}
+{% endschema %}

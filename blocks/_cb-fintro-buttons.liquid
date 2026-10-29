@@ -1,0 +1,64 @@
+<div class="cb-fintro__buttons" style="--cbfi-buttons-gap: {{ block.settings.gap }}px;" {{ block.shopify_attributes }}>
+  {% content_for 'blocks' %}
+</div>
+
+{% stylesheet %}
+  /* Phones: full-width stacked buttons. Larger screens: a centred row. */
+  .cb-fintro__buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    width: 100%;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-fintro__buttons {
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: var(--cbfi-buttons-gap, 16px);
+      width: auto;
+    }
+
+    .cb-fintro__content--left .cb-fintro__buttons {
+      justify-content: flex-start;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Buttons",
+  "tag": null,
+  "blocks": [{ "type": "_cb-fintro-button" }],
+  "settings": [
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Gap",
+      "min": 4,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Buttons",
+      "blocks": {
+        "start": {
+          "type": "_cb-fintro-button",
+          "settings": { "label": "Start racket finder", "link": "shopify://collections/rackets", "start_quiz": true, "style": "primary", "show_arrow": true }
+        },
+        "shop": {
+          "type": "_cb-fintro-button",
+          "settings": { "label": "Shop all rackets", "link": "shopify://collections/rackets", "style": "secondary" }
+        }
+      },
+      "block_order": ["start", "shop"]
+    }
+  ]
+}
+{% endschema %}

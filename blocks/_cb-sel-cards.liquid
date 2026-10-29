@@ -1,0 +1,71 @@
+<div
+  class="cb-sel__cards"
+  style="--cbx-columns: {{ block.settings.columns }}; --cbx-card-gap: {{ block.settings.gap }}px;"
+  {{ block.shopify_attributes }}
+>
+  {% content_for 'blocks' %}
+</div>
+
+{% stylesheet %}
+  .cb-sel__cards {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--cbx-card-gap, 16px);
+  }
+
+  @media screen and (min-width: 990px) {
+    .cb-sel__cards {
+      grid-template-columns: repeat(var(--cbx-columns, 2), minmax(0, 1fr));
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Type cards",
+  "tag": null,
+  "blocks": [{ "type": "_cb-sel-card" }, { "type": "_cb-sel-link-card" }],
+  "settings": [
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Cards per row on desktop",
+      "info": "Phones and tablets show 1 per row.",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Gap",
+      "min": 8,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Type cards",
+      "blocks": {
+        "card_1": { "type": "_cb-sel-card" },
+        "card_2": {
+          "type": "_cb-sel-card",
+          "settings": {
+            "card_eyebrow": "Training & school spec",
+            "eyebrow_style": "muted",
+            "card_title": "Nylon Shuttles",
+            "card_text": "Durable, affordable and ideal for training, schools, social games and newer players.",
+            "chips": "High Durability, Consistent Flight, Beginner & School Friendly",
+            "button_label": "Shop Nylon"
+          }
+        }
+      },
+      "block_order": ["card_1", "card_2"]
+    }
+  ]
+}
+{% endschema %}

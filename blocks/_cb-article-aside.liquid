@@ -1,0 +1,58 @@
+<div class="cb-article__box" {{ block.shopify_attributes }}>
+  {% content_for 'blocks' %}
+</div>
+
+{% stylesheet %}
+  .cb-article__box {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 0;
+    padding: var(--cbar-box-padding, 26px);
+    border-radius: var(--cbar-box-radius, 15px);
+    background: var(--cbar-card, #1b1b1b);
+  }
+
+  /* Spacing follows the design and sits on the following element, so blocks can be added, moved or removed. */
+  .cb-article .cb-article__box > * + * {
+    margin-top: 16px;
+  }
+
+  .cb-article__box > .cb-subheader + .cb-heading {
+    margin-top: 20px;
+  }
+
+  .cb-article__box > .cb-heading + .cb-paragraph {
+    margin-top: 13px;
+  }
+
+  .cb-article__box > * + .cb-article-contents {
+    margin-top: 16px;
+  }
+
+  .cb-article__box > * + .cb-button {
+    margin-top: 14px;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Guide box",
+  "tag": null,
+  "blocks": [
+    { "type": "cb-subheader" },
+    { "type": "cb-heading" },
+    { "type": "cb-paragraph" },
+    { "type": "_cb-article-contents" },
+    { "type": "cb-button" },
+    { "type": "cb-image" }
+  ],
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "The box beside the article. Colours, width and padding are in the section settings."
+    }
+  ],
+  "presets": [{ "name": "[CB] Guide box" }]
+}
+{% endschema %}

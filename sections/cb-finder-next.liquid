@@ -1,0 +1,433 @@
+{%- liquid
+  assign s = section.settings
+  assign font_scope = '#cb-fnext-' | append: section.id
+  assign retake_link = s.retake_link | default: '#racket-finder'
+-%}
+
+{% render 'cb-font-styles',
+  selector: font_scope,
+  prefix: 'cbfn',
+  heading_font: s.heading_font,
+  body_font: s.body_font
+%}
+
+<section
+  id="cb-fnext-{{ section.id }}"
+  class="cb-fnext"
+  style="
+    --cbfn-bg: {{ s.background_color }};
+    --cbfn-card: {{ s.card_color }};
+    --cbfn-icon-box: {{ s.icon_box_color }};
+    --cbfn-text: {{ s.text_color }};
+    --cbfn-muted: {{ s.muted_text_color }};
+    --cbfn-accent: {{ s.accent_color }};
+    --cbfn-light: {{ s.light_button_color }};
+    --cbfn-light-text: {{ s.light_button_text_color }};
+    --cbfn-dot: {{ s.dot_color }};
+    --cbfn-radius: {{ s.card_radius }}px;
+    --cbfn-gap: {{ s.card_gap }}px;
+    --cbfn-max-width: {{ s.max_width }}px;
+    --cbfn-stack-gap: {{ s.stack_gap }}px;
+    --cbfn-pt: {{ s.padding_top }}px;
+    --cbfn-pb: {{ s.padding_bottom }}px;
+    --cb-finder-next-links-size: {{ s.links_size }}px;
+    --cb-finder-next-links-weight: {{ s.links_weight }};
+  "
+>
+  <div class="cb-fnext__inner">
+    <div class="cb-fnext__cards">
+      {% content_for 'blocks' %}
+    </div>
+
+    {%- if s.retake_label != blank or s.shop_label != blank -%}
+      <div class="cb-fnext__row">
+        {%- if s.retake_label != blank -%}
+          <a class="cb-fnext__retake" href="{{ retake_link }}" data-cb-fnext-retake>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v6"/><path d="M7.1 6.1a8 8 0 1 0 9.8 0"/></svg>
+            <span>{{ s.retake_label | escape }}</span>
+          </a>
+        {%- endif -%}
+        {%- if s.shop_label != blank -%}
+          <a class="cb-fnext__shop" href="{{ s.shop_link | default: routes.all_products_collection_url }}">{{ s.shop_label | escape }}</a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% stylesheet %}
+  .cb-fnext {
+    color: var(--cbfn-text);
+    background: var(--cbfn-bg);
+    padding: calc(var(--cbfn-pt) * 0.7) 16px calc(var(--cbfn-pb) * 0.7);
+  }
+
+  .cb-fnext__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: calc(var(--cbfn-stack-gap) * 0.6);
+    max-width: var(--cbfn-max-width);
+    margin-inline: auto;
+  }
+
+  .cb-fnext__cards {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+    width: 100%;
+  }
+
+  .cb-fnext__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 12px 19px;
+  }
+
+  .cb-fnext__retake,
+  .cb-fnext__shop {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 43px;
+    font-family: var(--cbfn-font-heading);
+    font-weight: var(--cb-finder-next-links-weight, var(--cbfn-font-heading-medium-weight));
+    font-size: var(--cb-finder-next-links-size, 16px);
+    line-height: 1.2;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  .cb-fnext__retake {
+    padding: 0 24px;
+    border-radius: 3px;
+    background: var(--cbfn-card);
+    color: var(--cbfn-text);
+  }
+
+  .cb-fnext__retake:hover {
+    background: color-mix(in srgb, var(--cbfn-text) 8%, var(--cbfn-card));
+  }
+
+  .cb-fnext__retake svg {
+    flex: none;
+  }
+
+  .cb-fnext__shop {
+    color: var(--cbfn-muted);
+  }
+
+  .cb-fnext__shop:hover {
+    color: var(--cbfn-text);
+  }
+
+  .cb-fnext__retake:focus-visible,
+  .cb-fnext__shop:focus-visible {
+    outline: 2px solid var(--cbfn-text);
+    outline-offset: 3px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-fnext {
+      padding: var(--cbfn-pt) 32px var(--cbfn-pb);
+    }
+
+    .cb-fnext__inner {
+      gap: var(--cbfn-stack-gap);
+    }
+
+    .cb-fnext__cards {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--cbfn-gap);
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .cb-fnext {
+      padding-inline: 48px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cb-fnext__retake,
+    .cb-fnext__shop {
+      transition: none;
+    }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  (() => {
+    // "Retake finder" restarts the racket quiz on this page (Racket matcher or Racket finder quiz) and scrolls to it;
+    // with no quiz on the page it follows its link.
+    document.addEventListener('click', (event) => {
+      const link = event.target.closest?.('[data-cb-fnext-retake]');
+      if (!link) return;
+      const restart = document.querySelector('[data-cb-rmatch] [data-cb-rmatch-restart], [data-cb-quiz-section] [data-cb-quiz-restart]');
+      if (!restart) return;
+      event.preventDefault();
+      restart.click();
+      const quiz = restart.closest('[data-cb-rmatch], [data-cb-quiz-section]');
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      quiz?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+    });
+  })();
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "[CB] Finder next steps",
+  "tag": "div",
+  "class": "section-wrapper",
+  "blocks": [{ "type": "_cb-fnext-card" }],
+  "max_blocks": 4,
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width",
+      "min": 600,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "default": 1060
+    },
+    {
+      "type": "range",
+      "id": "card_gap",
+      "label": "Gap between cards",
+      "min": 8,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Card corner radius",
+      "min": 0,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 6
+    },
+    {
+      "type": "range",
+      "id": "stack_gap",
+      "label": "Space above the bottom links",
+      "min": 16,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "header",
+      "content": "Bottom links"
+    },
+    {
+      "type": "text",
+      "id": "retake_label",
+      "label": "Retake button",
+      "info": "Restarts the racket quiz on this page. Leave empty to hide.",
+      "default": "Retake finder"
+    },
+    {
+      "type": "url",
+      "id": "retake_link",
+      "label": "Retake link",
+      "info": "Used when the quiz isn't on this page, e.g. the racket finder page."
+    },
+    {
+      "type": "text",
+      "id": "shop_label",
+      "label": "Shop link text",
+      "info": "Leave empty to hide.",
+      "default": "Shop all rackets"
+    },
+    {
+      "type": "url",
+      "id": "shop_link",
+      "label": "Shop link"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "info": "The chosen style sets the heading weight. Buttons use its medium style.",
+      "default": "space_grotesk_n6"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "inter_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#0b0b0b"
+    },
+    {
+      "type": "color",
+      "id": "card_color",
+      "label": "Cards and retake button",
+      "default": "#191919"
+    },
+    {
+      "type": "color",
+      "id": "icon_box_color",
+      "label": "Icon boxes and dark buttons",
+      "default": "#202020"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "muted_text_color",
+      "label": "Secondary text",
+      "default": "#a1a1aa"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "default": "#d71f27"
+    },
+    {
+      "type": "color",
+      "id": "light_button_color",
+      "label": "White button",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "light_button_text_color",
+      "label": "White button text",
+      "default": "#0b0b0b"
+    },
+    {
+      "type": "color",
+      "id": "dot_color",
+      "label": "Status dot",
+      "default": "#10b981"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "links_size",
+      "label": "Bottom links text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "links_weight",
+      "label": "Bottom links text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Finder next steps",
+      "category": "t:categories.banners",
+      "settings": { "shop_link": "shopify://collections/rackets" },
+      "blocks": {
+        "shop": {
+          "type": "_cb-fnext-card",
+          "settings": {
+            "icon": "store",
+            "card_heading": "Not sure between two frames?",
+            "card_text": "Visit our Papakura Pro Shop at 41R Elliot Street to test court demo frames or speak with our coaches.",
+            "button_label": "Ask the Pro Shop",
+            "button_link": "shopify://pages/contact",
+            "button_style": "light",
+            "note_text": "Visit us (open 7 days)",
+            "show_note_dot": true
+          }
+        },
+        "stringing": {
+          "type": "_cb-fnext-card",
+          "settings": {
+            "icon": "racket",
+            "card_heading": "Get it set up properly.",
+            "card_text": "Tournament-calibrated electronic restringing for your recommended frame on our Victor C-7032 stringing machine.",
+            "button_label": "Explore stringing setup",
+            "button_link": "shopify://collections/stringing",
+            "button_style": "accent",
+            "show_arrow": true,
+            "note_text": ""
+          }
+        }
+      },
+      "block_order": ["shop", "stringing"]
+    }
+  ]
+}
+{% endschema %}

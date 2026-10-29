@@ -1,0 +1,382 @@
+{%- comment -%}
+  A text card with a link (e.g. a service or a range), with a decorative icon in the corner.
+{%- endcomment -%}
+<article
+  class="cb-sel-lcard{% if block.settings.link != blank %} cb-sel-lcard--link{% endif %}"
+  style="
+    --cb-sel-link-card-eyebrow-size: {{ block.settings.eyebrow_size }}px;
+    --cb-sel-link-card-eyebrow-weight: {{ block.settings.eyebrow_weight }};
+    --cb-sel-link-card-title-size: {{ block.settings.title_size }}px;
+    --cb-sel-link-card-title-weight: {{ block.settings.title_weight }};
+    --cb-sel-link-card-text-size: {{ block.settings.text_size }}px;
+    --cb-sel-link-card-text-weight: {{ block.settings.text_weight }};
+    --cb-sel-link-card-link-size: {{ block.settings.link_size }}px;
+    --cb-sel-link-card-link-weight: {{ block.settings.link_weight }};
+  "
+  {{ block.shopify_attributes }}
+>
+  {%- if block.settings.card_eyebrow != blank -%}
+    <p class="cb-sel-lcard__eyebrow cb-sel-lcard__eyebrow--{{ block.settings.eyebrow_style }}">
+      {{- block.settings.card_eyebrow | escape -}}
+    </p>
+  {%- endif -%}
+
+  {%- if block.settings.card_title != blank -%}
+    <h3 class="cb-sel-lcard__title">{{ block.settings.card_title | escape }}</h3>
+  {%- endif -%}
+
+  {%- if block.settings.card_text != blank -%}
+    <p class="cb-sel-lcard__text">{{ block.settings.card_text | escape }}</p>
+  {%- endif -%}
+
+  <div class="cb-sel-lcard__footer">
+    {%- if block.settings.link_label != blank -%}
+      {%- if block.settings.link != blank -%}
+        <a class="cb-sel-lcard__link" href="{{ block.settings.link }}">
+          {{- block.settings.link_label | escape -}}
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      {%- else -%}
+        <span class="cb-sel-lcard__link">{{ block.settings.link_label | escape }}</span>
+      {%- endif -%}
+    {%- endif -%}
+
+    {%- if block.settings.custom_icon != blank or block.settings.icon != 'none' -%}
+      <span class="cb-sel-lcard__icon" aria-hidden="true">
+        {%- if block.settings.custom_icon != blank -%}
+          {%- render 'cb-icon-upload', image: block.settings.custom_icon, size: 24, tint: block.settings.custom_icon_tint -%}
+        {%- else -%}
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            {%- case block.settings.icon -%}
+              {%- when 'wrench' -%}
+                <path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.4-.6-.6-2.4z"/>
+              {%- when 'target' -%}
+                <circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/>
+              {%- when 'racket' -%}
+                <ellipse cx="9.5" cy="10" rx="5" ry="6" transform="rotate(-40 9.5 10)"/><path d="m13.3 14.2 6 6"/>
+              {%- when 'shuttle' -%}
+                <path d="M12 21a2.5 2.5 0 0 1-2.5-2.5V16h5v2.5A2.5 2.5 0 0 1 12 21z"/><path d="M9.5 16 6 4M14.5 16 18 4M12 16V3"/>
+              {%- when 'calendar' -%}
+                <rect x="4" y="5" width="16" height="15" rx="1.5"/><path d="M4 9.5h16M8.5 3v4M15.5 3v4"/>
+              {%- when 'store' -%}
+                <path d="M4.5 9 6 4h12l1.5 5"/><path d="M4.5 9h15v1.2a2.5 2.5 0 0 1-5 0 2.5 2.5 0 0 1-5 0 2.5 2.5 0 0 1-5 0z"/><path d="M6 12.5V20h12v-7.5M10 20v-4h4v4"/>
+              {%- when 'chat' -%}
+                <path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/>
+              {%- when 'star' -%}
+                <path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/>
+            {%- endcase -%}
+          </svg>
+        {%- endif -%}
+      </span>
+    {%- endif -%}
+  </div>
+</article>
+
+{% stylesheet %}
+  .cb-sel-lcard {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 0;
+    height: 100%;
+    padding: 22px 22px 20px;
+    border: 1px solid var(--cbx-border);
+    border-radius: var(--cbx-radius);
+    background: var(--cbx-card);
+    transition: border-color 0.2s ease;
+  }
+
+  .cb-sel-lcard--link:hover {
+    border-color: color-mix(in srgb, var(--cbx-text) 25%, transparent);
+  }
+
+  .cb-sel-lcard__eyebrow {
+    margin: 0 0 4px;
+    font-family: var(--cbx-font-body);
+    font-weight: var(--cb-sel-link-card-eyebrow-weight, var(--cbx-font-body-strong));
+    font-size: var(--cb-sel-link-card-eyebrow-size, 9px);
+    line-height: 1.4;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .cb-sel-lcard__eyebrow--accent {
+    color: var(--cbx-accent);
+  }
+
+  .cb-sel-lcard__eyebrow--muted {
+    color: var(--cbx-muted);
+  }
+
+  .cb-sel-lcard__title {
+    margin: 0;
+    font-family: var(--cbx-font-heading);
+    font-weight: var(--cb-sel-link-card-title-weight, var(--cbx-font-heading-weight));
+    font-size: var(--cb-sel-link-card-title-size, 19px);
+    line-height: 1.2;
+    color: var(--cbx-text);
+  }
+
+  .cb-sel-lcard__text {
+    max-width: 52ch;
+    margin: 0;
+    font-family: var(--cbx-font-body);
+    font-weight: var(--cb-sel-link-card-text-weight, var(--cbx-font-body-weight));
+    font-size: var(--cb-sel-link-card-text-size, 12px);
+    line-height: 1.65;
+    color: var(--cbx-muted);
+  }
+
+  .cb-sel-lcard__footer {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: auto;
+    padding-top: 18px;
+  }
+
+  .cb-sel-lcard__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--cbx-font-body);
+    font-weight: var(--cb-sel-link-card-link-weight, var(--cbx-font-body-strong));
+    font-size: var(--cb-sel-link-card-link-size, 10px);
+    line-height: 1.3;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--cbx-accent);
+    text-decoration: none;
+  }
+
+  .cb-sel-lcard__link svg {
+    flex: none;
+    transition: transform 0.2s ease;
+  }
+
+  /* The whole card is clickable when it has a link. */
+  a.cb-sel-lcard__link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+  }
+
+  .cb-sel-lcard--link:hover .cb-sel-lcard__link svg {
+    transform: translateX(3px);
+  }
+
+  .cb-sel-lcard--link:has(a.cb-sel-lcard__link:focus-visible) {
+    outline: 2px solid var(--cbx-text);
+    outline-offset: 2px;
+  }
+
+  a.cb-sel-lcard__link:focus-visible {
+    outline: none;
+  }
+
+  .cb-sel-lcard__icon {
+    display: inline-flex;
+    flex: none;
+    color: var(--cbx-muted);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Link card",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "card_eyebrow",
+      "label": "Eyebrow",
+      "default": "Service"
+    },
+    {
+      "type": "select",
+      "id": "eyebrow_style",
+      "label": "Eyebrow color",
+      "options": [
+        { "value": "accent", "label": "Accent" },
+        { "value": "muted", "label": "Grey" }
+      ],
+      "default": "accent"
+    },
+    {
+      "type": "text",
+      "id": "card_title",
+      "label": "Title",
+      "default": "Get your racket restrung"
+    },
+    {
+      "type": "textarea",
+      "id": "card_text",
+      "label": "Text",
+      "default": "Bring us your racket and choose your string and tension, or ask the team for a personalized recommendation based on your play style."
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Link text",
+      "default": "Request a restring"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link",
+      "info": "With a link, the whole card is clickable."
+    },
+    {
+      "type": "select",
+      "id": "icon",
+      "label": "Corner icon",
+      "options": [
+        { "value": "wrench", "label": "Wrench" },
+        { "value": "target", "label": "Target" },
+        { "value": "racket", "label": "Racket" },
+        { "value": "shuttle", "label": "Shuttle" },
+        { "value": "calendar", "label": "Calendar" },
+        { "value": "store", "label": "Shop front" },
+        { "value": "chat", "label": "Chat" },
+        { "value": "star", "label": "Star" },
+        { "value": "none", "label": "None" }
+      ],
+      "default": "wrench"
+    },
+    {
+      "type": "image_picker",
+      "id": "custom_icon",
+      "label": "Custom icon",
+      "info": "Upload your own SVG (or PNG). It replaces the built-in icon above."
+    },
+    {
+      "type": "checkbox",
+      "id": "custom_icon_tint",
+      "label": "Colour it like the built-in icons",
+      "info": "For one-colour SVGs: uses this section's icon colour. Turn off to keep the file's own colours.",
+      "default": true,
+      "visible_if": "{{ block.settings.custom_icon != blank }}"
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_size",
+      "label": "Eyebrow size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 9
+    },
+    {
+      "type": "select",
+      "id": "eyebrow_weight",
+      "label": "Eyebrow weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Title size",
+      "min": 10,
+      "max": 56,
+      "step": 0.5,
+      "unit": "px",
+      "default": 19
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Title weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "text_weight",
+      "label": "Text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "link_size",
+      "label": "Link text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "link_weight",
+      "label": "Link text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    }
+  ],
+  "presets": [{ "name": "[CB] Link card" }]
+}
+{% endschema %}

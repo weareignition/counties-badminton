@@ -1,0 +1,191 @@
+{%- comment -%}
+  One step. The number comes from the card's position in the list unless a custom label is set.
+  It's a span because Horizon hides empty paragraphs (p:empty), which would hide the counter.
+{%- endcomment -%}
+<li
+  class="cb-steps__card"
+  style="
+    --cb-steps-card-number-size: {{ block.settings.number_size }}px;
+    --cb-steps-card-number-weight: {{ block.settings.number_weight }};
+    --cb-steps-card-title-size: {{ block.settings.title_size }}px;
+    --cb-steps-card-title-weight: {{ block.settings.title_weight }};
+    --cb-steps-card-text-size: {{ block.settings.text_size }}px;
+    --cb-steps-card-text-weight: {{ block.settings.text_weight }};
+  "
+  {{ block.shopify_attributes }}
+>
+  {%- if block.settings.number_label != blank -%}
+    <span class="cb-steps__number" aria-hidden="true">{{ block.settings.number_label | escape }}</span>
+  {%- else -%}
+    <span class="cb-steps__number cb-steps__number--auto" aria-hidden="true"></span>
+  {%- endif -%}
+  {%- if block.settings.card_title != blank -%}
+    <h3 class="cb-steps__title">{{ block.settings.card_title | escape }}</h3>
+  {%- endif -%}
+  {%- if block.settings.card_text != blank -%}
+    <p class="cb-steps__card-text">{{ block.settings.card_text | escape | newline_to_br }}</p>
+  {%- endif -%}
+</li>
+
+{% stylesheet %}
+  .cb-steps__card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    margin: 0;
+    padding: 24px 22px 22px;
+    border-radius: var(--cbst-radius);
+    background: var(--cbst-card);
+    counter-increment: cb-step;
+  }
+
+  .cb-steps__number {
+    display: block;
+    margin: 0 0 11px;
+    font-family: var(--cbst-font-heading);
+    font-weight: var(--cb-steps-card-number-weight, var(--cbst-font-heading-medium-weight));
+    font-size: var(--cb-steps-card-number-size, 33px);
+    line-height: 1;
+    letter-spacing: 0;
+    color: var(--cbst-accent);
+  }
+
+  .cb-steps__number--auto::before {
+    content: counter(cb-step, decimal-leading-zero);
+  }
+
+  .cb-steps__card .cb-steps__title {
+    margin: 0 0 9px;
+    font-family: var(--cbst-font-heading);
+    font-weight: var(--cb-steps-card-title-weight, var(--cbst-font-heading-regular-weight));
+    font-size: var(--cb-steps-card-title-size, 18px);
+    line-height: 1.25;
+    letter-spacing: 0;
+    color: var(--cbst-text);
+  }
+
+  .cb-steps__card-text {
+    margin: 0;
+    font-family: var(--cbst-font-body);
+    font-weight: var(--cb-steps-card-text-weight, var(--cbst-font-body-weight));
+    font-size: var(--cb-steps-card-text-size, 12px);
+    line-height: 1.5;
+    color: var(--cbst-muted);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Step",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "number_label",
+      "label": "Custom number",
+      "info": "Leave empty to number the steps in order (01, 02 …)."
+    },
+    {
+      "type": "text",
+      "id": "card_title",
+      "label": "Title",
+      "default": "Choose"
+    },
+    {
+      "type": "textarea",
+      "id": "card_text",
+      "label": "Text",
+      "default": "Pick your preferred string and tension, or consult with our qualified technicians for guidance."
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "number_size",
+      "label": "Number size",
+      "min": 16,
+      "max": 112,
+      "step": 1,
+      "unit": "px",
+      "default": 33
+    },
+    {
+      "type": "select",
+      "id": "number_weight",
+      "label": "Number weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Title size",
+      "min": 10,
+      "max": 56,
+      "step": 0.5,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Title weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "text_weight",
+      "label": "Text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    }
+  ],
+  "presets": [{ "name": "[CB] Step" }]
+}
+{% endschema %}

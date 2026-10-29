@@ -2,23 +2,40 @@
   assign link = block.settings.button_link | default: routes.all_products_collection_url
 -%}
 
-<div class="cb-frames__callout" {{ block.shopify_attributes }}>
-  <span class="cb-frames__callout-icon" aria-hidden="true">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-      {%- case block.settings.icon -%}
-        {%- when 'racket' -%}
-          <ellipse cx="9" cy="9" rx="5" ry="6.2" transform="rotate(-45 9 9)"/><path d="m12.6 12.6 7.4 7.4"/>
-        {%- when 'calendar' -%}
-          <rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/>
-        {%- when 'clock' -%}
-          <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>
-        {%- when 'pin' -%}
-          <path d="M12 21s-7-6.1-7-11.5a7 7 0 0 1 14 0C19 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>
-        {%- when 'info' -%}
-          <circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>
-      {%- endcase -%}
-    </svg>
-  </span>
+<div
+  class="cb-frames__callout"
+  style="
+    --cb-frames-callout-title-size: {{ block.settings.title_size }}px;
+    --cb-frames-callout-title-weight: {{ block.settings.title_weight }};
+    --cb-frames-callout-text-size: {{ block.settings.text_size }}px;
+    --cb-frames-callout-text-weight: {{ block.settings.text_weight }};
+    --cb-frames-callout-button-size: {{ block.settings.button_size }}px;
+    --cb-frames-callout-button-weight: {{ block.settings.button_weight }};
+  "
+  {{ block.shopify_attributes }}
+>
+  {%- if block.settings.custom_icon != blank or block.settings.icon != 'none' -%}
+    <span class="cb-frames__callout-icon" aria-hidden="true">
+      {%- if block.settings.custom_icon != blank -%}
+        {%- render 'cb-icon-upload', image: block.settings.custom_icon, size: 20, tint: block.settings.custom_icon_tint -%}
+      {%- else -%}
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          {%- case block.settings.icon -%}
+            {%- when 'racket' -%}
+              <ellipse cx="9" cy="9" rx="5" ry="6.2" transform="rotate(-45 9 9)"/><path d="m12.6 12.6 7.4 7.4"/>
+            {%- when 'calendar' -%}
+              <rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/>
+            {%- when 'clock' -%}
+              <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>
+            {%- when 'pin' -%}
+              <path d="M12 21s-7-6.1-7-11.5a7 7 0 0 1 14 0C19 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>
+            {%- when 'info' -%}
+              <circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>
+          {%- endcase -%}
+        </svg>
+      {%- endif -%}
+    </span>
+  {%- endif -%}
 
   <div class="cb-frames__callout-body">
     {%- if block.settings.callout_title != blank -%}
@@ -69,8 +86,8 @@
   .cb-frames__callout-title {
     margin: 0;
     font-family: var(--cbp-font-heading);
-    font-weight: var(--cbp-font-heading-weight);
-    font-size: 16px;
+    font-weight: var(--cb-frames-callout-title-weight, var(--cbp-font-heading-weight));
+    font-size: var(--cb-frames-callout-title-size, 16px);
     line-height: 1.25;
     color: var(--cbp-text);
   }
@@ -78,8 +95,8 @@
   .cb-frames__callout-text {
     margin: 0;
     font-family: var(--cbp-font-body);
-    font-weight: var(--cbp-font-body-weight);
-    font-size: 13px;
+    font-weight: var(--cb-frames-callout-text-weight, var(--cbp-font-body-weight));
+    font-size: var(--cb-frames-callout-text-size, 13px);
     line-height: 1.5;
     color: var(--cbp-muted);
   }
@@ -94,8 +111,8 @@
     border-radius: 6px;
     background: var(--cbp-accent);
     font-family: var(--cbp-font-body);
-    font-weight: var(--cbp-font-body-strong);
-    font-size: 13px;
+    font-weight: var(--cb-frames-callout-button-weight, var(--cbp-font-body-strong));
+    font-size: var(--cb-frames-callout-button-size, 13px);
     line-height: 1.2;
     text-decoration: none;
     color: var(--cbp-accent-text);
@@ -144,9 +161,24 @@
         { "value": "calendar", "label": "Calendar" },
         { "value": "clock", "label": "Clock" },
         { "value": "pin", "label": "Location" },
-        { "value": "info", "label": "Info" }
+        { "value": "info", "label": "Info" },
+        { "value": "none", "label": "None" }
       ],
       "default": "racket"
+    },
+    {
+      "type": "image_picker",
+      "id": "custom_icon",
+      "label": "Custom icon",
+      "info": "Upload your own SVG (or PNG). It replaces the built-in icon above."
+    },
+    {
+      "type": "checkbox",
+      "id": "custom_icon_tint",
+      "label": "Colour it like the built-in icons",
+      "info": "For one-colour SVGs: uses this section's icon colour. Turn off to keep the file's own colours.",
+      "default": true,
+      "visible_if": "{{ block.settings.custom_icon != blank }}"
     },
     {
       "type": "text",
@@ -169,6 +201,94 @@
       "type": "url",
       "id": "button_link",
       "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Title size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Title weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "select",
+      "id": "text_weight",
+      "label": "Text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "button_size",
+      "label": "Button text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "select",
+      "id": "button_weight",
+      "label": "Button text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
     }
   ],
   "presets": [{ "name": "[CB] Callout" }]

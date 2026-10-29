@@ -1,0 +1,28 @@
+{%- doc -%}
+  Outputs a product's brand: the first name from the list that appears in the product title, otherwise the vendor
+  (unless the vendor is just the shop's own name, as it is on every product in this store). Outputs nothing when
+  no brand is found.
+
+  @param {product} product - The product.
+  @param {string} brands - Comma-separated brand names, e.g. 'Yonex, Victor, Li-Ning'.
+{%- enddoc -%}
+{%- liquid
+  assign found = ''
+  assign title_down = product.title | downcase
+  assign list = brands | split: ','
+  for item in list
+    assign name = item | strip
+    if name == blank
+      continue
+    endif
+    assign key = name | downcase
+    if title_down contains key
+      assign found = name
+      break
+    endif
+  endfor
+  if found == blank and product.vendor != blank and product.vendor != shop.name
+    assign found = product.vendor
+  endif
+  echo found
+-%}

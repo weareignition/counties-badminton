@@ -1,0 +1,328 @@
+{%- liquid
+  assign s = section.settings
+  assign font_scope = '#cb-lab-' | append: section.id
+-%}
+
+{% render 'cb-font-styles',
+  selector: font_scope,
+  prefix: 'cbl',
+  heading_font: s.heading_font,
+  body_font: s.body_font
+%}
+
+<section
+  id="cb-lab-{{ section.id }}"
+  class="cb-lab{% if s.show_panel %} cb-lab--panel{% endif %}{% if s.media_first_mobile %} cb-lab--media-first{% endif %}"
+  style="
+    --cbl-bg: {{ s.background_color }};
+    --cbl-panel: {{ s.panel_background_color }};
+    --cbl-box: {{ s.box_background_color }};
+    --cbl-border: {{ s.border_color }};
+    --cbl-border-strong: {{ s.text_color | color_modify: 'alpha', 0.3 }};
+    --cbl-text: {{ s.text_color }};
+    --cbl-muted: {{ s.text_color | color_modify: 'alpha', 0.58 }};
+    --cbl-accent: {{ s.accent_color }};
+    --cbl-radius: {{ s.panel_radius }}px;
+    --cbl-content-col: {{ s.content_width }}fr;
+    --cbl-media-col: {{ 100 | minus: s.content_width }}fr;
+    --cbl-gap: {{ s.column_gap }}px;
+    --cbl-max-width: {{ s.max_width }}px;
+    --cbl-pt: {{ s.padding_top }}px;
+    --cbl-pb: {{ s.padding_bottom }}px;
+  "
+>
+  <div class="cb-lab__inner">
+    {% content_for 'blocks' %}
+  </div>
+</section>
+
+{% stylesheet %}
+  .cb-lab {
+    color: var(--cbl-text);
+    background: var(--cbl-bg);
+    padding: calc(var(--cbl-pt) * 0.6) 16px calc(var(--cbl-pb) * 0.6);
+  }
+
+  .cb-lab__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+    max-width: var(--cbl-max-width);
+    margin-inline: auto;
+  }
+
+  .cb-lab--panel .cb-lab__inner {
+    padding: 20px;
+    border: 1px solid var(--cbl-border);
+    border-radius: var(--cbl-radius);
+    background: var(--cbl-panel);
+  }
+
+  .cb-lab--media-first .cb-lab__media {
+    order: -1;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-lab {
+      padding: calc(var(--cbl-pt) * 0.8) 32px calc(var(--cbl-pb) * 0.8);
+    }
+
+    .cb-lab--panel .cb-lab__inner {
+      padding: 28px;
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .cb-lab {
+      padding: var(--cbl-pt) 48px var(--cbl-pb);
+    }
+
+    .cb-lab__inner {
+      grid-template-columns: minmax(0, var(--cbl-content-col)) minmax(0, var(--cbl-media-col));
+      gap: var(--cbl-gap);
+    }
+
+    .cb-lab--panel .cb-lab__inner {
+      padding: 32px;
+    }
+
+    .cb-lab--media-first .cb-lab__media {
+      order: 0;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Stringing lab",
+  "tag": "div",
+  "class": "section-wrapper",
+  "blocks": [
+    { "type": "_cb-lab-content" },
+    { "type": "_cb-lab-media" }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "paragraph",
+      "content": "Reorder the content group and photo blocks to swap sides."
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "label": "Text column width",
+      "info": "Share of the width on large screens; the photo takes the rest.",
+      "min": 30,
+      "max": 70,
+      "step": 1,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "column_gap",
+      "label": "Space between columns",
+      "min": 16,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "checkbox",
+      "id": "show_panel",
+      "label": "Boxed panel",
+      "info": "Border and background around both columns.",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "panel_radius",
+      "label": "Panel corner radius",
+      "min": 0,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 4
+    },
+    {
+      "type": "checkbox",
+      "id": "media_first_mobile",
+      "label": "Show photo first on phones and tablets",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width",
+      "min": 960,
+      "max": 1800,
+      "step": 20,
+      "unit": "px",
+      "default": 1400
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "space_grotesk_n7"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "info": "Used for the eyebrow, text, boxes, button, note and photo label.",
+      "default": "inter_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "id": "panel_background_color",
+      "label": "Panel",
+      "default": "#151515"
+    },
+    {
+      "type": "color",
+      "id": "box_background_color",
+      "label": "Info boxes",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Borders",
+      "default": "#ffffff14"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "default": "#d71f27"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Stringing lab",
+      "category": "t:categories.storytelling",
+      "blocks": {
+        "content": {
+          "type": "_cb-lab-content",
+          "blocks": {
+            "eyebrow": {
+              "type": "cb-subheader",
+              "settings": { "subheader_text": "Electronic stringing lab", "show_dot": true, "letter_spacing": 12 }
+            },
+            "heading": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "Your racket is only half the setup.",
+                "size": 30,
+                "mobile_scale": 80,
+                "line_height": 108,
+                "uppercase": true,
+                "wrap": "wrap"
+              }
+            },
+            "text": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>Need help choosing string or tension? Our team strings rackets seven days a week on electronic constant-pull machines and calibrates every frame to your specific arm conditioning and shuttle response.</p>",
+                "size": 13,
+                "mobile_size": 13,
+                "line_height": 165,
+                "max_width_unit": "ch"
+              }
+            },
+            "boxes": {
+              "type": "_cb-lab-boxes",
+              "blocks": {
+                "stock": {
+                  "type": "_cb-lab-box",
+                  "settings": {
+                    "box_title": "Comprehensive string stock",
+                    "box_text": "Yonex BG80, BG66 Ultimax, Exbolt 65, Victor VBS-66 Nano & Ashaway Zymax in full stock."
+                  }
+                },
+                "tension": {
+                  "type": "_cb-lab-box",
+                  "settings": {
+                    "box_title": "Exact tension calibration",
+                    "box_text": "Calibrated down to 0.5 lbs increments from 20 to 32 lbs tension with pre-stretch options."
+                  }
+                }
+              },
+              "block_order": ["stock", "tension"]
+            },
+            "actions": {
+              "type": "_cb-lab-actions",
+              "blocks": {
+                "button": { "type": "_cb-lab-button", "settings": { "label": "Explore stringing workshop" } },
+                "note": { "type": "_cb-lab-note", "settings": { "note_text": "Same-day / 24-hr turnaround in Papakura" } }
+              },
+              "block_order": ["button", "note"]
+            }
+          },
+          "block_order": ["eyebrow", "heading", "text", "boxes", "actions"]
+        },
+        "media": {
+          "type": "_cb-lab-media",
+          "settings": {
+            "label_highlight": "Daily Workshop:",
+            "label_text": "Mon–Sun 9:00am – 8:00pm"
+          }
+        }
+      },
+      "block_order": ["content", "media"]
+    }
+  ]
+}
+{% endschema %}

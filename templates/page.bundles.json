@@ -1,0 +1,473 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "blocks": {
+        "heading": {
+          "type": "text",
+          "name": "t:names.title",
+          "settings": {
+            "text": "<h1>{{ closest.page.title }}</h1>",
+            "width": "100%",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "h2",
+            "font": "var(--font-body--family)",
+            "font_size": "",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "text_color": "",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "page-content": {
+          "type": "page-content",
+          "settings": {
+            "text_color": ""
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "heading",
+        "page-content"
+      ],
+      "disabled": true,
+      "settings": {
+        "content_direction": "column",
+        "gap": 32,
+        "background_color": "",
+        "padding-block-start": 40,
+        "padding-block-end": 80
+      }
+    },
+    "cb_guides_9tVDcj": {
+      "type": "cb-guides",
+      "blocks": {
+        "cb_guides_header_XMMd6R": {
+          "type": "_cb-guides-header",
+          "settings": {
+            "alignment": "left",
+            "max_width": 1000
+          },
+          "blocks": {
+            "cb_guides_eyebrow_ca79jp": {
+              "type": "cb-subheader",
+              "settings": {
+                "subheader_text": "BADMINTON BUNDLES",
+                "secondary": "",
+                "show_dot": false,
+                "size": 11,
+                "weight": "strong",
+                "color": "accent",
+                "letter_spacing": 12,
+                "uppercase": true,
+                "space_below": -4
+              },
+              "blocks": {}
+            },
+            "cb_guides_heading_zhaDKC": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "Everything you need to get on court.&nbsp;",
+                "tag": "h2",
+                "size": 64,
+                "mobile_sizing": "fluid",
+                "mobile_scale": 82,
+                "fluid_min": 30,
+                "fluid_vw": 6.5,
+                "weight": "font",
+                "color": "text",
+                "line_height": 106,
+                "letter_spacing": -2,
+                "uppercase": false,
+                "wrap": "balance",
+                "max_width": 0
+              },
+              "blocks": {}
+            },
+            "cb_guides_text_LCkMdk": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>Read technical briefings straight from Counties Manukau stringers and coaching staff to demystify badminton gear.</p>",
+                "size": 18,
+                "mobile_sizing": "same",
+                "mobile_size": 18,
+                "fluid_vw": 2,
+                "weight": "regular",
+                "color": "muted",
+                "line_height": 160,
+                "letter_spacing": 0,
+                "wrap": "wrap",
+                "max_width_unit": "ch",
+                "max_width_px": 640,
+                "max_width_ch": 60
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "cb_guides_eyebrow_ca79jp",
+            "cb_guides_heading_zhaDKC",
+            "cb_guides_text_LCkMdk"
+          ]
+        },
+        "cb_guides_grid_GCaUMX": {
+          "type": "_cb-guides-grid",
+          "settings": {
+            "columns": 3,
+            "mobile_layout": "stack",
+            "gap": 16
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "cb_guides_header_XMMd6R",
+        "cb_guides_grid_GCaUMX"
+      ],
+      "name": "[CB] Technical guides",
+      "settings": {
+        "design": "1",
+        "max_width": 1400,
+        "stack_gap": 40,
+        "card_radius": 10,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "{{ settings.color_palette.foreground }}",
+        "card_background_color": "#181818",
+        "border_color": "#ffffff14",
+        "text_color": "#ffffff",
+        "accent_color": "#d71f27",
+        "padding_top": 64,
+        "padding_bottom": 64
+      }
+    },
+    "cb_guides_KfD3Qx": {
+      "type": "cb-guides",
+      "blocks": {
+        "cb_guides_header_FAnzqM": {
+          "type": "_cb-guides-header",
+          "settings": {
+            "alignment": "left",
+            "max_width": 1000
+          },
+          "blocks": {
+            "cb_subheader_rwVNBx": {
+              "type": "cb-subheader",
+              "settings": {
+                "subheader_text": "BADMINTON BUNDLES",
+                "secondary": "",
+                "show_dot": false,
+                "size": 11,
+                "weight": "strong",
+                "color": "accent",
+                "letter_spacing": 12,
+                "uppercase": true,
+                "space_below": -4
+              },
+              "blocks": {}
+            },
+            "cb_heading_FwmFA4": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "Everything you need to get on court.&nbsp;",
+                "tag": "h2",
+                "size": 64,
+                "mobile_sizing": "fluid",
+                "mobile_scale": 82,
+                "fluid_min": 30,
+                "fluid_vw": 6.5,
+                "weight": "font",
+                "color": "text",
+                "line_height": 106,
+                "letter_spacing": -2,
+                "uppercase": false,
+                "wrap": "balance",
+                "max_width": 0
+              },
+              "blocks": {}
+            },
+            "cb_paragraph_AWaGtE": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>Read technical briefings straight from Counties Manukau stringers and coaching staff to demystify badminton gear.</p>",
+                "size": 18,
+                "mobile_sizing": "same",
+                "mobile_size": 18,
+                "fluid_vw": 2,
+                "weight": "regular",
+                "color": "muted",
+                "line_height": 160,
+                "letter_spacing": 0,
+                "wrap": "wrap",
+                "max_width_unit": "ch",
+                "max_width_px": 640,
+                "max_width_ch": 60
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "cb_subheader_rwVNBx",
+            "cb_heading_FwmFA4",
+            "cb_paragraph_AWaGtE"
+          ]
+        }
+      },
+      "block_order": [
+        "cb_guides_header_FAnzqM"
+      ],
+      "name": "[CB] Technical guides",
+      "settings": {
+        "design": "1",
+        "max_width": 1400,
+        "stack_gap": 40,
+        "card_radius": 10,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "{{ settings.color_palette.foreground }}",
+        "card_background_color": "#181818",
+        "border_color": "#ffffff14",
+        "text_color": "#ffffff",
+        "accent_color": "#d71f27",
+        "padding_top": 64,
+        "padding_bottom": 64
+      }
+    },
+    "cb_bundles_PpfRaw": {
+      "type": "cb-bundles",
+      "blocks": {
+        "cb_bundle_card_RdfMGE": {
+          "type": "cb-bundle-card",
+          "settings": {
+            "products": [
+              "hundred-nitrix-thunder-badminton-rcket",
+              "hundred-2-compartment-utilitarian-racket-bag-blue",
+              "victor-ncs-caron-sonic-shuttlecock-tube-of-6"
+            ],
+            "label": "Starter",
+            "bundle_title": "Starter Bundle",
+            "use_custom_items": false,
+            "custom_items": "",
+            "use_custom_price": false,
+            "button_label": "Shop Starter Bundle",
+            "button_link": "",
+            "heading_font": "space_grotesk_n7",
+            "body_font": "inter_n4"
+          },
+          "blocks": {}
+        },
+        "cb_bundle_card_CFcMtL": {
+          "type": "cb-bundle-card",
+          "settings": {
+            "products": [
+              "hundred-flareon-700badminton-racket",
+              "hundred-2-compartment-utilitarian-racket-bag-blue"
+            ],
+            "label": "Intermediate",
+            "bundle_title": "Intermediate Bundle",
+            "use_custom_items": false,
+            "custom_items": "",
+            "use_custom_price": false,
+            "button_label": "Shop Intermediate Bundle",
+            "button_link": "",
+            "heading_font": "space_grotesk_n7",
+            "body_font": "inter_n4"
+          },
+          "blocks": {}
+        },
+        "cb_bundle_card_EbUHMd": {
+          "type": "cb-bundle-card",
+          "settings": {
+            "products": [
+              "li-ning-halbertec-9000-power-badminton-racket"
+            ],
+            "label": "Expert",
+            "bundle_title": "Expert Bundle",
+            "use_custom_items": false,
+            "custom_items": "",
+            "use_custom_price": false,
+            "button_label": "Shop Expert Bundle",
+            "button_link": "",
+            "heading_font": "space_grotesk_n7",
+            "body_font": "inter_n4"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "cb_bundle_card_RdfMGE",
+        "cb_bundle_card_CFcMtL",
+        "cb_bundle_card_EbUHMd"
+      ],
+      "name": "[CB] Bundles",
+      "settings": {
+        "eyebrow": "",
+        "heading": "",
+        "text": "",
+        "columns": 3,
+        "max_width": 1080,
+        "card_gap": 24,
+        "card_radius": 8,
+        "equal_height": true,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "{{ settings.color_palette.foreground }}",
+        "card_color": "#181818",
+        "frame_color": "#ffffff14",
+        "text_color": "#ffffff",
+        "item_text_color": "#eaeae8",
+        "muted_text_color": "#a1a1aa",
+        "accent_color": "#d71f27",
+        "padding_top": 48,
+        "padding_bottom": 48
+      }
+    },
+    "cb_advice_dzApGx": {
+      "type": "cb-advice",
+      "blocks": {
+        "cb_advice_content_fh9gWU": {
+          "type": "_cb-advice-content",
+          "settings": {
+            "alignment": "left",
+            "gap": 12
+          },
+          "blocks": {
+            "cb_advice_eyebrow_azrHCn": {
+              "type": "cb-subheader",
+              "settings": {
+                "subheader_text": "NEED A SECOND OPINION?",
+                "secondary": "",
+                "show_dot": false,
+                "size": 10,
+                "weight": "strong",
+                "color": "accent",
+                "letter_spacing": 0,
+                "uppercase": true,
+                "space_below": 0
+              },
+              "blocks": {}
+            },
+            "cb_advice_heading_JBRzJM": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "Get help from people who play.",
+                "tag": "h2",
+                "size": 32,
+                "mobile_sizing": "scale",
+                "mobile_scale": 82,
+                "fluid_min": 28,
+                "fluid_vw": 6,
+                "weight": "font",
+                "color": "text",
+                "line_height": 115,
+                "letter_spacing": -1,
+                "uppercase": false,
+                "wrap": "wrap",
+                "max_width": 0
+              },
+              "blocks": {}
+            },
+            "cb_advice_text_3hPkVb": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>Tell us how you play and what you want to improve. Our team can help you choose the most suitable setup before you buy.</p>",
+                "size": 14,
+                "mobile_sizing": "same",
+                "mobile_size": 14,
+                "fluid_vw": 2,
+                "weight": "regular",
+                "color": "muted",
+                "line_height": 160,
+                "letter_spacing": -1,
+                "wrap": "wrap",
+                "max_width_unit": "px",
+                "max_width_px": 960,
+                "max_width_ch": 60
+              },
+              "blocks": {}
+            },
+            "cb_advice_buttons_ERaRBb": {
+              "type": "_cb-advice-buttons",
+              "settings": {
+                "gap": 12,
+                "space_above": 16
+              },
+              "blocks": {
+                "cb_advice_button_rckHM8": {
+                  "type": "_cb-advice-button",
+                  "settings": {
+                    "label": "Ask the Pro Shop",
+                    "link": "shopify://pages/contact",
+                    "directions_address": "",
+                    "style": "primary",
+                    "icon": "none",
+                    "custom_icon_tint": true,
+                    "new_tab": false
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "cb_advice_button_rckHM8"
+              ]
+            }
+          },
+          "block_order": [
+            "cb_advice_eyebrow_azrHCn",
+            "cb_advice_heading_JBRzJM",
+            "cb_advice_text_3hPkVb",
+            "cb_advice_buttons_ERaRBb"
+          ]
+        }
+      },
+      "block_order": [
+        "cb_advice_content_fh9gWU"
+      ],
+      "name": "[CB] Advice banner",
+      "settings": {
+        "max_width": 1400,
+        "panel_padding": 44,
+        "panel_radius": 10,
+        "show_border": false,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "{{ settings.color_palette.foreground }}",
+        "panel_background_color": "#181818",
+        "border_color": "#ffffff14",
+        "text_color": "#b8262f",
+        "muted_text_color": "#a1a1aa",
+        "accent_color": "#d71f27",
+        "secondary_button_color": "#2a2a2a",
+        "padding_top": 32,
+        "padding_bottom": 32
+      }
+    }
+  },
+  "order": [
+    "main",
+    "cb_guides_9tVDcj",
+    "cb_guides_KfD3Qx",
+    "cb_bundles_PpfRaw",
+    "cb_advice_dzApGx"
+  ]
+}

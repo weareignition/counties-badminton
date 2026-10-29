@@ -1,0 +1,132 @@
+{%- if block.settings.box_title != blank or block.settings.box_text != blank -%}
+  <div
+    class="cb-lab__box"
+    style="
+      --cb-lab-box-title-size: {{ block.settings.title_size }}px;
+      --cb-lab-box-title-weight: {{ block.settings.title_weight }};
+      --cb-lab-box-text-size: {{ block.settings.text_size }}px;
+      --cb-lab-box-text-weight: {{ block.settings.text_weight }};
+    "
+    {{ block.shopify_attributes }}
+  >
+    {%- if block.settings.box_title != blank -%}
+      <p class="cb-lab__box-title">{{ block.settings.box_title | escape }}</p>
+    {%- endif -%}
+    {%- if block.settings.box_text != blank -%}
+      <p class="cb-lab__box-text">{{ block.settings.box_text | escape }}</p>
+    {%- endif -%}
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  .cb-lab__box {
+    min-width: 0;
+    padding: 12px 14px;
+    border: 1px solid var(--cbl-border);
+    border-radius: 2px;
+    background: var(--cbl-box);
+  }
+
+  .cb-lab__box-title {
+    margin: 0 0 6px;
+    font-family: var(--cbl-font-body);
+    font-weight: var(--cb-lab-box-title-weight, var(--cbl-font-body-strong));
+    font-size: var(--cb-lab-box-title-size, 10px);
+    line-height: 1.4;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--cbl-text);
+  }
+
+  .cb-lab__box-text {
+    margin: 0;
+    font-family: var(--cbl-font-body);
+    font-weight: var(--cb-lab-box-text-weight, var(--cbl-font-body-weight));
+    font-size: var(--cb-lab-box-text-size, 11px);
+    line-height: 1.6;
+    color: var(--cbl-muted);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Info box",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "box_title",
+      "label": "Title",
+      "info": "Shown in capitals.",
+      "default": "Comprehensive string stock"
+    },
+    {
+      "type": "textarea",
+      "id": "box_text",
+      "label": "Text",
+      "default": "Yonex BG80, BG66 Ultimax, Exbolt 65, Victor VBS-66 Nano & Ashaway Zymax in full stock."
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Title size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Title weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "select",
+      "id": "text_weight",
+      "label": "Text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    }
+  ],
+  "presets": [{ "name": "[CB] Info box" }]
+}
+{% endschema %}

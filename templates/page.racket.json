@@ -79,20 +79,41 @@
               "blocks": {}
             },
             "cb_hero_heading_hCwNzi": {
-              "type": "_cb-hero-heading",
+              "type": "cb-heading",
               "settings": {
                 "heading_text": "&nbsp;Find the frame that fits your&nbsp;",
+                "tag": "h1",
                 "size": 64,
-                "tag": "h1"
+                "mobile_sizing": "fluid",
+                "mobile_scale": 82,
+                "fluid_min": 36,
+                "fluid_vw": 8,
+                "weight": "font",
+                "color": "text",
+                "line_height": 105,
+                "letter_spacing": -2,
+                "uppercase": false,
+                "wrap": "balance",
+                "max_width": 0
               },
               "blocks": {}
             },
             "cb_hero_text_z7BUBP": {
-              "type": "_cb-hero-text",
+              "type": "cb-paragraph",
               "settings": {
                 "body_text": "<p>We don't sell rackets by logo alone. Choose by your swing speed, tactical play style and court needs — calibrated by CMBA certified stringers and competitive coaches.</p>",
                 "size": 18,
-                "max_width": 52
+                "mobile_sizing": "fluid",
+                "mobile_size": 15,
+                "fluid_vw": 2.2,
+                "weight": "regular",
+                "color": "muted",
+                "line_height": 155,
+                "letter_spacing": 0,
+                "wrap": "wrap",
+                "max_width_unit": "ch",
+                "max_width_px": 640,
+                "max_width_ch": 52
               },
               "blocks": {}
             },
@@ -257,10 +278,17 @@
           "settings": {},
           "blocks": {
             "cb_tactics_eyebrow_xNRGAe": {
-              "type": "_cb-tactics-eyebrow",
+              "type": "cb-subheader",
               "settings": {
-                "eyebrow_text": "Choose by playing tactics",
-                "show_dot": true
+                "subheader_text": "Choose by playing tactics",
+                "secondary": "",
+                "show_dot": true,
+                "size": 11,
+                "weight": "strong",
+                "color": "soft",
+                "letter_spacing": 12,
+                "uppercase": true,
+                "space_below": 0
               },
               "blocks": {}
             },

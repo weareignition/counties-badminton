@@ -1,0 +1,175 @@
+{%- comment -%}
+  A button. With "Start the racket finder" on, a click scrolls to the [CB] Racket finder quiz when it's on the same page;
+  otherwise it opens the link, which gets #racket-finder so the quiz page lands on the quiz.
+{%- endcomment -%}
+{%- liquid
+  assign url = block.settings.link
+  if block.settings.start_quiz and url != blank
+    unless url contains '#'
+      assign url = url | append: '#racket-finder'
+    endunless
+  endif
+  assign tag = 'span'
+  if url != blank or block.settings.start_quiz
+    assign tag = 'a'
+  endif
+-%}
+{%- if block.settings.label != blank -%}
+  <{{ tag }}
+    {% if tag == 'a' %}
+      href="{{ url | default: '#racket-finder' }}"
+    {% endif %}
+    class="cb-fintro__button cb-fintro__button--{{ block.settings.style }}{% if block.settings.show_arrow %} cb-fintro__button--arrow{% endif %}"
+    {% if block.settings.start_quiz %}
+      data-cb-fintro-start
+    {% endif %}
+    style="--cb-fintro-button-text-size: {{ block.settings.text_size }}px; --cb-fintro-button-text-weight: {{ block.settings.text_weight }};"
+    {{ block.shopify_attributes }}
+  >
+    <span>{{ block.settings.label | escape }}</span>
+    {%- if block.settings.show_arrow -%}
+      <svg width="12" height="12" viewBox="4 4 16 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+      </svg>
+    {%- endif -%}
+  </{{ tag }}>
+{%- endif -%}
+
+{% stylesheet %}
+  .cb-fintro__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 47px;
+    padding: 0 24px;
+    border-radius: var(--cbfi-button-radius, 4px);
+    font-family: var(--cbfi-font-heading);
+    font-weight: var(--cb-fintro-button-text-weight, var(--cbfi-font-heading-regular-weight));
+    font-size: var(--cb-fintro-button-text-size, 18px);
+    line-height: 1.2;
+    text-align: center;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--cbfi-text);
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .cb-fintro__button--arrow {
+    padding-inline: 28px;
+  }
+
+  .cb-fintro__button--primary {
+    background: var(--cbfi-accent);
+    box-shadow: 0 8px 22px -6px color-mix(in srgb, var(--cbfi-accent) 65%, transparent);
+  }
+
+  a.cb-fintro__button--primary:hover {
+    background: color-mix(in srgb, var(--cbfi-accent) 88%, #000);
+  }
+
+  .cb-fintro__button--secondary {
+    background: var(--cbfi-panel);
+  }
+
+  a.cb-fintro__button--secondary:hover {
+    background: color-mix(in srgb, var(--cbfi-text) 8%, var(--cbfi-panel));
+  }
+
+  .cb-fintro__button svg {
+    flex: none;
+    transition: transform 0.2s ease;
+  }
+
+  a.cb-fintro__button:hover svg {
+    transform: translateX(3px);
+  }
+
+  a.cb-fintro__button:focus-visible {
+    outline: 2px solid var(--cbfi-text);
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cb-fintro__button,
+    .cb-fintro__button svg {
+      transition: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Button",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "Shop all rackets"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link"
+    },
+    {
+      "type": "checkbox",
+      "id": "start_quiz",
+      "label": "Start the racket finder",
+      "info": "Scrolls to the [CB] Racket finder quiz when it's on this page. Otherwise opens the link above (pick the page with the quiz, e.g. Rackets).",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "style",
+      "label": "Style",
+      "options": [
+        { "value": "primary", "label": "Accent" },
+        { "value": "secondary", "label": "Dark" }
+      ],
+      "default": "secondary"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrow",
+      "label": "Show arrow",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Button text size",
+      "min": 10,
+      "max": 56,
+      "step": 0.5,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "select",
+      "id": "text_weight",
+      "label": "Button text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    }
+  ],
+  "presets": [{ "name": "[CB] Button" }]
+}
+{% endschema %}

@@ -1,0 +1,152 @@
+{%- comment -%} Large faint decorative icon beside the text. Each viewBox is cropped to its drawing so the edge lines up with the panel padding. {%- endcomment -%}
+{%- if block.settings.custom_icon != blank or block.settings.icon != 'none' -%}
+  {%- liquid
+    case block.settings.icon
+      when 'racket_shuttle'
+        assign view_box = '1.85 0.8 20.15 22.4'
+      when 'racket'
+        assign view_box = '1.85 0.8 18.85 19.2'
+      else
+        assign view_box = '1 1 22 22'
+    endcase
+  -%}
+  <div
+    class="cb-advice__icon cb-advice__icon--{{ block.settings.color }}{% unless block.settings.show_on_mobile %} cb-advice__icon--desktop{% endunless %}"
+    style="--cbn-icon-size: {{ block.settings.size }}px; --cbn-icon-opacity: {{ block.settings.opacity | divided_by: 100.0 }};"
+    aria-hidden="true"
+    {{ block.shopify_attributes }}
+  >
+    {%- if block.settings.custom_icon != blank -%}
+      {%- render 'cb-icon-upload', image: block.settings.custom_icon, tint: block.settings.custom_icon_tint -%}
+    {%- else -%}
+      <svg viewBox="{{ view_box }}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        {%- case block.settings.icon -%}
+          {%- when 'racket_shuttle' -%}
+            <ellipse cx="13.82" cy="7.68" rx="4.75" ry="6.8" transform="rotate(45 13.82 7.68)"/><path d="M7.95 9.7v3.85h3.85"/><path d="M7.95 13.55 2.6 19.3" stroke-linecap="butt"/><circle cx="17.95" cy="19.15" r="3"/>
+          {%- when 'racket' -%}
+            <ellipse cx="13.82" cy="7.68" rx="4.75" ry="6.8" transform="rotate(45 13.82 7.68)"/><path d="M7.95 9.7v3.85h3.85"/><path d="M7.95 13.55 2.6 19.3" stroke-linecap="butt"/>
+          {%- when 'shuttle' -%}
+            <path d="M12 21a2.5 2.5 0 0 1-2.5-2.5V16h5v2.5A2.5 2.5 0 0 1 12 21z"/><path d="M9.5 16 6 4M14.5 16 18 4M12 16V3"/>
+          {%- when 'help' -%}
+            <circle cx="12" cy="12" r="9"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01"/>
+          {%- when 'chat' -%}
+            <path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/>
+          {%- when 'store' -%}
+            <path d="M4.5 9 6 4h12l1.5 5"/><path d="M4.5 9h15v1.2a2.5 2.5 0 0 1-5 0 2.5 2.5 0 0 1-5 0 2.5 2.5 0 0 1-5 0z"/><path d="M6 12.5V20h12v-7.5M10 20v-4h4v4"/>
+        {%- endcase -%}
+      </svg>
+    {%- endif -%}
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  /* Size sets the height; the width follows the drawing so its edge lines up with the panel padding. */
+  .cb-advice__icon {
+    display: flex;
+    flex: none;
+    height: var(--cbn-icon-size, 136px);
+    color: var(--cbn-text);
+    opacity: var(--cbn-icon-opacity, 0.12);
+  }
+
+  .cb-advice__icon--accent {
+    color: var(--cbn-accent);
+  }
+
+  .cb-advice__icon svg,
+  .cb-advice__icon .cb-icon-upload {
+    width: auto;
+    height: 100%;
+  }
+
+  .cb-advice__icon .cb-icon-upload {
+    aspect-ratio: 1;
+  }
+
+  /* Phones: half size, above the text. */
+  @media screen and (max-width: 749px) {
+    .cb-advice__icon {
+      order: -1;
+      height: calc(var(--cbn-icon-size, 136px) * 0.5);
+    }
+
+    .cb-advice__icon--desktop {
+      display: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Icon",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "icon",
+      "label": "Icon",
+      "options": [
+        { "value": "racket_shuttle", "label": "Racket and shuttle" },
+        { "value": "racket", "label": "Racket" },
+        { "value": "shuttle", "label": "Shuttle" },
+        { "value": "help", "label": "Question" },
+        { "value": "chat", "label": "Chat" },
+        { "value": "store", "label": "Shop front" },
+        { "value": "none", "label": "None" }
+      ],
+      "default": "racket_shuttle"
+    },
+    {
+      "type": "image_picker",
+      "id": "custom_icon",
+      "label": "Custom icon",
+      "info": "Upload your own SVG (or PNG). It replaces the built-in icon above."
+    },
+    {
+      "type": "checkbox",
+      "id": "custom_icon_tint",
+      "label": "Colour it like the built-in icons",
+      "info": "For one-colour SVGs: uses this section's icon colour. Turn off to keep the file's own colours.",
+      "default": true,
+      "visible_if": "{{ block.settings.custom_icon != blank }}"
+    },
+    {
+      "type": "select",
+      "id": "color",
+      "label": "Color",
+      "options": [
+        { "value": "text", "label": "Text" },
+        { "value": "accent", "label": "Accent" }
+      ],
+      "default": "text"
+    },
+    {
+      "type": "range",
+      "id": "size",
+      "label": "Size",
+      "min": 40,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 136
+    },
+    {
+      "type": "range",
+      "id": "opacity",
+      "label": "Strength",
+      "min": 5,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 12
+    },
+    {
+      "type": "checkbox",
+      "id": "show_on_mobile",
+      "label": "Show on phones",
+      "default": false
+    }
+  ],
+  "presets": [{ "name": "[CB] Icon" }]
+}
+{% endschema %}

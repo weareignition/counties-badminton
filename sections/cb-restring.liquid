@@ -1,0 +1,291 @@
+{%- liquid
+  assign s = section.settings
+  assign font_scope = '#cb-rs-' | append: section.id
+-%}
+
+{% render 'cb-font-styles',
+  selector: font_scope,
+  prefix: 'cbr',
+  heading_font: s.heading_font,
+  body_font: s.body_font
+%}
+
+<section
+  id="cb-rs-{{ section.id }}"
+  class="cb-rs{% if s.media_first_mobile %} cb-rs--media-first{% endif %}"
+  style="
+    --cbr-bg: {{ s.background_color }};
+    --cbr-card: {{ s.card_background_color }};
+    --cbr-border: {{ s.border_color }};
+    --cbr-text: {{ s.text_color }};
+    --cbr-soft: {{ s.text_color | color_modify: 'alpha', 0.78 }};
+    --cbr-muted: {{ s.text_color | color_modify: 'alpha', 0.55 }};
+    --cbr-accent: {{ s.accent_color }};
+    --cbr-radius: {{ s.card_radius }}px;
+    --cbr-content-col: {{ s.content_width }}fr;
+    --cbr-media-col: {{ 100 | minus: s.content_width }}fr;
+    --cbr-gap: {{ s.column_gap }}px;
+    --cbr-max-width: {{ s.max_width }}px;
+    --cbr-pt: {{ s.padding_top }}px;
+    --cbr-pb: {{ s.padding_bottom }}px;
+  "
+>
+  <div class="cb-rs__inner">
+    {% content_for 'blocks' %}
+  </div>
+</section>
+
+{% stylesheet %}
+  .cb-rs {
+    color: var(--cbr-text);
+    background: var(--cbr-bg);
+    padding: calc(var(--cbr-pt) * 0.6) 16px calc(var(--cbr-pb) * 0.6);
+  }
+
+  .cb-rs__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    gap: 28px;
+    max-width: var(--cbr-max-width);
+    margin-inline: auto;
+  }
+
+  .cb-rs--media-first .cb-rs__media {
+    order: -1;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-rs {
+      padding: calc(var(--cbr-pt) * 0.8) 32px calc(var(--cbr-pb) * 0.8);
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .cb-rs {
+      padding: var(--cbr-pt) 48px var(--cbr-pb);
+    }
+
+    .cb-rs__inner {
+      grid-template-columns: minmax(0, var(--cbr-content-col)) minmax(0, var(--cbr-media-col));
+      gap: var(--cbr-gap);
+    }
+
+    .cb-rs--media-first .cb-rs__media {
+      order: 0;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Restringing",
+  "tag": "div",
+  "class": "section-wrapper",
+  "blocks": [
+    { "type": "_cb-rs-content" },
+    { "type": "_cb-rs-media" }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "paragraph",
+      "content": "Reorder the content group and photo blocks to swap sides."
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "label": "Text column width",
+      "info": "Share of the width on large screens; the photo takes the rest.",
+      "min": 30,
+      "max": 70,
+      "step": 1,
+      "unit": "%",
+      "default": 42
+    },
+    {
+      "type": "range",
+      "id": "column_gap",
+      "label": "Space between columns",
+      "min": 16,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Corner radius",
+      "info": "Boxes, price panel and photo.",
+      "min": 0,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "default": 3
+    },
+    {
+      "type": "checkbox",
+      "id": "media_first_mobile",
+      "label": "Show photo first on phones and tablets",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width",
+      "min": 960,
+      "max": 1800,
+      "step": 20,
+      "unit": "px",
+      "default": 1400
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "info": "Used for the heading, price and photo caption.",
+      "default": "space_grotesk_n7"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "inter_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#0d0d0d"
+    },
+    {
+      "type": "color",
+      "id": "card_background_color",
+      "label": "Boxes and price panel",
+      "default": "#1b1b1b"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Borders",
+      "default": "#ffffff14"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "default": "#d71f27"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Restringing",
+      "category": "t:categories.storytelling",
+      "blocks": {
+        "content": {
+          "type": "_cb-rs-content",
+          "blocks": {
+            "eyebrow": { "type": "cb-subheader", "settings": { "subheader_text": "Pro shop stringing" } },
+            "heading": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "Professional restringing, done in-house.",
+                "mobile_scale": 80,
+                "line_height": 112,
+                "wrap": "wrap"
+              }
+            },
+            "text": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>Your string and tension affect feel, control, power and comfort. The pro shop can help match the setup to your racket, level and playing style instead of leaving you to guess.</p>",
+                "size": 13,
+                "mobile_size": 13,
+                "line_height": 165,
+                "max_width_unit": "ch",
+                "max_width_ch": 62
+              }
+            },
+            "facts": {
+              "type": "_cb-rs-facts",
+              "blocks": {
+                "string": { "type": "_cb-rs-fact", "settings": { "fact_label": "String", "fact_text": "Yonex, Victor, Ashaway & Li-Ning in stock" } },
+                "tension": { "type": "_cb-rs-fact", "settings": { "fact_label": "Tension", "fact_text": "±0.5 lbs accuracy on 6-point mount" } },
+                "dropoff": { "type": "_cb-rs-fact", "settings": { "fact_label": "Drop-off", "fact_text": "41R Elliot St, Papakura (free hall parking)" } },
+                "availability": { "type": "_cb-rs-fact", "settings": { "fact_label": "Availability", "fact_text": "7 days, quick turnaround after 10am" } }
+              },
+              "block_order": ["string", "tension", "dropoff", "availability"]
+            },
+            "price": {
+              "type": "_cb-rs-price",
+              "settings": {
+                "price_label": "String options from",
+                "price_value": "$27–$32",
+                "price_unit": "per set",
+                "price_note": "Labour & restringing setup confirmed in-store",
+                "button_label": "Request a restring"
+              }
+            }
+          },
+          "block_order": ["eyebrow", "heading", "text", "facts", "price"]
+        },
+        "media": {
+          "type": "_cb-rs-media",
+          "settings": {
+            "overlay_icon": "check",
+            "overlay_title": "Official Certified Technicians",
+            "overlay_text": "Counties Manukau Badminton Association Pro Shop Workshop",
+            "tag_text": "Papakura Stadium"
+          }
+        }
+      },
+      "block_order": ["content", "media"]
+    }
+  ]
+}
+{% endschema %}

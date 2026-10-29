@@ -1,33 +1,39 @@
 {%- if block.settings.feature_text != blank -%}
-  <div class="cb-hero__feature" {{ block.shopify_attributes }}>
-    <span class="cb-hero__feature-icon" aria-hidden="true">
-      {%- if block.settings.custom_icon != blank -%}
-        {{ block.settings.custom_icon | image_url: width: 48 | image_tag: width: 16, height: 16, alt: '' }}
-      {%- else -%}
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          {%- case block.settings.icon -%}
-            {%- when 'check' -%}
-              <circle cx="12" cy="12" r="9"/><path d="m8.5 12 2.5 2.5 4.5-5"/>
-            {%- when 'sliders' -%}
-              <path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/>
-            {%- when 'calendar' -%}
-              <rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/>
-            {%- when 'truck' -%}
-              <path d="M2 6h12v10H2zM14 10h4l3 3v3h-7z"/><circle cx="6" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/>
-            {%- when 'shield' -%}
-              <path d="M12 3 4.5 6v5.5c0 4.6 3.2 8.1 7.5 9.5 4.3-1.4 7.5-4.9 7.5-9.5V6z"/><path d="m9 12 2 2 4-4"/>
-            {%- when 'star' -%}
-              <path d="m12 3.5 2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/>
-            {%- when 'pin' -%}
-              <path d="M12 21s-7-6.1-7-11.5a7 7 0 0 1 14 0C19 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>
-            {%- when 'clock' -%}
-              <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>
-            {%- when 'store' -%}
-              <path d="M4.5 9 6 4h12l1.5 5"/><path d="M4.5 9h15v1.2a2.5 2.5 0 0 1-5 0 2.5 2.5 0 0 1-5 0 2.5 2.5 0 0 1-5 0z"/><path d="M6 12.5V20h12v-7.5M10 20v-4h4v4"/>
-          {%- endcase -%}
-        </svg>
-      {%- endif -%}
-    </span>
+  <div
+    class="cb-hero__feature"
+    style="--cb-hero-feature-text-size: {{ block.settings.text_size }}px; --cb-hero-feature-text-weight: {{ block.settings.text_weight }};"
+    {{ block.shopify_attributes }}
+  >
+    {%- if block.settings.custom_icon != blank or block.settings.icon != 'none' -%}
+      <span class="cb-hero__feature-icon" aria-hidden="true">
+        {%- if block.settings.custom_icon != blank -%}
+          {%- render 'cb-icon-upload', image: block.settings.custom_icon, size: 16, tint: block.settings.custom_icon_tint -%}
+        {%- else -%}
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            {%- case block.settings.icon -%}
+              {%- when 'check' -%}
+                <circle cx="12" cy="12" r="9"/><path d="m8.5 12 2.5 2.5 4.5-5"/>
+              {%- when 'sliders' -%}
+                <path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/>
+              {%- when 'calendar' -%}
+                <rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/>
+              {%- when 'truck' -%}
+                <path d="M2 6h12v10H2zM14 10h4l3 3v3h-7z"/><circle cx="6" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/>
+              {%- when 'shield' -%}
+                <path d="M12 3 4.5 6v5.5c0 4.6 3.2 8.1 7.5 9.5 4.3-1.4 7.5-4.9 7.5-9.5V6z"/><path d="m9 12 2 2 4-4"/>
+              {%- when 'star' -%}
+                <path d="m12 3.5 2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/>
+              {%- when 'pin' -%}
+                <path d="M12 21s-7-6.1-7-11.5a7 7 0 0 1 14 0C19 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>
+              {%- when 'clock' -%}
+                <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>
+              {%- when 'store' -%}
+                <path d="M4.5 9 6 4h12l1.5 5"/><path d="M4.5 9h15v1.2a2.5 2.5 0 0 1-5 0 2.5 2.5 0 0 1-5 0 2.5 2.5 0 0 1-5 0z"/><path d="M6 12.5V20h12v-7.5M10 20v-4h4v4"/>
+            {%- endcase -%}
+          </svg>
+        {%- endif -%}
+      </span>
+    {%- endif -%}
     <span class="cb-hero__feature-text">{{ block.settings.feature_text | escape }}</span>
   </div>
 {%- endif -%}
@@ -39,8 +45,8 @@
     gap: 10px;
     min-width: 0;
     font-family: var(--cbh-font-body);
-    font-size: 14px;
-    font-weight: var(--cbh-font-body-strong);
+    font-size: var(--cb-hero-feature-text-size, 14px);
+    font-weight: var(--cb-hero-feature-text-weight, var(--cbh-font-body-strong));
     line-height: 1.3;
     color: var(--cbh-text);
   }
@@ -76,7 +82,8 @@
         { "value": "shield", "label": "Shield" },
         { "value": "star", "label": "Star" },
         { "value": "pin", "label": "Location" },
-        { "value": "store", "label": "Shop" }
+        { "value": "store", "label": "Shop" },
+        { "value": "none", "label": "None" }
       ],
       "default": "check"
     },
@@ -84,13 +91,53 @@
       "type": "image_picker",
       "id": "custom_icon",
       "label": "Custom icon",
-      "info": "Overrides the icon above."
+      "info": "Upload your own SVG (or PNG). It replaces the built-in icon above."
+    },
+    {
+      "type": "checkbox",
+      "id": "custom_icon_tint",
+      "label": "Colour it like the built-in icons",
+      "info": "For one-colour SVGs: uses this section's icon colour. Turn off to keep the file's own colours.",
+      "default": true,
+      "visible_if": "{{ block.settings.custom_icon != blank }}"
     },
     {
       "type": "text",
       "id": "feature_text",
       "label": "Text",
       "default": "Feature"
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "text_weight",
+      "label": "Text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
     }
   ],
   "presets": [{ "name": "[CB] Feature" }]

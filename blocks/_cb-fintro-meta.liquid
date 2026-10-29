@@ -1,0 +1,77 @@
+{%- comment -%}
+  A small line under the text. [count] becomes the number of questions in the [CB] Racket finder quiz on the same page
+  (filled in by the section's script); without a quiz on the page it reads "A few" / "a few".
+{%- endcomment -%}
+{%- liquid
+  assign raw = block.settings.meta_text | strip | escape
+  assign first_seven = raw | slice: 0, 7
+  assign fallback = 'a few'
+  if first_seven == '[count]'
+    assign fallback = 'A few'
+  endif
+  assign count_html = '<span data-cb-fintro-count>' | append: fallback | append: '</span>'
+  assign meta_html = raw | replace: '[count]', count_html
+-%}
+{%- if raw != blank -%}
+  <p class="cb-fintro__meta" style="--cb-fintro-meta-text-size: {{ block.settings.text_size }}px; --cb-fintro-meta-text-weight: {{ block.settings.text_weight }};" {{ block.shopify_attributes }}>{{ meta_html }}</p>
+{%- endif -%}
+
+{% stylesheet %}
+  .cb-fintro__meta {
+    margin: 0;
+    font-family: var(--cbfi-font-body);
+    font-weight: var(--cb-fintro-meta-text-weight, 500);
+    font-size: var(--cb-fintro-meta-text-size, 11px);
+    line-height: 1.4;
+    color: var(--cbfi-meta);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Small note",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "meta_text",
+      "label": "Text",
+      "info": "[count] becomes the number of questions in the Racket finder quiz on this page.",
+      "default": "[count] quick questions · Around 30–60 seconds"
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "select",
+      "id": "text_weight",
+      "label": "Text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    }
+  ],
+  "presets": [{ "name": "[CB] Small note" }]
+}
+{% endschema %}

@@ -1,0 +1,875 @@
+{%- comment -%}
+  Similar rackets: the shared [CB] Subheader and [CB] Heading (static blocks), a "View all" link and product cards.
+  Cards show the chosen products; without any, in-stock products from the chosen collection (or this product's first
+  collection): the same playing style from different brands first, then the same style, then others. Each card: photo with the playing style badge, brand,
+  title, a details line (snippets/cb-racket-trait) and price.
+{%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign font_scope = '#cb-similar-' | append: section.id
+  assign pool = s.collection | default: product.collections.first
+
+  assign picks = ','
+  assign pick_count = 0
+  if s.products != blank
+    for p in s.products
+      if p.id == product.id
+        continue
+      endif
+      assign picks = picks | append: p.handle | append: ','
+      assign pick_count = pick_count | plus: 1
+      if pick_count >= s.card_count
+        break
+      endif
+    endfor
+  elsif pool != blank
+    assign current_style = ''
+    if product != blank
+      capture current_style
+        render 'cb-racket-trait', product: product, trait: 'style'
+      endcapture
+      assign current_style = current_style | strip
+    endif
+    assign excluded = s.exclude_words | downcase | split: ','
+    assign used_brands = '|'
+    for pass in (1..3)
+      if pass < 3 and current_style == blank
+        continue
+      endif
+      for p in pool.products limit: 50
+        if pick_count >= s.card_count
+          break
+        endif
+        assign key = ',' | append: p.handle | append: ','
+        if p.id == product.id or p.available == false or picks contains key
+          continue
+        endif
+        assign title_down = p.title | downcase
+        assign skip = false
+        for word in excluded
+          assign w = word | strip
+          if w != blank and title_down contains w
+            assign skip = true
+            break
+          endif
+        endfor
+        if skip
+          continue
+        endif
+        if pass < 3
+          capture p_style
+            render 'cb-racket-trait', product: p, trait: 'style'
+          endcapture
+          assign p_style = p_style | strip
+          if p_style != current_style
+            continue
+          endif
+        endif
+        if pass == 1
+          # One per brand ("Li Ning" and "Li-Ning" count as the same).
+          capture p_brand
+            render 'cb-product-brand', product: p, brands: s.brand_names
+          endcapture
+          assign brand_name = p_brand | strip | downcase | remove: '-' | remove: ' '
+          assign brand_key = '|' | append: brand_name | append: '|'
+          if used_brands contains brand_key
+            continue
+          endif
+          assign used_brands = used_brands | append: brand_name | append: '|'
+        endif
+        assign picks = picks | append: p.handle | append: ','
+        assign pick_count = pick_count | plus: 1
+      endfor
+    endfor
+  endif
+  assign pick_list = picks | remove_first: ',' | split: ','
+
+  assign view_all_url = s.view_all_link | default: pool.url
+  assign details = s.details | split: ','
+-%}
+
+{% render 'cb-font-styles',
+  selector: font_scope,
+  prefix: 'cbsim',
+  heading_font: s.heading_font,
+  body_font: s.body_font
+%}
+
+{%- if pick_list.size > 0 or request.design_mode -%}
+  <section
+    id="cb-similar-{{ section.id }}"
+    class="cb-similar"
+    style="
+      --cbsim-bg: {{ s.background_color }};
+      --cbsim-card: {{ s.card_color }};
+      --cbsim-image-bg: {{ s.image_background }};
+      --cbsim-text: {{ s.text_color }};
+      --cbsim-muted: {{ s.muted_text_color }};
+      --cbsim-link: {{ s.link_color }};
+      --cbsim-accent: {{ s.accent_color }};
+      --cbsim-max-width: {{ s.max_width }}px;
+      --cbsim-side: {{ s.side_padding }}px;
+      --cbsim-columns: {{ s.columns }};
+      --cbsim-gap: {{ s.card_gap }}px;
+      --cbsim-ratio: {{ s.image_ratio }};
+      --cbsim-header-gap: {{ s.header_gap }}px;
+      --cbsim-pt: {{ s.padding_top }}px;
+      --cbsim-pb: {{ s.padding_bottom }}px;
+      --cb-similar-view-all-size: {{ s.view_all_size }}px;
+      --cb-similar-view-all-weight: {{ s.view_all_weight }};
+      --cb-similar-badge-size: {{ s.badge_size }}px;
+      --cb-similar-badge-weight: {{ s.badge_weight }};
+      --cb-similar-brand-size: {{ s.brand_size }}px;
+      --cb-similar-brand-weight: {{ s.brand_weight }};
+      --cb-similar-title-size: {{ s.card_title_size }}px;
+      --cb-similar-title-weight: {{ s.card_title_weight }};
+      --cb-similar-details-size: {{ s.details_size }}px;
+      --cb-similar-details-weight: {{ s.details_weight }};
+      --cb-similar-price-size: {{ s.price_size }}px;
+      --cb-similar-price-weight: {{ s.price_weight }};
+      --cb-similar-link-size: {{ s.card_link_size }}px;
+      --cb-similar-link-weight: {{ s.card_link_weight }};
+    "
+  >
+    <div class="cb-similar__inner">
+      <div class="cb-similar__header">
+        <div class="cb-similar__intro">
+          {%- content_for 'block', type: 'cb-subheader', id: 'subheader' -%}
+          {%- content_for 'block', type: 'cb-heading', id: 'heading' -%}
+        </div>
+        {%- if s.view_all_label != blank and view_all_url != blank -%}
+          <a class="cb-similar__all" href="{{ view_all_url }}">{{ s.view_all_label | escape }}</a>
+        {%- endif -%}
+      </div>
+
+      {%- if pick_list.size > 0 -%}
+        <div class="cb-similar__grid">
+          {%- for handle in pick_list -%}
+            {%- liquid
+              assign p = all_products[handle]
+              capture style
+                if s.show_style
+                  render 'cb-racket-trait', product: p, trait: 'style'
+                endif
+              endcapture
+              assign style = style | strip
+              capture brand
+                if s.show_brand
+                  render 'cb-product-brand', product: p, brands: s.brand_names
+                endif
+              endcapture
+              assign brand = brand | strip
+              assign spec_line = ''
+              for detail in details
+                assign d = detail | strip | downcase
+                if d == blank
+                  continue
+                endif
+                capture value
+                  render 'cb-racket-trait', product: p, trait: d
+                endcapture
+                assign value = value | strip
+                if value != blank
+                  if spec_line != blank
+                    assign spec_line = spec_line | append: ' • '
+                  endif
+                  assign spec_line = spec_line | append: value
+                endif
+              endfor
+            -%}
+            <a class="cb-sim-card" href="{{ p.url }}">
+              <span class="cb-sim-card__media">
+                {%- if p.featured_image != blank -%}
+                  {%- assign image_alt = p.featured_image.alt | default: p.title -%}
+                  {{
+                    p.featured_image
+                    | image_url: width: 900
+                    | image_tag:
+                      loading: 'lazy',
+                      widths: '300, 450, 600, 900',
+                      sizes: '(min-width: 990px) 30vw, 90vw',
+                      alt: image_alt,
+                      class: 'cb-sim-card__img'
+                  }}
+                {%- else -%}
+                  {{ 'product-1' | placeholder_svg_tag: 'cb-sim-card__img' }}
+                {%- endif -%}
+                {%- if style != blank -%}<span class="cb-sim-card__badge">{{ style | escape }}</span>{%- endif -%}
+              </span>
+              <span class="cb-sim-card__body">
+                {%- if brand != blank -%}<span class="cb-sim-card__brand">{{ brand | escape }}</span>{%- endif -%}
+                <span class="cb-sim-card__title">{{ p.title | escape }}</span>
+                {%- if spec_line != blank -%}<span class="cb-sim-card__specs">{{ spec_line | escape }}</span>{%- endif -%}
+                <span class="cb-sim-card__foot">
+                  <span class="cb-sim-card__price">
+                    {%- if p.price_varies -%}From {% endif -%}{{ p.price | money }}
+                  </span>
+                  {%- if s.card_link_label != blank -%}<span class="cb-sim-card__link">{{ s.card_link_label | escape }}</span>{%- endif -%}
+                </span>
+              </span>
+            </a>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </section>
+{%- endif -%}
+
+{% stylesheet %}
+  .cb-similar {
+    color: var(--cbsim-text);
+    background: var(--cbsim-bg);
+    padding: var(--cbsim-pt) 16px var(--cbsim-pb);
+  }
+
+  .cb-similar__inner {
+    max-width: var(--cbsim-max-width);
+    margin-inline: auto;
+  }
+
+  .cb-similar__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px 24px;
+    margin-bottom: var(--cbsim-header-gap);
+  }
+
+  .cb-similar__intro {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+    min-width: 0;
+  }
+
+  .cb-similar .cb-similar__all {
+    margin-top: 1px;
+    font-family: var(--cbsim-font-body);
+    font-weight: var(--cb-similar-view-all-weight, var(--cbsim-font-body-strong));
+    font-size: var(--cb-similar-view-all-size, 8px);
+    line-height: 1.3;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--cbsim-muted);
+    transition: color 0.2s ease;
+  }
+
+  .cb-similar .cb-similar__all:hover {
+    color: var(--cbsim-text);
+  }
+
+  .cb-similar__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--cbsim-gap);
+  }
+
+  /* Two classes: Horizon styles links globally. */
+  .cb-similar .cb-sim-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    box-sizing: border-box;
+    padding: 13px 13px 14px;
+    border-radius: 3px;
+    background: var(--cbsim-card);
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .cb-sim-card__media {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    aspect-ratio: var(--cbsim-ratio, 12 / 5);
+    border-radius: 2px;
+    background: var(--cbsim-image-bg);
+  }
+
+  .cb-similar .cb-sim-card__img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 9px;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+  }
+
+  .cb-similar .cb-sim-card:hover .cb-sim-card__img {
+    transform: scale(1.03);
+  }
+
+  .cb-sim-card__badge {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    display: inline-flex;
+    align-items: center;
+    height: 16px;
+    padding: 0 7px;
+    border-radius: 1px;
+    background: #0b0b0b;
+    font-family: var(--cbsim-font-heading);
+    font-weight: var(--cb-similar-badge-weight, var(--cbsim-font-heading-weight));
+    font-size: var(--cb-similar-badge-size, 8px);
+    line-height: 1;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #ffffff;
+  }
+
+  .cb-sim-card__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding-top: 4px;
+  }
+
+  .cb-sim-card__brand {
+    font-family: var(--cbsim-font-body);
+    font-weight: var(--cb-similar-brand-weight, var(--cbsim-font-body-strong));
+    font-size: var(--cb-similar-brand-size, 8px);
+    line-height: 1.3;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--cbsim-muted);
+  }
+
+  .cb-sim-card__title {
+    margin-top: 5px;
+    font-family: var(--cbsim-font-heading);
+    font-weight: var(--cb-similar-title-weight, var(--cbsim-font-heading-weight));
+    font-size: var(--cb-similar-title-size, 11px);
+    line-height: 1.3;
+    color: var(--cbsim-text);
+  }
+
+  .cb-sim-card__specs {
+    margin-top: 4px;
+    font-family: var(--cbsim-font-body);
+    font-weight: var(--cb-similar-details-weight, inherit);
+    font-size: var(--cb-similar-details-size, 10.5px);
+    line-height: 1.4;
+    color: var(--cbsim-muted);
+  }
+
+  .cb-sim-card__foot {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: auto;
+    padding-top: 22px;
+  }
+
+  .cb-sim-card__price {
+    font-family: var(--cbsim-font-heading);
+    font-weight: var(--cb-similar-price-weight, var(--cbsim-font-heading-weight));
+    font-size: var(--cb-similar-price-size, 11px);
+    line-height: 1.3;
+    color: var(--cbsim-text);
+  }
+
+  .cb-sim-card__link {
+    font-family: var(--cbsim-font-body);
+    font-weight: var(--cb-similar-link-weight, 500);
+    font-size: var(--cb-similar-link-size, 9.5px);
+    line-height: 1.3;
+    color: var(--cbsim-link);
+  }
+
+  .cb-similar .cb-sim-card:hover .cb-sim-card__link {
+    text-decoration: underline;
+  }
+
+  .cb-similar__hint {
+    margin: 0;
+    padding: 10px 12px;
+    border: 1px dashed rgb(255 255 255 / 0.2);
+    border-radius: 4px;
+    font-size: 11px;
+    color: rgb(255 255 255 / 0.6);
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-similar {
+      padding-inline: var(--cbsim-side);
+    }
+
+    .cb-similar__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .cb-similar__grid {
+      grid-template-columns: repeat(var(--cbsim-columns), minmax(0, 1fr));
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Similar rackets",
+  "tag": "section",
+  "class": "section-wrapper",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Products"
+    },
+    {
+      "type": "product_list",
+      "id": "products",
+      "label": "Products",
+      "info": "Leave empty to pick them automatically: in-stock products from the collection below, same playing style first.",
+      "limit": 8
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Pick from",
+      "info": "Defaults to the product's first collection. Also the \"View all\" link."
+    },
+    {
+      "type": "range",
+      "id": "card_count",
+      "label": "Number of products",
+      "min": 1,
+      "max": 8,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "text",
+      "id": "exclude_words",
+      "label": "Skip products whose title contains",
+      "info": "Comma-separated. Only for automatic picks.",
+      "default": "2nd hand, junior, kid, set"
+    },
+    {
+      "type": "text",
+      "id": "view_all_label",
+      "label": "View all link",
+      "info": "Leave empty to hide it.",
+      "default": "View all rackets →"
+    },
+    {
+      "type": "url",
+      "id": "view_all_link",
+      "label": "View all goes to",
+      "info": "Defaults to the collection above."
+    },
+    {
+      "type": "header",
+      "content": "Cards"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_style",
+      "label": "Playing style badge",
+      "info": "From the custom.racket_style or custom.player_style metafield, else the description.",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_brand",
+      "label": "Brand",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "brand_names",
+      "label": "Brand names",
+      "info": "The first one found in a product's title is its brand.",
+      "default": "Yonex, Victor, Li-Ning, Li Ning, Babolat, Ashaway, Hundred, Code Alpha, Kiwi, Apacs, Felet, RSL, Carlton"
+    },
+    {
+      "type": "text",
+      "id": "details",
+      "label": "Details line",
+      "info": "Comma-separated, any of: balance, flex, weight, grip, level, style, tension. Missing ones are left out.",
+      "default": "balance, flex, weight"
+    },
+    {
+      "type": "text",
+      "id": "card_link_label",
+      "label": "Card link text",
+      "default": "View details →"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "Photo shape",
+      "options": [
+        { "value": "12 / 5", "label": "Wide" },
+        { "value": "16 / 9", "label": "16:9" },
+        { "value": "4 / 3", "label": "4:3" },
+        { "value": "1 / 1", "label": "Square" }
+      ],
+      "default": "12 / 5"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Cards per row",
+      "info": "Tablets show 2, phones 1.",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "card_gap",
+      "label": "Space between cards",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "header_gap",
+      "label": "Space below heading",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Maximum width",
+      "min": 800,
+      "max": 1800,
+      "step": 20,
+      "unit": "px",
+      "default": 1520
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Side space",
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Fonts"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "space_grotesk_n7"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "inter_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#0b0b0b"
+    },
+    {
+      "type": "color",
+      "id": "card_color",
+      "label": "Cards",
+      "default": "#181818"
+    },
+    {
+      "type": "color",
+      "id": "image_background",
+      "label": "Photo background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "muted_text_color",
+      "label": "Muted text",
+      "default": "#a1a1aa"
+    },
+    {
+      "type": "color",
+      "id": "link_color",
+      "label": "Card link",
+      "default": "#f2aaa0"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "info": "Subheader.",
+      "default": "#d71f27"
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "view_all_size",
+      "label": "View all link size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "select",
+      "id": "view_all_weight",
+      "label": "View all link weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "badge_size",
+      "label": "Playing style badge size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "select",
+      "id": "badge_weight",
+      "label": "Playing style badge weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "brand_size",
+      "label": "Brand size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "select",
+      "id": "brand_weight",
+      "label": "Brand weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "card_title_size",
+      "label": "Card title size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "select",
+      "id": "card_title_weight",
+      "label": "Card title weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "details_size",
+      "label": "Details line size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 10.5
+    },
+    {
+      "type": "select",
+      "id": "details_weight",
+      "label": "Details line weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "price_size",
+      "label": "Price size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "select",
+      "id": "price_weight",
+      "label": "Price weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "card_link_size",
+      "label": "Card link size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 9.5
+    },
+    {
+      "type": "select",
+      "id": "card_link_weight",
+      "label": "Card link weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Similar rackets",
+      "blocks": {
+        "subheader": {
+          "type": "cb-subheader",
+          "static": true,
+          "settings": { "subheader_text": "Alternative frames", "size": 8, "letter_spacing": 10 }
+        },
+        "heading": {
+          "type": "cb-heading",
+          "static": true,
+          "settings": { "heading_text": "Similar Rackets", "size": 19, "line_height": 120 }
+        }
+      }
+    }
+  ]
+}
+{% endschema %}

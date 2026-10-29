@@ -1,13 +1,19 @@
 {%- if block.settings.note_text != blank -%}
-  <p class="cb-tactics__note" {{ block.shopify_attributes }}>{{ block.settings.note_text | escape }}</p>
+  <p
+    class="cb-tactics__note"
+    style="--cb-tactics-note-text-size: {{ block.settings.text_size }}px; --cb-tactics-note-text-weight: {{ block.settings.text_weight }};"
+    {{ block.shopify_attributes }}
+  >
+    {{- block.settings.note_text | escape -}}
+  </p>
 {%- endif -%}
 
 {% stylesheet %}
   .cb-tactics__note {
     margin: 0;
     font-family: var(--cbt-font-body);
-    font-weight: var(--cbt-font-body-weight);
-    font-size: 12px;
+    font-weight: var(--cb-tactics-note-text-weight, var(--cbt-font-body-weight));
+    font-size: var(--cb-tactics-note-text-size, 12px);
     line-height: 1.4;
     color: var(--cbt-muted);
   }
@@ -23,6 +29,38 @@
       "id": "note_text",
       "label": "Text",
       "default": "Click a style card to filter collection below"
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "text_weight",
+      "label": "Text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
     }
   ],
   "presets": [{ "name": "[CB] Note" }]

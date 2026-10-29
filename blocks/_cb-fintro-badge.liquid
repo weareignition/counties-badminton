@@ -1,0 +1,95 @@
+{%- if block.settings.badge_text != blank -%}
+  <p
+    class="cb-fintro__badge"
+    style="--cb-fintro-badge-text-size: {{ block.settings.text_size }}px; --cb-fintro-badge-text-weight: {{ block.settings.text_weight }};"
+    {{ block.shopify_attributes }}
+  >
+    {%- if block.settings.show_dot -%}
+      <span class="cb-fintro__badge-dot" aria-hidden="true"></span>
+    {%- endif -%}
+    <span>{{ block.settings.badge_text | escape }}</span>
+  </p>
+{%- endif -%}
+
+{% stylesheet %}
+  .cb-fintro__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    max-width: 100%;
+    margin: 0;
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: var(--cbfi-panel);
+    font-family: var(--cbfi-font-body);
+    font-weight: var(--cb-fintro-badge-text-weight, var(--cbfi-font-body-strong));
+    font-size: var(--cb-fintro-badge-text-size, 9px);
+    line-height: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--cbfi-muted);
+  }
+
+  .cb-fintro__badge-dot {
+    flex: none;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--cbfi-accent);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Badge",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Text",
+      "info": "Shown in capitals.",
+      "default": "Racket finder"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dot",
+      "label": "Show accent dot",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 9
+    },
+    {
+      "type": "select",
+      "id": "text_weight",
+      "label": "Text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    }
+  ],
+  "presets": [{ "name": "[CB] Badge" }]
+}
+{% endschema %}

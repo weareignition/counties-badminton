@@ -1,0 +1,563 @@
+{
+  "sections": {
+    "main": {
+      "type": "cb-product",
+      "blocks": {
+        "title": {
+          "type": "_cb-pd-title",
+          "settings": {}
+        },
+        "callout": {
+          "type": "_cb-pd-callout",
+          "settings": {}
+        },
+        "price": {
+          "type": "_cb-pd-price",
+          "settings": {}
+        },
+        "weight": {
+          "type": "_cb-pd-option",
+          "settings": {
+            "label": "Weight class",
+            "option_name": "Weight",
+            "choices": "4U (80-84g) | Fast whip & precision control | ~83g\n3U (85-89g) | Maximum offensive smash weight | ~88g"
+          }
+        },
+        "grip": {
+          "type": "_cb-pd-option",
+          "settings": {
+            "label": "Grip sizing",
+            "option_name": "Grip",
+            "choices": "G5 | Standard modern fit (3.25\") | Standard NZ\nG4 | Thicker palm profile (3.50\")"
+          }
+        },
+        "buy": {
+          "type": "_cb-pd-buy",
+          "settings": {
+            "addon_link": "shopify://collections/stringing",
+            "addon_mode": "builder"
+          }
+        },
+        "features": {
+          "type": "_cb-pd-features",
+          "settings": {},
+          "blocks": {
+            "collect": {
+              "type": "_cb-pd-feature",
+              "settings": {
+                "icon": "bag",
+                "feature_text": "Click & collect Papakura"
+              }
+            },
+            "open": {
+              "type": "_cb-pd-feature",
+              "settings": {
+                "icon": "clock",
+                "feature_text": "Open 7 days"
+              }
+            },
+            "advice": {
+              "type": "_cb-pd-feature",
+              "settings": {
+                "icon": "chat",
+                "feature_text": "Specialist advice"
+              }
+            },
+            "stringing": {
+              "type": "_cb-pd-feature",
+              "settings": {
+                "icon": "wrench",
+                "feature_text": "Professional stringing"
+              }
+            }
+          },
+          "block_order": [
+            "collect",
+            "open",
+            "advice",
+            "stringing"
+          ]
+        }
+      },
+      "block_order": [
+        "title",
+        "callout",
+        "price",
+        "weight",
+        "grip",
+        "buy",
+        "features"
+      ],
+      "settings": {}
+    },
+    "suits": {
+      "type": "cb-suits",
+      "blocks": {
+        "subheader": {
+          "type": "cb-subheader",
+          "settings": {
+            "subheader_text": "Who this racket suits",
+            "size": 8,
+            "letter_spacing": 10,
+            "space_below": -2
+          }
+        },
+        "heading": {
+          "type": "cb-heading",
+          "settings": {
+            "heading_text": "Who this racket suits",
+            "size": 28,
+            "line_height": 115
+          }
+        },
+        "paragraph": {
+          "type": "cb-paragraph",
+          "settings": {
+            "body_text": "<p>The head-heavy mass combined with an ultra-stiff graphite shaft concentrates kinetic energy directly into downhill offensive shots. It transforms committed forearm acceleration into steep smash rebounds and penetrating flat drives, ideal for players who dictate exchanges and play with assertive racket speed.</p>",
+            "size": 14,
+            "line_height": 170,
+            "max_width_unit": "px",
+            "max_width_px": 720
+          }
+        },
+        "style": {
+          "type": "cb-highlight-card",
+          "settings": {
+            "label": "Playing style",
+            "title_text": "Attack & Power",
+            "body_text": "Engineered for pure downhill trajectory, rapid overhead whip, and relentless court penetration.",
+            "label_size": 8,
+            "title_size": 11,
+            "text_size": 10.5,
+            "title_font": "heading_bold",
+            "label_gap": 6,
+            "text_gap": 6,
+            "label_color": "#a1a1aa",
+            "background_color": "#1c1c1c",
+            "padding_y": 17,
+            "padding_x": 16,
+            "radius": 3
+          }
+        },
+        "level": {
+          "type": "cb-highlight-card",
+          "settings": {
+            "label": "Player level",
+            "title_text": "Advanced / Competitive",
+            "body_text": "Best for competitive club players, tournament reps, and players with established timing mechanics.",
+            "label_size": 8,
+            "title_size": 11,
+            "text_size": 10.5,
+            "title_font": "heading_bold",
+            "label_gap": 6,
+            "text_gap": 6,
+            "label_color": "#a1a1aa",
+            "background_color": "#1c1c1c",
+            "padding_y": 17,
+            "padding_x": 16,
+            "radius": 3
+          }
+        },
+        "feel": {
+          "type": "cb-highlight-card",
+          "settings": {
+            "label": "How it feels",
+            "title_text": "Crisp & Torsionally Solid",
+            "body_text": "Crisp, solid feedback with high torsional stability on impact to eliminate flutter during off-center hits.",
+            "label_size": 8,
+            "title_size": 11,
+            "text_size": 10.5,
+            "title_font": "heading_bold",
+            "label_gap": 6,
+            "text_gap": 6,
+            "label_color": "#a1a1aa",
+            "background_color": "#1c1c1c",
+            "padding_y": 17,
+            "padding_x": 16,
+            "radius": 3
+          }
+        },
+        "suits": {
+          "type": "cb-highlight-card",
+          "settings": {
+            "label": "Who it suits",
+            "title_text": "Aggressive Attackers",
+            "body_text": "Aggressive rear-court singles or doubles back-court attackers who thrive on maintaining offensive pressure.",
+            "label_size": 8,
+            "title_size": 11,
+            "text_size": 10.5,
+            "title_font": "heading_bold",
+            "label_gap": 6,
+            "text_gap": 6,
+            "label_color": "#a1a1aa",
+            "background_color": "#1c1c1c",
+            "padding_y": 17,
+            "padding_x": 16,
+            "radius": 3
+          }
+        }
+      },
+      "block_order": [
+        "subheader",
+        "heading",
+        "paragraph",
+        "style",
+        "level",
+        "feel",
+        "suits"
+      ],
+      "settings": {}
+    },
+    "specs": {
+      "type": "cb-specs",
+      "blocks": {
+        "subheader": {
+          "type": "cb-subheader",
+          "static": true,
+          "settings": {
+            "subheader_text": "Equipment data",
+            "size": 8,
+            "letter_spacing": 10
+          }
+        },
+        "heading": {
+          "type": "cb-heading",
+          "static": true,
+          "settings": {
+            "heading_text": "Racket specifications",
+            "size": 19,
+            "line_height": 120
+          }
+        },
+        "style": {
+          "type": "_cb-spec-row",
+          "settings": {
+            "label": "Playing style",
+            "source": "product",
+            "trait": "style",
+            "show_dot": true
+          }
+        },
+        "level": {
+          "type": "_cb-spec-row",
+          "settings": {
+            "label": "Player level",
+            "source": "product",
+            "trait": "level"
+          }
+        },
+        "weight": {
+          "type": "_cb-spec-row",
+          "settings": {
+            "label": "Weight",
+            "source": "product",
+            "trait": "weight"
+          }
+        },
+        "balance": {
+          "type": "_cb-spec-row",
+          "settings": {
+            "label": "Balance",
+            "source": "product",
+            "trait": "balance"
+          }
+        },
+        "flex": {
+          "type": "_cb-spec-row",
+          "settings": {
+            "label": "Flex",
+            "source": "product",
+            "trait": "flex"
+          }
+        },
+        "grip": {
+          "type": "_cb-spec-row",
+          "settings": {
+            "label": "Grip size",
+            "source": "product",
+            "trait": "grip",
+            "value_text": "G5 (Standard)"
+          }
+        },
+        "tension": {
+          "type": "_cb-spec-row",
+          "settings": {
+            "label": "Stringing guidance / recommended tension",
+            "source": "product",
+            "trait": "tension",
+            "format": "Ask the Pro Shop ([value])",
+            "value_text": "Ask the Pro Shop",
+            "highlight": true
+          }
+        },
+        "condition": {
+          "type": "_cb-spec-row",
+          "settings": {
+            "label": "Condition",
+            "source": "text",
+            "value_text": "Brand new · Official NZ stock"
+          }
+        }
+      },
+      "block_order": [
+        "style",
+        "level",
+        "weight",
+        "balance",
+        "flex",
+        "grip",
+        "tension",
+        "condition"
+      ],
+      "settings": {}
+    },
+    "stringing": {
+      "type": "cb-stringing-builder",
+      "blocks": {
+        "subheader": {
+          "type": "cb-subheader",
+          "static": true,
+          "settings": {
+            "subheader_text": "Professional stringing",
+            "size": 8,
+            "letter_spacing": 10
+          }
+        },
+        "heading": {
+          "type": "cb-heading",
+          "static": true,
+          "settings": {
+            "heading_text": "Set it up for how you play.",
+            "size": 28,
+            "line_height": 115
+          }
+        },
+        "paragraph": {
+          "type": "cb-paragraph",
+          "static": true,
+          "settings": {
+            "body_text": "<p>Precision electronic tensioning on calibrated constant-pull machines at our Papakura workshop.</p>",
+            "size": 12,
+            "line_height": 160
+          }
+        },
+        "strings": {
+          "type": "_cb-sb-strings",
+          "settings": {
+            "string_product": "yonex-badminton-string-10m-packet"
+          }
+        },
+        "tension": {
+          "type": "_cb-sb-tension",
+          "settings": {}
+        },
+        "guide": {
+          "type": "_cb-sb-guide",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "strings",
+        "tension",
+        "guide"
+      ],
+      "settings": {}
+    },
+    "compare": {
+      "type": "cb-compare",
+      "blocks": {
+        "subheader": {
+          "type": "cb-subheader",
+          "static": true,
+          "settings": {
+            "subheader_text": "Compare rackets",
+            "size": 8,
+            "letter_spacing": 10
+          }
+        },
+        "heading": {
+          "type": "cb-heading",
+          "static": true,
+          "settings": {
+            "heading_text": "See how it stacks up.",
+            "size": 19,
+            "line_height": 120
+          }
+        }
+      },
+      "settings": {}
+    },
+    "reviews": {
+      "type": "cb-reviews",
+      "blocks": {
+        "subheader": {
+          "type": "cb-subheader",
+          "static": true,
+          "settings": {
+            "subheader_text": "Feedback",
+            "size": 8,
+            "letter_spacing": 10
+          }
+        },
+        "heading": {
+          "type": "cb-heading",
+          "static": true,
+          "settings": {
+            "heading_text": "Verified Reviews",
+            "size": 19,
+            "line_height": 120
+          }
+        },
+        "review_1": {
+          "type": "_cb-review",
+          "settings": {
+            "sample": true,
+            "review_title": "Unreal smash angle from the back line",
+            "review_text": "Strung at 26 lbs with Yonex BG80 by the Papakura team. The stiffness took two sessions to settle into, but overhead power is noticeably steeper. Superb frame for competitive doubles.",
+            "reviewer": "Marcus T. (Counties Rep)"
+          }
+        },
+        "review_2": {
+          "type": "_cb-review",
+          "settings": {
+            "sample": true,
+            "review_title": "Solid stringing service in-shop",
+            "review_text": "Great in-person advice on choosing 4U over 3U for match endurance. Racket was strung perfectly and ready before my weekly club night at the complex.",
+            "reviewer": "Sarah W. (Papakura Club)"
+          }
+        }
+      },
+      "block_order": [
+        "review_1",
+        "review_2"
+      ],
+      "settings": {}
+    },
+    "similar": {
+      "type": "cb-similar",
+      "blocks": {
+        "subheader": {
+          "type": "cb-subheader",
+          "static": true,
+          "settings": {
+            "subheader_text": "Alternative frames",
+            "size": 8,
+            "letter_spacing": 10
+          }
+        },
+        "heading": {
+          "type": "cb-heading",
+          "static": true,
+          "settings": {
+            "heading_text": "Similar Rackets",
+            "size": 19,
+            "line_height": 120
+          }
+        }
+      },
+      "settings": {}
+    },
+    "guides": {
+      "type": "cb-suits",
+      "blocks": {
+        "subheader": {
+          "type": "cb-subheader",
+          "settings": {
+            "subheader_text": "Pro shop guides",
+            "size": 8,
+            "letter_spacing": 10,
+            "space_below": -2
+          }
+        },
+        "heading": {
+          "type": "cb-heading",
+          "settings": {
+            "heading_text": "Need help understanding the specs?",
+            "size": 19,
+            "line_height": 120
+          }
+        },
+        "weight": {
+          "type": "cb-highlight-card",
+          "settings": {
+            "icon": "weight",
+            "icon_size": 18,
+            "title_text": "Racket weight explained",
+            "body_text": "How 3U vs 4U alters maneuverability and fatigue over long rallies.",
+            "title_size": 11,
+            "text_size": 10.5,
+            "title_font": "heading_bold",
+            "label_gap": 5,
+            "text_gap": 4,
+            "background_color": "#1c1b1b",
+            "padding_y": 12,
+            "padding_x": 12,
+            "radius": 3,
+            "label": ""
+          }
+        },
+        "balance": {
+          "type": "cb-highlight-card",
+          "settings": {
+            "icon": "balance",
+            "icon_size": 18,
+            "title_text": "Balance explained",
+            "body_text": "Understanding head-heavy power versus head-light defensive quickness.",
+            "title_size": 11,
+            "text_size": 10.5,
+            "title_font": "heading_bold",
+            "label_gap": 5,
+            "text_gap": 4,
+            "background_color": "#1c1b1b",
+            "padding_y": 12,
+            "padding_x": 12,
+            "radius": 3,
+            "label": ""
+          }
+        },
+        "tension": {
+          "type": "cb-highlight-card",
+          "settings": {
+            "icon": "tension",
+            "icon_size": 18,
+            "title_text": "String tension guide",
+            "body_text": "Selecting the optimal poundage to match your technique and arm speed.",
+            "title_size": 11,
+            "text_size": 10.5,
+            "title_font": "heading_bold",
+            "label_gap": 5,
+            "text_gap": 4,
+            "background_color": "#1c1b1b",
+            "padding_y": 12,
+            "padding_x": 12,
+            "radius": 3,
+            "label": ""
+          }
+        }
+      },
+      "block_order": [
+        "subheader",
+        "heading",
+        "weight",
+        "balance",
+        "tension"
+      ],
+      "settings": {
+        "columns": 3,
+        "card_gap": 13,
+        "cards_gap": 12,
+        "panel_padding": 27
+      }
+    }
+  },
+  "order": [
+    "main",
+    "suits",
+    "specs",
+    "stringing",
+    "compare",
+    "reviews",
+    "similar",
+    "guides"
+  ]
+}

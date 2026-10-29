@@ -1,0 +1,967 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "cb_hero_XjHpa6": {
+      "type": "cb-hero",
+      "blocks": {
+        "cb_hero_content_49w4nb": {
+          "type": "_cb-hero-content",
+          "settings": {
+            "gap": 24,
+            "alignment": "start"
+          },
+          "blocks": {
+            "cb_hero_badge_rdYdY6": {
+              "type": "_cb-hero-badge",
+              "settings": {
+                "badge_text": "APPAREL & SUPPORT",
+                "badge_secondary": "",
+                "show_dot": true
+              },
+              "blocks": {}
+            },
+            "cb_hero_heading_cEAWzg": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "&nbsp;Made for movement.Ready for the court.&nbsp;",
+                "tag": "h1",
+                "size": 56,
+                "mobile_sizing": "fluid",
+                "mobile_scale": 82,
+                "fluid_min": 36,
+                "fluid_vw": 8,
+                "weight": "font",
+                "color": "text",
+                "line_height": 105,
+                "letter_spacing": -2,
+                "uppercase": false,
+                "wrap": "balance",
+                "max_width": 0
+              },
+              "blocks": {}
+            },
+            "cb_hero_text_FmiT6y": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>Shop badminton apparel, compression gear and support products for training, club nights and competition.</p>",
+                "size": 18,
+                "mobile_sizing": "fluid",
+                "mobile_size": 15,
+                "fluid_vw": 2.2,
+                "weight": "regular",
+                "color": "muted",
+                "line_height": 155,
+                "letter_spacing": 0,
+                "wrap": "wrap",
+                "max_width_unit": "ch",
+                "max_width_px": 640,
+                "max_width_ch": 52
+              },
+              "blocks": {}
+            },
+            "cb_hero_buttons_GX4DRN": {
+              "type": "_cb-hero-buttons",
+              "settings": {
+                "stack_mobile": true
+              },
+              "blocks": {
+                "cb_hero_button_qL7Xyg": {
+                  "type": "_cb-hero-button",
+                  "settings": {
+                    "label": "SHOP ALL APPAREL & SUPPORT",
+                    "link": "",
+                    "open_in_new_tab": false,
+                    "style": "primary",
+                    "show_arrow": true
+                  },
+                  "blocks": {}
+                },
+                "cb_hero_button_Rqzgen": {
+                  "type": "_cb-hero-button",
+                  "settings": {
+                    "label": "SHOP SUPPORT GEAR",
+                    "link": "",
+                    "open_in_new_tab": false,
+                    "style": "secondary",
+                    "show_arrow": false
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "cb_hero_button_qL7Xyg",
+                "cb_hero_button_Rqzgen"
+              ]
+            },
+            "cb_hero_features_cgNxpU": {
+              "type": "_cb-hero-features",
+              "settings": {
+                "show_divider": true
+              },
+              "blocks": {
+                "cb_hero_feature_Lhpthm": {
+                  "type": "_cb-hero-feature",
+                  "settings": {
+                    "icon": "check",
+                    "feature_text": "Badminton specialists"
+                  },
+                  "blocks": {}
+                },
+                "cb_hero_feature_yPnJft": {
+                  "type": "_cb-hero-feature",
+                  "settings": {
+                    "icon": "store",
+                    "feature_text": "Click & collect Papakura"
+                  },
+                  "blocks": {}
+                },
+                "cb_hero_feature_jfhaiw": {
+                  "type": "_cb-hero-feature",
+                  "settings": {
+                    "icon": "calendar",
+                    "feature_text": "Open 7 Days"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "cb_hero_feature_Lhpthm",
+                "cb_hero_feature_yPnJft",
+                "cb_hero_feature_jfhaiw"
+              ]
+            }
+          },
+          "block_order": [
+            "cb_hero_badge_rdYdY6",
+            "cb_hero_heading_cEAWzg",
+            "cb_hero_text_FmiT6y",
+            "cb_hero_buttons_GX4DRN",
+            "cb_hero_features_cgNxpU"
+          ]
+        },
+        "cb_hero_media_ieywGH": {
+          "type": "_cb-hero-media",
+          "settings": {
+            "image": "shopify://shop_images/apparel_and_support.png",
+            "aspect_ratio": "4 / 3",
+            "aspect_ratio_mobile": "4 / 3",
+            "radius": 12
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "cb_hero_content_49w4nb",
+        "cb_hero_media_ieywGH"
+      ],
+      "name": "[CB] Hero",
+      "settings": {
+        "design": "1",
+        "content_width": 55,
+        "column_gap": 40,
+        "max_width": 1400,
+        "media_first_mobile": false,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "#0b0b0b",
+        "glow_color": "#3a0c10",
+        "text_color": "#ffffff",
+        "accent_color": "#d71f27",
+        "accent_text_color": "#ffffff",
+        "padding_top": 32,
+        "padding_bottom": 32
+      }
+    },
+    "cb_type_icons_yqxFBG": {
+      "type": "cb-type-icons",
+      "blocks": {
+        "cb_ticon_header_JUwn9c": {
+          "type": "_cb-ticon-header",
+          "settings": {
+            "alignment": "left",
+            "text_position": "right",
+            "gap": 7
+          },
+          "blocks": {
+            "cb_ticon_eyebrow_ygXTUD": {
+              "type": "cb-subheader",
+              "settings": {
+                "subheader_text": "Shop by type",
+                "secondary": "",
+                "show_dot": false,
+                "size": 10,
+                "weight": "strong",
+                "color": "accent",
+                "letter_spacing": 0,
+                "uppercase": true,
+                "space_below": 0
+              },
+              "blocks": {}
+            },
+            "cb_ticon_heading_4eRt3x": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "Gear up for the court.",
+                "tag": "h2",
+                "size": 32,
+                "mobile_sizing": "scale",
+                "mobile_scale": 82,
+                "fluid_min": 28,
+                "fluid_vw": 6,
+                "weight": "font",
+                "color": "text",
+                "line_height": 115,
+                "letter_spacing": -1,
+                "uppercase": false,
+                "wrap": "wrap",
+                "max_width": 0
+              },
+              "blocks": {}
+            },
+            "cb_ticon_text_intro": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "",
+                "size": 14,
+                "mobile_sizing": "same",
+                "mobile_size": 14,
+                "fluid_vw": 2,
+                "weight": "regular",
+                "color": "muted",
+                "line_height": 160,
+                "letter_spacing": -1,
+                "wrap": "wrap",
+                "max_width_unit": "px",
+                "max_width_px": 440,
+                "max_width_ch": 60
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "cb_ticon_eyebrow_ygXTUD",
+            "cb_ticon_heading_4eRt3x",
+            "cb_ticon_text_intro"
+          ]
+        },
+        "cb_ticon_cards_8XTcPh": {
+          "type": "_cb-ticon-cards",
+          "settings": {
+            "columns": 4,
+            "gap": 16
+          },
+          "blocks": {
+            "cb_ticon_card_CrrMQh": {
+              "type": "_cb-ticon-card",
+              "settings": {
+                "icon": "hanger",
+                "card_title": "Badminton Apparel",
+                "card_text": "Shirts, shorts and clothing for training and match play.",
+                "link_label": "Explore",
+                "link": "shopify://collections/clothing"
+              },
+              "blocks": {}
+            },
+            "cb_ticon_card_yPn6K9": {
+              "type": "_cb-ticon-card",
+              "settings": {
+                "icon": "compress",
+                "card_title": "Compression Gear",
+                "card_text": "Compression products for players who use them as part of their court setup.",
+                "link_label": "Explore",
+                "link": "shopify://collections/accessories"
+              },
+              "blocks": {}
+            },
+            "cb_ticon_card_bttc37": {
+              "type": "_cb-ticon-card",
+              "settings": {
+                "icon": "shield",
+                "card_title": "Support Sleeves",
+                "card_text": "McDavid support sleeves and related support products.",
+                "link_label": "Explore",
+                "link": "shopify://collections/accessories"
+              },
+              "blocks": {}
+            },
+            "cb_ticon_card_YTkUK7": {
+              "type": "_cb-ticon-card",
+              "settings": {
+                "icon": "shapes",
+                "card_title": "All Apparel & Support",
+                "card_text": "Browse the complete category and accessories.",
+                "link_label": "View all",
+                "link": ""
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "cb_ticon_card_CrrMQh",
+            "cb_ticon_card_yPn6K9",
+            "cb_ticon_card_bttc37",
+            "cb_ticon_card_YTkUK7"
+          ]
+        }
+      },
+      "block_order": [
+        "cb_ticon_header_JUwn9c",
+        "cb_ticon_cards_8XTcPh"
+      ],
+      "name": "[CB] Shop by type icons",
+      "settings": {
+        "max_width": 1400,
+        "stack_gap": 32,
+        "card_radius": 5,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "#0b0b0b",
+        "card_background_color": "#181818",
+        "text_color": "#ffffff",
+        "muted_text_color": "#a1a1aa",
+        "accent_color": "#d71f27",
+        "padding_top": 40,
+        "padding_bottom": 40
+      }
+    },
+    "main": {
+      "type": "cb-catalogue",
+      "blocks": {
+        "product_type": {
+          "type": "_cb-cat-filter",
+          "settings": {
+            "filter_label": "Product type",
+            "title_text": "Product Type",
+            "always_values": "Apparel, Compression Gear, Support Sleeves",
+            "panel_style": "card",
+            "reset_label": "Reset",
+            "display": "list",
+            "button_columns": "2",
+            "button_style": "filled",
+            "show_counts": false,
+            "count_style": "plain",
+            "check_shape": "square",
+            "numbered": false,
+            "collapsible": false,
+            "collapsed": false,
+            "note": "",
+            "title_link_label": "",
+            "title_link": "",
+            "guide_text": "",
+            "price_display": "slider",
+            "price_prefix": "Up to",
+            "price_buckets": "Under $30 | 0-30\n$30 – $60 | 30-60\nOver $60 | 60+",
+            "price_multi": false
+          },
+          "blocks": {}
+        },
+        "size": {
+          "type": "_cb-cat-filter",
+          "settings": {
+            "filter_label": "Size",
+            "title_text": "",
+            "always_values": "XS, S, M, L, XL",
+            "panel_style": "card",
+            "reset_label": "Reset",
+            "display": "buttons",
+            "button_columns": "auto",
+            "button_style": "outline",
+            "show_counts": false,
+            "count_style": "plain",
+            "check_shape": "square",
+            "numbered": false,
+            "collapsible": false,
+            "collapsed": false,
+            "note": "",
+            "title_link_label": "",
+            "title_link": "",
+            "guide_text": "",
+            "price_display": "slider",
+            "price_prefix": "Up to",
+            "price_buckets": "Under $30 | 0-30\n$30 – $60 | 30-60\nOver $60 | 60+",
+            "price_multi": false
+          },
+          "blocks": {}
+        },
+        "shoe_size": {
+          "type": "_cb-cat-filter",
+          "settings": {
+            "filter_label": "Shoe size",
+            "title_text": "Shoe Size",
+            "panel_style": "card",
+            "reset_label": "Reset",
+            "display": "buttons",
+            "button_columns": "auto",
+            "button_style": "outline",
+            "show_counts": false,
+            "count_style": "plain",
+            "check_shape": "square",
+            "numbered": false,
+            "collapsible": false,
+            "collapsed": false,
+            "note": "",
+            "title_link_label": "",
+            "title_link": "",
+            "guide_text": "",
+            "price_display": "slider",
+            "price_prefix": "Up to",
+            "price_buckets": "Under $30 | 0-30\n$30 – $60 | 30-60\nOver $60 | 60+",
+            "price_multi": false
+          },
+          "blocks": {}
+        },
+        "brand": {
+          "type": "_cb-cat-filter",
+          "settings": {
+            "filter_label": "Brand",
+            "title_text": "",
+            "always_values": "McDavid, Other brands to be confirmed",
+            "panel_style": "card",
+            "reset_label": "Reset",
+            "display": "list",
+            "button_columns": "2",
+            "button_style": "filled",
+            "show_counts": false,
+            "count_style": "plain",
+            "check_shape": "square",
+            "numbered": false,
+            "collapsible": false,
+            "collapsed": false,
+            "note": "",
+            "title_link_label": "",
+            "title_link": "",
+            "guide_text": "",
+            "price_display": "slider",
+            "price_prefix": "Up to",
+            "price_buckets": "Under $30 | 0-30\n$30 – $60 | 30-60\nOver $60 | 60+",
+            "price_multi": false
+          },
+          "blocks": {}
+        },
+        "price": {
+          "type": "_cb-cat-filter",
+          "settings": {
+            "filter_label": "Price",
+            "title_text": "Price Range (NZD)",
+            "panel_style": "card",
+            "reset_label": "Reset",
+            "display": "list",
+            "button_columns": "2",
+            "button_style": "filled",
+            "show_counts": false,
+            "count_style": "plain",
+            "check_shape": "round",
+            "numbered": false,
+            "collapsible": false,
+            "collapsed": false,
+            "note": "",
+            "title_link_label": "",
+            "title_link": "",
+            "guide_text": "",
+            "price_display": "buckets",
+            "price_prefix": "Up to",
+            "price_buckets": "Under $50.00 | 0-50\n$50.00 - $100.00 | 50-100\n$100.00 + | 100+",
+            "price_multi": false
+          },
+          "blocks": {}
+        },
+        "pickup": {
+          "type": "_cb-cat-promo",
+          "settings": {
+            "icon": "bag",
+            "look": "card",
+            "accent_border": true,
+            "icon_layout": "side",
+            "title_color": "text",
+            "show_dot": false,
+            "promo_title": "Free Papakura Pickup",
+            "promo_text": "Collect your order from our workshop counter at 41R Elliot Street.",
+            "footer_label": "",
+            "footer_value": "",
+            "link": ""
+          },
+          "blocks": {}
+        },
+        "intro": {
+          "type": "cb-paragraph",
+          "static": true,
+          "settings": {
+            "body_text": "<p>Filter by product type, size and price to find the right kit.</p>",
+            "size": 13,
+            "mobile_sizing": "same",
+            "mobile_size": 13,
+            "fluid_vw": 2,
+            "weight": "regular",
+            "color": "muted",
+            "line_height": 160,
+            "letter_spacing": 0,
+            "wrap": "wrap",
+            "max_width_unit": "ch",
+            "max_width_px": 640,
+            "max_width_ch": 70
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "product_type",
+        "size",
+        "shoe_size",
+        "brand",
+        "price",
+        "pickup"
+      ],
+      "settings": {
+        "title_text": "",
+        "heading_tag": "h1",
+        "show_count": true,
+        "count_label": "products",
+        "quick_filter": "",
+        "all_label": "All products",
+        "show_sort": true,
+        "sort_label": "Sort by:",
+        "show_view_toggle": true,
+        "filter_heading": "Filters",
+        "clear_label": "Clear all",
+        "collection": "",
+        "products_per_page": 16,
+        "columns": "4",
+        "image_ratio": "1 / 1",
+        "image_fit": "contain",
+        "show_wishlist": true,
+        "button_label": "View details",
+        "quick_add_mode": "all",
+        "quick_collect_tag": "quick-collect",
+        "quick_label": "Add to cart",
+        "stock_label": "In Stock Papakura",
+        "low_stock_threshold": 2,
+        "low_stock_label": "[count] In Stock Papakura",
+        "brand_names": "Yonex, Victor, Babolat, Code Alpha, Li-Ning, Ashaway, Carlton, RSL",
+        "showing_text": "Showing [from]–[to] of [total] products",
+        "empty_text": "No products match these filters.",
+        "sidebar_width": 300,
+        "max_width": 1400,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "#07090d",
+        "card_background_color": "#141414",
+        "border_color": "#ffffff1a",
+        "text_color": "#ffffff",
+        "accent_color": "#d71f27",
+        "image_background_color": "#ffffff",
+        "success_color": "#22c55e",
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
+    },
+    "cb_guides_ajNew9": {
+      "type": "cb-guides",
+      "blocks": {
+        "cb_guides_header_9JbyXJ": {
+          "type": "_cb-guides-header",
+          "settings": {
+            "alignment": "left",
+            "max_width": 660
+          },
+          "blocks": {
+            "cb_guides_eyebrow_YcxKVH": {
+              "type": "cb-subheader",
+              "settings": {
+                "subheader_text": "PLAYER GEAR GUIDANCE",
+                "secondary": "",
+                "show_dot": false,
+                "size": 10,
+                "weight": "strong",
+                "color": "accent",
+                "letter_spacing": 0,
+                "uppercase": true,
+                "space_below": 0
+              },
+              "blocks": {}
+            },
+            "cb_guides_heading_3nByaP": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "&nbsp;Choose what works for how you play.&nbsp;",
+                "tag": "h2",
+                "size": 32,
+                "mobile_sizing": "fluid",
+                "mobile_scale": 82,
+                "fluid_min": 30,
+                "fluid_vw": 6.5,
+                "weight": "font",
+                "color": "text",
+                "line_height": 115,
+                "letter_spacing": -1,
+                "uppercase": false,
+                "wrap": "balance",
+                "max_width": 0
+              },
+              "blocks": {}
+            },
+            "cb_guides_text_XTHQKP": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>From comfortable court clothing to compression and support products, the right setup should suit your training, movement and personal preferences.</p>",
+                "size": 16,
+                "mobile_sizing": "same",
+                "mobile_size": 16,
+                "fluid_vw": 2,
+                "weight": "regular",
+                "color": "muted",
+                "line_height": 156,
+                "letter_spacing": 0,
+                "wrap": "wrap",
+                "max_width_unit": "none",
+                "max_width_px": 640,
+                "max_width_ch": 60
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "cb_guides_eyebrow_YcxKVH",
+            "cb_guides_heading_3nByaP",
+            "cb_guides_text_XTHQKP"
+          ]
+        },
+        "cb_guides_grid_pt3Wrf": {
+          "type": "_cb-guides-grid",
+          "settings": {
+            "columns": 3,
+            "mobile_layout": "stack",
+            "gap": 22
+          },
+          "blocks": {
+            "cb_guides_card_miLkGw": {
+              "type": "_cb-guides-card",
+              "settings": {
+                "article": "",
+                "use_custom_text": false,
+                "card_title": "",
+                "summary": "Choose court clothing that feels comfortable and\nallows easy movement during training and matches.",
+                "icon": "athlete",
+                "label": "APPAREL",
+                "point_text": "Match play & training tops",
+                "link_label": "",
+                "link": ""
+              },
+              "blocks": {}
+            },
+            "cb_guides_card_bKnywb": {
+              "type": "_cb-guides-card",
+              "settings": {
+                "article": "",
+                "use_custom_text": false,
+                "card_title": "When players choose compression",
+                "summary": "Explore compression products available through the\nPro Shop and find the size and style that suits your\npreference.",
+                "icon": "bag",
+                "label": "COMPRESSION",
+                "point_text": "Fitted comfort on court",
+                "link_label": "",
+                "link": ""
+              },
+              "blocks": {}
+            },
+            "cb_guides_card_w74aq6": {
+              "type": "_cb-guides-card",
+              "settings": {
+                "article": "",
+                "use_custom_text": false,
+                "card_title": "Finding the right support product",
+                "summary": "Browse support sleeves and related products, or ask the Pro Shop team for help with sizing and available options.",
+                "icon": "wrench",
+                "label": "SUPPORT GEAR",
+                "point_text": "In-store sizing advice",
+                "link_label": "",
+                "link": ""
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "cb_guides_card_miLkGw",
+            "cb_guides_card_bKnywb",
+            "cb_guides_card_w74aq6"
+          ]
+        }
+      },
+      "block_order": [
+        "cb_guides_header_9JbyXJ",
+        "cb_guides_grid_pt3Wrf"
+      ],
+      "name": "[CB] Setup guidance",
+      "settings": {
+        "design": "2",
+        "max_width": 1400,
+        "stack_gap": 40,
+        "card_radius": 4,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "#07090d",
+        "card_background_color": "#181818",
+        "border_color": "#ffffff0d",
+        "text_color": "#ffffff",
+        "accent_color": "#d71f27",
+        "padding_top": 52,
+        "padding_bottom": 44
+      }
+    },
+    "cb_support_FW4bgj": {
+      "type": "cb-support",
+      "blocks": {
+        "cb_support_content_8hzRjm": {
+          "type": "_cb-support-content",
+          "settings": {},
+          "blocks": {
+            "cb_support_eyebrow_eHXfhQ": {
+              "type": "cb-subheader",
+              "settings": {
+                "subheader_text": "McDavid support",
+                "secondary": "",
+                "show_dot": true,
+                "size": 10,
+                "weight": "strong",
+                "color": "accent",
+                "letter_spacing": 0,
+                "uppercase": true,
+                "space_below": 0
+              },
+              "blocks": {}
+            },
+            "cb_support_heading_GMtgfq": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "Support gear available in the Pro Shop.",
+                "tag": "h2",
+                "size": 32,
+                "mobile_sizing": "scale",
+                "mobile_scale": 82,
+                "fluid_min": 28,
+                "fluid_vw": 6,
+                "weight": "font",
+                "color": "text",
+                "line_height": 115,
+                "letter_spacing": -1,
+                "uppercase": false,
+                "wrap": "wrap",
+                "max_width": 0
+              },
+              "blocks": {}
+            },
+            "cb_support_text_XfqgUC": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>Explore McDavid support sleeves and compression gear available through Counties Badminton Pro Shop.</p>",
+                "size": 14,
+                "mobile_sizing": "same",
+                "mobile_size": 14,
+                "fluid_vw": 2,
+                "weight": "regular",
+                "color": "muted",
+                "line_height": 160,
+                "letter_spacing": -1,
+                "wrap": "wrap",
+                "max_width_unit": "px",
+                "max_width_px": 520,
+                "max_width_ch": 60
+              },
+              "blocks": {}
+            },
+            "cb_support_buttons_fePgC9": {
+              "type": "_cb-support-buttons",
+              "settings": {
+                "gap": 14
+              },
+              "blocks": {
+                "cb_support_button_aJ4Qw8": {
+                  "type": "_cb-support-button",
+                  "settings": {
+                    "label": "Shop McDavid support",
+                    "link": "/search?type=product&q=mcdavid",
+                    "style": "primary",
+                    "new_tab": false
+                  },
+                  "blocks": {}
+                },
+                "cb_support_button_MjHbDt": {
+                  "type": "_cb-support-button",
+                  "settings": {
+                    "label": "Ask the Pro Shop",
+                    "link": "shopify://pages/contact",
+                    "style": "secondary",
+                    "new_tab": false
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "cb_support_button_aJ4Qw8",
+                "cb_support_button_MjHbDt"
+              ]
+            }
+          },
+          "block_order": [
+            "cb_support_eyebrow_eHXfhQ",
+            "cb_support_heading_GMtgfq",
+            "cb_support_text_XfqgUC",
+            "cb_support_buttons_fePgC9"
+          ]
+        },
+        "cb_support_box_NTb6an": {
+          "type": "_cb-support-box",
+          "settings": {
+            "box_title": "Available categories",
+            "items": "Elastic joint & arm sleeves\nCompression sleeves & wraps\nMultiple sizing options (S–XL)",
+            "icon": "check_circle",
+            "footnote": "Non-medical sports support gear available in the Pro Shop.",
+            "box_width": 350
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "cb_support_content_8hzRjm",
+        "cb_support_box_NTb6an"
+      ],
+      "name": "[CB] Support banner",
+      "settings": {
+        "max_width": 1400,
+        "panel_padding": 44,
+        "panel_radius": 10,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "#0b0b0b",
+        "panel_background_color": "#181818",
+        "box_background_color": "#0e0e0e",
+        "box_border_color": "#ffffff40",
+        "text_color": "#ffffff",
+        "muted_text_color": "#a1a1aa",
+        "accent_color": "#d71f27",
+        "secondary_button_color": "#2a2a2a",
+        "padding_top": 32,
+        "padding_bottom": 32
+      }
+    },
+    "cb_visit_7xwxrV": {
+      "type": "cb-visit",
+      "blocks": {
+        "cb_visit_content_hbmkQj": {
+          "type": "_cb-visit-content",
+          "settings": {
+            "gap": 8
+          },
+          "blocks": {
+            "cb_visit_eyebrow_VCX9tz": {
+              "type": "cb-subheader",
+              "settings": {
+                "subheader_text": "NEED HELP CHOOSING?",
+                "secondary": "",
+                "show_dot": false,
+                "size": 10,
+                "weight": "strong",
+                "color": "accent",
+                "letter_spacing": 8,
+                "uppercase": true,
+                "space_below": 0
+              },
+              "blocks": {}
+            },
+            "cb_visit_heading_DFy9Bk": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "Ask the team in Papakura.",
+                "tag": "h2",
+                "size": 20,
+                "mobile_sizing": "scale",
+                "mobile_scale": 90,
+                "fluid_min": 28,
+                "fluid_vw": 6,
+                "weight": "font",
+                "color": "text",
+                "line_height": 115,
+                "letter_spacing": -1,
+                "uppercase": true,
+                "wrap": "wrap",
+                "max_width": 0
+              },
+              "blocks": {}
+            },
+            "cb_visit_text_h4A7RR": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>Explore McDavid support sleeves and compression gear available through<br>Counties Badminton Pro Shop.</p>",
+                "size": 13,
+                "mobile_sizing": "same",
+                "mobile_size": 13,
+                "fluid_vw": 2,
+                "weight": "regular",
+                "color": "muted",
+                "line_height": 160,
+                "letter_spacing": 0,
+                "wrap": "wrap",
+                "max_width_unit": "ch",
+                "max_width_px": 640,
+                "max_width_ch": 120
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "cb_visit_eyebrow_VCX9tz",
+            "cb_visit_heading_DFy9Bk",
+            "cb_visit_text_h4A7RR"
+          ]
+        },
+        "cb_visit_button_EN9ddG": {
+          "type": "_cb-visit-button",
+          "settings": {
+            "label": "VISIT THE PRO SHOP",
+            "link": "",
+            "directions_address": "41R Elliot Street, Papakura, Auckland",
+            "style": "light",
+            "icon": "pin"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "cb_visit_content_hbmkQj",
+        "cb_visit_button_EN9ddG"
+      ],
+      "name": "[CB] Visit banner",
+      "settings": {
+        "max_width": 1400,
+        "show_panel": true,
+        "panel_radius": 2,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "#0b0b0b",
+        "panel_background_color": "#181818",
+        "border_color": "#ffffff14",
+        "text_color": "#ffffff",
+        "accent_color": "#d71f27",
+        "button_background_color": "#ffffff",
+        "button_text_color": "#111111",
+        "padding_top": 24,
+        "padding_bottom": 24
+      }
+    }
+  },
+  "order": [
+    "cb_hero_XjHpa6",
+    "cb_type_icons_yqxFBG",
+    "main",
+    "cb_guides_ajNew9",
+    "cb_support_FW4bgj",
+    "cb_visit_7xwxrV"
+  ]
+}

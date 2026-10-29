@@ -1,0 +1,68 @@
+{%- comment -%}
+  One quiz step. The card numbers the steps ("Question 02 of 04") and shows one at a time.
+{%- endcomment -%}
+<div class="cb-quiz-q" data-cb-quiz-question {{ block.shopify_attributes }}>
+  <div class="cb-quiz-card__head">
+    <span class="cb-quiz-card__step" data-cb-quiz-step></span>
+    {%- if block.settings.tag_label != blank -%}
+      <span class="cb-quiz-card__tag">{{ block.settings.tag_label | escape }}</span>
+    {%- endif -%}
+  </div>
+
+  <h3 id="cb-quiz-q-{{ block.id }}" class="cb-quiz-card__title" tabindex="-1" data-cb-quiz-title>
+    {{- block.settings.question_text | escape -}}
+  </h3>
+
+  <div class="cb-quiz-q__options" role="group" aria-labelledby="cb-quiz-q-{{ block.id }}">
+    {% content_for 'blocks' %}
+  </div>
+</div>
+
+{% stylesheet %}
+  .cb-quiz-q__options {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+  }
+
+  @media screen and (min-width: 600px) {
+    .cb-quiz-q__options {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Question",
+  "tag": null,
+  "blocks": [{ "type": "_cb-quiz-option" }],
+  "settings": [
+    {
+      "type": "text",
+      "id": "question_text",
+      "label": "Question",
+      "default": "How do you typically win points in rallies?"
+    },
+    {
+      "type": "text",
+      "id": "tag_label",
+      "label": "Tag",
+      "info": "Small label in the corner, e.g. Primary tactical style.",
+      "default": "Primary tactical style"
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Question",
+      "blocks": {
+        "answer_1": { "type": "_cb-quiz-option", "settings": { "option_title": "Answer one", "option_text": "Short description." } },
+        "answer_2": { "type": "_cb-quiz-option", "settings": { "option_title": "Answer two", "option_text": "Short description." } },
+        "answer_3": { "type": "_cb-quiz-option", "settings": { "option_title": "Answer three", "option_text": "Short description." } },
+        "answer_4": { "type": "_cb-quiz-option", "settings": { "option_title": "Answer four", "option_text": "Short description." } }
+      },
+      "block_order": ["answer_1", "answer_2", "answer_3", "answer_4"]
+    }
+  ]
+}
+{% endschema %}

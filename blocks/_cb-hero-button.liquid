@@ -6,6 +6,7 @@
   <a
     href="{{ link }}"
     class="cb-hero__button cb-hero__button--{{ block.settings.style }}"
+    style="--cb-hero-button-label-size: {{ block.settings.label_size }}px; --cb-hero-button-label-weight: {{ block.settings.label_weight }};"
     {% if block.settings.open_in_new_tab %}
       target="_blank" rel="noopener"
     {% endif %}
@@ -30,8 +31,8 @@
     border: 1px solid transparent;
     border-radius: 6px;
     font-family: var(--cbh-font-body);
-    font-size: 14px;
-    font-weight: var(--cbh-font-body-strong);
+    font-size: var(--cb-hero-button-label-size, 14px);
+    font-weight: var(--cb-hero-button-label-weight, var(--cbh-font-body-strong));
     line-height: 1.2;
     text-decoration: none;
     transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
@@ -108,6 +109,38 @@
       "id": "show_arrow",
       "label": "Show arrow",
       "default": false
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "label_size",
+      "label": "Button text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "label_weight",
+      "label": "Button text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
     }
   ],
   "presets": [{ "name": "[CB] Button" }]

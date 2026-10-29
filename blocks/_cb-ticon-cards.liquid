@@ -1,0 +1,69 @@
+<div
+  class="cb-ticons__cards"
+  style="--cbtc-columns: {{ block.settings.columns }}; --cbtc-card-gap: {{ block.settings.gap }}px;"
+  {{ block.shopify_attributes }}
+>
+  {% content_for 'blocks' %}
+</div>
+
+{% stylesheet %}
+  /* Phones 1 per row, tablets 2, desktop the chosen number. */
+  .cb-ticons__cards {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-ticons__cards {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--cbtc-card-gap, 16px);
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .cb-ticons__cards {
+      grid-template-columns: repeat(var(--cbtc-columns, 4), minmax(0, 1fr));
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Icon cards",
+  "tag": null,
+  "blocks": [{ "type": "_cb-ticon-card" }],
+  "settings": [
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Cards per row on desktop",
+      "info": "Tablets show 2 per row, phones 1.",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Gap",
+      "min": 8,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Icon cards",
+      "blocks": {
+        "card_1": { "type": "_cb-ticon-card" },
+        "card_2": { "type": "_cb-ticon-card", "settings": { "icon": "shapes", "link_label": "View all" } }
+      },
+      "block_order": ["card_1", "card_2"]
+    }
+  ]
+}
+{% endschema %}

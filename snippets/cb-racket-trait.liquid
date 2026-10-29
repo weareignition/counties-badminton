@@ -1,0 +1,235 @@
+{%- doc -%}
+  One racket detail as plain text, or nothing. The product's custom.racket_<trait> metafield wins (for the style also
+  custom.play_style or custom.player_style, the store's "Player style" field); otherwise the
+  detail is detected from the title and description with the same rules as the [CB] Racket matcher results.
+
+  @param {object} product - The product.
+  @param {string} trait - style | level | weight | grip | balance | flex | tension
+{%- enddoc -%}
+
+{%- liquid
+  assign mf = product.metafields.custom
+  assign out = ''
+
+  case trait
+    when 'style'
+      assign out = mf.racket_style.value
+      if out == blank
+        capture out
+          render 'cb-metafield-text', field: mf.player_style
+          render 'cb-metafield-text', field: mf.play_style
+        endcapture
+        assign out = out | strip
+      endif
+    when 'level'
+      assign out = mf.racket_level.value
+    when 'weight'
+      assign out = mf.racket_weight.value
+    when 'grip'
+      assign out = mf.racket_grip.value
+    when 'balance'
+      assign out = mf.racket_balance.value
+    when 'flex'
+      assign out = mf.racket_flex.value
+    when 'tension'
+      assign out = mf.racket_tension.value
+  endcase
+
+  if out == blank
+    assign t = product.title | append: ' ' | append: product.description | strip_html | downcase
+    assign t = t | replace: '‑', '-' | replace: '–', '-' | replace: '—', '-' | replace: '(', ' ' | replace: ')', ' ' | replace: '/', ' ' | replace: ',', ' ' | replace: '.', ' ' | replace: ':', ' ' | replace: ';', ' ' | replace: '~', ' ' | replace: '!', ' ' | replace: '&nbsp;', ' ' | strip_newlines
+    assign t = ' ' | append: t | append: ' '
+    assign tt = product.title | downcase | replace: '(', ' ' | replace: ')', ' ' | replace: '/', ' ' | replace: ',', ' ' | replace: '-', ' '
+    assign tt = ' ' | append: tt | append: ' '
+
+    case trait
+      when 'weight'
+        # Class (2U-6U, title first, e.g. "4U", "4UG5", "4U6") and grams, as "4U (80–84 g)".
+        assign weight_class = ''
+        for source in (1..2)
+          assign hay = tt
+          if source == 2
+            assign hay = t
+          endif
+          for u in (2..6)
+            assign k1 = ' ' | append: u | append: 'u '
+            assign k2 = ' ' | append: u | append: 'ug'
+            assign k3 = ' ' | append: u | append: 'u4'
+            assign k4 = ' ' | append: u | append: 'u5'
+            assign k5 = ' ' | append: u | append: 'u6'
+            if hay contains k1 or hay contains k2 or hay contains k3 or hay contains k4 or hay contains k5
+              assign weight_class = u | append: 'U'
+              break
+            endif
+          endfor
+          if weight_class != blank
+            break
+          endif
+        endfor
+        assign grams = ''
+        for n in (50..99)
+          assign k1 = ' ' | append: n | append: ' g '
+          assign k2 = ' ' | append: n | append: 'g '
+          if t contains k1 or t contains k2
+            assign grams = n
+            break
+          endif
+        endfor
+        if weight_class == blank and grams != blank
+          if grams >= 90
+            assign weight_class = '2U'
+          elsif grams >= 85
+            assign weight_class = '3U'
+          elsif grams >= 80
+            assign weight_class = '4U'
+          elsif grams >= 75
+            assign weight_class = '5U'
+          elsif grams >= 70
+            assign weight_class = '6U'
+          endif
+        endif
+        if weight_class != blank
+          assign out = weight_class
+          if grams != blank
+            assign out = out | append: ' (' | append: grams | append: ' g)'
+          else
+            case weight_class
+              when '2U'
+                assign out = out | append: ' (90–94 g)'
+              when '3U'
+                assign out = out | append: ' (85–89 g)'
+              when '4U'
+                assign out = out | append: ' (80–84 g)'
+              when '5U'
+                assign out = out | append: ' (75–79 g)'
+              when '6U'
+                assign out = out | append: ' (70–74 g)'
+            endcase
+          endif
+        elsif grams != blank
+          assign out = grams | append: ' g'
+        endif
+
+      when 'grip'
+        for source in (1..2)
+          assign hay = tt
+          if source == 2
+            assign hay = t
+          endif
+          for g in (4..6)
+            assign k1 = ' g' | append: g | append: ' '
+            assign k2 = 'ug' | append: g
+            assign k3 = 'u' | append: g | append: ' '
+            if hay contains k1 or hay contains k2 or hay contains k3
+              assign out = 'G' | append: g
+              break
+            endif
+          endfor
+          if out != blank
+            break
+          endif
+        endfor
+
+      when 'balance'
+        if t contains 'slightly head-heavy' or t contains 'slightly head heavy'
+          assign out = 'Slightly head heavy'
+        elsif t contains 'head-heavy' or t contains 'head heavy'
+          assign out = 'Head heavy'
+        elsif t contains 'head-light' or t contains 'head light'
+          assign out = 'Head light'
+        elsif t contains 'even balance' or t contains 'even-balance' or t contains 'evenly balanced' or t contains 'even balanced'
+          assign out = 'Even balance'
+        endif
+
+      when 'flex'
+        if t contains 'extra stiff' or t contains 'extra-stiff'
+          assign out = 'Extra stiff'
+        elsif t contains 'medium-stiff' or t contains 'medium stiff'
+          assign out = 'Medium-stiff'
+        elsif t contains 'stiff'
+          assign out = 'Stiff'
+        elsif t contains 'medium flex' or t contains 'medium-flex' or t contains 'medium shaft'
+          assign out = 'Medium'
+        elsif t contains 'flexible'
+          assign out = 'Flexible'
+        endif
+
+      when 'level'
+        # The range of levels the description mentions.
+        assign lv_beg = false
+        assign lv_int = false
+        assign lv_adv = false
+        if t contains 'beginner' or t contains 'entry-level' or t contains 'entry level' or t contains 'new players'
+          assign lv_beg = true
+        endif
+        if t contains 'intermediate' or t contains 'club player' or t contains 'developing'
+          assign lv_int = true
+        endif
+        if t contains 'advanced' or t contains 'professional' or t contains 'elite' or t contains 'competitive' or t contains 'tournament'
+          assign lv_adv = true
+        endif
+        if lv_beg and lv_adv
+          assign out = 'Beginner to advanced'
+        elsif lv_beg and lv_int
+          assign out = 'Beginner to intermediate'
+        elsif lv_int and lv_adv
+          assign out = 'Intermediate to advanced'
+        elsif lv_beg
+          assign out = 'Beginner'
+        elsif lv_int
+          assign out = 'Intermediate'
+        elsif lv_adv
+          assign out = 'Advanced'
+        endif
+
+      when 'style'
+        # Whichever family of words the description uses most.
+        assign n_attack = t | split: 'attack' | size | minus: 1
+        assign n = t | split: 'smash' | size | minus: 1
+        assign n_attack = n_attack | plus: n
+        assign n = t | split: 'power' | size | minus: 1
+        assign n_attack = n_attack | plus: n
+        assign n_speed = t | split: 'speed' | size | minus: 1
+        assign n = t | split: ' fast' | size | minus: 1
+        assign n_speed = n_speed | plus: n
+        assign n = t | split: 'defen' | size | minus: 1
+        assign n_speed = n_speed | plus: n
+        assign n = t | split: 'quick' | size | minus: 1
+        assign n_speed = n_speed | plus: n
+        assign n_control = t | split: 'control' | size | minus: 1
+        assign n = t | split: 'all-round' | size | minus: 1
+        assign n_control = n_control | plus: n
+        assign n = t | split: 'versatil' | size | minus: 1
+        assign n_control = n_control | plus: n
+        assign n = t | split: 'precision' | size | minus: 1
+        assign n_control = n_control | plus: n
+        if n_attack > 0 and n_attack >= n_speed and n_attack >= n_control
+          assign out = 'Attack'
+        elsif n_speed > 0 and n_speed >= n_control
+          assign out = 'Speed'
+        elsif n_control > 0
+          assign out = 'Control'
+        endif
+
+      when 'tension'
+        # The highest number written before "lbs", e.g. "4U: 20–28 lbs" gives "Up to 28 lbs".
+        assign top = 0
+        assign parts = t | replace: ' lb ', ' lbs ' | split: 'lbs'
+        for part in parts
+          if forloop.last
+            break
+          endif
+          assign last_word = part | strip | split: ' ' | last | split: '-' | last
+          assign num = last_word | plus: 0
+          if num > top and num < 40
+            assign top = num
+          endif
+        endfor
+        if top > 0
+          assign out = 'Up to ' | append: top | append: ' lbs'
+        endif
+    endcase
+  endif
+
+  echo out
+-%}

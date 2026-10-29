@@ -1,0 +1,488 @@
+{%- liquid
+  assign s = section.settings
+  assign font_scope = '#cb-article-' | append: section.id
+-%}
+
+{% render 'cb-font-styles',
+  selector: font_scope,
+  prefix: 'cbar',
+  heading_font: s.heading_font,
+  body_font: s.body_font
+%}
+
+<section
+  id="cb-article-{{ section.id }}"
+  class="cb-article cb-article--box-{{ s.mobile_box }}{% if s.show_box %} cb-article--has-box{% endif %}{% if s.sticky %} cb-article--sticky{% endif %}"
+  style="
+    --cbar-bg: {{ s.background_color }};
+    --cbar-card: {{ s.card_color }};
+    --cbar-text: {{ s.text_color }};
+    --cbar-muted: {{ s.muted_text_color }};
+    --cbar-soft: {{ s.soft_text_color }};
+    --cbar-accent: {{ s.accent_color }};
+    --cbar-max-width: {{ s.max_width }}px;
+    --cbar-box-width: {{ s.box_width }}px;
+    --cbar-col-gap: {{ s.column_gap }}px;
+    --cbar-topic-gap: {{ s.topic_gap }}px;
+    --cbar-box-padding: {{ s.box_padding }}px;
+    --cbar-box-radius: {{ s.box_radius }}px;
+    --cbar-pt: {{ s.padding_top }}px;
+    --cbar-pb: {{ s.padding_bottom }}px;
+  "
+>
+  <div class="cb-article__layout">
+    <div class="cb-article__main">
+      {% content_for 'blocks' %}
+    </div>
+    {%- if s.show_box -%}
+      <aside class="cb-article__aside">
+        {% content_for 'block', type: '_cb-article-aside', id: 'guide-box' %}
+      </aside>
+    {%- endif -%}
+  </div>
+</section>
+
+{% stylesheet %}
+  .cb-article {
+    color: var(--cbar-text);
+    background: var(--cbar-bg);
+    padding: calc(var(--cbar-pt) * 0.6) 16px calc(var(--cbar-pb) * 0.6);
+  }
+
+  .cb-article__layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 40px;
+    max-width: var(--cbar-max-width);
+    margin-inline: auto;
+  }
+
+  /* Phones and tablets: the guide box sits above or below the article (section setting). */
+  .cb-article--box-above .cb-article__aside {
+    order: -1;
+  }
+
+  .cb-article__main {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 0;
+  }
+
+  /* Spacing follows the design and sits on the following block, so blocks can be added, moved or removed:
+     a subheader starts a new topic, the heading sits under it, then the text. */
+  .cb-article__main > * + .cb-image,
+  .cb-article__main > .cb-image + * {
+    margin-top: 32px;
+  }
+
+  .cb-article__main > * + .cb-hcard,
+  .cb-article__main > .cb-hcard + *,
+  .cb-article__main > * + .cb-card,
+  .cb-article__main > .cb-card + * {
+    margin-top: 24px;
+  }
+
+  .cb-article__main > * + .cb-button {
+    margin-top: 24px;
+  }
+
+  .cb-article__main > * + .cb-subheader,
+  .cb-article__main > * + .cb-heading {
+    margin-top: var(--cbar-topic-gap, 31px);
+  }
+
+  .cb-article__main > .cb-subheader + .cb-heading {
+    margin-top: 16px;
+  }
+
+  .cb-article__main > .cb-heading + .cb-paragraph {
+    margin-top: 13px;
+  }
+
+  .cb-article__main > .cb-paragraph + .cb-paragraph {
+    margin-top: 16px;
+  }
+
+  /* Links in the guide box jump to the headings; keep them clear of the sticky header. */
+  .cb-article .cb-heading {
+    scroll-margin-top: calc(var(--header-height, 0px) + 24px);
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-article {
+      padding: var(--cbar-pt) 32px var(--cbar-pb);
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .cb-article {
+      padding-inline: 48px;
+    }
+
+    .cb-article--has-box .cb-article__layout {
+      grid-template-columns: minmax(0, 1fr) var(--cbar-box-width, 308px);
+      align-items: start;
+      column-gap: var(--cbar-col-gap, 48px);
+    }
+
+    .cb-article--box-above .cb-article__aside {
+      order: 0;
+    }
+
+    .cb-article--sticky .cb-article__aside {
+      position: sticky;
+      top: calc(var(--header-height, 0px) + 24px);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Article",
+  "tag": "div",
+  "class": "section-wrapper",
+  "blocks": [
+    { "type": "cb-subheader" },
+    { "type": "cb-heading" },
+    { "type": "cb-paragraph" },
+    { "type": "cb-image" },
+    { "type": "cb-button" },
+    { "type": "cb-highlight-card" },
+    { "type": "cb-card" }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width",
+      "min": 600,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "default": 1120
+    },
+    {
+      "type": "range",
+      "id": "topic_gap",
+      "label": "Space between topics",
+      "info": "Above each subheader, or each heading without one.",
+      "min": 8,
+      "max": 96,
+      "step": 1,
+      "unit": "px",
+      "default": 31
+    },
+    {
+      "type": "header",
+      "content": "Guide box"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_box",
+      "label": "Show the guide box",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "sticky",
+      "label": "Keep it in view while scrolling",
+      "info": "On computers.",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "mobile_box",
+      "label": "On phones and tablets",
+      "options": [
+        { "value": "above", "label": "Above the article" },
+        { "value": "below", "label": "Below the article" }
+      ],
+      "default": "above"
+    },
+    {
+      "type": "range",
+      "id": "box_width",
+      "label": "Width",
+      "min": 240,
+      "max": 420,
+      "step": 4,
+      "unit": "px",
+      "default": 308
+    },
+    {
+      "type": "range",
+      "id": "column_gap",
+      "label": "Space beside the article",
+      "min": 16,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "box_padding",
+      "label": "Padding",
+      "min": 12,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 26
+    },
+    {
+      "type": "range",
+      "id": "box_radius",
+      "label": "Corner radius",
+      "min": 0,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "header",
+      "content": "Fonts"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "info": "The chosen style is the headings' 'Section font' weight; the guide box title uses its medium style.",
+      "default": "space_grotesk_n7"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "inter_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "card_color",
+      "label": "Guide box",
+      "default": "#1b1b1b"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "info": "Headings and the guide box list.",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "soft_text_color",
+      "label": "Soft text",
+      "info": "Article paragraphs (paragraph colour 'Soft').",
+      "default": "#dcdcde"
+    },
+    {
+      "type": "color",
+      "id": "muted_text_color",
+      "label": "Muted text",
+      "info": "Guide box text (paragraph colour 'Muted').",
+      "default": "#d0d0d4"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "info": "Subheaders and buttons.",
+      "default": "#d71f27"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Article",
+      "category": "t:categories.text",
+      "blocks": {
+        "guide-box": {
+          "type": "_cb-article-aside",
+          "static": true,
+          "blocks": {
+            "eyebrow": {
+              "type": "cb-subheader",
+              "settings": { "subheader_text": "In this guide", "letter_spacing": 10 }
+            },
+            "title": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "Racket essentials",
+                "tag": "p",
+                "size": 21,
+                "mobile_scale": 100,
+                "weight": "medium",
+                "line_height": 125,
+                "letter_spacing": 0,
+                "wrap": "wrap"
+              }
+            },
+            "text": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>Five things to weigh up before you choose a racket. Tap a topic to jump straight to it.</p>",
+                "size": 13
+              }
+            },
+            "contents": { "type": "_cb-article-contents" },
+            "button": {
+              "type": "cb-button",
+              "settings": { "label": "Ask a specialist →", "link": "/pages/contact" }
+            }
+          },
+          "block_order": ["eyebrow", "title", "text", "contents", "button"]
+        },
+        "answer_label": {
+          "type": "cb-subheader",
+          "settings": { "subheader_text": "Quick answer", "size": 11 }
+        },
+        "answer_heading": {
+          "type": "cb-heading",
+          "settings": { "heading_text": "Choose for the player you are now", "size": 40, "mobile_scale": 70, "wrap": "wrap" }
+        },
+        "answer_text": {
+          "type": "cb-paragraph",
+          "settings": {
+            "body_text": "<p>Start with a racket you can swing comfortably and control consistently. Power becomes more useful when timing and technique are already working with you.</p>",
+            "size": 15,
+            "color": "soft",
+            "line_height": 162
+          }
+        },
+        "weight_label": { "type": "cb-subheader", "settings": { "subheader_text": "01", "size": 11 } },
+        "weight_heading": {
+          "type": "cb-heading",
+          "settings": { "heading_text": "Weight", "size": 41, "mobile_scale": 70, "wrap": "wrap" }
+        },
+        "weight_text": {
+          "type": "cb-paragraph",
+          "settings": {
+            "body_text": "<p>A lighter-feeling racket can be easier to manoeuvre and may suit newer players who are still building timing and strength. A heavier-feeling setup can add stability, but only when it remains comfortable through a full session.</p>",
+            "size": 15,
+            "color": "soft",
+            "line_height": 162
+          }
+        },
+        "balance_label": { "type": "cb-subheader", "settings": { "subheader_text": "02", "size": 11 } },
+        "balance_heading": {
+          "type": "cb-heading",
+          "settings": { "heading_text": "Balance", "size": 41, "mobile_scale": 70, "wrap": "wrap" }
+        },
+        "balance_text": {
+          "type": "cb-paragraph",
+          "settings": {
+            "body_text": "<p>Head-heavy, even-balance and head-light rackets distribute weight differently. Think about whether you want help with momentum, an all-round feel, or quicker handling.</p>",
+            "size": 15,
+            "color": "soft",
+            "line_height": 162
+          }
+        },
+        "flex_label": { "type": "cb-subheader", "settings": { "subheader_text": "03", "size": 11 } },
+        "flex_heading": {
+          "type": "cb-heading",
+          "settings": { "heading_text": "Flex", "size": 41, "mobile_scale": 70, "wrap": "wrap" }
+        },
+        "flex_text": {
+          "type": "cb-paragraph",
+          "settings": {
+            "body_text": "<p>Shaft flex changes how the racket loads and releases through the swing. Your swing speed and technique matter more than choosing the most advanced-sounding specification.</p>",
+            "size": 15,
+            "color": "soft",
+            "line_height": 162
+          }
+        },
+        "shape_label": { "type": "cb-subheader", "settings": { "subheader_text": "04", "size": 11 } },
+        "shape_heading": {
+          "type": "cb-heading",
+          "settings": { "heading_text": "Frame shape", "size": 41, "mobile_scale": 70, "wrap": "wrap" }
+        },
+        "shape_text": {
+          "type": "cb-paragraph",
+          "settings": {
+            "body_text": "<p>Frame geometry influences the size and feel of the hitting area. Prioritise a forgiving, repeatable contact point while you build consistency.</p>",
+            "size": 15,
+            "color": "soft",
+            "line_height": 162
+          }
+        },
+        "check_label": { "type": "cb-subheader", "settings": { "subheader_text": "05", "size": 11 } },
+        "check_heading": {
+          "type": "cb-heading",
+          "settings": { "heading_text": "A simple final check", "size": 41, "mobile_scale": 70, "wrap": "wrap" }
+        },
+        "check_text": {
+          "type": "cb-paragraph",
+          "settings": {
+            "body_text": "<p>Before you decide, hold the racket, make a few practice swings and ask yourself whether it would still feel comfortable at the end of a long session. If you're unsure, compare two or three options with the team in store.</p>",
+            "size": 15,
+            "color": "soft",
+            "line_height": 162
+          }
+        }
+      },
+      "block_order": [
+        "answer_label",
+        "answer_heading",
+        "answer_text",
+        "weight_label",
+        "weight_heading",
+        "weight_text",
+        "balance_label",
+        "balance_heading",
+        "balance_text",
+        "flex_label",
+        "flex_heading",
+        "flex_text",
+        "shape_label",
+        "shape_heading",
+        "shape_text",
+        "check_label",
+        "check_heading",
+        "check_text"
+      ]
+    }
+  ]
+}
+{% endschema %}

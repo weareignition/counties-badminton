@@ -10,6 +10,7 @@
     href="{{ block.settings.link }}"
   {% endif %}
   class="cb-info-brand"
+  style="--cb-info-brand-name-size: {{ block.settings.name_size }}px; --cb-info-brand-name-weight: {{ block.settings.name_weight }}; --cb-info-brand-caption-size: {{ block.settings.caption_size }}px; --cb-info-brand-caption-weight: {{ block.settings.caption_weight }};"
   {{ block.shopify_attributes }}
 >
   {%- if block.settings.logo != blank -%}
@@ -61,8 +62,8 @@
 
   .cb-info-brand__name {
     font-family: var(--cbi-font-heading);
-    font-weight: var(--cbi-font-heading-weight);
-    font-size: 15px;
+    font-weight: var(--cb-info-brand-name-weight, var(--cbi-font-heading-weight));
+    font-size: var(--cb-info-brand-name-size, 15px);
     line-height: 1.2;
     letter-spacing: 0.02em;
     text-transform: uppercase;
@@ -79,8 +80,8 @@
 
   .cb-info-brand__caption {
     font-family: var(--cbi-font-body);
-    font-weight: var(--cbi-font-body-weight);
-    font-size: 10px;
+    font-weight: var(--cb-info-brand-caption-weight, var(--cbi-font-body-weight));
+    font-size: var(--cb-info-brand-caption-size, 10px);
     line-height: 1.35;
     color: var(--cbi-muted);
   }
@@ -113,6 +114,66 @@
       "type": "url",
       "id": "link",
       "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "name_size",
+      "label": "Brand name size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "select",
+      "id": "name_weight",
+      "label": "Brand name weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "caption_size",
+      "label": "Caption size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "caption_weight",
+      "label": "Caption weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
     }
   ],
   "presets": [{ "name": "[CB] Brand tile" }]

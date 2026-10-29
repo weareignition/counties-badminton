@@ -1,0 +1,65 @@
+<div class="cb-support__content" {{ block.shopify_attributes }}>
+  {% content_for 'blocks' %}
+</div>
+
+{% stylesheet %}
+  .cb-support__content {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 0;
+  }
+
+  .cb-support__content > * + .cb-heading {
+    margin-top: 17px;
+  }
+
+  .cb-support__content > * + .cb-paragraph {
+    margin-top: 16px;
+  }
+
+  .cb-support__content > * + .cb-support__buttons {
+    margin-top: 30px;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Content group",
+  "tag": null,
+  "blocks": [
+    { "type": "cb-subheader" },
+    { "type": "cb-heading" },
+    { "type": "cb-paragraph" },
+    { "type": "cb-button" },
+    { "type": "_cb-support-buttons" }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Content group",
+      "blocks": {
+        "eyebrow": {
+          "type": "cb-subheader",
+          "settings": { "subheader_text": "McDavid support", "show_dot": true, "letter_spacing": 0 }
+        },
+        "heading": {
+          "type": "cb-heading",
+          "settings": { "heading_text": "Support gear available in the Pro Shop.", "wrap": "wrap" }
+        },
+        "text": {
+          "type": "cb-paragraph",
+          "settings": {
+            "body_text": "<p>Explore McDavid support sleeves and compression gear available through Counties Badminton Pro Shop.</p>",
+            "letter_spacing": -1,
+            "max_width_unit": "px",
+            "max_width_px": 520
+          }
+        },
+        "buttons": { "type": "_cb-support-buttons" }
+      },
+      "block_order": ["eyebrow", "heading", "text", "buttons"]
+    }
+  ]
+}
+{% endschema %}

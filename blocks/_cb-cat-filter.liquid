@@ -1,15 +1,177 @@
 {%- liquid
   assign source = collection | default: section.settings.collection
   assign wanted = block.settings.filter_label | strip
-  assign filter = source.filters | where: 'label', wanted | first
-  assign title = block.settings.title_text | default: filter.label | default: wanted
+  # Match the Search & Discovery filter name whatever the capitals and spaces ("Gender/fit" = "Gender / Fit"). Several
+  # names can be given, comma-separated ("Racket balance, Balance"), so the block still finds the filter after a rename.
+  assign wanted_names = wanted | downcase | split: ','
+  assign filter = nil
+  for candidate in source.filters
+    assign candidate_key = candidate.label | downcase | remove: ' '
+    for name in wanted_names
+      assign wanted_key = name | remove: ' '
+      if wanted_key != blank and candidate_key == wanted_key
+        assign filter = candidate
+        break
+      endif
+    endfor
+    if filter
+      break
+    endif
+  endfor
+
+  # The same filter across the whole store. Shopify only lists the options this collection has (none at all when it
+  # has no products), so the store's other options are shown too, greyed out with 0.
+  assign store_filter = nil
+  for candidate in collections.all.filters
+    assign candidate_key = candidate.label | downcase | remove: ' '
+    for name in wanted_names
+      assign wanted_key = name | remove: ' '
+      if wanted_key != blank and candidate_key == wanted_key
+        assign store_filter = candidate
+        break
+      endif
+    endfor
+    if store_filter
+      break
+    endif
+  endfor
+  assign shape = filter | default: store_filter
+
+  assign first_name = wanted | split: ',' | first | strip
+  assign title = block.settings.title_text | default: filter.label | default: store_filter.label | default: first_name
   assign form_id = 'cb-cat-form-' | append: section.id
+  assign count_style = block.settings.count_style | default: 'plain'
+
+  # Options in the store's order: "c<n>" is this collection's value n (with its count), "s<n>" store value n that
+  # this collection has none of (greyed out, 0).
+  assign value_list = ''
+  assign shown_values = '|'
+  assign existing_labels = '|'
+  for store_value in store_filter.values
+    assign token = 's' | append: forloop.index0
+    for value in filter.values
+      if value.value == store_value.value
+        assign token = 'c' | append: forloop.index0
+        break
+      endif
+    endfor
+    # Each label is also known by its name without the bracketed part ("victor" for "Victor (Taiwan)").
+    assign value_key = store_value.label | downcase | strip
+    assign value_base = value_key | split: ' (' | first | strip
+    assign value_list = value_list | append: token | append: ','
+    assign shown_values = shown_values | append: store_value.value | append: '|'
+    assign existing_labels = existing_labels | append: value_key | append: '|' | append: value_base | append: '|'
+  endfor
+  for value in filter.values
+    assign value_id = '|' | append: value.value | append: '|'
+    unless shown_values contains value_id
+      assign value_key = value.label | downcase | strip
+      assign value_base = value_key | split: ' (' | first | strip
+      assign value_list = value_list | append: 'c' | append: forloop.index0 | append: ','
+      assign existing_labels = existing_labels | append: value_key | append: '|' | append: value_base | append: '|'
+    endunless
+  endfor
+  assign value_tokens = value_list | split: ','
+
+  # "Always show these options": listed options that no product in the store has yet are added greyed out, with 0.
+  assign missing_list = ''
+  if block.settings.always_values != blank
+    assign wanted_values = block.settings.always_values | split: ','
+    for item in wanted_values
+      assign item_label = item | strip
+      assign item_key = '|' | append: item_label | append: '|' | downcase
+      if item_label == blank or existing_labels contains item_key
+        continue
+      endif
+      assign missing_list = missing_list | append: item_label | append: '|'
+    endfor
+  endif
+  assign missing_values = missing_list | split: '|'
+
+  # Shown in the order of "Always show these options" under the names written there (Victor for Victor (Taiwan), 7.0
+  # for 7), then the rest in the store's order: "c1=Victor", "s2", or "m0" for missing option 0.
+  capture ordered_list
+    render 'cb-cat-filter-order', tokens: value_tokens, filter: filter, store_filter: store_filter, wanted: block.settings.always_values, missing: missing_values
+  endcapture
+  assign option_tokens = ordered_list | strip | split: ','
+
+  # Optional "Reset" beside the heading while something in this filter is applied.
+  assign reset_label = block.settings.reset_label | strip
+  assign show_reset = false
+  if reset_label != blank and filter
+    if filter.type == 'price_range'
+      if filter.min_value.value != nil or filter.max_value.value != nil
+        assign show_reset = true
+      endif
+    elsif filter.active_values.size > 0
+      assign show_reset = true
+    endif
+  endif
+
+  # Optional small link beside the heading (e.g. "Guide"): a URL, or else a short text that opens under the heading.
+  assign guide_label = block.settings.title_link_label | strip
+  assign guide_mode = ''
+  if guide_label != blank
+    if block.settings.title_link != blank
+      assign guide_mode = 'link'
+    elsif block.settings.guide_text != blank
+      assign guide_mode = 'text'
+    endif
+  endif
 -%}
 
-{%- if filter -%}
+{%- comment -%}
+  Every filter always shows. When no product in the store has it yet (e.g. Play style), it lists "Always show these
+  options", or else shows the empty text.
+{%- endcomment -%}
+{%- liquid
+  assign filter_classes = 'cb-cat-filter'
+  if block.settings.numbered
+    assign filter_classes = filter_classes | append: ' cb-cat-filter--numbered'
+  endif
+  if guide_mode != blank
+    assign filter_classes = filter_classes | append: ' cb-cat-filter--has-guide'
+  endif
+  if block.settings.panel_style == 'card'
+    assign filter_classes = filter_classes | append: ' cb-cat-filter--card'
+  elsif block.settings.panel_style == 'panel'
+    assign filter_classes = filter_classes | append: ' cb-cat-filter--panel'
+  endif
+  if show_reset
+    assign filter_classes = filter_classes | append: ' cb-cat-filter--has-reset'
+  endif
+  assign round_class = ''
+  if block.settings.check_shape == 'round'
+    assign round_class = ' cb-cat-checks--round'
+  endif
+-%}
+{%- capture root_style -%}
+  --cb-cat-filter-heading-size: {{ block.settings.heading_size }}px;
+  --cb-cat-filter-heading-weight: {{ block.settings.heading_weight }};
+  --cb-cat-filter-heading-link-size: {{ block.settings.heading_link_size }}px;
+  --cb-cat-filter-heading-link-weight: {{ block.settings.heading_link_weight }};
+  --cb-cat-filter-reset-size: {{ block.settings.reset_size }}px;
+  --cb-cat-filter-reset-weight: {{ block.settings.reset_weight }};
+  --cb-cat-filter-guide-size: {{ block.settings.guide_size }}px;
+  --cb-cat-filter-guide-weight: {{ block.settings.guide_weight }};
+  --cb-cat-filter-checkbox-size: {{ block.settings.checkbox_size }}px;
+  --cb-cat-filter-checkbox-weight: {{ block.settings.checkbox_weight }};
+  --cb-cat-filter-count-size: {{ block.settings.count_size }}px;
+  --cb-cat-filter-count-weight: {{ block.settings.count_weight }};
+  --cb-cat-filter-button-size: {{ block.settings.button_size }}px;
+  --cb-cat-filter-button-weight: {{ block.settings.button_weight }};
+  --cb-cat-filter-price-labels-size: {{ block.settings.price_labels_size }}px;
+  --cb-cat-filter-price-labels-weight: {{ block.settings.price_labels_weight }};
+  --cb-cat-filter-note-size: {{ block.settings.note_size }}px;
+  --cb-cat-filter-note-weight: {{ block.settings.note_weight }};
+  --cb-cat-filter-empty-size: {{ block.settings.empty_size }}px;
+  --cb-cat-filter-empty-weight: {{ block.settings.empty_weight }};
+{%- endcapture -%}
+{%- if block.settings.collapsible -%}
   <details
     id="cb-cat-filter-{{ block.id }}"
-    class="cb-cat-filter{% if block.settings.numbered %} cb-cat-filter--numbered{% endif %}"
+    class="{{ filter_classes }}"
+    style="{{ root_style }}"
     {% unless block.settings.collapsed %}
       open
     {% endunless %}
@@ -21,89 +183,164 @@
         <path d="m3 7.5 3-3 3 3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </summary>
+{%- else -%}
+  <div id="cb-cat-filter-{{ block.id }}" class="{{ filter_classes }} cb-cat-filter--static" style="{{ root_style }}" {{ block.shopify_attributes }}>
+    <p class="cb-cat-filter__title">
+      <span class="cb-cat-filter__name">{{ title | escape }}</span>
+    </p>
+{%- endif -%}
 
-    <div class="cb-cat-filter__body">
-      {%- if filter.type == 'price_range' -%}
-        {%- liquid
-          assign symbol = 0 | money | remove: '0' | remove: '.' | remove: ',' | strip
-          assign slider_max = filter.range_max | plus: 99 | divided_by: 100
-          assign current_cents = filter.max_value.value | default: filter.range_max
-          assign slider_value = current_cents | divided_by: 100
-          assign percent = 100
-          if slider_max > 0
-            assign percent = slider_value | times: 100 | divided_by: slider_max
-          endif
-        -%}
-        <div class="cb-cat-price" style="--cbk-price-pct: {{ percent }}%;" data-symbol="{{ symbol }}">
-          <input
-            class="cb-cat-price__range"
-            type="range"
-            form="{{ form_id }}"
-            name="{{ filter.max_value.param_name }}"
-            min="0"
-            max="{{ slider_max }}"
-            step="1"
-            value="{{ slider_value }}"
-            data-cb-price-max="{{ slider_max }}"
-            aria-label="{{ title | escape }}"
-          >
-          <div class="cb-cat-price__labels">
-            <span>{{ 0 | money }}</span>
-            <span class="cb-cat-price__current">
-              {{- block.settings.price_prefix | escape }}
-              <strong data-cb-price-label>{{ current_cents | money }}</strong>
-              {{ cart.currency.iso_code -}}
-            </span>
-          </div>
-        </div>
-      {%- elsif block.settings.display == 'buttons' -%}
-        <div
-          class="cb-cat-chips cb-cat-chips--{{ block.settings.button_style }}"
-          style="--cbk-chip-columns: {{ block.settings.button_columns }};"
-        >
-          {%- for value in filter.values -%}
-            {%- liquid
+  {%- if guide_mode == 'link' -%}
+    <a class="cb-cat-filter__guide-toggle" href="{{ block.settings.title_link }}">{{ guide_label | escape }}</a>
+  {%- elsif guide_mode == 'text' -%}
+    <button
+      type="button"
+      class="cb-cat-filter__guide-toggle"
+      data-cb-cat-guide
+      aria-expanded="false"
+      aria-controls="cb-cat-guide-{{ block.id }}"
+    >
+      {{- guide_label | escape -}}
+    </button>
+  {%- endif -%}
+
+  {%- if show_reset -%}
+    <a class="cb-cat-filter__reset" href="{{ filter.url_to_remove }}" data-cb-cat-link>{{ reset_label | escape }}</a>
+  {%- endif -%}
+
+  <div class="cb-cat-filter__body">
+    {%- if guide_mode == 'text' -%}
+      <p id="cb-cat-guide-{{ block.id }}" class="cb-cat-filter__guide" hidden>{{ block.settings.guide_text | escape }}</p>
+    {%- endif -%}
+
+    {%- if shape == nil and missing_values.size == 0 -%}
+      <p class="cb-cat-filter__empty">{{ block.settings.empty_text | escape }}</p>
+    {%- elsif shape.type == 'price_range' and block.settings.price_display == 'buckets' -%}
+      {%- liquid
+        assign gte_name = shape.min_value.param_name
+        assign lte_name = shape.max_value.param_name
+        assign active_gte = filter.min_value.value
+        assign active_lte = filter.max_value.value
+        assign price_active = false
+        if active_gte != blank or active_lte != blank
+          assign price_active = true
+        endif
+
+        # Shopify gives no counts for price ranges, so they're counted from the products on show (up to 50).
+        assign can_count = false
+        if block.settings.show_counts and source.products_count <= 50
+          assign can_count = true
+        endif
+
+        assign lines = block.settings.price_buckets | newline_to_br | split: '<br />'
+      -%}
+      <ul
+        class="cb-cat-checks cb-cat-checks--{{ count_style }}{{ round_class }}"
+        role="list"
+        {% if block.settings.price_multi %}
+          data-cb-price-multi
+        {% endif %}
+      >
+        {%- for line in lines -%}
+          {%- liquid
+            assign parts = line | split: '|'
+            assign valid = false
+            if parts.size > 1
+              assign valid = true
+              assign bucket_label = parts.first | strip
+              assign range = parts.last | strip | remove: ' '
+              assign min = range | split: '-' | first | remove: '+'
+              assign max = ''
+              if range contains '-'
+                assign max = range | split: '-' | last
+              endif
+              if min == '0'
+                assign min = ''
+              endif
+              assign gte_cents = min | times: 100
+              assign lte_cents = max | times: 100
+
+              assign active = false
+              if price_active and block.settings.price_multi
+                # Several ticked ranges combine into one span; a range shows ticked when it lies inside it.
+                assign gte_ok = false
+                if active_gte == blank
+                  assign gte_ok = true
+                elsif min != blank and gte_cents >= active_gte
+                  assign gte_ok = true
+                endif
+                assign lte_ok = false
+                if active_lte == blank
+                  assign lte_ok = true
+                elsif max != blank and lte_cents <= active_lte
+                  assign lte_ok = true
+                endif
+                if gte_ok and lte_ok
+                  assign active = true
+                endif
+              elsif price_active
+                assign gte_ok = false
+                if min == blank
+                  if active_gte == blank
+                    assign gte_ok = true
+                  endif
+                elsif active_gte == gte_cents
+                  assign gte_ok = true
+                endif
+                assign lte_ok = false
+                if max == blank
+                  if active_lte == blank
+                    assign lte_ok = true
+                  endif
+                elsif active_lte == lte_cents
+                  assign lte_ok = true
+                endif
+                if gte_ok and lte_ok
+                  assign active = true
+                endif
+              endif
+
+              # With a price range applied only the chosen range can be counted.
+              assign bucket_count = nil
+              if can_count
+                if price_active == false or active
+                  assign bucket_count = 0
+                  for product in source.products
+                    assign in_range = true
+                    if min != blank and product.price_max < gte_cents
+                      assign in_range = false
+                    endif
+                    if max != blank and product.price_min > lte_cents
+                      assign in_range = false
+                    endif
+                    if in_range
+                      assign bucket_count = bucket_count | plus: 1
+                    endif
+                  endfor
+                endif
+              endif
+
+              # A collection with no prices (no products) greys every range out.
               assign unavailable = false
-              if value.count == 0 and value.active == false
+              if filter == nil or bucket_count == 0 and active == false
                 assign unavailable = true
               endif
-            -%}
-            <label class="cb-cat-chip{% if unavailable %} is-disabled{% endif %}">
-              <input
-                class="cb-cat-chip__input"
-                type="checkbox"
-                form="{{ form_id }}"
-                name="{{ value.param_name }}"
-                value="{{ value.value }}"
-                {% if value.active %}
-                  checked
-                {% endif %}
-                {% if unavailable %}
-                  disabled
-                {% endif %}
-              >
-              <span class="cb-cat-chip__text">{{ value.label | escape }}</span>
-            </label>
-          {%- endfor -%}
-        </div>
-      {%- else -%}
-        <ul class="cb-cat-checks" role="list">
-          {%- for value in filter.values -%}
-            {%- liquid
-              assign unavailable = false
-              if value.count == 0 and value.active == false
-                assign unavailable = true
-              endif
-            -%}
+            endif
+          -%}
+          {%- if valid -%}
             <li>
               <label class="cb-cat-check{% if unavailable %} is-disabled{% endif %}">
                 <input
+                  id="cb-cat-bucket-{{ block.id }}-{{ forloop.index }}"
                   class="cb-cat-check__input"
                   type="checkbox"
                   form="{{ form_id }}"
-                  name="{{ value.param_name }}"
-                  value="{{ value.value }}"
-                  {% if value.active %}
+                  data-cb-price-bucket
+                  data-gte-name="{{ gte_name }}"
+                  data-lte-name="{{ lte_name }}"
+                  data-gte="{{ min }}"
+                  data-lte="{{ max }}"
+                  {% if active %}
                     checked
                   {% endif %}
                   {% if unavailable %}
@@ -113,26 +350,181 @@
                 <span class="cb-cat-check__box" aria-hidden="true">
                   <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="m2.5 6.2 2.3 2.3 4.7-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </span>
-                <span class="cb-cat-check__label">{{ value.label | escape }}</span>
-                {%- if block.settings.show_counts -%}
-                  <span class="cb-cat-check__count">{{ value.count }}</span>
+                <span class="cb-cat-check__label">{{ bucket_label | escape }}</span>
+                {%- if bucket_count != nil -%}
+                  <span class="cb-cat-check__count">
+                    {%- if count_style == 'brackets' -%}({{ bucket_count }}){%- else -%}{{ bucket_count }}{%- endif -%}
+                  </span>
                 {%- endif -%}
               </label>
             </li>
-          {%- endfor -%}
-        </ul>
-      {%- endif -%}
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+    {%- elsif shape.type == 'price_range' -%}
+      {%- liquid
+        assign symbol = 0 | money | remove: '0' | remove: '.' | remove: ',' | strip
+        assign slider_max = shape.range_max | plus: 99 | divided_by: 100
+        assign current_cents = filter.max_value.value | default: shape.range_max
+        assign slider_value = current_cents | divided_by: 100
+        assign percent = 100
+        if slider_max > 0
+          assign percent = slider_value | times: 100 | divided_by: slider_max
+        endif
+      -%}
+      <div
+        class="cb-cat-price{% if filter == nil %} is-disabled{% endif %}"
+        style="--cbk-price-pct: {{ percent }}%;"
+        data-symbol="{{ symbol }}"
+      >
+        <input
+          class="cb-cat-price__range"
+          type="range"
+          form="{{ form_id }}"
+          name="{{ shape.max_value.param_name }}"
+          min="0"
+          max="{{ slider_max }}"
+          step="1"
+          value="{{ slider_value }}"
+          data-cb-price-max="{{ slider_max }}"
+          aria-label="{{ title | escape }}"
+          {% if filter == nil %}
+            disabled
+          {% endif %}
+        >
+        <div class="cb-cat-price__labels">
+          <span>{{ 0 | money }}</span>
+          <span class="cb-cat-price__current">
+            {{- block.settings.price_prefix | escape }}
+            <strong data-cb-price-label>{{ current_cents | money }}</strong>
+            {{ cart.currency.iso_code -}}
+          </span>
+        </div>
+      </div>
+    {%- elsif block.settings.display == 'buttons' -%}
+      <div
+        class="cb-cat-chips cb-cat-chips--{{ block.settings.button_style }}{% if block.settings.button_columns == 'auto' %} cb-cat-chips--auto{% endif %}"
+        {% unless block.settings.button_columns == 'auto' %}
+          style="--cbk-chip-columns: {{ block.settings.button_columns }};"
+        {% endunless %}
+      >
+        {%- for entry in option_tokens -%}
+          {%- liquid
+            assign token = entry | split: '=' | first
+            assign index = token | remove_first: 'c' | remove_first: 's' | remove_first: 'm' | plus: 0
+            assign value = filter.values[index]
+            assign value_count = value.count
+            assign value_active = value.active
+            if token contains 's'
+              assign value = store_filter.values[index]
+              assign value_count = 0
+              assign value_active = false
+            endif
+            assign unavailable = true
+            if value_count > 0 or value_active
+              assign unavailable = false
+            endif
+            # The name it's listed under in "Always show these options", else its own
+            assign value_label = entry | remove_first: token | remove_first: '=' | default: value.label
+          -%}
+          {%- if token contains 'm' -%}
+            <label class="cb-cat-chip is-disabled">
+              <input class="cb-cat-chip__input" type="checkbox" disabled>
+              <span class="cb-cat-chip__text">{{ missing_values[index] | escape }}</span>
+            </label>
+          {%- else -%}
+            <label class="cb-cat-chip{% if unavailable %} is-disabled{% endif %}">
+              <input
+                class="cb-cat-chip__input"
+                type="checkbox"
+                form="{{ form_id }}"
+                name="{{ value.param_name }}"
+                value="{{ value.value }}"
+                {% if value_active %}
+                  checked
+                {% endif %}
+                {% if unavailable %}
+                  disabled
+                {% endif %}
+              >
+              <span class="cb-cat-chip__text">{{ value_label | escape }}</span>
+            </label>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    {%- else -%}
+      <ul class="cb-cat-checks cb-cat-checks--{{ count_style }}{{ round_class }}" role="list">
+        {%- for entry in option_tokens -%}
+          {%- liquid
+            assign token = entry | split: '=' | first
+            assign index = token | remove_first: 'c' | remove_first: 's' | remove_first: 'm' | plus: 0
+            assign value = filter.values[index]
+            assign value_count = value.count
+            assign value_active = value.active
+            if token contains 's'
+              assign value = store_filter.values[index]
+              assign value_count = 0
+              assign value_active = false
+            endif
+            assign unavailable = true
+            if value_count > 0 or value_active
+              assign unavailable = false
+            endif
+            # The name it's listed under in "Always show these options", else its own
+            assign value_label = entry | remove_first: token | remove_first: '=' | default: value.label
+          -%}
+          {%- if token contains 'm' -%}
+            <li>
+              <label class="cb-cat-check is-disabled">
+                <input class="cb-cat-check__input" type="checkbox" disabled>
+                <span class="cb-cat-check__box" aria-hidden="true">
+                  <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="m2.5 6.2 2.3 2.3 4.7-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </span>
+                <span class="cb-cat-check__label">{{ missing_values[index] | escape }}</span>
+                {%- if block.settings.show_counts -%}
+                  <span class="cb-cat-check__count">{%- if count_style == 'brackets' -%}(0){%- else -%}0{%- endif -%}</span>
+                {%- endif -%}
+              </label>
+            </li>
+          {%- else -%}
+            <li>
+              <label class="cb-cat-check{% if unavailable %} is-disabled{% endif %}">
+                <input
+                  class="cb-cat-check__input"
+                  type="checkbox"
+                  form="{{ form_id }}"
+                  name="{{ value.param_name }}"
+                  value="{{ value.value }}"
+                  {% if value_active %}
+                    checked
+                  {% endif %}
+                  {% if unavailable %}
+                    disabled
+                  {% endif %}
+                >
+                <span class="cb-cat-check__box" aria-hidden="true">
+                  <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="m2.5 6.2 2.3 2.3 4.7-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </span>
+                <span class="cb-cat-check__label">{{ value_label | escape }}</span>
+                {%- if block.settings.show_counts -%}
+                  <span class="cb-cat-check__count">
+                    {%- if count_style == 'brackets' -%}({{ value_count }}){%- else -%}{{ value_count }}{%- endif -%}
+                  </span>
+                {%- endif -%}
+              </label>
+            </li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
 
-      {%- if block.settings.note != blank -%}
-        <p class="cb-cat-filter__note">{{ block.settings.note | escape }}</p>
-      {%- endif -%}
-    </div>
+    {%- if block.settings.note != blank -%}
+      <p class="cb-cat-filter__note">{{ block.settings.note | escape }}</p>
+    {%- endif -%}
+  </div>
+{%- if block.settings.collapsible -%}
   </details>
-{%- elsif request.design_mode -%}
-  <div class="cb-cat-filter cb-cat-filter--missing" {{ block.shopify_attributes }}>
-    <p>
-      “{{ wanted | escape }}” isn’t a filter on this collection yet. Add it in the Search &amp; Discovery app → Filters (the name must match), or change this block’s filter name. Only you see this message.
-    </p>
+{%- else -%}
   </div>
 {%- endif -%}
 
@@ -150,8 +542,8 @@
     list-style: none;
     cursor: pointer;
     font-family: var(--cbk-font-body);
-    font-weight: var(--cbk-font-body-strong);
-    font-size: 11px;
+    font-weight: var(--cb-cat-filter-heading-weight, var(--cbk-font-body-strong));
+    font-size: var(--cb-cat-filter-heading-size, 11px);
     line-height: 1.3;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -160,6 +552,15 @@
 
   .cb-cat-filter__title::-webkit-details-marker {
     display: none;
+  }
+
+  /* Two classes: Horizon's global summary rules add padding and turn hovered summaries dark. */
+  .cb-cat-filter .cb-cat-filter__title {
+    padding-block: 11px;
+  }
+
+  .cb-cat-filter .cb-cat-filter__title:hover {
+    color: var(--cbk-text);
   }
 
   .cb-cat-filter__title:focus-visible {
@@ -193,9 +594,25 @@
   .cb-cat-filter__note {
     margin: 10px 0 0;
     font-family: var(--cbk-font-body);
-    font-size: 11px;
+    font-weight: var(--cb-cat-filter-note-weight, inherit);
+    font-size: var(--cb-cat-filter-note-size, 11px);
     line-height: 1.5;
     color: var(--cbk-muted);
+  }
+
+  .cb-cat-filter .cb-cat-filter__empty {
+    margin: 0;
+    font-family: var(--cbk-font-body);
+    font-weight: var(--cb-cat-filter-empty-weight, inherit);
+    font-size: var(--cb-cat-filter-empty-size, 12px);
+    line-height: 1.5;
+    color: var(--cbk-muted);
+  }
+
+  .cb-cat-filter .cb-cat-filter__empty + .cb-cat-filter__empty {
+    margin-top: 6px;
+    font-size: 11px;
+    opacity: 0.7;
   }
 
   .cb-cat-filter--missing p {
@@ -227,7 +644,8 @@
     gap: 10px;
     cursor: pointer;
     font-family: var(--cbk-font-body);
-    font-size: 12px;
+    font-weight: var(--cb-cat-filter-checkbox-weight, inherit);
+    font-size: var(--cb-cat-filter-checkbox-size, 12px);
     line-height: 1.35;
     color: var(--cbk-soft);
   }
@@ -268,13 +686,351 @@
   }
 
   .cb-cat-check__count {
-    font-size: 11px;
+    font-weight: var(--cb-cat-filter-count-weight, inherit);
+    font-size: var(--cb-cat-filter-count-size, 11px);
     color: var(--cbk-muted);
   }
 
+  /* Fixed heading (filter can't be folded). */
+  .cb-cat-filter--static .cb-cat-filter__title {
+    margin: 0;
+    cursor: default;
+  }
+
+  /* Round ticks (radio look). */
+  .cb-cat-checks--round .cb-cat-check__box {
+    border-radius: 50%;
+  }
+
+  .cb-cat-checks--round .cb-cat-check__input:checked + .cb-cat-check__box {
+    border: 4px solid var(--cbk-accent);
+    background: #fff;
+    color: transparent;
+  }
+
+  /* Buttons at their natural width, wrapping (e.g. string gauges). Two classes: the grid rule comes later. */
+  .cb-cat-chips.cb-cat-chips--auto {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .cb-cat-chips--auto .cb-cat-chip__text {
+    min-height: 30px;
+    padding: 6px 10px;
+  }
+
+  /* Boxed counts; the ticked row turns bold and its count box takes the accent. */
+  .cb-cat-checks--boxed .cb-cat-check__count {
+    min-width: 22px;
+    padding: 1px 5px;
+    border: 1px solid var(--cbk-border);
+    border-radius: 2px;
+    font-size: calc(var(--cb-cat-filter-count-size, 11px) * 10 / 11);
+    line-height: 1.5;
+    text-align: center;
+  }
+
+  .cb-cat-checks--boxed .cb-cat-check__input:checked ~ .cb-cat-check__label {
+    font-weight: max(var(--cb-cat-filter-checkbox-weight, 0), var(--cbk-font-body-strong));
+    color: var(--cbk-text);
+  }
+
+  .cb-cat-checks--boxed .cb-cat-check__input:checked ~ .cb-cat-check__count {
+    border-color: var(--cbk-accent);
+    color: var(--cbk-text);
+  }
+
+  /* Small link or guide toggle beside the heading (outside the summary, so it doesn't fold the filter). */
+  .cb-cat-filter--has-guide {
+    position: relative;
+  }
+
+  .cb-cat-filter--has-guide .cb-cat-filter__name {
+    padding-right: 56px;
+  }
+
+  /* Lined up with the heading text: filter padding (16px) + heading padding (11px). */
+  .cb-cat-filter__guide-toggle {
+    position: absolute;
+    top: 27px;
+    right: 22px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    font-family: var(--cbk-font-body);
+    font-weight: var(--cb-cat-filter-heading-link-weight, var(--cbk-font-body-weight));
+    font-size: var(--cb-cat-filter-heading-link-size, 10px);
+    line-height: 1.4;
+    color: var(--cbk-accent);
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .cb-cat-filter__guide-toggle:hover {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .cb-cat-filter__guide-toggle:focus-visible {
+    outline: 2px solid var(--cbk-text);
+    outline-offset: 2px;
+  }
+
+  .cb-cat-filter__guide {
+    margin: 0 0 12px;
+    padding: 8px 10px;
+    border-left: 2px solid var(--cbk-accent);
+    background: var(--cbk-surface);
+    font-family: var(--cbk-font-body);
+    font-weight: var(--cb-cat-filter-guide-weight, inherit);
+    font-size: var(--cb-cat-filter-guide-size, 11px);
+    line-height: 1.5;
+    color: var(--cbk-soft);
+  }
+
+  .cb-cat-filter__guide[hidden] {
+    display: none;
+  }
+
+  /* "Reset" beside the heading while the filter is applied. */
+  .cb-cat-filter--has-reset {
+    position: relative;
+  }
+
+  .cb-cat-filter--has-reset .cb-cat-filter__name {
+    padding-right: 52px;
+  }
+
+  .cb-cat-filter__reset {
+    position: absolute;
+    top: 27px;
+    right: 22px;
+    font-family: var(--cbk-font-body);
+    font-weight: var(--cb-cat-filter-reset-weight, var(--cbk-font-body-strong));
+    font-size: var(--cb-cat-filter-reset-size, 11px);
+    line-height: 1.4;
+    color: var(--cbk-accent);
+    text-decoration: none;
+  }
+
+  .cb-cat-filter--static .cb-cat-filter__reset {
+    right: 0;
+  }
+
+  .cb-cat-filter--has-guide .cb-cat-filter__reset {
+    right: 64px;
+  }
+
+  .cb-cat-filter__reset:hover {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .cb-cat-filter__reset:focus-visible {
+    outline: 2px solid var(--cbk-text);
+    outline-offset: 2px;
+  }
+
+  /* Card style: each filter in its own rounded panel. Two classes beat the line style above. */
+  .cb-cat-filter.cb-cat-filter--card {
+    position: relative;
+    margin-bottom: 28px;
+    padding: 23px 20px 22px;
+    border: 1px solid color-mix(in srgb, var(--cbk-text) 6%, transparent);
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--cbk-text) 2%, var(--cbk-card));
+  }
+
+  .cb-cat-filter.cb-cat-filter--card .cb-cat-filter__title {
+    padding-block: 0;
+    font-family: var(--cbk-font-heading);
+    font-weight: var(--cb-cat-filter-heading-weight, var(--cbk-font-heading-medium-weight));
+    font-size: calc(var(--cb-cat-filter-heading-size, 11px) * 17 / 11);
+    line-height: 1.3;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  .cb-cat-filter--card .cb-cat-filter__body {
+    padding-top: 16px;
+  }
+
+  .cb-cat-filter--card .cb-cat-checks {
+    gap: 13px;
+  }
+
+  .cb-cat-filter--card .cb-cat-checks--round {
+    gap: 11px;
+  }
+
+  .cb-cat-filter--card .cb-cat-check {
+    grid-template-columns: 18px minmax(0, 1fr) auto;
+    gap: 12px;
+    font-size: calc(var(--cb-cat-filter-checkbox-size, 12px) * 14 / 12);
+    color: color-mix(in srgb, var(--cbk-text) 62%, transparent);
+  }
+
+  .cb-cat-filter--card .cb-cat-check__box {
+    width: 18px;
+    height: 18px;
+    border-radius: 3px;
+  }
+
+  .cb-cat-filter--card .cb-cat-check__box svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  .cb-cat-filter--card .cb-cat-check__input:checked ~ .cb-cat-check__label {
+    color: var(--cbk-text);
+  }
+
+  .cb-cat-filter--card .cb-cat-checks--round .cb-cat-check__box {
+    border-radius: 50%;
+  }
+
+  .cb-cat-filter--card .cb-cat-checks--round .cb-cat-check__input:checked + .cb-cat-check__box {
+    border-width: 5px;
+  }
+
+  .cb-cat-filter--card .cb-cat-filter__reset {
+    top: 25px;
+    right: 20px;
+    font-size: calc(var(--cb-cat-filter-reset-size, 11px) * 13 / 11);
+  }
+
+  /* Foldable card: keep the link clear of the arrow. */
+  .cb-cat-filter--card:not(.cb-cat-filter--static) .cb-cat-filter__reset {
+    right: 44px;
+  }
+
+  /* One-panel style: the Filters heading and every panel-style filter share one panel, with no lines between. */
+  .cb-cat__sidebar:has(.cb-cat-filter--panel) .cb-cat__sidebar-head {
+    padding: 20px 21px 8px;
+    border-radius: 5px 5px 0 0;
+    background: color-mix(in srgb, var(--cbk-text) 2%, var(--cbk-card));
+  }
+
+  .cb-cat__sidebar:has(.cb-cat-filter--panel) .cb-cat__sidebar-title {
+    font-size: calc(var(--cb-catalogue-filters-heading-size, 11px) * 10 / 11);
+    letter-spacing: 0.1em;
+    color: color-mix(in srgb, var(--cbk-text) 90%, transparent);
+  }
+
+  .cb-cat__sidebar:has(.cb-cat-filter--panel) .cb-cat__sidebar-title svg {
+    display: none;
+  }
+
+  .cb-cat__sidebar:has(.cb-cat-filter--panel) .cb-cat__clear {
+    font-weight: var(--cb-catalogue-clear-weight, var(--cbk-font-body-weight));
+    font-size: var(--cb-catalogue-clear-size, 10px);
+    letter-spacing: 0;
+    text-transform: none;
+    color: color-mix(in srgb, var(--cbk-text) 55%, transparent);
+  }
+
+  /* margin-top: -1px overlaps the parts so no hairline seam shows between them on scaled (125%, 150%) screens. */
+  .cb-cat-filter.cb-cat-filter--panel {
+    margin-top: -1px;
+    padding: 22px 21px 0;
+    border: 0;
+    background: color-mix(in srgb, var(--cbk-text) 2%, var(--cbk-card));
+  }
+
+  /* The last panel filter rounds off the panel. */
+  .cb-cat-filter.cb-cat-filter--panel:not(:has(+ .cb-cat-filter--panel)) {
+    padding-bottom: 22px;
+    border-radius: 0 0 5px 5px;
+  }
+
+  .cb-cat-filter.cb-cat-filter--panel .cb-cat-filter__title {
+    padding-block: 0;
+    font-size: calc(var(--cb-cat-filter-heading-size, 11px) * 10 / 11);
+    letter-spacing: 0.1em;
+    color: color-mix(in srgb, var(--cbk-text) 94%, transparent);
+  }
+
+  .cb-cat-filter--panel .cb-cat-filter__body {
+    padding-top: 10px;
+  }
+
+  .cb-cat-filter--panel .cb-cat-checks {
+    gap: 8px;
+  }
+
+  .cb-cat-filter--panel .cb-cat-check {
+    grid-template-columns: 15px minmax(0, 1fr) auto;
+    gap: 10px;
+    color: color-mix(in srgb, var(--cbk-text) 70%, transparent);
+  }
+
+  .cb-cat-filter--panel .cb-cat-check__input:checked ~ .cb-cat-check__label {
+    color: var(--cbk-text);
+  }
+
+  .cb-cat-filter--panel .cb-cat-check__box {
+    width: 15px;
+    height: 15px;
+    border-color: transparent;
+    background: color-mix(in srgb, #000 45%, var(--cbk-card));
+  }
+
+  .cb-cat-filter--panel .cb-cat-check__input:checked + .cb-cat-check__box {
+    border-color: var(--cbk-accent);
+    background: var(--cbk-accent);
+  }
+
+  .cb-cat-filter--panel .cb-cat-chips {
+    gap: 6px 7px;
+  }
+
+  .cb-cat-filter--panel .cb-cat-chip__text {
+    min-height: 26px;
+    padding: 4px 6px;
+    border-color: transparent;
+    background: color-mix(in srgb, var(--cbk-text) 7%, var(--cbk-card));
+    font-size: calc(var(--cb-cat-filter-button-size, 11px) * 10 / 11);
+    color: color-mix(in srgb, var(--cbk-text) 55%, transparent);
+  }
+
+  .cb-cat-filter--panel .cb-cat-chip__input:checked + .cb-cat-chip__text {
+    border-color: var(--cbk-accent);
+    background: var(--cbk-accent);
+    color: #fff;
+  }
+
+  /* A promo under a one-panel sidebar matches the panel. */
+  .cb-cat__sidebar:has(.cb-cat-filter--panel) .cb-cat-promo {
+    margin-top: 21px;
+    padding: 13px 14px 15px;
+    border-color: transparent;
+    border-radius: 5px;
+    background: color-mix(in srgb, var(--cbk-text) 2%, var(--cbk-card));
+  }
+
+  .cb-cat__sidebar:has(.cb-cat-filter--panel) .cb-cat-promo__content {
+    gap: 7px;
+  }
+
+  .cb-cat__sidebar:has(.cb-cat-filter--panel) .cb-cat-promo__title {
+    font-size: calc(var(--cb-cat-promo-title-size, 11px) * 10 / 11);
+    letter-spacing: 0.1em;
+  }
+
+  .cb-cat__sidebar:has(.cb-cat-filter--panel) .cb-cat-promo__text {
+    line-height: 1.5;
+    color: color-mix(in srgb, var(--cbk-text) 55%, transparent);
+  }
+
   .cb-cat-check.is-disabled,
-  .cb-cat-chip.is-disabled {
+  .cb-cat-chip.is-disabled,
+  .cb-cat-price.is-disabled {
     opacity: 0.4;
+    cursor: default;
+  }
+
+  .cb-cat-price.is-disabled .cb-cat-price__range {
     cursor: default;
   }
 
@@ -300,7 +1056,8 @@
     border-radius: 2px;
     background: var(--cbk-card);
     font-family: var(--cbk-font-body);
-    font-size: 11px;
+    font-weight: var(--cb-cat-filter-button-weight, inherit);
+    font-size: var(--cb-cat-filter-button-size, 11px);
     line-height: 1.25;
     text-align: center;
     color: var(--cbk-soft);
@@ -312,17 +1069,18 @@
     color: var(--cbk-text);
   }
 
+  /* A picked option stays at least as bold as the others when their weight is set. */
   .cb-cat-chips--filled .cb-cat-chip__input:checked + .cb-cat-chip__text {
     border-color: var(--cbk-accent);
     background: var(--cbk-accent);
-    font-weight: var(--cbk-font-body-strong);
+    font-weight: max(var(--cb-cat-filter-button-weight, 0), var(--cbk-font-body-strong));
     color: #fff;
   }
 
   .cb-cat-chips--outline .cb-cat-chip__input:checked + .cb-cat-chip__text {
     border-color: var(--cbk-accent);
     background: color-mix(in srgb, var(--cbk-accent) 12%, var(--cbk-card));
-    font-weight: var(--cbk-font-body-strong);
+    font-weight: max(var(--cb-cat-filter-button-weight, 0), var(--cbk-font-body-strong));
     color: var(--cbk-text);
   }
 
@@ -391,12 +1149,13 @@
     gap: 8px;
     margin-top: 10px;
     font-family: var(--cbk-font-body);
-    font-size: 11px;
+    font-weight: var(--cb-cat-filter-price-labels-weight, inherit);
+    font-size: var(--cb-cat-filter-price-labels-size, 11px);
     color: var(--cbk-muted);
   }
 
   .cb-cat-price__current strong {
-    font-weight: var(--cbk-font-body-strong);
+    font-weight: max(var(--cb-cat-filter-price-labels-weight, 0), var(--cbk-font-body-strong));
     color: var(--cbk-text);
   }
 {% endstylesheet %}
@@ -410,7 +1169,7 @@
       "type": "text",
       "id": "filter_label",
       "label": "Filter name",
-      "info": "Must match the filter's name in the Search & Discovery app, e.g. Price, Availability, Play style. Price filters show as a slider.",
+      "info": "The filter's name in the Search & Discovery app (capitals and spaces don't matter), e.g. Price, Availability, Play style. List several, comma-separated, to match any of them (e.g. Racket balance, Balance). Price filters show as a slider.",
       "default": "Price"
     },
     {
@@ -418,6 +1177,37 @@
       "id": "title_text",
       "label": "Heading",
       "info": "Leave empty to use the filter name."
+    },
+    {
+      "type": "text",
+      "id": "always_values",
+      "label": "Always show these options",
+      "info": "The filter always shows, with every option a product in the store has, greyed out with 0 when this collection has none. List options no product has yet here to show them too, comma-separated, e.g. Attack, Speed, Control, All-round. Spell them as on the products, or leave off the bracketed part to show a shorter name (Victor shows Victor (Taiwan) as Victor)."
+    },
+    {
+      "type": "text",
+      "id": "empty_text",
+      "label": "Text when there are no options",
+      "info": "Shown under the heading when no product in the store has this filter yet and no options are listed above.",
+      "default": "No options yet"
+    },
+    {
+      "type": "select",
+      "id": "panel_style",
+      "label": "Style",
+      "options": [
+        { "value": "lines", "label": "Lines between filters" },
+        { "value": "card", "label": "Card" },
+        { "value": "panel", "label": "Inside one panel" }
+      ],
+      "default": "lines",
+      "info": "Inside one panel: the Filters heading and every filter using this style share one panel."
+    },
+    {
+      "type": "text",
+      "id": "reset_label",
+      "label": "Reset link",
+      "info": "Shown beside the heading while something in this filter is ticked, e.g. Reset. Leave empty to hide."
     },
     {
       "type": "select",
@@ -435,7 +1225,9 @@
       "label": "Buttons per row",
       "options": [
         { "value": "2", "label": "2" },
-        { "value": "3", "label": "3" }
+        { "value": "3", "label": "3" },
+        { "value": "4", "label": "4" },
+        { "value": "auto", "label": "Fit to text" }
       ],
       "default": "2",
       "visible_if": "{{ block.settings.display == 'buttons' }}"
@@ -458,6 +1250,27 @@
       "default": true
     },
     {
+      "type": "select",
+      "id": "count_style",
+      "label": "Count style",
+      "options": [
+        { "value": "plain", "label": "Plain number" },
+        { "value": "brackets", "label": "In brackets, e.g. (12)" },
+        { "value": "boxed", "label": "Boxed (bold when ticked)" }
+      ],
+      "default": "plain"
+    },
+    {
+      "type": "select",
+      "id": "check_shape",
+      "label": "Tick box shape",
+      "options": [
+        { "value": "square", "label": "Square" },
+        { "value": "round", "label": "Round (radio look)" }
+      ],
+      "default": "square"
+    },
+    {
       "type": "checkbox",
       "id": "numbered",
       "label": "Number this filter",
@@ -466,9 +1279,17 @@
     },
     {
       "type": "checkbox",
+      "id": "collapsible",
+      "label": "Can be folded",
+      "info": "Shows an arrow beside the heading.",
+      "default": true
+    },
+    {
+      "type": "checkbox",
       "id": "collapsed",
       "label": "Start collapsed",
-      "default": false
+      "default": false,
+      "visible_if": "{{ block.settings.collapsible }}"
     },
     {
       "type": "text",
@@ -477,11 +1298,351 @@
       "info": "Small text under the values."
     },
     {
+      "type": "header",
+      "content": "Heading link"
+    },
+    {
+      "type": "text",
+      "id": "title_link_label",
+      "label": "Link text",
+      "info": "Small accent link beside the heading, e.g. Guide."
+    },
+    {
+      "type": "url",
+      "id": "title_link",
+      "label": "Link",
+      "info": "Leave empty to open the guide text below under the heading instead."
+    },
+    {
+      "type": "textarea",
+      "id": "guide_text",
+      "label": "Guide text"
+    },
+    {
+      "type": "header",
+      "content": "Price filter"
+    },
+    {
+      "type": "select",
+      "id": "price_display",
+      "label": "Show price as",
+      "options": [
+        { "value": "slider", "label": "Slider" },
+        { "value": "buckets", "label": "Price ranges to tick" }
+      ],
+      "default": "slider"
+    },
+    {
       "type": "text",
       "id": "price_prefix",
-      "label": "Price label",
-      "info": "Price slider only.",
-      "default": "Up to"
+      "label": "Slider label",
+      "default": "Up to",
+      "visible_if": "{{ block.settings.price_display == 'slider' }}"
+    },
+    {
+      "type": "textarea",
+      "id": "price_buckets",
+      "label": "Price ranges",
+      "info": "One per line: label | from-to. Use 60+ for no upper limit, e.g. Over $60 | 60+",
+      "default": "Under $30 | 0-30\n$30 – $60 | 30-60\nOver $60 | 60+",
+      "visible_if": "{{ block.settings.price_display == 'buckets' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "price_multi",
+      "label": "Let shoppers tick several ranges",
+      "info": "Ticked ranges combine into one span, e.g. $120 – $180 plus $180 – $240 shows $120 – $240. Off: one range at a time.",
+      "default": false,
+      "visible_if": "{{ block.settings.price_display == 'buckets' }}"
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading size",
+      "info": "Card style shows it larger and the \"Inside one panel\" style smaller.",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "select",
+      "id": "heading_weight",
+      "label": "Heading weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "heading_link_size",
+      "label": "Heading link size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "heading_link_weight",
+      "label": "Heading link weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "reset_size",
+      "label": "Reset link size",
+      "info": "Card style shows it larger.",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "select",
+      "id": "reset_weight",
+      "label": "Reset link weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "guide_size",
+      "label": "Guide text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "select",
+      "id": "guide_weight",
+      "label": "Guide text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "checkbox_size",
+      "label": "Checkbox labels size",
+      "info": "Card style shows them larger.",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "checkbox_weight",
+      "label": "Checkbox labels weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "count_size",
+      "label": "Product counts size",
+      "info": "Boxed counts show slightly smaller.",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "select",
+      "id": "count_weight",
+      "label": "Product counts weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "button_size",
+      "label": "Button text size",
+      "info": "The \"Inside one panel\" style shows them slightly smaller.",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "select",
+      "id": "button_weight",
+      "label": "Button text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "price_labels_size",
+      "label": "Price slider labels size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "select",
+      "id": "price_labels_weight",
+      "label": "Price slider labels weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "note_size",
+      "label": "Note size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "select",
+      "id": "note_weight",
+      "label": "Note weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "empty_size",
+      "label": "No options text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "empty_weight",
+      "label": "No options text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
     }
   ],
   "presets": [{ "name": "[CB] Filter" }]

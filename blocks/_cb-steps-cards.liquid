@@ -1,0 +1,101 @@
+<ol
+  class="cb-steps__cards cb-steps__cards--{{ block.settings.number_style }}{% if block.settings.title_uppercase %} cb-steps__cards--upper{% endif %}"
+  style="--cbst-columns: {{ block.settings.columns }}; --cbst-card-gap: {{ block.settings.gap }}px;"
+  role="list"
+  {{ block.shopify_attributes }}
+>
+  {% content_for 'blocks' %}
+</ol>
+
+{% stylesheet %}
+  .cb-steps__cards {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--cbst-card-gap, 24px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: cb-step;
+  }
+
+  .cb-steps__cards--plain .cb-steps__number--auto::before {
+    content: counter(cb-step);
+  }
+
+  .cb-steps__cards--none .cb-steps__number {
+    display: none;
+  }
+
+  .cb-steps__cards--upper .cb-steps__title {
+    text-transform: uppercase;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-steps__cards {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .cb-steps__cards {
+      grid-template-columns: repeat(var(--cbst-columns, 4), minmax(0, 1fr));
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Steps",
+  "tag": null,
+  "blocks": [{ "type": "_cb-steps-card" }],
+  "settings": [
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Steps per row on desktop",
+      "info": "Tablets show 2 per row, phones 1.",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Gap",
+      "min": 8,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "select",
+      "id": "number_style",
+      "label": "Numbers",
+      "options": [
+        { "value": "leading_zero", "label": "01, 02, 03" },
+        { "value": "plain", "label": "1, 2, 3" },
+        { "value": "none", "label": "Hidden" }
+      ],
+      "default": "leading_zero"
+    },
+    {
+      "type": "checkbox",
+      "id": "title_uppercase",
+      "label": "Titles in capital letters",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Steps",
+      "blocks": {
+        "step_1": { "type": "_cb-steps-card" },
+        "step_2": { "type": "_cb-steps-card", "settings": { "card_title": "Next step", "card_text": "Describe what happens next." } }
+      },
+      "block_order": ["step_1", "step_2"]
+    }
+  ]
+}
+{% endschema %}

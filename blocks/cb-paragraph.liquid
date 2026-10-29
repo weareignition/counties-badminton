@@ -1,0 +1,361 @@
+{%- comment -%}
+  Body text for any section. Inside a [CB] section it uses that section's body font and colours (through the
+  --cb-* variables from snippets/cb-font-styles); elsewhere it falls back to the theme's body font.
+{%- endcomment -%}
+{%- liquid
+  assign s = block.settings
+
+  case s.weight
+    when 'strong'
+      assign weight = 'var(--cb-font-body-strong, 600)'
+    when '100', '200', '300', '500', '700', '800', '900'
+      assign weight = s.weight
+    else
+      assign weight = 'var(--cb-font-body-weight, var(--font-body--weight))'
+  endcase
+
+  case s.color
+    when 'soft'
+      assign color = 'var(--cb-color-soft, var(--color-foreground-muted, currentColor))'
+    when 'text'
+      assign color = 'var(--cb-color-text, currentColor)'
+    when 'accent'
+      assign color = 'var(--cb-color-accent, #d71f27)'
+    when 'custom'
+      assign color = s.custom_color | default: 'currentColor'
+    else
+      assign color = 'var(--cb-color-muted, var(--color-foreground-muted, currentColor))'
+  endcase
+
+  assign line_height = s.line_height | divided_by: 100.0
+  assign letter_spacing = s.letter_spacing | divided_by: 100.0
+
+  case s.max_width_unit
+    when 'px'
+      assign max_width = s.max_width_px | append: 'px'
+    when 'ch'
+      assign max_width = s.max_width_ch | append: 'ch'
+    else
+      assign max_width = 'none'
+  endcase
+-%}
+
+{%- if s.body_text != blank -%}
+  <div
+    class="cb-paragraph cb-paragraph--{{ s.mobile_sizing }}{% render 'cb-text-box', settings: s, part: 'class' %}"
+    style="
+      --cb-paragraph-size: {{ s.size }}px;
+      {%- if s.mobile_sizing != 'same' %} --cb-paragraph-mobile: {{ s.mobile_size }}px;{% endif %}
+      {%- if s.mobile_sizing == 'fluid' %} --cb-paragraph-vw: {{ s.fluid_vw }}vw;{% endif %}
+      --cb-paragraph-lh: {{ line_height }};
+      --cb-paragraph-ls: {{ letter_spacing }}em;
+      --cb-paragraph-weight: {{ weight }};
+      --cb-paragraph-color: {{ color }};
+      --cb-paragraph-wrap: {{ s.wrap }};
+      --cb-paragraph-max: {{ max_width }};
+      {% render 'cb-text-box', settings: s, part: 'style' %}
+    "
+    {{ block.shopify_attributes }}
+  >
+    {{ s.body_text }}
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  .cb-paragraph {
+    max-width: var(--cb-paragraph-max, none);
+    font-family: var(--cb-font-body, var(--font-body--family));
+    font-weight: var(--cb-paragraph-weight);
+    font-size: var(--cb-paragraph-size, 14px);
+    line-height: var(--cb-paragraph-lh, 1.6);
+    letter-spacing: var(--cb-paragraph-ls, 0);
+    color: var(--cb-paragraph-color);
+    text-wrap: var(--cb-paragraph-wrap, wrap);
+  }
+
+  .cb-paragraph--custom {
+    font-size: var(--cb-paragraph-mobile, 14px);
+  }
+
+  /* Grows with the screen from the phone size up to the set size. */
+  .cb-paragraph--fluid {
+    font-size: clamp(var(--cb-paragraph-mobile, 14px), var(--cb-paragraph-vw, 2vw), var(--cb-paragraph-size, 14px));
+  }
+
+  .cb-paragraph > * {
+    margin: 0;
+  }
+
+  .cb-paragraph > * + * {
+    margin-top: 0.75em;
+  }
+
+  .cb-paragraph a {
+    color: var(--cb-color-text, var(--color-foreground, currentColor));
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-paragraph--custom {
+      font-size: var(--cb-paragraph-size, 14px);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Paragraph",
+  "tag": null,
+  "settings": [
+    {
+      "type": "richtext",
+      "id": "body_text",
+      "label": "Text"
+    },
+    {
+      "type": "header",
+      "content": "Size"
+    },
+    {
+      "type": "range",
+      "id": "size",
+      "label": "Size",
+      "min": 10,
+      "max": 32,
+      "step": 0.5,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "mobile_sizing",
+      "label": "On phones",
+      "options": [
+        { "value": "same", "label": "Same size" },
+        { "value": "custom", "label": "Different size" },
+        { "value": "fluid", "label": "Shrinks with the screen" }
+      ],
+      "default": "same"
+    },
+    {
+      "type": "range",
+      "id": "mobile_size",
+      "label": "Phone size",
+      "info": "With 'Shrinks with the screen', this is the smallest size.",
+      "min": 10,
+      "max": 32,
+      "step": 0.5,
+      "unit": "px",
+      "default": 14,
+      "visible_if": "{{ block.settings.mobile_sizing != 'same' }}"
+    },
+    {
+      "type": "range",
+      "id": "fluid_vw",
+      "label": "Size per screen width",
+      "info": "Percent of the screen width. The text never gets bigger than the size above.",
+      "min": 1,
+      "max": 10,
+      "step": 0.1,
+      "unit": "vw",
+      "default": 2,
+      "visible_if": "{{ block.settings.mobile_sizing == 'fluid' }}"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "select",
+      "id": "weight",
+      "label": "Weight",
+      "options": [
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "regular", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "strong", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "regular"
+    },
+    {
+      "type": "select",
+      "id": "color",
+      "label": "Color",
+      "options": [
+        { "value": "muted", "label": "Muted" },
+        { "value": "soft", "label": "Soft" },
+        { "value": "text", "label": "Text" },
+        { "value": "accent", "label": "Accent" },
+        { "value": "custom", "label": "Custom" }
+      ],
+      "default": "muted"
+    },
+    {
+      "type": "color",
+      "id": "custom_color",
+      "label": "Custom color",
+      "default": "#ffffff",
+      "visible_if": "{{ block.settings.color == 'custom' }}"
+    },
+    {
+      "type": "range",
+      "id": "line_height",
+      "label": "Line height",
+      "min": 100,
+      "max": 200,
+      "step": 1,
+      "unit": "%",
+      "default": 160
+    },
+    {
+      "type": "range",
+      "id": "letter_spacing",
+      "label": "Letter spacing",
+      "info": "Percent of the text size.",
+      "min": -5,
+      "max": 20,
+      "step": 0.5,
+      "unit": "%",
+      "default": 0
+    },
+    {
+      "type": "select",
+      "id": "wrap",
+      "label": "Line breaks",
+      "options": [
+        { "value": "wrap", "label": "Normal" },
+        { "value": "balance", "label": "Even line lengths" },
+        { "value": "pretty", "label": "No single word on the last line" }
+      ],
+      "default": "wrap"
+    },
+    {
+      "type": "header",
+      "content": "Width"
+    },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "Width",
+      "options": [
+        { "value": "auto", "label": "Auto (follows the section)" },
+        { "value": "fit", "label": "Fit the text" },
+        { "value": "full", "label": "Full width" },
+        { "value": "custom", "label": "Custom" }
+      ],
+      "default": "auto"
+    },
+    {
+      "type": "range",
+      "id": "width_px",
+      "label": "Custom width",
+      "min": 100,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "default": 400,
+      "visible_if": "{{ block.settings.width == 'custom' }}"
+    },
+    {
+      "type": "select",
+      "id": "max_width_unit",
+      "label": "Max width",
+      "options": [
+        { "value": "none", "label": "No limit" },
+        { "value": "px", "label": "Pixels" },
+        { "value": "ch", "label": "Characters per line" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "max_width_px",
+      "label": "Max width",
+      "min": 200,
+      "max": 1200,
+      "step": 10,
+      "unit": "px",
+      "default": 640,
+      "visible_if": "{{ block.settings.max_width_unit == 'px' }}"
+    },
+    {
+      "type": "range",
+      "id": "max_width_ch",
+      "label": "Characters per line",
+      "min": 20,
+      "max": 120,
+      "step": 1,
+      "default": 60,
+      "visible_if": "{{ block.settings.max_width_unit == 'ch' }}"
+    },
+    {
+      "type": "header",
+      "content": "Box"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "info": "Leave empty for no background."
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Padding top and bottom",
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_x",
+      "label": "Padding left and right",
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "label": "Border",
+      "info": "0 = no border.",
+      "min": 0,
+      "max": 8,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "info": "Leave empty for a faint version of the text colour.",
+      "visible_if": "{{ block.settings.border_width > 0 }}"
+    },
+    {
+      "type": "range",
+      "id": "radius",
+      "label": "Corner radius",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Paragraph",
+      "settings": { "body_text": "<p>Tell customers more about this part of the store.</p>" }
+    }
+  ]
+}
+{% endschema %}

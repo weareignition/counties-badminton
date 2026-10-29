@@ -1,7 +1,8 @@
 {%- doc -%}
   Renders a list or swatch filter.
 
-  @param {object} filter - The filter to render
+  @param {object} filter - The filter to render (nil when the collection has no products with it)
+  @param {object} [store_filter] - The same filter across the whole store; its options this collection has none of show greyed out
   @param {string} filter_style - The filter style ('horizontal' | 'vertical')
   @param {number} active_value_count - The number of active values
   @param {number} sectionId - The section ID
@@ -11,6 +12,34 @@
 {%- enddoc -%}
 
 {% render 'variant-picker-styles' %}
+
+{%- liquid
+  # Options in the store's order: "c<n>" is this collection's option n, "s<n>" store option n that this collection has
+  # none of (greyed out). Without a store filter (search results) only the collection's own options show.
+  assign page_filter = filter
+  assign filter = filter | default: store_filter
+  assign all_values = store_filter.values | default: filter.values
+  assign value_list = ''
+  assign shown_values = '|'
+  for store_value in store_filter.values
+    assign token = 's' | append: forloop.index0
+    for value in page_filter.values
+      if value.value == store_value.value
+        assign token = 'c' | append: forloop.index0
+        break
+      endif
+    endfor
+    assign value_list = value_list | append: token | append: ','
+    assign shown_values = shown_values | append: store_value.value | append: '|'
+  endfor
+  for value in page_filter.values
+    assign value_id = '|' | append: value.value | append: '|'
+    unless shown_values contains value_id
+      assign value_list = value_list | append: 'c' | append: forloop.index0 | append: ','
+    endunless
+  endfor
+  assign value_tokens = value_list | split: ','
+-%}
 
 {% liquid
   assign is_swatch = false
@@ -133,7 +162,7 @@
           if is_swatch and show_swatch_label
             assign should_render_for_swatch = false
           endif
-          if filter.values.size > max_visible_values and should_render_for_swatch == false
+          if value_tokens.size > max_visible_values and should_render_for_swatch == false
             assign render_show_more = true
           endif
         %}
@@ -147,7 +176,7 @@
           endif
           assign should_use_pills = true
 
-          for value in filter.values
+          for value in all_values
             if value.label.size > 3
               assign should_use_pills = false
               break
@@ -165,15 +194,15 @@
         >
           {% liquid
             if is_swatch
-              assign swatch_columns = filter.values.size
+              assign swatch_columns = value_tokens.size
 
               if swatch_columns > 4
                 assign swatch_columns = 4
 
                 # Balance the number of columns based on the number of values, i.e. try to avoid one or two items in
                 # the last row if the number of values is (almost) divisible by 3.
-                assign mod4 = filter.values.size | modulo: 4
-                assign mod3 = filter.values.size | modulo: 3
+                assign mod4 = value_tokens.size | modulo: 4
+                assign mod3 = value_tokens.size | modulo: 3
                 if mod4 != 0 and mod4 != 3
                   if mod3 == 0 or mod3 == 2
                     assign swatch_columns = 3
@@ -184,8 +213,8 @@
 
             if is_image
               assign image_columns = 3
-              if filter.values.size < 3
-                assign image_columns = filter.values.size
+              if value_tokens.size < 3
+                assign image_columns = value_tokens.size
               endif
             endif
           %}
@@ -200,11 +229,16 @@
             {% endif %}
             name="{{ filter.label }}"
           >
-            {%- for value in filter.values -%}
+            {%- for token in value_tokens -%}
               {% liquid
+                assign index = token | remove_first: 'c' | remove_first: 's' | plus: 0
+                assign value = page_filter.values[index]
                 assign input_id = 'Filter-' | append: filter.param_name | escape | append: '-' | append: forloop.index | replace: '.', '-' | append: '-' | append: filter_style | append: '-' | append: in_drawer
                 assign is_disabled = false
-                if value.count == 0 and value.active == false
+                if token contains 's'
+                  assign value = store_filter.values[index]
+                  assign is_disabled = true
+                elsif value.count == 0 and value.active == false
                   assign is_disabled = true
                 endif
                 assign hidden_class = null

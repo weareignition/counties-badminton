@@ -1,0 +1,259 @@
+{%- liquid
+  assign s = section.settings
+  assign font_scope = '#cb-bspot-' | append: section.id
+-%}
+
+{% render 'cb-font-styles',
+  selector: font_scope,
+  prefix: 'cbbs',
+  heading_font: s.heading_font,
+  body_font: s.body_font
+%}
+
+<section
+  id="cb-bspot-{{ section.id }}"
+  class="cb-bspot"
+  style="
+    --cbbs-bg: {{ s.background_color }};
+    --cbbs-card: {{ s.card_background_color }};
+    --cbbs-badge: {{ s.badge_background_color }};
+    --cbbs-text: {{ s.text_color }};
+    --cbbs-muted: {{ s.muted_text_color }};
+    --cbbs-accent: {{ s.accent_color }};
+    --cbbs-radius: {{ s.card_radius }}px;
+    --cbbs-card-pad: {{ s.card_padding }}px;
+    --cbbs-max-width: {{ s.max_width }}px;
+    --cbbs-stack-gap: {{ s.stack_gap }}px;
+    --cbbs-pt: {{ s.padding_top }}px;
+    --cbbs-pb: {{ s.padding_bottom }}px;
+  "
+>
+  <div class="cb-bspot__inner">
+    {% content_for 'blocks' %}
+  </div>
+</section>
+
+{% stylesheet %}
+  .cb-bspot {
+    color: var(--cbbs-text);
+    background: var(--cbbs-bg);
+    padding: calc(var(--cbbs-pt) * 0.75) 16px calc(var(--cbbs-pb) * 0.75);
+  }
+
+  .cb-bspot__inner {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--cbbs-stack-gap) * 0.8);
+    max-width: var(--cbbs-max-width);
+    margin-inline: auto;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-bspot {
+      padding: var(--cbbs-pt) 32px var(--cbbs-pb);
+    }
+
+    .cb-bspot__inner {
+      gap: var(--cbbs-stack-gap);
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .cb-bspot {
+      padding-inline: 48px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Brand spotlight",
+  "tag": "div",
+  "class": "section-wrapper",
+  "blocks": [
+    { "type": "_cb-bspot-header" },
+    { "type": "_cb-bspot-cards" }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width",
+      "min": 960,
+      "max": 1800,
+      "step": 20,
+      "unit": "px",
+      "default": 1400
+    },
+    {
+      "type": "range",
+      "id": "stack_gap",
+      "label": "Space between header and cards",
+      "min": 8,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "card_padding",
+      "label": "Card padding",
+      "info": "Phones use less.",
+      "min": 16,
+      "max": 64,
+      "step": 1,
+      "unit": "px",
+      "default": 37
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Card corner radius",
+      "min": 0,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "info": "The chosen style sets the heading weight. Brand names use the font's medium style, card titles its regular style.",
+      "default": "space_grotesk_n5"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "info": "Used for the eyebrow, text, badges and links.",
+      "default": "inter_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#0b0b0b"
+    },
+    {
+      "type": "color",
+      "id": "card_background_color",
+      "label": "Cards",
+      "default": "#191919"
+    },
+    {
+      "type": "color",
+      "id": "badge_background_color",
+      "label": "Badges",
+      "default": "#2a2a2a"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "muted_text_color",
+      "label": "Body text and badge text",
+      "default": "#a1a1aa"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "info": "Eyebrow and links.",
+      "default": "#d71f27"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Brand spotlight",
+      "category": "t:categories.collections",
+      "blocks": {
+        "header": {
+          "type": "_cb-bspot-header",
+          "blocks": {
+            "eyebrow": {
+              "type": "cb-subheader",
+              "settings": { "subheader_text": "Footwear brands", "letter_spacing": 0 }
+            },
+            "heading": { "type": "cb-heading", "settings": { "heading_text": "Victor and Babolat court footwear." } }
+          },
+          "block_order": ["eyebrow", "heading"]
+        },
+        "cards": {
+          "type": "_cb-bspot-cards",
+          "blocks": {
+            "victor": {
+              "type": "_cb-bspot-card",
+              "settings": {
+                "brand_name": "Victor",
+                "badge": "Court specialist",
+                "card_title": "Precision Court Engineering",
+                "card_text": "Engineered specifically for badminton movement, Victor footwear delivers responsive court feel, lateral stability, and reliable traction during rapid changes of direction.",
+                "link_label": "Explore [brand] range",
+                "search_word": "shoe"
+              }
+            },
+            "babolat": {
+              "type": "_cb-bspot-card",
+              "settings": {
+                "brand_name": "Babolat",
+                "badge": "Grip & traction",
+                "card_title": "Grip & Outsole Performance",
+                "card_text": "Babolat court shoes deliver robust non-marking court grip and long-lasting durability, tailored for players requiring confident footwork across intensive training and match play.",
+                "link_label": "Explore [brand] range",
+                "search_word": "shoe"
+              }
+            }
+          },
+          "block_order": ["victor", "babolat"]
+        }
+      },
+      "block_order": ["header", "cards"]
+    }
+  ]
+}
+{% endschema %}

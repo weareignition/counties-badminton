@@ -1,0 +1,198 @@
+{%- comment -%}
+  One answer. Its match words (product tags or words in product titles) score rackets for the results.
+{%- endcomment -%}
+{%- liquid
+  assign match = ''
+  assign terms = block.settings.match_tags | split: ','
+  for term in terms
+    assign key = term | strip | handleize
+    if key != blank
+      assign match = match | append: key | append: '|'
+    endif
+  endfor
+-%}
+
+{%- if block.settings.option_title != blank -%}
+  <button
+    type="button"
+    class="cb-quiz-opt"
+    data-cb-quiz-option
+    data-match="{{ match }}"
+    aria-pressed="false"
+    style="
+      --cb-quiz-option-answer-size: {{ block.settings.answer_size }}px;
+      --cb-quiz-option-answer-weight: {{ block.settings.answer_weight }};
+      --cb-quiz-option-description-size: {{ block.settings.description_size }}px;
+      --cb-quiz-option-description-weight: {{ block.settings.description_weight }};
+    "
+    {{ block.shopify_attributes }}
+  >
+    <span class="cb-quiz-opt__radio" aria-hidden="true"></span>
+    <span class="cb-quiz-opt__body">
+      <span class="cb-quiz-opt__title">{{ block.settings.option_title | escape }}</span>
+      {%- if block.settings.option_text != blank -%}
+        <span class="cb-quiz-opt__desc">{{ block.settings.option_text | escape }}</span>
+      {%- endif -%}
+    </span>
+  </button>
+{%- endif -%}
+
+{% stylesheet %}
+  .cb-quiz-opt {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    width: 100%;
+    min-height: 100%;
+    margin: 0;
+    padding: 12px 14px;
+    border: 1px solid var(--cbq-border);
+    border-radius: 3px;
+    background: var(--cbq-option);
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+  }
+
+  .cb-quiz-opt:hover {
+    border-color: var(--cbq-border-strong);
+  }
+
+  .cb-quiz-opt[aria-pressed='true'] {
+    border-color: color-mix(in srgb, var(--cbq-accent) 70%, transparent);
+    background: color-mix(in srgb, var(--cbq-accent) 10%, var(--cbq-option));
+  }
+
+  .cb-quiz-opt:focus-visible {
+    outline: 2px solid var(--cbq-text);
+    outline-offset: 2px;
+  }
+
+  .cb-quiz-opt__radio {
+    flex: none;
+    width: 13px;
+    height: 13px;
+    margin-top: 1px;
+    border: 1px solid var(--cbq-border-strong);
+    border-radius: 50%;
+    transition: border-color 0.2s ease, border-width 0.2s ease;
+  }
+
+  .cb-quiz-opt[aria-pressed='true'] .cb-quiz-opt__radio {
+    border: 4px solid var(--cbq-accent);
+    background: #fff;
+  }
+
+  .cb-quiz-opt__body {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .cb-quiz-opt__title {
+    font-family: var(--cbq-font-heading);
+    font-weight: var(--cb-quiz-option-answer-weight, var(--cbq-font-heading-weight));
+    font-size: var(--cb-quiz-option-answer-size, 13px);
+    line-height: 1.3;
+    color: var(--cbq-text);
+  }
+
+  .cb-quiz-opt__desc {
+    font-family: var(--cbq-font-body);
+    font-weight: var(--cb-quiz-option-description-weight, var(--cbq-font-body-weight));
+    font-size: var(--cb-quiz-option-description-size, 11px);
+    line-height: 1.5;
+    color: var(--cbq-muted);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Answer",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "option_title",
+      "label": "Answer",
+      "default": "Rear-Court Attack"
+    },
+    {
+      "type": "text",
+      "id": "option_text",
+      "label": "Description",
+      "default": "Aggressive smashes, steep angle clears, heavy baseline offense."
+    },
+    {
+      "type": "text",
+      "id": "match_tags",
+      "label": "Match rackets by",
+      "info": "Product tags or words in product titles, separated by commas (e.g. Astrox, Thruster). Rackets matching the most answers are shown as the results."
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "answer_size",
+      "label": "Answer size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "select",
+      "id": "answer_weight",
+      "label": "Answer weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "description_size",
+      "label": "Description size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "select",
+      "id": "description_weight",
+      "label": "Description weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    }
+  ],
+  "presets": [{ "name": "[CB] Answer" }]
+}
+{% endschema %}

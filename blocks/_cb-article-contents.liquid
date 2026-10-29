@@ -1,0 +1,191 @@
+{%- comment -%}
+  "In this guide" list. Automatic: every [CB] Heading in the article column, linked to it (optionally leaving out the
+  first one, e.g. a "quick answer" heading). Built in the browser, because Liquid can't read other theme blocks'
+  settings (section.blocks reports them as '@theme' without settings); it rebuilds when headings change in the editor.
+  Custom: one item per line, not linked.
+{%- endcomment -%}
+{%- assign s = block.settings -%}
+
+{%- if s.source == 'custom' -%}
+  <ul
+    class="cb-article-contents"
+    role="list"
+    style="--cb-article-contents-item-size: {{ s.item_size }}px; --cb-article-contents-item-weight: {{ s.item_weight }};"
+    {{ block.shopify_attributes }}
+  >
+    {%- assign lines = s.items | newline_to_br | split: '<br />' -%}
+    {%- for line in lines -%}
+      {%- assign text = line | strip -%}
+      {%- if text != blank -%}
+        <li>{{ text | escape }}</li>
+      {%- endif -%}
+    {%- endfor -%}
+  </ul>
+{%- else -%}
+  <cb-guide-contents
+    class="cb-article-contents"
+    {% if s.skip_first %}data-skip-first{% endif %}
+    style="--cb-article-contents-item-size: {{ s.item_size }}px; --cb-article-contents-item-weight: {{ s.item_weight }};"
+    {{ block.shopify_attributes }}
+  >
+    <ul class="cb-article-contents__list" role="list"></ul>
+  </cb-guide-contents>
+{%- endif -%}
+
+{% javascript %}
+  if (!customElements.get('cb-guide-contents')) {
+    customElements.define(
+      'cb-guide-contents',
+      class extends HTMLElement {
+        connectedCallback() {
+          this.article = this.closest('.cb-article');
+          if (!this.article) return;
+          this.build();
+          // Rebuild when headings are added, removed or edited (theme editor).
+          const main = this.article.querySelector('.cb-article__main');
+          if (main) {
+            this.observer = new MutationObserver(() => this.build());
+            this.observer.observe(main, { childList: true, subtree: true, characterData: true });
+          }
+        }
+
+        disconnectedCallback() {
+          this.observer?.disconnect();
+        }
+
+        build() {
+          const list = this.querySelector('ul');
+          const headings = [...this.article.querySelectorAll('.cb-article__main > .cb-heading')].filter((h) => h.id);
+          if (this.hasAttribute('data-skip-first')) headings.shift();
+          const signature = headings.map((h) => h.id + h.textContent).join('|');
+          if (signature === this.signature) return;
+          this.signature = signature;
+          list.replaceChildren(
+            ...headings.map((h) => {
+              const item = document.createElement('li');
+              const link = document.createElement('a');
+              link.href = '#' + h.id;
+              link.textContent = h.textContent.trim();
+              item.append(link);
+              return item;
+            })
+          );
+        }
+      }
+    );
+  }
+{% endjavascript %}
+
+{% stylesheet %}
+  cb-guide-contents.cb-article-contents {
+    display: block;
+  }
+
+  ul.cb-article-contents,
+  .cb-article-contents__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--cbar-list-gap, 8px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .cb-article-contents li {
+    position: relative;
+    padding-left: 15px;
+    font-family: var(--cb-font-body, var(--font-body--family));
+    font-weight: var(--cb-article-contents-item-weight, var(--cb-font-body-weight, var(--font-body--weight)));
+    font-size: var(--cb-article-contents-item-size, 13px);
+    line-height: 1.6;
+    color: var(--cb-color-text, currentColor);
+  }
+
+  .cb-article-contents li::before {
+    content: '';
+    position: absolute;
+    top: 0.68em;
+    left: 1px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  .cb-article-contents a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .cb-article-contents a:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Guide contents",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "source",
+      "label": "Items",
+      "options": [
+        { "value": "auto", "label": "The article's headings" },
+        { "value": "custom", "label": "Custom list" }
+      ],
+      "default": "auto"
+    },
+    {
+      "type": "checkbox",
+      "id": "skip_first",
+      "label": "Leave out the first heading",
+      "info": "E.g. a quick-answer heading at the top.",
+      "default": true,
+      "visible_if": "{{ block.settings.source == 'auto' }}"
+    },
+    {
+      "type": "textarea",
+      "id": "items",
+      "label": "Custom items",
+      "info": "One per line.",
+      "visible_if": "{{ block.settings.source == 'custom' }}"
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "item_size",
+      "label": "Item size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "select",
+      "id": "item_weight",
+      "label": "Item weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    }
+  ],
+  "presets": [{ "name": "[CB] Guide contents" }]
+}
+{% endschema %}

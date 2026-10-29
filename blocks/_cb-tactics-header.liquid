@@ -17,14 +17,23 @@
   "name": "[CB] Header",
   "tag": null,
   "blocks": [
-    { "type": "_cb-tactics-eyebrow" },
+    { "type": "cb-subheader" },
     { "type": "_cb-tactics-note" }
   ],
   "presets": [
     {
       "name": "[CB] Header",
       "blocks": {
-        "eyebrow": { "type": "_cb-tactics-eyebrow" },
+        "eyebrow": {
+          "type": "cb-subheader",
+          "settings": {
+            "subheader_text": "Choose by playing tactics",
+            "show_dot": true,
+            "size": 11,
+            "color": "soft",
+            "letter_spacing": 12
+          }
+        },
         "note": { "type": "_cb-tactics-note" }
       },
       "block_order": ["eyebrow", "note"]

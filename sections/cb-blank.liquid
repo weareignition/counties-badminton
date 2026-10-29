@@ -1,0 +1,257 @@
+{%- comment -%}
+  An empty section to build anything in: add rows (with columns) or any reusable block directly.
+  It loads the fonts and colours the [CB] blocks read (--cb-* via snippets/cb-font-styles), and passes the text and
+  background colours on to Horizon's own blocks (--color-foreground etc.) so they stay readable.
+{%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign font_scope = '#cb-blank-' | append: section.id
+-%}
+
+{% render 'cb-font-styles',
+  selector: font_scope,
+  prefix: 'cbbk',
+  heading_font: s.heading_font,
+  body_font: s.body_font
+%}
+
+<section
+  id="cb-blank-{{ section.id }}"
+  class="cb-blank cb-blank--{{ s.alignment }}{% if request.design_mode %} cb-blank--editing{% endif %}"
+  style="
+    --cbbk-bg: {{ s.background_color }};
+    --cbbk-text: {{ s.text_color }};
+    --cbbk-muted: {{ s.muted_text_color }};
+    --cbbk-soft: {{ s.soft_text_color }};
+    --cbbk-accent: {{ s.accent_color }};
+    --cbbk-max-width: {{ s.max_width }}px;
+    --cbbk-gap: {{ s.gap }}px;
+    --cbbk-text-gap: {{ s.text_gap }}px;
+    --cbbk-pt: {{ s.padding_top }}px;
+    --cbbk-pb: {{ s.padding_bottom }}px;
+    --color-foreground: {{ s.text_color }};
+    --color-foreground-rgb: {{ s.text_color.rgb }};
+    --color-foreground-heading: {{ s.text_color }};
+    --color-background: {{ s.background_color }};
+    --color-background-rgb: {{ s.background_color.rgb }};
+  "
+>
+  <div class="cb-blank__inner">
+    {% content_for 'blocks' %}
+  </div>
+</section>
+
+{% stylesheet %}
+  .cb-blank {
+    color: var(--cbbk-text);
+    background: var(--cbbk-bg);
+    padding: calc(var(--cbbk-pt) * 0.6) 16px calc(var(--cbbk-pb) * 0.6);
+  }
+
+  /* Rows and blocks stack with the section gap; rows always use the full width. */
+  .cb-blank__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--cbbk-gap, 32px);
+    max-width: var(--cbbk-max-width);
+    margin-inline: auto;
+  }
+
+  .cb-blank--center .cb-blank__inner {
+    align-items: center;
+    text-align: center;
+  }
+
+  /* A subheader, heading and paragraph that follow each other sit closer than other blocks. */
+  .cb-blank__inner > :is(.cb-subheader, .cb-heading, .cb-paragraph) + :is(.cb-heading, .cb-paragraph) {
+    margin-top: calc(var(--cbbk-text-gap, 12px) - var(--cbbk-gap, 32px));
+  }
+
+  .cb-blank__inner > .cb-row {
+    align-self: stretch;
+  }
+
+  .cb-blank__hint {
+    align-self: stretch;
+    margin: 0;
+    padding: 32px;
+    border: 1px dashed rgb(255 255 255 / 0.2);
+    border-radius: 8px;
+    font-size: 13px;
+    text-align: center;
+    color: rgb(255 255 255 / 0.6);
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-blank {
+      padding: var(--cbbk-pt) 32px var(--cbbk-pb);
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .cb-blank {
+      padding-inline: 48px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Blank section",
+  "tag": "div",
+  "class": "section-wrapper",
+  "blocks": [
+    {
+      "type": "_cb-row"
+    },
+    {
+      "type": "@theme"
+    },
+    {
+      "type": "@app"
+    }
+  ],
+  "disabled_on": { "groups": ["header", "footer"] },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width",
+      "info": "1600 fills the page like the other [CB] sections.",
+      "min": 600,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "default": 1600
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Space between rows and blocks",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "text_gap",
+      "label": "Space between text blocks",
+      "info": "Between a subheader, heading and paragraph that follow each other. Other blocks use the space above.",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Fonts"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "space_grotesk_n7"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "inter_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "info": "Headings, and text in Horizon's own blocks.",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "soft_text_color",
+      "label": "Soft text",
+      "info": "Paragraph colour \"Soft\".",
+      "default": "#dcdcde"
+    },
+    {
+      "type": "color",
+      "id": "muted_text_color",
+      "label": "Muted text",
+      "info": "Paragraph colour \"Muted\" and card text.",
+      "default": "#d0d0d4"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "info": "Subheaders, italic heading words, buttons.",
+      "default": "#d71f27"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Blank section",
+      "category": "t:categories.layout",
+      "blocks": {
+        "row": {
+          "type": "_cb-row",
+          "blocks": { "column_1": { "type": "_cb-column" }, "column_2": { "type": "_cb-column" } },
+          "block_order": ["column_1", "column_2"]
+        }
+      },
+      "block_order": ["row"]
+    }
+  ]
+}
+{% endschema %}

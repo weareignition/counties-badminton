@@ -1,0 +1,521 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "blocks": {
+        "cb_subheader_bmKiUN": {
+          "type": "cb-subheader",
+          "name": "[CB] Subheader",
+          "settings": {
+            "subheader_text": "Subheader",
+            "secondary": "",
+            "show_dot": false,
+            "size": 10,
+            "weight": "strong",
+            "color": "accent",
+            "custom_color": "#ffffff",
+            "letter_spacing": 10,
+            "uppercase": true,
+            "space_below": 0,
+            "width": "auto",
+            "width_px": 400,
+            "background_color": "",
+            "padding_y": 0,
+            "padding_x": 0,
+            "border_width": 0,
+            "border_color": "",
+            "radius": 0
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "cb_subheader_bmKiUN"
+      ],
+      "disabled": true,
+      "settings": {
+        "content_direction": "column",
+        "gap": 32,
+        "background_color": "",
+        "padding-block-start": 40,
+        "padding-block-end": 80
+      }
+    },
+    "cb_player_guides_DRBn46": {
+      "type": "cb-player-guides",
+      "blocks": {
+        "cb_pguide_header_qjGFT7": {
+          "type": "_cb-pguide-header",
+          "settings": {
+            "alignment": "left",
+            "gap": 12
+          },
+          "blocks": {
+            "cb_subheader_FMJ3Dj": {
+              "type": "cb-subheader",
+              "settings": {
+                "subheader_text": "EXPERT ADVICE",
+                "secondary": "",
+                "show_dot": false,
+                "size": 11,
+                "weight": "strong",
+                "color": "accent",
+                "custom_color": "#ffffff",
+                "letter_spacing": 10,
+                "uppercase": true,
+                "space_below": 3,
+                "width": "auto",
+                "width_px": 400,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_heading_QzPRYr": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "Better choices. Better badminton.&nbsp;",
+                "tag": "h2",
+                "size": 40,
+                "mobile_sizing": "scale",
+                "mobile_scale": 70,
+                "fluid_min": 28,
+                "fluid_vw": 6,
+                "weight": "font",
+                "color": "text",
+                "custom_color": "#ffffff",
+                "line_height": 120,
+                "letter_spacing": -1,
+                "uppercase": false,
+                "wrap": "balance",
+                "width": "auto",
+                "width_px": 400,
+                "max_width": 0,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_paragraph_yyWcaz": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>Clear, practical guidance from Counties Manukau coaches, players and stringers — built to help you understand your equipment and play with more confidence.</p>",
+                "size": 15,
+                "mobile_sizing": "same",
+                "mobile_size": 14,
+                "fluid_vw": 2,
+                "weight": "regular",
+                "color": "muted",
+                "custom_color": "#ffffff",
+                "line_height": 160,
+                "letter_spacing": 0,
+                "wrap": "wrap",
+                "width": "auto",
+                "width_px": 400,
+                "max_width_unit": "none",
+                "max_width_px": 640,
+                "max_width_ch": 60,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "cb_subheader_FMJ3Dj",
+            "cb_heading_QzPRYr",
+            "cb_paragraph_yyWcaz"
+          ]
+        }
+      },
+      "block_order": [
+        "cb_pguide_header_qjGFT7"
+      ],
+      "name": "[CB] Player guides",
+      "settings": {
+        "columns": 2,
+        "max_width": 1120,
+        "column_gap": 22,
+        "row_gap": 80,
+        "header_gap": 80,
+        "equal_height": true,
+        "card_padding": 26,
+        "card_radius": 15,
+        "photo_height": 196,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "{{ settings.color_palette.foreground }}",
+        "card_color": "#1b1b1b",
+        "frame_color": "#ffffff14",
+        "text_color": "#ffffff",
+        "muted_text_color": "#d0d0d4",
+        "accent_color": "#d71f27",
+        "button_color": "#ffffff05",
+        "button_border_color": "#ffffff14",
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
+    },
+    "cb_player_guides_yzGwaQ": {
+      "type": "cb-player-guides",
+      "blocks": {
+        "cb_pguide_header_gegP8z": {
+          "type": "_cb-pguide-header",
+          "settings": {
+            "alignment": "left",
+            "gap": 12
+          },
+          "blocks": {
+            "cb_subheader_dcKeA8": {
+              "type": "cb-subheader",
+              "settings": {
+                "subheader_text": "Guides",
+                "secondary": "",
+                "show_dot": false,
+                "size": 11,
+                "weight": "strong",
+                "color": "accent",
+                "custom_color": "#ffffff",
+                "letter_spacing": 10,
+                "uppercase": true,
+                "space_below": 3,
+                "width": "auto",
+                "width_px": 400,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_heading_PfUtmt": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "Start with the questions players ask most",
+                "tag": "h2",
+                "size": 40,
+                "mobile_sizing": "scale",
+                "mobile_scale": 70,
+                "fluid_min": 28,
+                "fluid_vw": 6,
+                "weight": "font",
+                "color": "text",
+                "custom_color": "#ffffff",
+                "line_height": 120,
+                "letter_spacing": -1,
+                "uppercase": false,
+                "wrap": "balance",
+                "width": "auto",
+                "width_px": 400,
+                "max_width": 0,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_paragraph_T9KGck": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>No jargon for the sake of it. Just useful advice, explained in plain language.</p>",
+                "size": 15,
+                "mobile_sizing": "same",
+                "mobile_size": 14,
+                "fluid_vw": 2,
+                "weight": "regular",
+                "color": "muted",
+                "custom_color": "#ffffff",
+                "line_height": 160,
+                "letter_spacing": 0,
+                "wrap": "wrap",
+                "width": "auto",
+                "width_px": 400,
+                "max_width_unit": "none",
+                "max_width_px": 640,
+                "max_width_ch": 60,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "cb_subheader_dcKeA8",
+            "cb_heading_PfUtmt",
+            "cb_paragraph_T9KGck"
+          ]
+        },
+        "cb_pguide_card_9JLPDa": {
+          "type": "_cb-pguide-card",
+          "settings": {
+            "article": "",
+            "use_custom_text": false,
+            "card_title": "Choosing Your First Racket",
+            "summary": "Selecting your first racket can feel overwhelming, but it doesn't need to be. Learn how weight, balance, flex and frame shape affect the way a racket feels and performs.",
+            "product": "hundred-nitrix-thunder-badminton-rcket",
+            "label": "Player guide",
+            "button_label": "Read guide →",
+            "link": ""
+          },
+          "blocks": {}
+        },
+        "cb_pguide_card_HrfKXR": {
+          "type": "_cb-pguide-card",
+          "settings": {
+            "article": "",
+            "use_custom_text": false,
+            "card_title": "Understanding String Tension",
+            "summary": "See how higher and lower tensions change control, power and forgiveness, and how to find a practical starting point for your game.",
+            "product": "yonex-badminton-string-10m-packet",
+            "label": "Player guide",
+            "button_label": "Read guide →",
+            "link": ""
+          },
+          "blocks": {}
+        },
+        "cb_pguide_card_FtdRmF": {
+          "type": "_cb-pguide-card",
+          "settings": {
+            "article": "",
+            "use_custom_text": false,
+            "card_title": "Shuttle Speeds Explained",
+            "summary": "Understand speed ratings, temperature and hall conditions so you can choose a shuttle that flies correctly for training or competition.",
+            "product": "victor-ncs-caron-sonic-shuttlecock-tube-of-6",
+            "label": "Player guide",
+            "button_label": "Read guide →",
+            "link": ""
+          },
+          "blocks": {}
+        },
+        "cb_pguide_card_PQJ3ac": {
+          "type": "_cb-pguide-card",
+          "settings": {
+            "article": "",
+            "use_custom_text": false,
+            "card_title": "Grip Sizing & Comfort",
+            "summary": "Explore how thickness, texture and absorbency affect control and comfort, plus simple ways to adjust your grip for your hand and playing intensity.",
+            "product": "yonex-cushion-leather-grip",
+            "label": "Player guide",
+            "button_label": "Read guide →",
+            "link": ""
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "cb_pguide_header_gegP8z",
+        "cb_pguide_card_9JLPDa",
+        "cb_pguide_card_HrfKXR",
+        "cb_pguide_card_FtdRmF",
+        "cb_pguide_card_PQJ3ac"
+      ],
+      "name": "[CB] Player guides",
+      "settings": {
+        "columns": 2,
+        "max_width": 1120,
+        "column_gap": 22,
+        "row_gap": 80,
+        "header_gap": 80,
+        "equal_height": true,
+        "card_padding": 26,
+        "card_radius": 15,
+        "photo_height": 196,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "{{ settings.color_palette.foreground }}",
+        "card_color": "#1b1b1b",
+        "frame_color": "#ffffff14",
+        "text_color": "#ffffff",
+        "muted_text_color": "#d0d0d4",
+        "accent_color": "#d71f27",
+        "button_color": "#ffffff05",
+        "button_border_color": "#ffffff14",
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
+    },
+    "cb_advice_VY79jh": {
+      "type": "cb-advice",
+      "blocks": {
+        "cb_advice_content_ChpKgq": {
+          "type": "_cb-advice-content",
+          "settings": {
+            "alignment": "left",
+            "gap": 12
+          },
+          "blocks": {
+            "cb_subheader_grBpgc": {
+              "type": "cb-subheader",
+              "settings": {
+                "subheader_text": "WHY CMBA",
+                "secondary": "",
+                "show_dot": false,
+                "size": 10,
+                "weight": "strong",
+                "color": "accent",
+                "custom_color": "#ffffff",
+                "letter_spacing": 0,
+                "uppercase": true,
+                "space_below": 0,
+                "width": "auto",
+                "width_px": 400,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_heading_xLn97C": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "Advice grounded in playing experience.&nbsp;",
+                "tag": "h2",
+                "size": 32,
+                "mobile_sizing": "scale",
+                "mobile_scale": 82,
+                "fluid_min": 28,
+                "fluid_vw": 6,
+                "weight": "font",
+                "color": "text",
+                "custom_color": "#ffffff",
+                "line_height": 115,
+                "letter_spacing": -1,
+                "uppercase": false,
+                "wrap": "wrap",
+                "width": "auto",
+                "width_px": 400,
+                "max_width": 0,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_paragraph_VcUrUn": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>Our coaching and stringing team combines international playing experience, BWF-qualified coaching, and professional-grade racket preparation.<br/></p>",
+                "size": 14,
+                "mobile_sizing": "same",
+                "mobile_size": 14,
+                "fluid_vw": 2,
+                "weight": "regular",
+                "color": "muted",
+                "custom_color": "#ffffff",
+                "line_height": 160,
+                "letter_spacing": -1,
+                "wrap": "wrap",
+                "width": "auto",
+                "width_px": 400,
+                "max_width_unit": "px",
+                "max_width_px": 600,
+                "max_width_ch": 60,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_advice_buttons_D9C4qV": {
+              "type": "_cb-advice-buttons",
+              "settings": {
+                "gap": 12,
+                "space_above": 16
+              },
+              "blocks": {
+                "cb_advice_button_xJbmrG": {
+                  "type": "_cb-advice-button",
+                  "settings": {
+                    "label": "About our expertise",
+                    "link": "shopify://pages/contact",
+                    "directions_address": "",
+                    "style": "primary",
+                    "icon": "arrow",
+                    "custom_icon_tint": true,
+                    "new_tab": false
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "cb_advice_button_xJbmrG"
+              ]
+            }
+          },
+          "block_order": [
+            "cb_subheader_grBpgc",
+            "cb_heading_xLn97C",
+            "cb_paragraph_VcUrUn",
+            "cb_advice_buttons_D9C4qV"
+          ]
+        }
+      },
+      "block_order": [
+        "cb_advice_content_ChpKgq"
+      ],
+      "name": "[CB] Advice banner",
+      "settings": {
+        "max_width": 1400,
+        "panel_padding": 44,
+        "panel_radius": 10,
+        "show_border": false,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "{{ settings.color_palette.foreground }}",
+        "panel_background_color": "#181818",
+        "border_color": "#ffffff14",
+        "text_color": "#B8262F",
+        "muted_text_color": "#a1a1aa",
+        "accent_color": "#d71f27",
+        "secondary_button_color": "#2a2a2a",
+        "padding_top": 32,
+        "padding_bottom": 32
+      }
+    }
+  },
+  "order": [
+    "main",
+    "cb_player_guides_DRBn46",
+    "cb_player_guides_yzGwaQ",
+    "cb_advice_VY79jh"
+  ]
+}

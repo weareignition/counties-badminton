@@ -1,0 +1,268 @@
+{%- comment -%} The bordered box beside the text: a title, a list with icons (one item per line) and a footnote. {%- endcomment -%}
+{%- assign items = block.settings.items | newline_to_br | split: '<br />' -%}
+
+<div
+  class="cb-support-box"
+  style="--cbsu-box-width: {{ block.settings.box_width }}px; --cb-support-box-title-size: {{ block.settings.title_size }}px; --cb-support-box-title-weight: {{ block.settings.title_weight }}; --cb-support-box-list-size: {{ block.settings.list_size }}px; --cb-support-box-list-weight: {{ block.settings.list_weight }}; --cb-support-box-footnote-size: {{ block.settings.footnote_size }}px; --cb-support-box-footnote-weight: {{ block.settings.footnote_weight }};"
+  {{ block.shopify_attributes }}
+>
+  {%- if block.settings.box_title != blank -%}
+    <p class="cb-support-box__title">{{ block.settings.box_title | escape }}</p>
+  {%- endif -%}
+
+  {%- if block.settings.items != blank -%}
+    <ul class="cb-support-box__list" role="list">
+      {%- for item in items -%}
+        {%- assign item_text = item | strip -%}
+        {%- if item_text != blank -%}
+          <li class="cb-support-box__item">
+            {%- if block.settings.custom_icon != blank or block.settings.icon != 'none' -%}
+              {%- if block.settings.custom_icon != blank -%}
+                {%- render 'cb-icon-upload', image: block.settings.custom_icon, size: 2, class: 'cb-support-box__icon', tint: block.settings.custom_icon_tint -%}
+              {%- else -%}
+                <svg class="cb-support-box__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  {%- case block.settings.icon -%}
+                    {%- when 'check_circle' -%}
+                      <circle cx="12" cy="12" r="10"/><path d="m8.5 12 2.5 2.5 4.5-5"/>
+                    {%- when 'check' -%}
+                      <path d="m5 12.5 4.5 4.5L19 7.5"/>
+                    {%- when 'dot' -%}
+                      <circle cx="12" cy="12" r="3.5" fill="currentColor" stroke="none"/>
+                  {%- endcase -%}
+                </svg>
+              {%- endif -%}
+            {%- endif -%}
+            <span>{{ item_text | escape }}</span>
+          </li>
+        {%- endif -%}
+      {%- endfor -%}
+    </ul>
+  {%- endif -%}
+
+  {%- if block.settings.footnote != blank -%}
+    <p class="cb-support-box__footnote">{{ block.settings.footnote | escape }}</p>
+  {%- endif -%}
+</div>
+
+{% stylesheet %}
+  .cb-support-box {
+    flex: none;
+    width: 100%;
+    padding: 22px 22px 48px;
+    border: 1px solid var(--cbsu-box-border);
+    border-radius: 6px;
+    background: var(--cbsu-box);
+  }
+
+  .cb-support-box__title {
+    margin: 0;
+    padding-bottom: 14px;
+    border-bottom: 1px solid color-mix(in srgb, var(--cbsu-text) 6%, transparent);
+    font-family: var(--cbsu-font-body);
+    font-weight: var(--cb-support-box-title-weight, var(--cbsu-font-body-strong));
+    font-size: var(--cb-support-box-title-size, 10px);
+    line-height: 1.3;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--cbsu-text) 88%, transparent);
+  }
+
+  .cb-support-box__list {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    margin: 0;
+    padding: 13px 0 0;
+    list-style: none;
+  }
+
+  .cb-support-box__item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    font-family: var(--cbsu-font-body);
+    font-weight: var(--cb-support-box-list-weight, var(--cbsu-font-body-weight));
+    font-size: var(--cb-support-box-list-size, 12px);
+    line-height: 1.5;
+    color: color-mix(in srgb, var(--cbsu-text) 92%, transparent);
+  }
+
+  .cb-support-box__icon {
+    flex: none;
+    width: 16px;
+    height: 16px;
+    color: var(--cbsu-accent);
+  }
+
+  .cb-support-box__footnote {
+    margin: 11px 0 0;
+    padding-top: 10px;
+    border-top: 1px solid color-mix(in srgb, var(--cbsu-text) 6%, transparent);
+    font-family: var(--cbsu-font-body);
+    font-weight: var(--cb-support-box-footnote-weight, var(--cbsu-font-body-weight));
+    font-size: var(--cb-support-box-footnote-size, 10px);
+    line-height: 1.5;
+    color: color-mix(in srgb, var(--cbsu-text) 50%, transparent);
+  }
+
+  @media screen and (min-width: 990px) {
+    .cb-support-box {
+      width: var(--cbsu-box-width, 350px);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Checklist box",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "box_title",
+      "label": "Title",
+      "info": "Shown in capitals.",
+      "default": "Available categories"
+    },
+    {
+      "type": "textarea",
+      "id": "items",
+      "label": "List",
+      "info": "One item per line.",
+      "default": "Elastic joint & arm sleeves\nCompression sleeves & wraps\nMultiple sizing options (S–XL)"
+    },
+    {
+      "type": "select",
+      "id": "icon",
+      "label": "List icon",
+      "options": [
+        { "value": "check_circle", "label": "Tick in a circle" },
+        { "value": "check", "label": "Tick" },
+        { "value": "dot", "label": "Dot" },
+        { "value": "none", "label": "None" }
+      ],
+      "default": "check_circle"
+    },
+    {
+      "type": "image_picker",
+      "id": "custom_icon",
+      "label": "Custom icon",
+      "info": "Upload your own SVG (or PNG). It replaces the built-in icon above."
+    },
+    {
+      "type": "checkbox",
+      "id": "custom_icon_tint",
+      "label": "Colour it like the built-in icons",
+      "info": "For one-colour SVGs: uses this section's icon colour. Turn off to keep the file's own colours.",
+      "default": true,
+      "visible_if": "{{ block.settings.custom_icon != blank }}"
+    },
+    {
+      "type": "text",
+      "id": "footnote",
+      "label": "Footnote",
+      "default": "Non-medical sports support gear available in the Pro Shop."
+    },
+    {
+      "type": "range",
+      "id": "box_width",
+      "label": "Width on desktop",
+      "min": 260,
+      "max": 520,
+      "step": 10,
+      "unit": "px",
+      "default": 350
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Title size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Title weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "list_size",
+      "label": "List size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "list_weight",
+      "label": "List weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "footnote_size",
+      "label": "Footnote size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "footnote_weight",
+      "label": "Footnote weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    }
+  ],
+  "presets": [{ "name": "[CB] Checklist box" }]
+}
+{% endschema %}

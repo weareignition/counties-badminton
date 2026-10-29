@@ -1,0 +1,165 @@
+<div
+  class="cb-rmatch-q"
+  data-cb-rmatch-question
+  data-step="{{ block.settings.step_name | escape }}"
+  style="
+    --cb-rmatch-question-title-size: {{ block.settings.title_size }}px;
+    --cb-rmatch-question-title-weight: {{ block.settings.title_weight }};
+    --cb-rmatch-question-text-size: {{ block.settings.text_size }}px;
+    --cb-rmatch-question-text-weight: {{ block.settings.text_weight }};
+  "
+  {{ block.shopify_attributes }}
+>
+  <h3 class="cb-rmatch-q__title" id="cb-rmatch-q-{{ block.id }}" tabindex="-1">{{ block.settings.question_title | escape }}</h3>
+  {%- if block.settings.question_text != blank -%}
+    <p class="cb-rmatch-q__text">{{ block.settings.question_text | escape }}</p>
+  {%- endif -%}
+  <div class="cb-rmatch-q__options" role="radiogroup" aria-labelledby="cb-rmatch-q-{{ block.id }}">
+    {% content_for 'blocks' %}
+  </div>
+</div>
+
+{% stylesheet %}
+  .cb-rmatch-q .cb-rmatch-q__title {
+    margin: 0;
+    font-family: var(--cbrm-font-heading);
+    font-weight: var(--cb-rmatch-question-title-weight, var(--cbrm-font-heading-medium-weight));
+    font-size: calc(var(--cb-rmatch-question-title-size, 32px) * 26 / 32);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    color: var(--cbrm-text);
+  }
+
+  .cb-rmatch-q__title:focus {
+    outline: none;
+  }
+
+  .cb-rmatch-q .cb-rmatch-q__text {
+    max-width: 600px;
+    margin: 12px 0 0;
+    font-family: var(--cbrm-font-body);
+    font-weight: var(--cb-rmatch-question-text-weight, var(--cbrm-font-body-weight));
+    font-size: var(--cb-rmatch-question-text-size, 14px);
+    line-height: 1.5;
+    letter-spacing: -0.01em;
+    color: var(--cbrm-muted);
+  }
+
+  .cb-rmatch-q__options {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+    margin-top: 26px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-rmatch-q .cb-rmatch-q__title {
+      font-size: var(--cb-rmatch-question-title-size, 32px);
+    }
+
+    .cb-rmatch-q__options {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px 15px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Question",
+  "tag": null,
+  "blocks": [{ "type": "_cb-rmatch-option" }],
+  "settings": [
+    {
+      "type": "text",
+      "id": "step_name",
+      "label": "Step name",
+      "info": "Shown top right, after the step label.",
+      "default": "Playing Style Identification"
+    },
+    {
+      "type": "text",
+      "id": "question_title",
+      "label": "Question",
+      "default": "How do you like to win points?"
+    },
+    {
+      "type": "textarea",
+      "id": "question_text",
+      "label": "Text",
+      "default": "Pick the style that feels closest to your game on court."
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Question size",
+      "info": "Scaled down on phones.",
+      "min": 16,
+      "max": 112,
+      "step": 1,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Question weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "text_weight",
+      "label": "Text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Question",
+      "blocks": {
+        "a": { "type": "_cb-rmatch-option" },
+        "b": { "type": "_cb-rmatch-option", "settings": { "option_title": "Not sure yet", "option_text": "Let our Pro Shop team recommend based on your player level.", "match_terms": "" } }
+      },
+      "block_order": ["a", "b"]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,361 @@
+{%- liquid
+  assign s = block.settings
+  assign variant = product.selected_or_first_available_variant
+
+  assign brand = ''
+  if s.note_text contains '[brand]'
+    capture brand
+      render 'cb-product-brand', product: product, brands: section.settings.brand_names
+    endcapture
+    assign brand = brand | strip
+  endif
+  assign note = s.note_text | replace: '[brand]', brand | replace: '  ', ' ' | strip
+-%}
+
+{%- assign boxed = false -%}
+{%- if s.style == 'box' -%}{%- assign boxed = true -%}{%- endif -%}
+<div
+  class="cb-pd-price{% if boxed %} cb-pd-price--box{% endif %}{% if s.stock_style == 'dot' %} cb-pd-price--dot{% endif %}"
+  style="--cbpd-price-size: {{ s.price_size }}px; --cbpd-price-weight: {{ s.price_weight }}; --cb-pd-price-compare-size: {{ s.compare_size }}px; --cb-pd-price-compare-weight: {{ s.compare_weight }}; --cb-pd-price-stock-size: {{ s.stock_size }}px; --cb-pd-price-stock-weight: {{ s.stock_weight }}; --cb-pd-price-code-size: {{ s.code_size }}px; --cb-pd-price-code-weight: {{ s.code_weight }}; --cb-pd-price-note-size: {{ s.note_size }}px; --cb-pd-price-note-weight: {{ s.note_weight }};"
+  {{ block.shopify_attributes }}
+>
+  <div class="cb-pd-price__row">
+    <p class="cb-pd-price__amount">
+      {%- if boxed -%}
+        {%- comment -%} Box: the amount, then the currency code in small type. {%- endcomment -%}
+        <span data-cb-pdp-price data-format="short">{{ variant.price | money }}</span>
+        <span class="cb-pd-price__code">{{ cart.currency.iso_code }}</span>
+        <s data-cb-pdp-compare data-format="short" {% unless variant.compare_at_price > variant.price %}hidden{% endunless %}>
+          {{- variant.compare_at_price | money -}}
+        </s>
+      {%- else -%}
+        <span data-cb-pdp-price>{{ variant.price | money_with_currency }}</span>
+        <s data-cb-pdp-compare {% unless variant.compare_at_price > variant.price %}hidden{% endunless %}>
+          {{- variant.compare_at_price | money_with_currency -}}
+        </s>
+      {%- endif -%}
+    </p>
+    {%- if s.show_stock -%}
+      <p
+        class="cb-pd-price__stock{% unless variant.available %} is-out{% endunless %}"
+        data-cb-pdp-stock
+        data-in="{{ s.in_stock_text | escape }}"
+        data-out="{{ s.sold_out_text | escape }}"
+      >
+        {%- if variant.available -%}{{ s.in_stock_text | escape }}{%- else -%}{{ s.sold_out_text | escape }}{%- endif -%}
+      </p>
+    {%- endif -%}
+  </div>
+  {%- if note != blank -%}
+    <p class="cb-pd-price__note">{{ note | escape }}</p>
+  {%- endif -%}
+</div>
+
+{% stylesheet %}
+  .cb-pd-price__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px 16px;
+  }
+
+  .cb-pd-price .cb-pd-price__amount {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 10px;
+    margin: 0;
+    font-family: var(--cb-font-heading, var(--font-heading--family));
+    font-weight: var(--cbpd-price-weight, var(--cb-font-heading-weight, 700));
+    font-size: var(--cbpd-price-size, 28px);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    color: var(--cb-color-text, #ffffff);
+  }
+
+  .cb-pd-price__amount s {
+    font-family: var(--cb-font-body, var(--font-body--family));
+    font-weight: var(--cb-pd-price-compare-weight, var(--cb-font-body-weight, 400));
+    font-size: var(--cb-pd-price-compare-size, 14px);
+    color: var(--cbpd-grey, #a1a1aa);
+  }
+
+  .cb-pd-price .cb-pd-price__stock {
+    margin: 0;
+    padding: 4px 9px;
+    border-radius: 2px;
+    background: var(--cbpd-card, #222222);
+    font-family: var(--cb-font-body, var(--font-body--family));
+    font-weight: var(--cb-pd-price-stock-weight, 500);
+    font-size: var(--cb-pd-price-stock-size, 10px);
+    line-height: 1.1;
+    color: #f2aaa0;
+  }
+
+  .cb-pd-price .cb-pd-price__stock.is-out {
+    color: var(--cbpd-grey, #a1a1aa);
+  }
+
+  /* Box style: a dark panel with the price on the left and stock on the right. */
+  .cb-pd-price--box .cb-pd-price__row {
+    min-height: 55px;
+    box-sizing: border-box;
+    padding: 8px 15px;
+    border-radius: 4px;
+    background: var(--cbpd-panel, #181818);
+  }
+
+  .cb-pd-price--box .cb-pd-price__amount {
+    align-items: baseline;
+    gap: 7px;
+  }
+
+  .cb-pd-price .cb-pd-price__code {
+    font-family: var(--cb-font-body, var(--font-body--family));
+    font-weight: var(--cb-pd-price-code-weight, var(--cb-font-body-weight, 400));
+    font-size: var(--cb-pd-price-code-size, 9.5px);
+    letter-spacing: 0.04em;
+    color: var(--cbpd-grey, #8a8a8a);
+  }
+
+  /* Dot style stock: a green (or grey) dot and plain text. */
+  .cb-pd-price.cb-pd-price--dot .cb-pd-price__stock {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0;
+    border-radius: 0;
+    background: none;
+    font-weight: var(--cb-pd-price-stock-weight, 500);
+    font-size: calc(var(--cb-pd-price-stock-size, 10px) * 11.5 / 10);
+    color: var(--cb-color-text, #ffffff);
+  }
+
+  .cb-pd-price--dot .cb-pd-price__stock::before {
+    content: '';
+    flex: none;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #10b981;
+  }
+
+  .cb-pd-price.cb-pd-price--dot .cb-pd-price__stock.is-out {
+    color: var(--cbpd-grey, #a1a1aa);
+  }
+
+  .cb-pd-price--dot .cb-pd-price__stock.is-out::before {
+    background: #71717a;
+  }
+
+  .cb-pd-price .cb-pd-price__note {
+    margin: 4px 0 0;
+    font-family: var(--cb-font-body, var(--font-body--family));
+    font-weight: var(--cb-pd-price-note-weight, inherit);
+    font-size: var(--cb-pd-price-note-size, 10px);
+    line-height: 1.5;
+    letter-spacing: 0.02em;
+    color: var(--cbpd-grey, #a1a1aa);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Product price",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "style",
+      "label": "Style",
+      "options": [
+        { "value": "inline", "label": "Plain" },
+        { "value": "box", "label": "Box, with the currency code small" }
+      ],
+      "default": "inline"
+    },
+    {
+      "type": "range",
+      "id": "price_size",
+      "label": "Price size",
+      "min": 18,
+      "max": 44,
+      "step": 1,
+      "unit": "px",
+      "default": 28
+    },
+    {
+      "type": "select",
+      "id": "price_weight",
+      "label": "Price weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "select",
+      "id": "stock_style",
+      "label": "Stock badge style",
+      "options": [
+        { "value": "pill", "label": "Pill" },
+        { "value": "dot", "label": "Green dot" }
+      ],
+      "default": "pill"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_stock",
+      "label": "Show stock badge",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "in_stock_text",
+      "label": "In stock text",
+      "default": "In stock at Papakura (41R Elliot St)"
+    },
+    {
+      "type": "text",
+      "id": "sold_out_text",
+      "label": "Sold out text",
+      "default": "Sold out"
+    },
+    {
+      "type": "text",
+      "id": "note_text",
+      "label": "Note under the price",
+      "info": "[brand] is replaced with the product's brand.",
+      "default": "Official NZ [brand] stockist"
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "compare_size",
+      "label": "Compare-at price size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "compare_weight",
+      "label": "Compare-at price weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "stock_size",
+      "label": "Stock badge size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 10,
+      "info": "Slightly larger in the green-dot style."
+    },
+    {
+      "type": "select",
+      "id": "stock_weight",
+      "label": "Stock badge weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "code_size",
+      "label": "Currency code size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 9.5
+    },
+    {
+      "type": "select",
+      "id": "code_weight",
+      "label": "Currency code weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "note_size",
+      "label": "Note size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "note_weight",
+      "label": "Note weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    }
+  ],
+  "presets": [{ "name": "[CB] Product price" }]
+}
+{% endschema %}

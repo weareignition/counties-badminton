@@ -1,0 +1,317 @@
+{%- liquid
+  assign s = section.settings
+  assign font_scope = '#cb-fintro-' | append: section.id
+-%}
+
+{% render 'cb-font-styles',
+  selector: font_scope,
+  prefix: 'cbfi',
+  heading_font: s.heading_font,
+  body_font: s.body_font
+%}
+
+<section
+  id="cb-fintro-{{ section.id }}"
+  class="cb-fintro"
+  style="
+    --cbfi-bg: {{ s.background_color }};
+    --cbfi-panel: {{ s.panel_color }};
+    --cbfi-text: {{ s.text_color }};
+    --cbfi-muted: {{ s.muted_text_color }};
+    --cbfi-meta: {{ s.note_text_color }};
+    --cbfi-accent: {{ s.accent_color }};
+    --cbfi-button-radius: {{ s.corner_radius }}px;
+    --cbfi-stack-gap: {{ s.stack_gap }}px;
+    --cbfi-max-width: {{ s.max_width }}px;
+    --cbfi-pt: {{ s.padding_top }}px;
+    --cbfi-pb: {{ s.padding_bottom }}px;
+  "
+>
+  <div class="cb-fintro__inner">
+    {% content_for 'blocks' %}
+  </div>
+</section>
+
+{% stylesheet %}
+  .cb-fintro {
+    color: var(--cbfi-text);
+    background: var(--cbfi-bg);
+    padding: calc(var(--cbfi-pt) * 0.7) 16px calc(var(--cbfi-pb) * 0.7);
+  }
+
+  .cb-fintro__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: calc(var(--cbfi-stack-gap) * 0.6);
+    max-width: var(--cbfi-max-width);
+    margin-inline: auto;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-fintro {
+      padding: var(--cbfi-pt) 32px var(--cbfi-pb);
+    }
+
+    .cb-fintro__inner {
+      gap: var(--cbfi-stack-gap);
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .cb-fintro {
+      padding-inline: 48px;
+    }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  (() => {
+    // The quiz on this page: [CB] Racket matcher or [CB] Racket finder quiz.
+    const QUIZ = '[data-cb-rmatch], [data-cb-quiz-section]';
+
+    // Fill [count] with the number of questions in the quiz on this page.
+    const fillCounts = () => {
+      const quiz = document.querySelector(QUIZ);
+      const total = quiz ? quiz.querySelectorAll('[data-cb-rmatch-question], [data-cb-quiz-question]').length : 0;
+      if (!total) return;
+      for (const el of document.querySelectorAll('[data-cb-fintro-count]')) el.textContent = String(total);
+    };
+
+    // "Start the racket finder" buttons scroll to the quiz when it's on this page and focus its first answer.
+    document.addEventListener('click', (event) => {
+      const button = event.target.closest?.('[data-cb-fintro-start]');
+      if (!button) return;
+      const quiz = document.querySelector(QUIZ);
+      if (!quiz) return;
+      event.preventDefault();
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      quiz.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+      const first = quiz.querySelector('.is-active [data-cb-rmatch-option], [data-cb-rmatch-option], [data-cb-quiz-option]');
+      if (first) window.setTimeout(() => first.focus({ preventScroll: true }), reduce ? 0 : 600);
+    });
+
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fillCounts);
+    else fillCounts();
+    document.addEventListener('shopify:section:load', fillCounts);
+  })();
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "[CB] Racket finder intro",
+  "tag": "div",
+  "class": "section-wrapper",
+  "blocks": [
+    { "type": "_cb-fintro-content" },
+    { "type": "_cb-fintro-features" }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width",
+      "min": 600,
+      "max": 1800,
+      "step": 20,
+      "unit": "px",
+      "default": 1400
+    },
+    {
+      "type": "range",
+      "id": "stack_gap",
+      "label": "Space above the features",
+      "info": "Phones use less.",
+      "min": 16,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "corner_radius",
+      "label": "Button and icon corner radius",
+      "min": 0,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "info": "The chosen style sets the heading weight. Buttons and feature titles use the font's regular style.",
+      "default": "space_grotesk_n7"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "info": "Used for the badge, text and feature text.",
+      "default": "inter_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#0b0b0b"
+    },
+    {
+      "type": "color",
+      "id": "panel_color",
+      "label": "Badge, dark button and icon boxes",
+      "default": "#181818"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "muted_text_color",
+      "label": "Body text",
+      "default": "#a1a1aa"
+    },
+    {
+      "type": "color",
+      "id": "note_text_color",
+      "label": "Small note",
+      "default": "#d4d4d8"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "info": "Dot, main button and icons.",
+      "default": "#d71f27"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Racket finder intro",
+      "category": "t:categories.banners",
+      "blocks": {
+        "content": {
+          "type": "_cb-fintro-content",
+          "blocks": {
+            "badge": { "type": "_cb-fintro-badge", "settings": { "badge_text": "Racket finder", "show_dot": true } },
+            "heading": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "Find the racket that fits your game.",
+                "size": 48,
+                "mobile_scale": 70,
+                "line_height": 118,
+                "wrap": "wrap",
+                "max_width": 720
+              }
+            },
+            "text": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>Answer a few quick questions and we’ll narrow down the frames we’d put in your hand at the Pro Shop.</p>",
+                "size": 16,
+                "mobile_sizing": "custom",
+                "mobile_size": 15,
+                "wrap": "pretty",
+                "max_width_unit": "px",
+                "max_width_px": 580
+              }
+            },
+            "meta": { "type": "_cb-fintro-meta", "settings": { "meta_text": "[count] quick questions · Around 30–60 seconds" } },
+            "buttons": {
+              "type": "_cb-fintro-buttons",
+              "blocks": {
+                "start": {
+                  "type": "_cb-fintro-button",
+                  "settings": { "label": "Start racket finder", "link": "shopify://collections/rackets", "start_quiz": true, "style": "primary", "show_arrow": true }
+                },
+                "shop": {
+                  "type": "_cb-fintro-button",
+                  "settings": { "label": "Shop all rackets", "link": "shopify://collections/rackets", "style": "secondary" }
+                }
+              },
+              "block_order": ["start", "shop"]
+            }
+          },
+          "block_order": ["badge", "heading", "text", "meta", "buttons"]
+        },
+        "features": {
+          "type": "_cb-fintro-features",
+          "blocks": {
+            "play": {
+              "type": "_cb-fintro-feature",
+              "settings": {
+                "icon": "racket",
+                "feature_title": "Built around your play",
+                "feature_text": "Style-first matching prioritizing power angles, whip, and net touch."
+              }
+            },
+            "brands": {
+              "type": "_cb-fintro-feature",
+              "settings": {
+                "icon": "sliders",
+                "feature_title": "Unbiased multi-brand stock",
+                "feature_text": "Direct authorized stock from Yonex, Victor, Ashaway, and Babolat."
+              }
+            },
+            "guidance": {
+              "type": "_cb-fintro-feature",
+              "settings": {
+                "icon": "badge_check",
+                "feature_title": "Specialist Pro Shop guidance",
+                "feature_text": "Backed by certified stringers and on-court coaches in Papakura."
+              }
+            }
+          },
+          "block_order": ["play", "brands", "guidance"]
+        }
+      },
+      "block_order": ["content", "features"]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,70 @@
+{%- assign tablet_columns = block.settings.columns | at_most: 2 -%}
+<div
+  class="cb-bspot__cards"
+  style="--cbbs-columns: {{ block.settings.columns }}; --cbbs-columns-tablet: {{ tablet_columns }}; --cbbs-card-gap: {{ block.settings.gap }}px;"
+  {{ block.shopify_attributes }}
+>
+  {% content_for 'blocks' %}
+</div>
+
+{% stylesheet %}
+  /* Phones: one card per row. Tablets: up to two. Desktop: the chosen number. Cards in a row share one height. */
+  .cb-bspot__cards {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-bspot__cards {
+      grid-template-columns: repeat(var(--cbbs-columns-tablet, 2), minmax(0, 1fr));
+      gap: 16px;
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .cb-bspot__cards {
+      grid-template-columns: repeat(var(--cbbs-columns, 2), minmax(0, 1fr));
+      gap: var(--cbbs-card-gap, 22px);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Brand cards",
+  "tag": null,
+  "blocks": [{ "type": "_cb-bspot-card" }],
+  "settings": [
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Cards per row on desktop",
+      "info": "Tablets show up to 2 per row, phones 1.",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Gap",
+      "min": 8,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 22
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Brand cards",
+      "blocks": {
+        "card_1": { "type": "_cb-bspot-card" }
+      },
+      "block_order": ["card_1"]
+    }
+  ]
+}
+{% endschema %}

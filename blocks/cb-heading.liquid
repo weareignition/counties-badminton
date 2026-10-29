@@ -1,0 +1,360 @@
+{%- comment -%}
+  A heading for any section. Inside a [CB] section it uses that section's heading font and colours (through the
+  --cb-* variables from snippets/cb-font-styles); elsewhere it falls back to the theme's heading font.
+  Italic text is shown upright in the accent colour.
+{%- endcomment -%}
+{%- liquid
+  assign s = block.settings
+
+  case s.weight
+    when 'regular'
+      assign weight = 'var(--cb-font-heading-regular-weight, 400)'
+    when 'medium'
+      assign weight = 'var(--cb-font-heading-medium-weight, 500)'
+    when '100', '200', '300', '600', '700', '800', '900'
+      assign weight = s.weight
+    else
+      assign weight = 'var(--cb-font-heading-weight, var(--font-heading--weight))'
+  endcase
+
+  case s.color
+    when 'accent'
+      assign color = 'var(--cb-color-accent, #d71f27)'
+    when 'muted'
+      assign color = 'var(--cb-color-muted, var(--color-foreground-muted, currentColor))'
+    when 'custom'
+      assign color = s.custom_color | default: 'currentColor'
+    else
+      assign color = 'var(--cb-color-text, currentColor)'
+  endcase
+
+  assign scale = s.mobile_scale | divided_by: 100.0
+  assign line_height = s.line_height | divided_by: 100.0
+  assign letter_spacing = s.letter_spacing | divided_by: 100.0
+-%}
+
+{%- if s.heading_text != blank -%}
+  <{{ s.tag }}
+    id="cb-heading-{{ block.id }}"
+    class="cb-heading cb-heading--{{ s.mobile_sizing }}{% if s.uppercase %} cb-heading--upper{% endif %}{% render 'cb-text-box', settings: s, part: 'class' %}"
+    style="
+      --cb-heading-size: {{ s.size }}px;
+      {%- if s.mobile_sizing == 'fluid' %} --cb-heading-min: {{ s.fluid_min }}px; --cb-heading-vw: {{ s.fluid_vw }}vw;
+      {%- else %} --cb-heading-scale: {{ scale }};{% endif %}
+      --cb-heading-lh: {{ line_height }};
+      --cb-heading-ls: {{ letter_spacing }}em;
+      --cb-heading-weight: {{ weight }};
+      --cb-heading-color: {{ color }};
+      --cb-heading-wrap: {{ s.wrap }};
+      {%- if s.max_width > 0 %} --cb-heading-max: {{ s.max_width }}px;{% endif %}
+      {% render 'cb-text-box', settings: s, part: 'style' %}
+    "
+    {{ block.shopify_attributes }}
+  >
+    {{- s.heading_text -}}
+  </{{ s.tag }}>
+{%- endif -%}
+
+{% stylesheet %}
+  .cb-heading {
+    max-width: var(--cb-heading-max, none);
+    margin: 0;
+    font-family: var(--cb-font-heading, var(--font-heading--family));
+    font-weight: var(--cb-heading-weight);
+    font-size: calc(var(--cb-heading-size, 32px) * var(--cb-heading-scale, 1));
+    line-height: var(--cb-heading-lh, 1.15);
+    letter-spacing: var(--cb-heading-ls, 0);
+    color: var(--cb-heading-color);
+    text-wrap: var(--cb-heading-wrap, wrap);
+  }
+
+  /* Grows with the screen from the smallest size up to the set size. */
+  .cb-heading--fluid {
+    font-size: clamp(var(--cb-heading-min, 28px), var(--cb-heading-vw, 6vw), var(--cb-heading-size, 32px));
+  }
+
+  .cb-heading--upper {
+    text-transform: uppercase;
+  }
+
+  .cb-heading em {
+    font-style: normal;
+    color: var(--cb-color-accent, #d71f27);
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-heading--scale {
+      font-size: var(--cb-heading-size, 32px);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Heading",
+  "tag": null,
+  "settings": [
+    {
+      "type": "inline_richtext",
+      "id": "heading_text",
+      "label": "Heading",
+      "info": "Italic text shows upright in the accent colour."
+    },
+    {
+      "type": "select",
+      "id": "tag",
+      "label": "HTML tag",
+      "info": "For search engines and screen readers; it doesn't change the look. Use one H1 per page.",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" },
+        { "value": "h4", "label": "H4" },
+        { "value": "p", "label": "Paragraph" }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "header",
+      "content": "Size"
+    },
+    {
+      "type": "range",
+      "id": "size",
+      "label": "Size",
+      "min": 12,
+      "max": 96,
+      "step": 1,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "select",
+      "id": "mobile_sizing",
+      "label": "On phones",
+      "options": [
+        { "value": "scale", "label": "Smaller by a set amount" },
+        { "value": "fluid", "label": "Shrinks with the screen" }
+      ],
+      "default": "scale"
+    },
+    {
+      "type": "range",
+      "id": "mobile_scale",
+      "label": "Phone size",
+      "info": "Percent of the size above, on screens under 750px wide.",
+      "min": 50,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 82,
+      "visible_if": "{{ block.settings.mobile_sizing == 'scale' }}"
+    },
+    {
+      "type": "range",
+      "id": "fluid_min",
+      "label": "Smallest size",
+      "min": 12,
+      "max": 72,
+      "step": 1,
+      "unit": "px",
+      "default": 28,
+      "visible_if": "{{ block.settings.mobile_sizing == 'fluid' }}"
+    },
+    {
+      "type": "range",
+      "id": "fluid_vw",
+      "label": "Size per screen width",
+      "info": "Percent of the screen width. The heading never gets bigger than the size above.",
+      "min": 2,
+      "max": 12,
+      "step": 0.1,
+      "unit": "vw",
+      "default": 6,
+      "visible_if": "{{ block.settings.mobile_sizing == 'fluid' }}"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "select",
+      "id": "weight",
+      "label": "Weight",
+      "info": "Section font uses the style picked in the section's heading font.",
+      "options": [
+        { "value": "font", "label": "Section font" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "regular", "label": "Regular" },
+        { "value": "medium", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "font"
+    },
+    {
+      "type": "select",
+      "id": "color",
+      "label": "Color",
+      "options": [
+        { "value": "text", "label": "Text" },
+        { "value": "accent", "label": "Accent" },
+        { "value": "muted", "label": "Muted" },
+        { "value": "custom", "label": "Custom" }
+      ],
+      "default": "text"
+    },
+    {
+      "type": "color",
+      "id": "custom_color",
+      "label": "Custom color",
+      "default": "#ffffff",
+      "visible_if": "{{ block.settings.color == 'custom' }}"
+    },
+    {
+      "type": "range",
+      "id": "line_height",
+      "label": "Line height",
+      "min": 90,
+      "max": 160,
+      "step": 1,
+      "unit": "%",
+      "default": 115
+    },
+    {
+      "type": "range",
+      "id": "letter_spacing",
+      "label": "Letter spacing",
+      "info": "Percent of the text size.",
+      "min": -5,
+      "max": 20,
+      "step": 0.5,
+      "unit": "%",
+      "default": -1
+    },
+    {
+      "type": "checkbox",
+      "id": "uppercase",
+      "label": "Uppercase",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "wrap",
+      "label": "Line breaks",
+      "options": [
+        { "value": "wrap", "label": "Normal" },
+        { "value": "balance", "label": "Even line lengths" },
+        { "value": "pretty", "label": "No single word on the last line" }
+      ],
+      "default": "balance"
+    },
+    {
+      "type": "header",
+      "content": "Width"
+    },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "Width",
+      "options": [
+        { "value": "auto", "label": "Auto (follows the section)" },
+        { "value": "fit", "label": "Fit the text" },
+        { "value": "full", "label": "Full width" },
+        { "value": "custom", "label": "Custom" }
+      ],
+      "default": "auto"
+    },
+    {
+      "type": "range",
+      "id": "width_px",
+      "label": "Custom width",
+      "min": 100,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "default": 400,
+      "visible_if": "{{ block.settings.width == 'custom' }}"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width",
+      "info": "Longest the heading can get, e.g. to keep lines short. 0 = no limit.",
+      "min": 0,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Box"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "info": "Leave empty for no background."
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Padding top and bottom",
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_x",
+      "label": "Padding left and right",
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "label": "Border",
+      "info": "0 = no border.",
+      "min": 0,
+      "max": 8,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "info": "Leave empty for a faint version of the text colour.",
+      "visible_if": "{{ block.settings.border_width > 0 }}"
+    },
+    {
+      "type": "range",
+      "id": "radius",
+      "label": "Corner radius",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Heading",
+      "settings": { "heading_text": "Heading" }
+    }
+  ]
+}
+{% endschema %}

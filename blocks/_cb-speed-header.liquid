@@ -1,0 +1,72 @@
+<div
+  class="cb-speed__header"
+  style="--cbd-header-gap: {{ block.settings.gap }}px;"
+  {{ block.shopify_attributes }}
+>
+  {% content_for 'blocks' %}
+</div>
+
+{% stylesheet %}
+  .cb-speed__header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--cbd-header-gap, 10px);
+    min-width: 0;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Header",
+  "tag": null,
+  "blocks": [
+    { "type": "cb-subheader" },
+    { "type": "cb-heading" },
+    { "type": "cb-paragraph" },
+    { "type": "cb-button" }
+  ],
+  "settings": [
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Space between lines",
+      "min": 0,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 10
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Header",
+      "blocks": {
+        "eyebrow": { "type": "cb-subheader", "settings": { "subheader_text": "CMBA temperature calibration" } },
+        "heading": {
+          "type": "cb-heading",
+          "settings": {
+            "heading_text": "Shuttle speed, explained simply.",
+            "size": 30,
+            "mobile_scale": 80,
+            "line_height": 112,
+            "wrap": "wrap"
+          }
+        },
+        "text": {
+          "type": "cb-paragraph",
+          "settings": {
+            "body_text": "<p>Temperature, altitude and hall draft affect how quickly a shuttle travels. The right speed helps the shuttle behave naturally instead of flying long or falling short.</p>",
+            "size": 13,
+            "mobile_size": 13,
+            "line_height": 165,
+            "max_width_unit": "ch",
+            "max_width_ch": 62
+          }
+        }
+      },
+      "block_order": ["eyebrow", "heading", "text"]
+    }
+  ]
+}
+{% endschema %}

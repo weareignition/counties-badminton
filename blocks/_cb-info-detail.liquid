@@ -1,4 +1,15 @@
-<div class="cb-info-detail" {{ block.shopify_attributes }}>
+<div
+  class="cb-info-detail"
+  style="
+    --cb-info-detail-label-size: {{ block.settings.label_size }}px;
+    --cb-info-detail-label-weight: {{ block.settings.label_weight }};
+    --cb-info-detail-value-size: {{ block.settings.value_size }}px;
+    --cb-info-detail-value-weight: {{ block.settings.value_weight }};
+    --cb-info-detail-note-size: {{ block.settings.note_size }}px;
+    --cb-info-detail-note-weight: {{ block.settings.note_weight }};
+  "
+  {{ block.shopify_attributes }}
+>
   {%- if block.settings.detail_label != blank -%}
     <p class="cb-info-detail__label">{{ block.settings.detail_label | escape }}</p>
   {%- endif -%}
@@ -23,8 +34,8 @@
   .cb-info-detail__label {
     margin: 0 0 4px;
     font-family: var(--cbi-font-body);
-    font-weight: var(--cbi-font-body-strong);
-    font-size: 10px;
+    font-weight: var(--cb-info-detail-label-weight, var(--cbi-font-body-strong));
+    font-size: var(--cb-info-detail-label-size, 10px);
     line-height: 1.3;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -34,8 +45,8 @@
   .cb-info-detail__value {
     margin: 0;
     font-family: var(--cbi-font-heading);
-    font-weight: var(--cbi-font-heading-weight);
-    font-size: 15px;
+    font-weight: var(--cb-info-detail-value-weight, var(--cbi-font-heading-weight));
+    font-size: var(--cb-info-detail-value-size, 15px);
     line-height: 1.3;
     color: var(--cbi-text);
   }
@@ -43,8 +54,8 @@
   .cb-info-detail__note {
     margin: 0;
     font-family: var(--cbi-font-body);
-    font-weight: var(--cbi-font-body-weight);
-    font-size: 12px;
+    font-weight: var(--cb-info-detail-note-weight, var(--cbi-font-body-weight));
+    font-size: var(--cb-info-detail-note-size, 12px);
     line-height: 1.45;
   }
 
@@ -94,6 +105,94 @@
         { "value": "accent", "label": "Accent" }
       ],
       "default": "muted"
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "label_size",
+      "label": "Label size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "label_weight",
+      "label": "Label weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "value_size",
+      "label": "Value size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "select",
+      "id": "value_weight",
+      "label": "Value weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "note_size",
+      "label": "Note size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "note_weight",
+      "label": "Note weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
     }
   ],
   "presets": [{ "name": "[CB] Detail" }]

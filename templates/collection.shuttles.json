@@ -1,0 +1,1305 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "cb_hero_RR9bHE": {
+      "type": "cb-hero",
+      "blocks": {
+        "cb_hero_content_ATRdAe": {
+          "type": "_cb-hero-content",
+          "settings": {
+            "gap": 24,
+            "alignment": "start"
+          },
+          "blocks": {
+            "cb_hero_badge_bzMGmB": {
+              "type": "_cb-hero-badge",
+              "settings": {
+                "badge_text": "Counties Manukau Badminton Association Official Store",
+                "badge_secondary": "",
+                "show_dot": true,
+                "text_size": 12
+              },
+              "blocks": {}
+            },
+            "cb_hero_heading_fPj7xA": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "The right shuttle changes the game.&nbsp;",
+                "tag": "h1",
+                "size": 64,
+                "mobile_sizing": "fluid",
+                "mobile_scale": 82,
+                "fluid_min": 36,
+                "fluid_vw": 8,
+                "weight": "font",
+                "color": "text",
+                "custom_color": "#ffffff",
+                "line_height": 105,
+                "letter_spacing": -2,
+                "uppercase": false,
+                "wrap": "balance",
+                "width": "auto",
+                "width_px": 400,
+                "max_width": 0,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_hero_text_A6DbQj": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>Feather or nylon, training or match play — find the shuttle that suits how and where you play. Calibrated for New Zealand indoor courts and hall temperatures.<br/></p>",
+                "size": 18,
+                "mobile_sizing": "fluid",
+                "mobile_size": 15,
+                "fluid_vw": 2.2,
+                "weight": "regular",
+                "color": "muted",
+                "custom_color": "#ffffff",
+                "line_height": 155,
+                "letter_spacing": 0,
+                "wrap": "wrap",
+                "width": "auto",
+                "width_px": 400,
+                "max_width_unit": "ch",
+                "max_width_px": 640,
+                "max_width_ch": 52,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_hero_buttons_WT3P4j": {
+              "type": "_cb-hero-buttons",
+              "settings": {
+                "stack_mobile": true
+              },
+              "blocks": {
+                "cb_hero_button_GhBGpp": {
+                  "type": "_cb-hero-button",
+                  "settings": {
+                    "label": "SHOP ALL SHUTTLES",
+                    "link": "",
+                    "open_in_new_tab": false,
+                    "style": "primary",
+                    "show_arrow": false,
+                    "label_size": 14
+                  },
+                  "blocks": {}
+                },
+                "cb_hero_button_KL4FCY": {
+                  "type": "_cb-hero-button",
+                  "settings": {
+                    "label": "SHUTTLE SPEED GUIDE",
+                    "link": "",
+                    "open_in_new_tab": false,
+                    "style": "secondary",
+                    "show_arrow": false,
+                    "label_size": 14
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "cb_hero_button_GhBGpp",
+                "cb_hero_button_KL4FCY"
+              ]
+            },
+            "cb_hero_features_3QKQLB": {
+              "type": "_cb-hero-features",
+              "settings": {
+                "show_divider": true
+              },
+              "blocks": {
+                "cb_hero_feature_fq4yF4": {
+                  "type": "_cb-hero-feature",
+                  "settings": {
+                    "icon": "check",
+                    "custom_icon": "shopify://shop_images/check.svg",
+                    "custom_icon_tint": true,
+                    "feature_text": "100% Genuine Spec",
+                    "text_size": 14
+                  },
+                  "blocks": {}
+                },
+                "cb_hero_feature_ejnHF6": {
+                  "type": "_cb-hero-feature",
+                  "settings": {
+                    "icon": "sliders",
+                    "custom_icon": "shopify://shop_images/Icon_1.svg",
+                    "custom_icon_tint": true,
+                    "feature_text": "Club & Wholesale Cartons",
+                    "text_size": 14
+                  },
+                  "blocks": {}
+                },
+                "cb_hero_feature_x9be6d": {
+                  "type": "_cb-hero-feature",
+                  "settings": {
+                    "icon": "calendar",
+                    "custom_icon": "shopify://shop_images/store.svg",
+                    "custom_icon_tint": true,
+                    "feature_text": "Papakura Pickup 7 Days",
+                    "text_size": 14
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "cb_hero_feature_fq4yF4",
+                "cb_hero_feature_ejnHF6",
+                "cb_hero_feature_x9be6d"
+              ]
+            }
+          },
+          "block_order": [
+            "cb_hero_badge_bzMGmB",
+            "cb_hero_heading_fPj7xA",
+            "cb_hero_text_A6DbQj",
+            "cb_hero_buttons_WT3P4j",
+            "cb_hero_features_3QKQLB"
+          ]
+        },
+        "cb_hero_media_gLtXPw": {
+          "type": "_cb-hero-media",
+          "settings": {
+            "image": "shopify://shop_images/Tournament_Grade_Feather_Badminton_Shuttlecocks_and_Packaging_Tubes.png",
+            "aspect_ratio": "4 / 3",
+            "aspect_ratio_mobile": "4 / 3",
+            "radius": 12
+          },
+          "blocks": {
+            "cb_hero_label_WA4dJ3": {
+              "type": "_cb-hero-label",
+              "settings": {
+                "label_text": "Official Papakura Pro Shop Stock • BWF Approved",
+                "label_secondary": "",
+                "uppercase": false,
+                "position": "bottom-right",
+                "style": "dark",
+                "text_size": 12
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "cb_hero_label_WA4dJ3"
+          ]
+        }
+      },
+      "block_order": [
+        "cb_hero_content_ATRdAe",
+        "cb_hero_media_gLtXPw"
+      ],
+      "name": "[CB] Hero",
+      "settings": {
+        "design": "1",
+        "content_width": 55,
+        "column_gap": 40,
+        "max_width": 1400,
+        "media_first_mobile": false,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "#121212",
+        "glow_color": "#3a0c10",
+        "text_color": "#ffffff",
+        "accent_color": "#d71f27",
+        "accent_text_color": "#ffffff",
+        "padding_top": 100,
+        "padding_bottom": 100
+      }
+    },
+    "cb_selector_GpAhK6": {
+      "type": "cb-selector",
+      "blocks": {
+        "cb_sel_header_8DDc9x": {
+          "type": "_cb-sel-header",
+          "settings": {
+            "alignment": "left",
+            "gap": 6
+          },
+          "blocks": {
+            "cb_sel_eyebrow_NiJ4kJ": {
+              "type": "cb-subheader",
+              "settings": {
+                "subheader_text": "Quick selector",
+                "secondary": "",
+                "show_dot": false,
+                "size": 10,
+                "weight": "strong",
+                "color": "accent",
+                "custom_color": "#ffffff",
+                "letter_spacing": 10,
+                "uppercase": true,
+                "space_below": 0,
+                "width": "auto",
+                "width_px": 400,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_sel_heading_7AWP73": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "Choose your shuttle",
+                "tag": "h2",
+                "size": 26,
+                "mobile_sizing": "scale",
+                "mobile_scale": 85,
+                "fluid_min": 28,
+                "fluid_vw": 6,
+                "weight": "font",
+                "color": "text",
+                "custom_color": "#ffffff",
+                "line_height": 115,
+                "letter_spacing": -1,
+                "uppercase": false,
+                "wrap": "wrap",
+                "width": "auto",
+                "width_px": 400,
+                "max_width": 0,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_sel_text_93Lpbk": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>Start with how and where you play.</p>",
+                "size": 12,
+                "mobile_sizing": "same",
+                "mobile_size": 12,
+                "fluid_vw": 2,
+                "weight": "regular",
+                "color": "muted",
+                "custom_color": "#ffffff",
+                "line_height": 160,
+                "letter_spacing": 0,
+                "wrap": "wrap",
+                "width": "auto",
+                "width_px": 400,
+                "max_width_unit": "ch",
+                "max_width_px": 640,
+                "max_width_ch": 70,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "cb_sel_eyebrow_NiJ4kJ",
+            "cb_sel_heading_7AWP73",
+            "cb_sel_text_93Lpbk"
+          ]
+        },
+        "cb_sel_cards_qRhUwX": {
+          "type": "_cb-sel-cards",
+          "settings": {
+            "columns": 2,
+            "gap": 16
+          },
+          "blocks": {
+            "cb_sel_card_tpNXrx": {
+              "type": "_cb-sel-card",
+              "settings": {
+                "card_eyebrow": "Competition & club standard",
+                "eyebrow_style": "accent",
+                "card_title": "Feather Shuttles",
+                "card_text": "Natural flight, better touch and the preferred choice for club and match play.",
+                "chips": "Natural Flight, Match & Club Play, Premium Portuguese Cork",
+                "collection": "",
+                "match_keywords": "feather, tournament, official",
+                "price_label": "Starting from:",
+                "custom_price": "",
+                "image": "shopify://shop_images/Feather_Shuttlecock.png",
+                "button_label": "Shop Feather",
+                "link": "",
+                "eyebrow_size": 9,
+                "title_size": 18,
+                "description_size": 11,
+                "tags_size": 10,
+                "price_size": 12,
+                "button_size": 11
+              },
+              "blocks": {}
+            },
+            "cb_sel_card_PrxJej": {
+              "type": "_cb-sel-card",
+              "settings": {
+                "card_eyebrow": "Training & school spec",
+                "eyebrow_style": "muted",
+                "card_title": "Nylon Shuttles",
+                "card_text": "Durable, affordable and ideal for training, schools, social games and newer players.",
+                "chips": "High Durability, Consistent Flight, Beginner & School Friendly",
+                "collection": "",
+                "match_keywords": "nylon, synthetic, ncs",
+                "price_label": "Starting from:",
+                "custom_price": "",
+                "image": "shopify://shop_images/Nylon_Shuttlecock.png",
+                "button_label": "Shop Nylon",
+                "link": "",
+                "eyebrow_size": 9,
+                "title_size": 18,
+                "description_size": 11,
+                "tags_size": 10,
+                "price_size": 12,
+                "button_size": 11
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "cb_sel_card_tpNXrx",
+            "cb_sel_card_PrxJej"
+          ]
+        }
+      },
+      "block_order": [
+        "cb_sel_header_8DDc9x",
+        "cb_sel_cards_qRhUwX"
+      ],
+      "name": "[CB] Quick selector",
+      "settings": {
+        "max_width": 1400,
+        "stack_gap": 20,
+        "card_radius": 3,
+        "media_size": 84,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "#0d0d0d",
+        "card_background_color": "#1a1a1a",
+        "chip_background_color": "#222222",
+        "border_color": "#ffffff14",
+        "text_color": "#ffffff",
+        "accent_color": "#d71f27",
+        "media_background_color": "#ffffff",
+        "padding_top": 100,
+        "padding_bottom": 100
+      }
+    },
+    "main": {
+      "type": "cb-catalogue",
+      "blocks": {
+        "shuttle_type": {
+          "type": "_cb-cat-filter",
+          "settings": {
+            "filter_label": "Shuttle type",
+            "title_text": "",
+            "always_values": "Feather Match Shuttles, Nylon Synthetic Shuttles",
+            "empty_text": "No options yet",
+            "panel_style": "lines",
+            "reset_label": "",
+            "display": "list",
+            "button_columns": "2",
+            "button_style": "filled",
+            "show_counts": true,
+            "count_style": "boxed",
+            "check_shape": "square",
+            "numbered": false,
+            "collapsible": true,
+            "collapsed": false,
+            "note": "",
+            "title_link_label": "",
+            "title_link": "",
+            "guide_text": "",
+            "price_display": "slider",
+            "price_prefix": "Up to",
+            "price_buckets": "Under $30 | 0-30\n$30 – $60 | 30-60\nOver $60 | 60+",
+            "price_multi": false,
+            "heading_size": 11,
+            "heading_link_size": 10,
+            "reset_size": 11,
+            "guide_size": 11,
+            "checkbox_size": 12,
+            "count_size": 11,
+            "button_size": 11,
+            "price_labels_size": 11,
+            "note_size": 11,
+            "empty_size": 12
+          },
+          "blocks": {}
+        },
+        "speed": {
+          "type": "_cb-cat-filter",
+          "settings": {
+            "filter_label": "Speed, Shuttle speed, Speed (NZ STANDARD)",
+            "title_text": "Speed (NZ standard)",
+            "always_values": "Speed 76 (Warm / Summer), Speed 77 (Auckland Std), Speed 78 (Cooler Halls)",
+            "empty_text": "No options yet",
+            "panel_style": "lines",
+            "reset_label": "",
+            "display": "list",
+            "button_columns": "2",
+            "button_style": "filled",
+            "show_counts": true,
+            "count_style": "boxed",
+            "check_shape": "square",
+            "numbered": false,
+            "collapsible": true,
+            "collapsed": false,
+            "note": "",
+            "title_link_label": "Guide",
+            "title_link": "",
+            "guide_text": "Speed 77 suits most Auckland halls. Choose 76 when it's warm or in summer, and 78 in cooler halls.",
+            "price_display": "slider",
+            "price_prefix": "Up to",
+            "price_buckets": "Under $30 | 0-30\n$30 – $60 | 30-60\nOver $60 | 60+",
+            "price_multi": false,
+            "heading_size": 11,
+            "heading_link_size": 10,
+            "reset_size": 11,
+            "guide_size": 11,
+            "checkbox_size": 12,
+            "count_size": 11,
+            "button_size": 11,
+            "price_labels_size": 11,
+            "note_size": 11,
+            "empty_size": 12
+          },
+          "blocks": {}
+        },
+        "pack_format": {
+          "type": "_cb-cat-filter",
+          "settings": {
+            "filter_label": "Pack format, Shuttle Pack Format",
+            "title_text": "Pack format",
+            "always_values": "Single Tube (12 Shuttles), 6-Pack Tube (Nylon), Club Carton (10 Tubes)",
+            "empty_text": "No options yet",
+            "panel_style": "lines",
+            "reset_label": "",
+            "display": "list",
+            "button_columns": "2",
+            "button_style": "filled",
+            "show_counts": true,
+            "count_style": "boxed",
+            "check_shape": "square",
+            "numbered": false,
+            "collapsible": true,
+            "collapsed": false,
+            "note": "",
+            "title_link_label": "",
+            "title_link": "",
+            "guide_text": "",
+            "price_display": "slider",
+            "price_prefix": "Up to",
+            "price_buckets": "Under $30 | 0-30\n$30 – $60 | 30-60\nOver $60 | 60+",
+            "price_multi": false,
+            "heading_size": 11,
+            "heading_link_size": 10,
+            "reset_size": 11,
+            "guide_size": 11,
+            "checkbox_size": 12,
+            "count_size": 11,
+            "button_size": 11,
+            "price_labels_size": 11,
+            "note_size": 11,
+            "empty_size": 12
+          },
+          "blocks": {}
+        },
+        "brand": {
+          "type": "_cb-cat-filter",
+          "settings": {
+            "filter_label": "Brand",
+            "title_text": "Brand (optional filter)",
+            "always_values": "Yonex, Victor, RSL, Ashaway",
+            "empty_text": "No options yet",
+            "panel_style": "lines",
+            "reset_label": "",
+            "display": "list",
+            "button_columns": "2",
+            "button_style": "filled",
+            "show_counts": true,
+            "count_style": "boxed",
+            "check_shape": "square",
+            "numbered": false,
+            "collapsible": true,
+            "collapsed": false,
+            "note": "",
+            "title_link_label": "",
+            "title_link": "",
+            "guide_text": "",
+            "price_display": "slider",
+            "price_prefix": "Up to",
+            "price_buckets": "Under $30 | 0-30\n$30 – $60 | 30-60\nOver $60 | 60+",
+            "price_multi": false,
+            "heading_size": 11,
+            "heading_link_size": 10,
+            "reset_size": 11,
+            "guide_size": 11,
+            "checkbox_size": 12,
+            "count_size": 11,
+            "button_size": 11,
+            "price_labels_size": 11,
+            "note_size": 11,
+            "empty_size": 12
+          },
+          "blocks": {}
+        },
+        "price": {
+          "type": "_cb-cat-filter",
+          "settings": {
+            "filter_label": "Price",
+            "title_text": "Price range (NZD)",
+            "always_values": "",
+            "empty_text": "No options yet",
+            "panel_style": "lines",
+            "reset_label": "",
+            "display": "list",
+            "button_columns": "2",
+            "button_style": "filled",
+            "show_counts": true,
+            "count_style": "boxed",
+            "check_shape": "square",
+            "numbered": false,
+            "collapsible": true,
+            "collapsed": false,
+            "note": "",
+            "title_link_label": "",
+            "title_link": "",
+            "guide_text": "",
+            "price_display": "buckets",
+            "price_prefix": "Up to",
+            "price_buckets": "Under $30 | 0-30\n$30 – $60 | 30-60\nOver $60 / Bulk | 60+",
+            "price_multi": false,
+            "heading_size": 11,
+            "heading_link_size": 10,
+            "reset_size": 11,
+            "guide_size": 11,
+            "checkbox_size": 12,
+            "count_size": 11,
+            "button_size": 11,
+            "price_labels_size": 11,
+            "note_size": 11,
+            "empty_size": 12
+          },
+          "blocks": {}
+        },
+        "click_collect": {
+          "type": "_cb-cat-promo",
+          "settings": {
+            "icon": "store",
+            "custom_icon_tint": true,
+            "look": "compact",
+            "accent_border": false,
+            "icon_layout": "side",
+            "title_color": "text",
+            "show_dot": true,
+            "promo_title": "Click & collect",
+            "promo_text": "Order online, collect in 2 hours at the Papakura pro shop (41R Elliot St).",
+            "footer_label": "",
+            "footer_value": "",
+            "link": "",
+            "title_size": 11,
+            "text_size": 12,
+            "footer_size": 11
+          },
+          "blocks": {}
+        },
+        "intro": {
+          "type": "cb-paragraph",
+          "static": true,
+          "settings": {
+            "body_text": "",
+            "size": 14,
+            "mobile_sizing": "same",
+            "mobile_size": 14,
+            "fluid_vw": 2,
+            "weight": "regular",
+            "color": "muted",
+            "custom_color": "#ffffff",
+            "line_height": 160,
+            "letter_spacing": 0,
+            "wrap": "wrap",
+            "width": "auto",
+            "width_px": 400,
+            "max_width_unit": "none",
+            "max_width_px": 640,
+            "max_width_ch": 60,
+            "background_color": "",
+            "padding_y": 0,
+            "padding_x": 0,
+            "border_width": 0,
+            "border_color": "",
+            "radius": 0
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "shuttle_type",
+        "speed",
+        "pack_format",
+        "brand",
+        "price",
+        "click_collect"
+      ],
+      "settings": {
+        "title_text": "All shuttles",
+        "heading_tag": "h1",
+        "show_count": true,
+        "count_label": "products",
+        "quick_filter": "",
+        "all_label": "All styles",
+        "show_sort": true,
+        "sort_label": "Sort by:",
+        "show_view_toggle": true,
+        "filter_heading": "Filters",
+        "clear_label": "Clear all",
+        "collection": "shuttles",
+        "products_per_page": 12,
+        "columns": "4",
+        "image_ratio": "1 / 1",
+        "image_fit": "contain",
+        "show_wishlist": true,
+        "button_label": "View details",
+        "quick_add_mode": "all",
+        "quick_collect_tag": "quick-collect",
+        "quick_label": "Add to cart",
+        "stock_label": "In Stock Papakura",
+        "low_stock_threshold": 2,
+        "low_stock_label": "[count] In Stock Papakura",
+        "brand_names": "Victor, Yonex, RSL, Code Alpha, Li-Ning, Babolat, Carlton, Ashaway",
+        "showing_text": "Showing [from]–[to] of [total] shuttles",
+        "empty_text": "No shuttles match these filters.",
+        "sidebar_width": 220,
+        "max_width": 1400,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "#0b0b0b",
+        "card_background_color": "#141414",
+        "border_color": "#ffffff1a",
+        "text_color": "#ffffff",
+        "accent_color": "#d71f27",
+        "image_background_color": "#ffffff",
+        "success_color": "#22c55e",
+        "padding_top": 100,
+        "padding_bottom": 100,
+        "title_size": 22,
+        "count_size": 10,
+        "pill_size": 11,
+        "sort_label_size": 10,
+        "sort_select_size": 10,
+        "filters_button_size": 11,
+        "filters_heading_size": 11,
+        "clear_size": 10,
+        "badge_size": 9,
+        "brand_tag_size": 10,
+        "product_title_size": 15,
+        "specs_size": 10,
+        "price_size": 16,
+        "compare_price_size": 11,
+        "currency_size": 9,
+        "stock_size": 10,
+        "card_button_size": 11,
+        "showing_size": 12,
+        "pagination_size": 12,
+        "empty_size": 13
+      }
+    },
+    "cb_speed_QPpQiL": {
+      "type": "cb-speed",
+      "blocks": {
+        "cb_speed_header_68KzbC": {
+          "type": "_cb-speed-header",
+          "settings": {
+            "gap": 10
+          },
+          "blocks": {
+            "cb_speed_eyebrow_mJMJwf": {
+              "type": "cb-subheader",
+              "settings": {
+                "subheader_text": "CMBA temperature calibration",
+                "secondary": "",
+                "show_dot": false,
+                "size": 10,
+                "weight": "strong",
+                "color": "accent",
+                "custom_color": "#ffffff",
+                "letter_spacing": 10,
+                "uppercase": true,
+                "space_below": 0,
+                "width": "auto",
+                "width_px": 400,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_speed_heading_CcKaDi": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "Shuttle speed, explained simply.",
+                "tag": "h2",
+                "size": 30,
+                "mobile_sizing": "scale",
+                "mobile_scale": 80,
+                "fluid_min": 28,
+                "fluid_vw": 6,
+                "weight": "font",
+                "color": "text",
+                "custom_color": "#ffffff",
+                "line_height": 112,
+                "letter_spacing": -1,
+                "uppercase": false,
+                "wrap": "wrap",
+                "width": "auto",
+                "width_px": 400,
+                "max_width": 0,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_speed_text_faGYVy": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>Temperature, altitude and hall draft affect how quickly a shuttle travels. The right speed helps the shuttle behave naturally instead of flying long or falling short.</p>",
+                "size": 13,
+                "mobile_sizing": "same",
+                "mobile_size": 13,
+                "fluid_vw": 2,
+                "weight": "regular",
+                "color": "muted",
+                "custom_color": "#ffffff",
+                "line_height": 165,
+                "letter_spacing": 0,
+                "wrap": "wrap",
+                "width": "auto",
+                "width_px": 400,
+                "max_width_unit": "ch",
+                "max_width_px": 640,
+                "max_width_ch": 62,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "cb_speed_eyebrow_mJMJwf",
+            "cb_speed_heading_CcKaDi",
+            "cb_speed_text_faGYVy"
+          ]
+        },
+        "cb_speed_cards_gUMrJt": {
+          "type": "_cb-speed-cards",
+          "settings": {
+            "columns": 3,
+            "gap": 16
+          },
+          "blocks": {
+            "cb_speed_card_kHHTmh": {
+              "type": "_cb-speed-card",
+              "settings": {
+                "speed_tag": "Speed 76 / Yonex 2",
+                "icon": "thermometer",
+                "custom_icon_tint": true,
+                "icon_color": "#f5a524",
+                "card_title": "Slower",
+                "subtitle": "For warmer conditions / summer play",
+                "card_text": "Helps prevent the shuttle travelling too far and flying baseline out.",
+                "footer_text": "Warm hall or summer match play",
+                "highlight": false,
+                "highlight_label": "CMBA standard spec",
+                "tag_size": 9,
+                "title_size": 18,
+                "subtitle_size": 9,
+                "text_size": 12,
+                "footer_size": 10,
+                "tab_size": 9
+              },
+              "blocks": {}
+            },
+            "cb_speed_card_jR3xBJ": {
+              "type": "_cb-speed-card",
+              "settings": {
+                "speed_tag": "Speed 77 / Yonex 3",
+                "icon": "check",
+                "custom_icon_tint": true,
+                "icon_color": "#22c55e",
+                "card_title": "Medium",
+                "subtitle": "The everyday starting point",
+                "card_text": "Calibrated for typical NZ indoor club conditions and unheated school halls.",
+                "footer_text": "Standard Papakura club & junior spec",
+                "highlight": true,
+                "highlight_label": "CMBA standard spec",
+                "tag_size": 9,
+                "title_size": 18,
+                "subtitle_size": 9,
+                "text_size": 12,
+                "footer_size": 10,
+                "tab_size": 9
+              },
+              "blocks": {}
+            },
+            "cb_speed_card_8rkkMW": {
+              "type": "_cb-speed-card",
+              "settings": {
+                "speed_tag": "Speed 78 / Yonex 4",
+                "icon": "snowflake",
+                "custom_icon_tint": true,
+                "icon_color": "#60a5fa",
+                "card_title": "Faster",
+                "subtitle": "For cooler conditions / winter play",
+                "card_text": "Maintains proper flight depth without arm strain in cooler, denser air.",
+                "footer_text": "Unheated stadiums or winter play",
+                "highlight": false,
+                "highlight_label": "CMBA standard spec",
+                "tag_size": 9,
+                "title_size": 18,
+                "subtitle_size": 9,
+                "text_size": 12,
+                "footer_size": 10,
+                "tab_size": 9
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "cb_speed_card_kHHTmh",
+            "cb_speed_card_jR3xBJ",
+            "cb_speed_card_8rkkMW"
+          ]
+        },
+        "cb_speed_notice_VtFJrG": {
+          "type": "_cb-speed-notice",
+          "settings": {
+            "show_icon": true,
+            "icon_type": "info",
+            "custom_icon_tint": true,
+            "notice_title": "",
+            "notice_text": "Speed numbers vary by brand. If you're unsure, ask the pro shop and we'll help you choose.",
+            "button_label": "Ask the Pro Shop",
+            "button_caps": false,
+            "button_link": "",
+            "link_label": "Read the Full Shuttle Guide",
+            "link_url": "",
+            "title_size": 15,
+            "text_size": 12,
+            "button_size": 11,
+            "link_size": 11
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "cb_speed_header_68KzbC",
+        "cb_speed_cards_gUMrJt",
+        "cb_speed_notice_VtFJrG"
+      ],
+      "name": "[CB] Speed guide",
+      "settings": {
+        "max_width": 1400,
+        "stack_gap": 32,
+        "card_radius": 3,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "#0d0d0d",
+        "card_background_color": "#1a1a1a",
+        "border_color": "#ffffff14",
+        "text_color": "#ffffff",
+        "accent_color": "#d71f27",
+        "padding_top": 100,
+        "padding_bottom": 100
+      }
+    },
+    "cb_visit_eHMzk8": {
+      "type": "cb-visit",
+      "blocks": {
+        "cb_visit_content_8mgYfG": {
+          "type": "_cb-visit-content",
+          "settings": {
+            "gap": 8
+          },
+          "blocks": {
+            "cb_visit_eyebrow_6MjFDk": {
+              "type": "cb-subheader",
+              "settings": {
+                "subheader_text": "AFFILIATE CLUB & SCHOOL SUPPLY",
+                "secondary": "",
+                "show_dot": false,
+                "size": 10,
+                "weight": "strong",
+                "color": "accent",
+                "custom_color": "#ffffff",
+                "letter_spacing": 8,
+                "uppercase": true,
+                "space_below": 0,
+                "width": "auto",
+                "width_px": 400,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_visit_heading_bYYbTk": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "Ordering shuttles for your club, school or squad?",
+                "tag": "h2",
+                "size": 20,
+                "mobile_sizing": "scale",
+                "mobile_scale": 90,
+                "fluid_min": 28,
+                "fluid_vw": 6,
+                "weight": "font",
+                "color": "text",
+                "custom_color": "#ffffff",
+                "line_height": 115,
+                "letter_spacing": -1,
+                "uppercase": true,
+                "wrap": "wrap",
+                "width": "auto",
+                "width_px": 400,
+                "max_width": 0,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_visit_text_B7rQXe": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>Counties Manukau Badminton supplies clubs, schools, and tournament organizers across<br>New Zealand with verified wholesale carton pricing and scheduled replenishment.</p>",
+                "size": 13,
+                "mobile_sizing": "same",
+                "mobile_size": 13,
+                "fluid_vw": 2,
+                "weight": "regular",
+                "color": "muted",
+                "custom_color": "#ffffff",
+                "line_height": 160,
+                "letter_spacing": 0,
+                "wrap": "wrap",
+                "width": "auto",
+                "width_px": 400,
+                "max_width_unit": "ch",
+                "max_width_px": 640,
+                "max_width_ch": 120,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "cb_visit_eyebrow_6MjFDk",
+            "cb_visit_heading_bYYbTk",
+            "cb_visit_text_B7rQXe"
+          ]
+        },
+        "cb_visit_button_q3yKL8": {
+          "type": "_cb-visit-button",
+          "settings": {
+            "label": "Request Wholesale Pricing",
+            "link": "",
+            "directions_address": "",
+            "style": "outline",
+            "icon": "none",
+            "custom_icon_tint": true,
+            "text_size": 11
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "cb_visit_content_8mgYfG",
+        "cb_visit_button_q3yKL8"
+      ],
+      "name": "[CB] Visit banner",
+      "settings": {
+        "max_width": 1400,
+        "show_panel": true,
+        "panel_radius": 2,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "#0b0b0b",
+        "panel_background_color": "#181818",
+        "border_color": "#ffffff14",
+        "text_color": "#ffffff",
+        "accent_color": "#d71f27",
+        "button_background_color": "#ffffff",
+        "button_text_color": "#111111",
+        "padding_top": 52,
+        "padding_bottom": 52
+      }
+    },
+    "cb_strip_4jdDXp": {
+      "type": "cb-strip",
+      "blocks": {
+        "cb_strip_item_Ncy8wW": {
+          "type": "_cb-strip-item",
+          "settings": {
+            "icon": "racket",
+            "custom_icon_tint": true,
+            "item_title": "Badminton people",
+            "item_text": "Advice from players, coaches and stringers who know the game.",
+            "link": "",
+            "title_size": 11,
+            "text_size": 12
+          },
+          "blocks": {}
+        },
+        "cb_strip_item_qNxU3b": {
+          "type": "_cb-strip-item",
+          "settings": {
+            "icon": "store",
+            "custom_icon_tint": true,
+            "item_title": "Click & collect",
+            "item_text": "Pick up from the Papakura pro shop seven days a week.",
+            "link": "",
+            "title_size": 11,
+            "text_size": 12
+          },
+          "blocks": {}
+        },
+        "cb_strip_item_Eg3Vkc": {
+          "type": "_cb-strip-item",
+          "settings": {
+            "icon": "heart_hand",
+            "custom_icon_tint": true,
+            "item_title": "Support the sport",
+            "item_text": "Every purchase helps support Counties Manukau Badminton.",
+            "link": "",
+            "title_size": 11,
+            "text_size": 12
+          },
+          "blocks": {}
+        },
+        "cb_strip_item_39gidq": {
+          "type": "_cb-strip-item",
+          "settings": {
+            "icon": "help",
+            "custom_icon_tint": true,
+            "item_title": "Need help?",
+            "item_text": "Ask us before you buy and we'll help you choose the right shuttle.",
+            "link": "",
+            "title_size": 11,
+            "text_size": 12
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "cb_strip_item_Ncy8wW",
+        "cb_strip_item_qNxU3b",
+        "cb_strip_item_Eg3Vkc",
+        "cb_strip_item_39gidq"
+      ],
+      "name": "[CB] Feature strip",
+      "settings": {
+        "columns": 4,
+        "show_dividers": true,
+        "gutter": 24,
+        "max_width": 1400,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "#07090d",
+        "text_color": "#ffffff",
+        "accent_color": "#d71f27",
+        "divider_color": "#ffffff14",
+        "padding_top": 52,
+        "padding_bottom": 52
+      }
+    },
+    "cb_visit_67bFMn": {
+      "type": "cb-visit",
+      "blocks": {
+        "cb_visit_content_B9nUbh": {
+          "type": "_cb-visit-content",
+          "settings": {
+            "gap": 8
+          },
+          "blocks": {
+            "cb_visit_eyebrow_9EGeRM": {
+              "type": "cb-subheader",
+              "settings": {
+                "subheader_text": "BADMINTON ADVICE",
+                "secondary": "",
+                "show_dot": false,
+                "size": 10,
+                "weight": "strong",
+                "color": "accent",
+                "custom_color": "#ffffff",
+                "letter_spacing": 8,
+                "uppercase": true,
+                "space_below": 0,
+                "width": "auto",
+                "width_px": 400,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_visit_heading_bRKkiK": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "Still deciding between feather and nylon?",
+                "tag": "h2",
+                "size": 20,
+                "mobile_sizing": "scale",
+                "mobile_scale": 90,
+                "fluid_min": 28,
+                "fluid_vw": 6,
+                "weight": "font",
+                "color": "text",
+                "custom_color": "#ffffff",
+                "line_height": 115,
+                "letter_spacing": -1,
+                "uppercase": true,
+                "wrap": "wrap",
+                "width": "auto",
+                "width_px": 400,
+                "max_width": 0,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_visit_text_UizFmg": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>Read our beginner-friendly guide to shuttle types, flight speeds, and what works best for<br>casual training, school sports, and association match play.</p>",
+                "size": 13,
+                "mobile_sizing": "same",
+                "mobile_size": 13,
+                "fluid_vw": 2,
+                "weight": "regular",
+                "color": "muted",
+                "custom_color": "#ffffff",
+                "line_height": 160,
+                "letter_spacing": 0,
+                "wrap": "wrap",
+                "width": "auto",
+                "width_px": 400,
+                "max_width_unit": "ch",
+                "max_width_px": 640,
+                "max_width_ch": 120,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "cb_visit_eyebrow_9EGeRM",
+            "cb_visit_heading_bRKkiK",
+            "cb_visit_text_UizFmg"
+          ]
+        },
+        "cb_visit_button_KWBKxJ": {
+          "type": "_cb-visit-button",
+          "settings": {
+            "label": "READ THE SHUTTLE GUIDE",
+            "link": "",
+            "directions_address": "",
+            "style": "accent",
+            "icon": "arrow",
+            "custom_icon_tint": true,
+            "text_size": 11
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "cb_visit_content_B9nUbh",
+        "cb_visit_button_KWBKxJ"
+      ],
+      "name": "[CB] Visit banner",
+      "settings": {
+        "max_width": 1400,
+        "show_panel": true,
+        "panel_radius": 2,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "#0b0b0b",
+        "panel_background_color": "#181818",
+        "border_color": "#ffffff14",
+        "text_color": "#ffffff",
+        "accent_color": "#d71f27",
+        "button_background_color": "#ffffff",
+        "button_text_color": "#111111",
+        "padding_top": 100,
+        "padding_bottom": 100
+      }
+    }
+  },
+  "order": [
+    "cb_hero_RR9bHE",
+    "cb_selector_GpAhK6",
+    "main",
+    "cb_speed_QPpQiL",
+    "cb_visit_eHMzk8",
+    "cb_strip_4jdDXp",
+    "cb_visit_67bFMn"
+  ]
+}

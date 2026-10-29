@@ -1,0 +1,78 @@
+<div
+  class="cb-visit__content"
+  style="--cbv-content-gap: {{ block.settings.gap }}px;"
+  {{ block.shopify_attributes }}
+>
+  {% content_for 'blocks' %}
+</div>
+
+{% stylesheet %}
+  .cb-visit__content {
+    display: flex;
+    flex: 1 1 220px;
+    flex-direction: column;
+    gap: var(--cbv-content-gap, 8px);
+    min-width: 0;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Content group",
+  "tag": null,
+  "blocks": [
+    { "type": "cb-subheader" },
+    { "type": "cb-heading" },
+    { "type": "cb-paragraph" },
+    { "type": "cb-button" }
+  ],
+  "settings": [
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Space between lines",
+      "min": 2,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 8
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Content group",
+      "blocks": {
+        "eyebrow": {
+          "type": "cb-subheader",
+          "settings": {
+            "subheader_text": "Papakura community hub",
+            "secondary": "41R Elliot Street",
+            "letter_spacing": 8
+          }
+        },
+        "heading": {
+          "type": "cb-heading",
+          "settings": {
+            "heading_text": "See it. Hold it. Test it on court.",
+            "size": 20,
+            "mobile_scale": 90,
+            "uppercase": true,
+            "wrap": "wrap"
+          }
+        },
+        "text": {
+          "type": "cb-paragraph",
+          "settings": {
+            "body_text": "<p>Visit the CMBA Pro Shop inside the Papakura Badminton Hall to test swing weights, compare grip sizes, and collect online orders instantly.</p>",
+            "size": 13,
+            "mobile_size": 13,
+            "max_width_unit": "ch",
+            "max_width_ch": 120
+          }
+        }
+      },
+      "block_order": ["eyebrow", "heading", "text"]
+    }
+  ]
+}
+{% endschema %}

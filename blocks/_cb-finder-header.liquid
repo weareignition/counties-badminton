@@ -28,8 +28,9 @@
   "tag": null,
   "blocks": [
     { "type": "_cb-finder-badge" },
-    { "type": "_cb-finder-heading" },
-    { "type": "_cb-finder-text" }
+    { "type": "cb-heading" },
+    { "type": "cb-paragraph" },
+    { "type": "cb-button" }
   ],
   "settings": [
     {
@@ -58,8 +59,29 @@
       "name": "[CB] Header",
       "blocks": {
         "badge": { "type": "_cb-finder-badge" },
-        "heading": { "type": "_cb-finder-heading" },
-        "text": { "type": "_cb-finder-text" }
+        "heading": {
+          "type": "cb-heading",
+          "settings": {
+            "heading_text": "Not sure which racket suits you?",
+            "size": 56,
+            "mobile_sizing": "fluid",
+            "fluid_min": 34,
+            "fluid_vw": 8,
+            "line_height": 105,
+            "letter_spacing": -2,
+            "wrap": "pretty"
+          }
+        },
+        "text": {
+          "type": "cb-paragraph",
+          "settings": {
+            "body_text": "<p>Tell customers how the racket finder helps them choose.</p>",
+            "size": 15,
+            "mobile_size": 15,
+            "max_width_unit": "ch",
+            "max_width_ch": 56
+          }
+        }
       },
       "block_order": ["badge", "heading", "text"]
     }

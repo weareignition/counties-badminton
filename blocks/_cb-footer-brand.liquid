@@ -18,7 +18,8 @@
   "tag": null,
   "blocks": [
     { "type": "_cb-footer-logo" },
-    { "type": "_cb-footer-text" },
+    { "type": "cb-paragraph" },
+    { "type": "cb-button" },
     { "type": "_cb-footer-badge" }
   ],
   "presets": [
@@ -26,7 +27,15 @@
       "name": "[CB] Brand column",
       "blocks": {
         "logo": { "type": "_cb-footer-logo" },
-        "text": { "type": "_cb-footer-text" }
+        "text": {
+          "type": "cb-paragraph",
+          "settings": {
+            "body_text": "<p>Tell customers about your store.</p>",
+            "color": "soft",
+            "max_width_unit": "ch",
+            "max_width_ch": 46
+          }
+        }
       },
       "block_order": ["logo", "text"]
     }

@@ -1,0 +1,1293 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-blog",
+      "blocks": {
+        "title": {
+          "type": "text",
+          "name": "t:names.title",
+          "settings": {
+            "text": "<h1>{{ closest.blog.title }}</h1>",
+            "width": "fit-content",
+            "max_width": "narrow",
+            "alignment": "left",
+            "type_preset": "h2",
+            "font": "var(--font-body--family)",
+            "font_size": "",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "text_color": "",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 48,
+            "padding-block-end": 48,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "static-blog-post-card": {
+          "type": "_blog-post-card",
+          "static": true,
+          "settings": {
+            "alignment": "left",
+            "background_color": ""
+          },
+          "blocks": {
+            "image": {
+              "type": "_blog-post-image",
+              "static": true,
+              "settings": {
+                "height": "large",
+                "border": "none",
+                "border_width": 1,
+                "border_opacity": 100,
+                "border_color": "",
+                "border_radius": 4
+              },
+              "blocks": {}
+            },
+            "heading": {
+              "type": "_heading",
+              "name": "t:names.title",
+              "static": true,
+              "settings": {
+                "type_preset": "h4",
+                "font": "var(--font-body--family)",
+                "font_size": "",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "text": "",
+                "read_only": true,
+                "alignment": "left",
+                "show_alignment": false,
+                "text_color": "",
+                "padding-block-start": 0,
+                "padding-block-end": 10,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "blog-post-details": {
+              "type": "_blog-post-info-text",
+              "name": "t:names.details",
+              "static": true,
+              "settings": {
+                "show_date": true,
+                "show_author": false,
+                "type_preset": "",
+                "alignment": "left",
+                "text_color": "",
+                "show_alignment": false,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "content": {
+              "type": "_blog-post-description",
+              "static": true,
+              "settings": {
+                "type_preset": "rte",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "text_color": "",
+                "padding-block-start": 16,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": []
+        }
+      },
+      "block_order": [
+        "title"
+      ],
+      "disabled": true,
+      "settings": {
+        "background_color": "",
+        "padding-block-start": 0,
+        "padding-block-end": 48
+      }
+    },
+    "cb_player_guides_RJ9DpQ": {
+      "type": "cb-player-guides",
+      "blocks": {
+        "cb_pguide_header_MGydtj": {
+          "type": "_cb-pguide-header",
+          "settings": {
+            "alignment": "left",
+            "gap": 12
+          },
+          "blocks": {
+            "cb_subheader_Apgmr4": {
+              "type": "cb-subheader",
+              "settings": {
+                "subheader_text": "PLAYER GUIDE",
+                "secondary": "",
+                "show_dot": false,
+                "size": 11,
+                "weight": "strong",
+                "color": "accent",
+                "custom_color": "#ffffff",
+                "letter_spacing": 10,
+                "uppercase": true,
+                "space_below": 3,
+                "width": "auto",
+                "width_px": 400,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_heading_6xRUby": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "&nbsp;Choosing Your First Racket&nbsp;",
+                "tag": "h2",
+                "size": 40,
+                "mobile_sizing": "scale",
+                "mobile_scale": 70,
+                "fluid_min": 28,
+                "fluid_vw": 6,
+                "weight": "font",
+                "color": "text",
+                "custom_color": "#ffffff",
+                "line_height": 120,
+                "letter_spacing": -1,
+                "uppercase": false,
+                "wrap": "balance",
+                "width": "auto",
+                "width_px": 400,
+                "max_width": 0,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_paragraph_VEJi8k": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>Selecting your first racket can feel overwhelming, but it doesn’t need to be. This guide breaks down the essentials so you can make a confident, informed choice.</p>",
+                "size": 15,
+                "mobile_sizing": "same",
+                "mobile_size": 14,
+                "fluid_vw": 2,
+                "weight": "regular",
+                "color": "muted",
+                "custom_color": "#ffffff",
+                "line_height": 160,
+                "letter_spacing": 0,
+                "wrap": "wrap",
+                "width": "auto",
+                "width_px": 400,
+                "max_width_unit": "none",
+                "max_width_px": 640,
+                "max_width_ch": 60,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "cb_subheader_Apgmr4",
+            "cb_heading_6xRUby",
+            "cb_paragraph_VEJi8k"
+          ]
+        }
+      },
+      "block_order": [
+        "cb_pguide_header_MGydtj"
+      ],
+      "name": "[CB] Player guides",
+      "settings": {
+        "columns": 2,
+        "max_width": 1120,
+        "column_gap": 22,
+        "row_gap": 80,
+        "header_gap": 80,
+        "equal_height": true,
+        "card_padding": 26,
+        "card_radius": 15,
+        "show_photos": true,
+        "photo_height": 196,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "title_font": "body",
+        "background_color": "{{ settings.color_palette.foreground }}",
+        "card_color": "#1b1b1b",
+        "frame_color": "#ffffff14",
+        "text_color": "#ffffff",
+        "muted_text_color": "#d0d0d4",
+        "accent_color": "#d71f27",
+        "button_color": "#ffffff05",
+        "button_border_color": "#ffffff14",
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
+    },
+    "cb_image_banner_DPfH3g": {
+      "type": "cb-image-banner",
+      "blocks": {
+        "cb_image_e4CHNr": {
+          "type": "cb-image",
+          "settings": {
+            "image": "shopify://shop_images/Editable_image_-_Article_hero_image.png",
+            "alt": "",
+            "link": "",
+            "ratio": "5 / 2",
+            "mobile_ratio": "4 / 3",
+            "eager": false,
+            "width": "full",
+            "width_px": 400,
+            "background_color": "",
+            "padding_y": 0,
+            "padding_x": 0,
+            "border_width": 1,
+            "border_color": "#ffffff14",
+            "radius": 10
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "cb_image_e4CHNr"
+      ],
+      "name": "[CB] Image banner",
+      "settings": {
+        "columns": 1,
+        "gap": 22,
+        "max_width": 1120,
+        "background_color": "#111111",
+        "text_color": "#ffffff",
+        "padding_top": 48,
+        "padding_bottom": 48
+      }
+    },
+    "cb_article_PfPttj": {
+      "type": "cb-article",
+      "blocks": {
+        "cb_subheader_4L386B": {
+          "type": "cb-subheader",
+          "settings": {
+            "subheader_text": "Quick answer",
+            "secondary": "",
+            "show_dot": false,
+            "size": 11,
+            "weight": "strong",
+            "color": "accent",
+            "custom_color": "#ffffff",
+            "letter_spacing": 10,
+            "uppercase": true,
+            "space_below": 0,
+            "width": "auto",
+            "width_px": 400,
+            "background_color": "",
+            "padding_y": 0,
+            "padding_x": 0,
+            "border_width": 0,
+            "border_color": "",
+            "radius": 0
+          },
+          "blocks": {}
+        },
+        "cb_heading_m7gHRa": {
+          "type": "cb-heading",
+          "settings": {
+            "heading_text": "Choose for the player you are now",
+            "tag": "h2",
+            "size": 40,
+            "mobile_sizing": "scale",
+            "mobile_scale": 70,
+            "fluid_min": 28,
+            "fluid_vw": 6,
+            "weight": "font",
+            "color": "text",
+            "custom_color": "#ffffff",
+            "line_height": 115,
+            "letter_spacing": -1,
+            "uppercase": false,
+            "wrap": "wrap",
+            "width": "auto",
+            "width_px": 400,
+            "max_width": 0,
+            "background_color": "",
+            "padding_y": 0,
+            "padding_x": 0,
+            "border_width": 0,
+            "border_color": "",
+            "radius": 0
+          },
+          "blocks": {}
+        },
+        "cb_paragraph_wwnnXd": {
+          "type": "cb-paragraph",
+          "settings": {
+            "body_text": "<p>Start with a racket you can swing comfortably and control consistently. Power becomes more useful when timing and technique are already working with you.</p>",
+            "size": 15,
+            "mobile_sizing": "same",
+            "mobile_size": 14,
+            "fluid_vw": 2,
+            "weight": "regular",
+            "color": "soft",
+            "custom_color": "#ffffff",
+            "line_height": 160,
+            "letter_spacing": 0,
+            "wrap": "wrap",
+            "width": "auto",
+            "width_px": 400,
+            "max_width_unit": "none",
+            "max_width_px": 640,
+            "max_width_ch": 60,
+            "background_color": "",
+            "padding_y": 0,
+            "padding_x": 0,
+            "border_width": 0,
+            "border_color": "",
+            "radius": 0
+          },
+          "blocks": {}
+        },
+        "cb_subheader_EHj4kT": {
+          "type": "cb-subheader",
+          "settings": {
+            "subheader_text": "01",
+            "secondary": "",
+            "show_dot": false,
+            "size": 11,
+            "weight": "strong",
+            "color": "accent",
+            "custom_color": "#ffffff",
+            "letter_spacing": 10,
+            "uppercase": true,
+            "space_below": 0,
+            "width": "auto",
+            "width_px": 400,
+            "background_color": "",
+            "padding_y": 0,
+            "padding_x": 0,
+            "border_width": 0,
+            "border_color": "",
+            "radius": 0
+          },
+          "blocks": {}
+        },
+        "cb_heading_zihdxX": {
+          "type": "cb-heading",
+          "settings": {
+            "heading_text": "Weight",
+            "tag": "h2",
+            "size": 41,
+            "mobile_sizing": "scale",
+            "mobile_scale": 70,
+            "fluid_min": 28,
+            "fluid_vw": 6,
+            "weight": "font",
+            "color": "text",
+            "custom_color": "#ffffff",
+            "line_height": 115,
+            "letter_spacing": -1,
+            "uppercase": false,
+            "wrap": "wrap",
+            "width": "auto",
+            "width_px": 400,
+            "max_width": 0,
+            "background_color": "",
+            "padding_y": 0,
+            "padding_x": 0,
+            "border_width": 0,
+            "border_color": "",
+            "radius": 0
+          },
+          "blocks": {}
+        },
+        "cb_paragraph_iiEr9X": {
+          "type": "cb-paragraph",
+          "settings": {
+            "body_text": "<p>A lighter-feeling racket can be easier to manoeuvre and may suit newer players who are still building timing and strength. A heavier-feeling setup can add stability, but only when it remains comfortable through a full session.</p>",
+            "size": 15,
+            "mobile_sizing": "same",
+            "mobile_size": 14,
+            "fluid_vw": 2,
+            "weight": "regular",
+            "color": "soft",
+            "custom_color": "#ffffff",
+            "line_height": 160,
+            "letter_spacing": 0,
+            "wrap": "wrap",
+            "width": "auto",
+            "width_px": 400,
+            "max_width_unit": "none",
+            "max_width_px": 640,
+            "max_width_ch": 60,
+            "background_color": "",
+            "padding_y": 0,
+            "padding_x": 0,
+            "border_width": 0,
+            "border_color": "",
+            "radius": 0
+          },
+          "blocks": {}
+        },
+        "cb_subheader_qQ3baN": {
+          "type": "cb-subheader",
+          "settings": {
+            "subheader_text": "02",
+            "secondary": "",
+            "show_dot": false,
+            "size": 11,
+            "weight": "strong",
+            "color": "accent",
+            "custom_color": "#ffffff",
+            "letter_spacing": 10,
+            "uppercase": true,
+            "space_below": 0,
+            "width": "auto",
+            "width_px": 400,
+            "background_color": "",
+            "padding_y": 0,
+            "padding_x": 0,
+            "border_width": 0,
+            "border_color": "",
+            "radius": 0
+          },
+          "blocks": {}
+        },
+        "cb_heading_6Njn9p": {
+          "type": "cb-heading",
+          "settings": {
+            "heading_text": "Balance",
+            "tag": "h2",
+            "size": 41,
+            "mobile_sizing": "scale",
+            "mobile_scale": 70,
+            "fluid_min": 28,
+            "fluid_vw": 6,
+            "weight": "font",
+            "color": "text",
+            "custom_color": "#ffffff",
+            "line_height": 115,
+            "letter_spacing": -1,
+            "uppercase": false,
+            "wrap": "wrap",
+            "width": "auto",
+            "width_px": 400,
+            "max_width": 0,
+            "background_color": "",
+            "padding_y": 0,
+            "padding_x": 0,
+            "border_width": 0,
+            "border_color": "",
+            "radius": 0
+          },
+          "blocks": {}
+        },
+        "cb_paragraph_ejgNfz": {
+          "type": "cb-paragraph",
+          "settings": {
+            "body_text": "<p>Head-heavy, even-balance and head-light rackets distribute weight differently. Think about whether you want help with momentum, an all-round feel, or quicker handling.</p>",
+            "size": 15,
+            "mobile_sizing": "same",
+            "mobile_size": 14,
+            "fluid_vw": 2,
+            "weight": "regular",
+            "color": "soft",
+            "custom_color": "#ffffff",
+            "line_height": 160,
+            "letter_spacing": 0,
+            "wrap": "wrap",
+            "width": "auto",
+            "width_px": 400,
+            "max_width_unit": "none",
+            "max_width_px": 640,
+            "max_width_ch": 60,
+            "background_color": "",
+            "padding_y": 0,
+            "padding_x": 0,
+            "border_width": 0,
+            "border_color": "",
+            "radius": 0
+          },
+          "blocks": {}
+        },
+        "cb_subheader_tHfx4Q": {
+          "type": "cb-subheader",
+          "settings": {
+            "subheader_text": "03",
+            "secondary": "",
+            "show_dot": false,
+            "size": 11,
+            "weight": "strong",
+            "color": "accent",
+            "custom_color": "#ffffff",
+            "letter_spacing": 10,
+            "uppercase": true,
+            "space_below": 0,
+            "width": "auto",
+            "width_px": 400,
+            "background_color": "",
+            "padding_y": 0,
+            "padding_x": 0,
+            "border_width": 0,
+            "border_color": "",
+            "radius": 0
+          },
+          "blocks": {}
+        },
+        "cb_heading_qX6gYp": {
+          "type": "cb-heading",
+          "settings": {
+            "heading_text": "Flex",
+            "tag": "h2",
+            "size": 41,
+            "mobile_sizing": "scale",
+            "mobile_scale": 70,
+            "fluid_min": 28,
+            "fluid_vw": 6,
+            "weight": "font",
+            "color": "text",
+            "custom_color": "#ffffff",
+            "line_height": 115,
+            "letter_spacing": -1,
+            "uppercase": false,
+            "wrap": "wrap",
+            "width": "auto",
+            "width_px": 400,
+            "max_width": 0,
+            "background_color": "",
+            "padding_y": 0,
+            "padding_x": 0,
+            "border_width": 0,
+            "border_color": "",
+            "radius": 0
+          },
+          "blocks": {}
+        },
+        "cb_paragraph_hAEtki": {
+          "type": "cb-paragraph",
+          "settings": {
+            "body_text": "<p>Shaft flex changes how the racket loads and releases through the swing. Your swing speed and technique matter more than choosing the most advanced-sounding specification.</p>",
+            "size": 15,
+            "mobile_sizing": "same",
+            "mobile_size": 14,
+            "fluid_vw": 2,
+            "weight": "regular",
+            "color": "soft",
+            "custom_color": "#ffffff",
+            "line_height": 160,
+            "letter_spacing": 0,
+            "wrap": "wrap",
+            "width": "auto",
+            "width_px": 400,
+            "max_width_unit": "none",
+            "max_width_px": 640,
+            "max_width_ch": 60,
+            "background_color": "",
+            "padding_y": 0,
+            "padding_x": 0,
+            "border_width": 0,
+            "border_color": "",
+            "radius": 0
+          },
+          "blocks": {}
+        },
+        "cb_subheader_KFYqcF": {
+          "type": "cb-subheader",
+          "settings": {
+            "subheader_text": "04",
+            "secondary": "",
+            "show_dot": false,
+            "size": 11,
+            "weight": "strong",
+            "color": "accent",
+            "custom_color": "#ffffff",
+            "letter_spacing": 10,
+            "uppercase": true,
+            "space_below": 0,
+            "width": "auto",
+            "width_px": 400,
+            "background_color": "",
+            "padding_y": 0,
+            "padding_x": 0,
+            "border_width": 0,
+            "border_color": "",
+            "radius": 0
+          },
+          "blocks": {}
+        },
+        "cb_heading_daBzgg": {
+          "type": "cb-heading",
+          "settings": {
+            "heading_text": "Frame shape",
+            "tag": "h2",
+            "size": 41,
+            "mobile_sizing": "scale",
+            "mobile_scale": 70,
+            "fluid_min": 28,
+            "fluid_vw": 6,
+            "weight": "font",
+            "color": "text",
+            "custom_color": "#ffffff",
+            "line_height": 115,
+            "letter_spacing": -1,
+            "uppercase": false,
+            "wrap": "wrap",
+            "width": "auto",
+            "width_px": 400,
+            "max_width": 0,
+            "background_color": "",
+            "padding_y": 0,
+            "padding_x": 0,
+            "border_width": 0,
+            "border_color": "",
+            "radius": 0
+          },
+          "blocks": {}
+        },
+        "cb_paragraph_UbLFMe": {
+          "type": "cb-paragraph",
+          "settings": {
+            "body_text": "<p>Frame geometry influences the size and feel of the hitting area. Prioritise a forgiving, repeatable contact point while you build consistency.</p>",
+            "size": 15,
+            "mobile_sizing": "same",
+            "mobile_size": 14,
+            "fluid_vw": 2,
+            "weight": "regular",
+            "color": "soft",
+            "custom_color": "#ffffff",
+            "line_height": 160,
+            "letter_spacing": 0,
+            "wrap": "wrap",
+            "width": "auto",
+            "width_px": 400,
+            "max_width_unit": "none",
+            "max_width_px": 640,
+            "max_width_ch": 60,
+            "background_color": "",
+            "padding_y": 0,
+            "padding_x": 0,
+            "border_width": 0,
+            "border_color": "",
+            "radius": 0
+          },
+          "blocks": {}
+        },
+        "cb_subheader_RkFaUp": {
+          "type": "cb-subheader",
+          "settings": {
+            "subheader_text": "05",
+            "secondary": "",
+            "show_dot": false,
+            "size": 11,
+            "weight": "strong",
+            "color": "accent",
+            "custom_color": "#ffffff",
+            "letter_spacing": 10,
+            "uppercase": true,
+            "space_below": 0,
+            "width": "auto",
+            "width_px": 400,
+            "background_color": "",
+            "padding_y": 0,
+            "padding_x": 0,
+            "border_width": 0,
+            "border_color": "",
+            "radius": 0
+          },
+          "blocks": {}
+        },
+        "cb_heading_gRnAj7": {
+          "type": "cb-heading",
+          "settings": {
+            "heading_text": "A simple final check",
+            "tag": "h2",
+            "size": 41,
+            "mobile_sizing": "scale",
+            "mobile_scale": 70,
+            "fluid_min": 28,
+            "fluid_vw": 6,
+            "weight": "font",
+            "color": "text",
+            "custom_color": "#ffffff",
+            "line_height": 115,
+            "letter_spacing": -1,
+            "uppercase": false,
+            "wrap": "wrap",
+            "width": "auto",
+            "width_px": 400,
+            "max_width": 0,
+            "background_color": "",
+            "padding_y": 0,
+            "padding_x": 0,
+            "border_width": 0,
+            "border_color": "",
+            "radius": 0
+          },
+          "blocks": {}
+        },
+        "cb_paragraph_iXdw68": {
+          "type": "cb-paragraph",
+          "settings": {
+            "body_text": "<p>Before you decide, hold the racket, make a few practice swings and ask yourself whether it would still feel comfortable at the end of a long session. If you're unsure, compare two or three options with the team in store.</p>",
+            "size": 15,
+            "mobile_sizing": "same",
+            "mobile_size": 14,
+            "fluid_vw": 2,
+            "weight": "regular",
+            "color": "soft",
+            "custom_color": "#ffffff",
+            "line_height": 160,
+            "letter_spacing": 0,
+            "wrap": "wrap",
+            "width": "auto",
+            "width_px": 400,
+            "max_width_unit": "none",
+            "max_width_px": 640,
+            "max_width_ch": 60,
+            "background_color": "",
+            "padding_y": 0,
+            "padding_x": 0,
+            "border_width": 0,
+            "border_color": "",
+            "radius": 0
+          },
+          "blocks": {}
+        },
+        "guide-box": {
+          "type": "_cb-article-aside",
+          "static": true,
+          "settings": {},
+          "blocks": {
+            "cb_subheader_jJhzxB": {
+              "type": "cb-subheader",
+              "settings": {
+                "subheader_text": "In this guide",
+                "secondary": "",
+                "show_dot": false,
+                "size": 10,
+                "weight": "strong",
+                "color": "accent",
+                "custom_color": "#ffffff",
+                "letter_spacing": 10,
+                "uppercase": true,
+                "space_below": 0,
+                "width": "auto",
+                "width_px": 400,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_heading_zWqWhr": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "Racket essentials",
+                "tag": "p",
+                "size": 21,
+                "mobile_sizing": "scale",
+                "mobile_scale": 100,
+                "fluid_min": 28,
+                "fluid_vw": 6,
+                "weight": "medium",
+                "color": "text",
+                "custom_color": "#ffffff",
+                "line_height": 125,
+                "letter_spacing": 0,
+                "uppercase": false,
+                "wrap": "wrap",
+                "width": "auto",
+                "width_px": 400,
+                "max_width": 0,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_paragraph_UMFUXq": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>Five things to weigh up before you choose a racket. Tap a topic to jump straight to it.</p>",
+                "size": 13,
+                "mobile_sizing": "same",
+                "mobile_size": 14,
+                "fluid_vw": 2,
+                "weight": "regular",
+                "color": "muted",
+                "custom_color": "#ffffff",
+                "line_height": 160,
+                "letter_spacing": 0,
+                "wrap": "wrap",
+                "width": "auto",
+                "width_px": 400,
+                "max_width_unit": "none",
+                "max_width_px": 640,
+                "max_width_ch": 60,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_article_contents_dGwz9q": {
+              "type": "_cb-article-contents",
+              "settings": {
+                "source": "auto",
+                "skip_first": true,
+                "items": ""
+              },
+              "blocks": {}
+            },
+            "cb_button_M4yAAV": {
+              "type": "cb-button",
+              "settings": {
+                "label": "Ask a specialist →",
+                "link": "/pages/contact",
+                "new_tab": false,
+                "style": "outline",
+                "size": 12,
+                "radius": 8,
+                "full_width": false
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "cb_subheader_jJhzxB",
+            "cb_heading_zWqWhr",
+            "cb_paragraph_UMFUXq",
+            "cb_article_contents_dGwz9q",
+            "cb_button_M4yAAV"
+          ]
+        }
+      },
+      "block_order": [
+        "cb_subheader_4L386B",
+        "cb_heading_m7gHRa",
+        "cb_paragraph_wwnnXd",
+        "cb_subheader_EHj4kT",
+        "cb_heading_zihdxX",
+        "cb_paragraph_iiEr9X",
+        "cb_subheader_qQ3baN",
+        "cb_heading_6Njn9p",
+        "cb_paragraph_ejgNfz",
+        "cb_subheader_tHfx4Q",
+        "cb_heading_qX6gYp",
+        "cb_paragraph_hAEtki",
+        "cb_subheader_KFYqcF",
+        "cb_heading_daBzgg",
+        "cb_paragraph_UbLFMe",
+        "cb_subheader_RkFaUp",
+        "cb_heading_gRnAj7",
+        "cb_paragraph_iXdw68"
+      ],
+      "name": "[CB] Article",
+      "settings": {
+        "max_width": 1120,
+        "topic_gap": 36,
+        "show_box": true,
+        "sticky": true,
+        "mobile_box": "above",
+        "box_width": 308,
+        "column_gap": 48,
+        "box_padding": 26,
+        "box_radius": 15,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "#111111",
+        "card_color": "#1b1b1b",
+        "text_color": "#ffffff",
+        "soft_text_color": "#dcdcde",
+        "muted_text_color": "#d0d0d4",
+        "accent_color": "#d71f27",
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
+    },
+    "cb_advice_xhRim4": {
+      "type": "cb-advice",
+      "blocks": {
+        "cb_advice_content_9FXpVD": {
+          "type": "_cb-advice-content",
+          "settings": {
+            "alignment": "left",
+            "gap": 12
+          },
+          "blocks": {
+            "cb_subheader_9tUXXm": {
+              "type": "cb-subheader",
+              "settings": {
+                "subheader_text": "FINAL CHECK",
+                "secondary": "",
+                "show_dot": false,
+                "size": 10,
+                "weight": "strong",
+                "color": "accent",
+                "custom_color": "#ffffff",
+                "letter_spacing": 0,
+                "uppercase": true,
+                "space_below": 0,
+                "width": "auto",
+                "width_px": 400,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_heading_B6Bbia": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "&nbsp;Comfort, control, confidence.&nbsp;",
+                "tag": "h2",
+                "size": 32,
+                "mobile_sizing": "scale",
+                "mobile_scale": 82,
+                "fluid_min": 28,
+                "fluid_vw": 6,
+                "weight": "font",
+                "color": "text",
+                "custom_color": "#ffffff",
+                "line_height": 115,
+                "letter_spacing": -1,
+                "uppercase": false,
+                "wrap": "wrap",
+                "width": "auto",
+                "width_px": 400,
+                "max_width": 0,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_paragraph_TXxFNH": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>If two rackets feel close, choose the one you can control comfortably for the length of a match. The Pro Shop team can help you compare options in person.</p>",
+                "size": 14,
+                "mobile_sizing": "same",
+                "mobile_size": 14,
+                "fluid_vw": 2,
+                "weight": "regular",
+                "color": "muted",
+                "custom_color": "#ffffff",
+                "line_height": 160,
+                "letter_spacing": -1,
+                "wrap": "wrap",
+                "width": "auto",
+                "width_px": 400,
+                "max_width_unit": "px",
+                "max_width_px": 1200,
+                "max_width_ch": 60,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_advice_buttons_HJBUqi": {
+              "type": "_cb-advice-buttons",
+              "settings": {
+                "gap": 12,
+                "space_above": 16
+              },
+              "blocks": {
+                "cb_advice_button_mkmDqV": {
+                  "type": "_cb-advice-button",
+                  "settings": {
+                    "label": "Visit the Pro Shop",
+                    "link": "shopify://pages/contact",
+                    "directions_address": "",
+                    "style": "primary",
+                    "icon": "arrow",
+                    "custom_icon_tint": true,
+                    "new_tab": false
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "cb_advice_button_mkmDqV"
+              ]
+            }
+          },
+          "block_order": [
+            "cb_subheader_9tUXXm",
+            "cb_heading_B6Bbia",
+            "cb_paragraph_TXxFNH",
+            "cb_advice_buttons_HJBUqi"
+          ]
+        }
+      },
+      "block_order": [
+        "cb_advice_content_9FXpVD"
+      ],
+      "name": "[CB] Advice banner",
+      "settings": {
+        "max_width": 1400,
+        "panel_padding": 44,
+        "panel_radius": 10,
+        "show_border": false,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "#0b0b0b",
+        "panel_background_color": "#181818",
+        "border_color": "#ffffff14",
+        "text_color": "#b8262f",
+        "muted_text_color": "#a1a1aa",
+        "accent_color": "#d71f27",
+        "secondary_button_color": "#2a2a2a",
+        "padding_top": 32,
+        "padding_bottom": 32
+      }
+    },
+    "cb_guides_UNcVib": {
+      "type": "cb-guides",
+      "blocks": {
+        "cb_guides_header_N7JW9n": {
+          "type": "_cb-guides-header",
+          "settings": {
+            "alignment": "left",
+            "max_width": 1000
+          },
+          "blocks": {
+            "cb_subheader_w3hKEW": {
+              "type": "cb-subheader",
+              "settings": {
+                "subheader_text": "MEET THE TEAM",
+                "secondary": "",
+                "show_dot": false,
+                "size": 10,
+                "weight": "strong",
+                "color": "accent",
+                "custom_color": "#ffffff",
+                "letter_spacing": 0,
+                "uppercase": true,
+                "space_below": 0,
+                "width": "auto",
+                "width_px": 400,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_heading_n9m9QW": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "&nbsp;Players, coaches and stringers who understand the game&nbsp;",
+                "tag": "h2",
+                "size": 32,
+                "mobile_sizing": "fluid",
+                "mobile_scale": 82,
+                "fluid_min": 30,
+                "fluid_vw": 6.5,
+                "weight": "font",
+                "color": "text",
+                "custom_color": "#ffffff",
+                "line_height": 115,
+                "letter_spacing": -1,
+                "uppercase": false,
+                "wrap": "balance",
+                "width": "auto",
+                "width_px": 400,
+                "max_width": 0,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_paragraph_NX7BXg": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>Meet the coaches, players and stringers behind the Pro Shop, the people who help you choose, set up and look after your equipment.</p>",
+                "size": 16,
+                "mobile_sizing": "same",
+                "mobile_size": 16,
+                "fluid_vw": 2,
+                "weight": "regular",
+                "color": "muted",
+                "custom_color": "#ffffff",
+                "line_height": 156,
+                "letter_spacing": 0,
+                "wrap": "wrap",
+                "width": "auto",
+                "width_px": 400,
+                "max_width_unit": "none",
+                "max_width_px": 640,
+                "max_width_ch": 60,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "cb_subheader_w3hKEW",
+            "cb_heading_n9m9QW",
+            "cb_paragraph_NX7BXg"
+          ]
+        },
+        "cb_guides_grid_mV3jtE": {
+          "type": "_cb-guides-grid",
+          "settings": {
+            "columns": 3,
+            "mobile_layout": "stack",
+            "gap": 22
+          },
+          "blocks": {
+            "cb_guides_card_jymwY3": {
+              "type": "_cb-guides-card",
+              "settings": {
+                "article": "",
+                "use_custom_text": false,
+                "card_title": "Coaches",
+                "summary": "Guidance built around the player, their goals and the way they move on court.",
+                "icon": "none",
+                "custom_icon_tint": true,
+                "label": "TEAM PROFILE",
+                "point_text": "",
+                "link_label": "",
+                "link": ""
+              },
+              "blocks": {}
+            },
+            "cb_guides_card_yNwPbr": {
+              "type": "_cb-guides-card",
+              "settings": {
+                "article": "",
+                "use_custom_text": false,
+                "card_title": "Players",
+                "summary": "First-hand product insight grounded in real training and match experience.",
+                "icon": "none",
+                "custom_icon_tint": true,
+                "label": "TEAM PROFILE",
+                "point_text": "",
+                "link_label": "",
+                "link": ""
+              },
+              "blocks": {}
+            },
+            "cb_guides_card_FzeQ4w": {
+              "type": "_cb-guides-card",
+              "settings": {
+                "article": "",
+                "use_custom_text": false,
+                "card_title": "Stringers",
+                "summary": "Careful preparation, considered tension advice and dependable workmanship.",
+                "icon": "none",
+                "custom_icon_tint": true,
+                "label": "TEAM PROFILE",
+                "point_text": "",
+                "link_label": "",
+                "link": ""
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "cb_guides_card_jymwY3",
+            "cb_guides_card_yNwPbr",
+            "cb_guides_card_FzeQ4w"
+          ]
+        }
+      },
+      "block_order": [
+        "cb_guides_header_N7JW9n",
+        "cb_guides_grid_mV3jtE"
+      ],
+      "name": "[CB] Setup guidance",
+      "settings": {
+        "design": "1",
+        "max_width": 1400,
+        "stack_gap": 40,
+        "card_radius": 4,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "#111112",
+        "card_background_color": "#181818",
+        "border_color": "#ffffff0d",
+        "text_color": "#ffffff",
+        "accent_color": "#d71f27",
+        "padding_top": 52,
+        "padding_bottom": 44
+      }
+    }
+  },
+  "order": [
+    "main",
+    "cb_player_guides_RJ9DpQ",
+    "cb_image_banner_DPfH3g",
+    "cb_article_PfPttj",
+    "cb_advice_xhRim4",
+    "cb_guides_UNcVib"
+  ]
+}

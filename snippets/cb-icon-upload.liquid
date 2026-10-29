@@ -1,0 +1,57 @@
+{%- doc -%}
+  Renders an icon the merchant uploaded (SVG or PNG from an image_picker setting) in place of a built-in [CB] icon.
+  The original file is used (no resizing), so SVGs stay sharp. With tint on (the default), the file is used as a CSS
+  mask filled with the current text colour, so a one-colour icon matches the built-in icons and follows hover and
+  accent colours. With tint off, the file shows in its own colours.
+  Size comes from `size`, or from the block's own CSS when `size` is left out (the defaults below have zero specificity).
+
+  @param {image} image - The uploaded icon.
+  @param {number} [size] - Width and height in px.
+  @param {boolean} [tint] - Fill with the current text colour. On unless false is passed.
+  @param {string} [class] - Extra classes, e.g. the class the built-in icon used.
+{%- enddoc -%}
+{%- liquid
+  assign src = image | image_url
+  assign size_style = ''
+  if size
+    assign size_style = '--cb-icon-size: ' | append: size | append: 'px;'
+  endif
+-%}
+{%- if tint == false -%}
+  <img
+    class="cb-icon-upload {{ class }}"
+    src="{{ src }}"
+    {% if size %}
+      width="{{ size }}" height="{{ size }}"
+    {% endif %}
+    alt=""
+    loading="lazy"
+    style="{{ size_style }}"
+  >
+{%- else -%}
+  <span
+    class="cb-icon-upload cb-icon-upload--tint {{ class }}"
+    style="--cb-icon-src: url('{{ src }}'); {{ size_style }}"
+    aria-hidden="true"
+  ></span>
+{%- endif -%}
+
+{% stylesheet %}
+  :where(.cb-icon-upload) {
+    display: inline-block;
+    flex: none;
+    width: var(--cb-icon-size, 16px);
+    height: var(--cb-icon-size, 16px);
+    vertical-align: middle;
+  }
+
+  :where(img.cb-icon-upload) {
+    object-fit: contain;
+  }
+
+  :where(.cb-icon-upload--tint) {
+    background-color: currentColor;
+    -webkit-mask: var(--cb-icon-src) center / contain no-repeat;
+    mask: var(--cb-icon-src) center / contain no-repeat;
+  }
+{% endstylesheet %}

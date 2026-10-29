@@ -1,0 +1,445 @@
+{%- comment -%}
+  Reviews panel: the shared [CB] Subheader and [CB] Heading (static blocks), an overall rating on the right and
+  [CB] Review cards. The overall rating comes from the product's reviews.rating and reviews.rating_count metafields
+  (filled by review apps), or the numbers typed in the settings; with neither it is hidden. The whole section hides
+  on the store when it has no rating and no real (non-sample) reviews.
+{%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign font_scope = '#cb-reviews-' | append: section.id
+
+  assign rating = ''
+  assign scale = 5
+  assign count = ''
+  if s.rating_source == 'product' and product.metafields.reviews.rating != blank
+    assign rating = product.metafields.reviews.rating.value.rating | round: 1
+    assign scale = product.metafields.reviews.rating.value.scale_max | plus: 0
+    assign count = product.metafields.reviews.rating_count.value
+  elsif s.rating_source == 'manual' and s.rating != blank
+    assign rating = s.rating | plus: 0
+    assign count = s.review_count
+  endif
+-%}
+
+{% render 'cb-font-styles',
+  selector: font_scope,
+  prefix: 'cbrv',
+  heading_font: s.heading_font,
+  body_font: s.body_font
+%}
+
+<section
+  id="cb-reviews-{{ section.id }}"
+  class="cb-reviews"
+  style="
+    --cbrv-bg: {{ s.background_color }};
+    --cbrv-panel: {{ s.panel_color }};
+    --cbrv-card: {{ s.card_color }};
+    --cbrv-text: {{ s.text_color }};
+    --cbrv-muted: {{ s.muted_text_color }};
+    --cbrv-badge: {{ s.badge_color }};
+    --cbrv-accent: {{ s.accent_color }};
+    --cbrv-max-width: {{ s.max_width }}px;
+    --cbrv-side: {{ s.side_padding }}px;
+    --cbrv-panel-padding: {{ s.panel_padding }}px;
+    --cbrv-columns: {{ s.columns }};
+    --cbrv-gap: {{ s.card_gap }}px;
+    --cbrv-header-gap: {{ s.header_gap }}px;
+    --cbrv-pt: {{ s.padding_top }}px;
+    --cbrv-pb: {{ s.padding_bottom }}px;
+    --cb-reviews-summary-size: {{ s.summary_size }}px;
+    --cb-reviews-summary-weight: {{ s.summary_weight }};
+  "
+>
+  <div class="cb-reviews__panel">
+    <div class="cb-reviews__header">
+      <div class="cb-reviews__intro">
+        {%- content_for 'block', type: 'cb-subheader', id: 'subheader' -%}
+        {%- content_for 'block', type: 'cb-heading', id: 'heading' -%}
+      </div>
+      {%- if rating != blank -%}
+        <p class="cb-reviews__summary">
+          {%- render 'cb-stars', rating: rating, scale: scale, size: 12 -%}
+          <strong>{{ s.rating_format | replace: '[rating]', rating }}</strong>
+          {%- if count != blank -%}
+            <span>{{ s.count_format | replace: '[count]', count }}</span>
+          {%- endif -%}
+        </p>
+      {%- endif -%}
+    </div>
+    <div class="cb-reviews__grid">
+      {%- content_for 'blocks' -%}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .cb-reviews {
+    color: var(--cbrv-text);
+    background: var(--cbrv-bg);
+    padding: var(--cbrv-pt) 16px var(--cbrv-pb);
+  }
+
+  /* Nothing real to show: no rating and no (non-sample) reviews. */
+  .cb-reviews:not(:has(.cb-review, .cb-reviews__summary)) {
+    display: none;
+  }
+
+  .cb-reviews__panel {
+    max-width: var(--cbrv-max-width);
+    box-sizing: border-box;
+    margin-inline: auto;
+    padding: 18px;
+    border-radius: 3px;
+    background: var(--cbrv-panel);
+  }
+
+  .cb-reviews__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px 24px;
+    margin-bottom: var(--cbrv-header-gap);
+  }
+
+  .cb-reviews__intro {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+    min-width: 0;
+  }
+
+  .cb-reviews .cb-reviews__summary {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 7px;
+    margin: 0;
+    font-family: var(--cbrv-font-body);
+    font-weight: var(--cb-reviews-summary-weight, inherit);
+    font-size: var(--cb-reviews-summary-size, 10px);
+    line-height: 1.3;
+    color: var(--cbrv-muted);
+  }
+
+  .cb-reviews__summary strong {
+    font-weight: max(var(--cb-reviews-summary-weight, 0), var(--cbrv-font-body-strong));
+    color: var(--cbrv-text);
+  }
+
+  .cb-reviews__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--cbrv-gap);
+  }
+
+  /* Star rows (snippets/cb-stars): grey stars with the filled ones laid over them. */
+  .cb-stars {
+    position: relative;
+    display: inline-flex;
+    flex: none;
+    line-height: 0;
+  }
+
+  .cb-stars__row {
+    display: inline-flex;
+    fill: var(--cb-stars-empty, rgb(255 255 255 / 0.18));
+  }
+
+  .cb-stars__row--full {
+    position: absolute;
+    inset: 0 auto 0 0;
+    overflow: hidden;
+    width: var(--cb-stars-fill, 100%);
+    fill: var(--cb-stars-color, var(--cb-color-accent, #d71f27));
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-reviews {
+      padding-inline: var(--cbrv-side);
+    }
+
+    .cb-reviews__panel {
+      padding: var(--cbrv-panel-padding);
+    }
+
+    .cb-reviews__grid {
+      grid-template-columns: repeat(var(--cbrv-columns), minmax(0, 1fr));
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Reviews",
+  "tag": "section",
+  "class": "section-wrapper",
+  "blocks": [{ "type": "_cb-review" }],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Overall rating"
+    },
+    {
+      "type": "select",
+      "id": "rating_source",
+      "label": "Rating comes from",
+      "options": [
+        { "value": "product", "label": "The product's review metafields" },
+        { "value": "manual", "label": "The numbers below" },
+        { "value": "none", "label": "Hide it" }
+      ],
+      "default": "product",
+      "info": "Review apps fill reviews.rating and reviews.rating_count. Without them the rating is hidden."
+    },
+    {
+      "type": "text",
+      "id": "rating",
+      "label": "Rating",
+      "info": "e.g. 4.9. Use only real figures.",
+      "visible_if": "{{ section.settings.rating_source == 'manual' }}"
+    },
+    {
+      "type": "text",
+      "id": "review_count",
+      "label": "Number of reviews",
+      "visible_if": "{{ section.settings.rating_source == 'manual' }}"
+    },
+    {
+      "type": "text",
+      "id": "rating_format",
+      "label": "Rating text",
+      "info": "[rating] is the rating.",
+      "default": "[rating] Overall"
+    },
+    {
+      "type": "text",
+      "id": "count_format",
+      "label": "Count text",
+      "info": "[count] is the number of reviews.",
+      "default": "([count] reviews)"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Reviews per row",
+      "info": "Phones show one per row.",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "card_gap",
+      "label": "Space between reviews",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "header_gap",
+      "label": "Space below heading",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Maximum width",
+      "min": 800,
+      "max": 1800,
+      "step": 20,
+      "unit": "px",
+      "default": 1520
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Side space",
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "panel_padding",
+      "label": "Panel padding",
+      "info": "Smaller on phones.",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "default": 25
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Fonts"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "space_grotesk_n7"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "inter_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#0b0b0b"
+    },
+    {
+      "type": "color",
+      "id": "panel_color",
+      "label": "Panel",
+      "default": "#181818"
+    },
+    {
+      "type": "color",
+      "id": "card_color",
+      "label": "Review cards",
+      "default": "#1c1b1b"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "muted_text_color",
+      "label": "Muted text",
+      "default": "#a1a1aa"
+    },
+    {
+      "type": "color",
+      "id": "badge_color",
+      "label": "Badge",
+      "default": "#f2aaa0"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "info": "Subheader and stars.",
+      "default": "#d71f27"
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "summary_size",
+      "label": "Overall rating size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "summary_weight",
+      "label": "Overall rating weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Reviews",
+      "blocks": {
+        "subheader": {
+          "type": "cb-subheader",
+          "static": true,
+          "settings": { "subheader_text": "Feedback", "size": 8, "letter_spacing": 10 }
+        },
+        "heading": {
+          "type": "cb-heading",
+          "static": true,
+          "settings": { "heading_text": "Verified Reviews", "size": 19, "line_height": 120 }
+        },
+        "review_1": {
+          "type": "_cb-review",
+          "settings": {
+            "sample": true,
+            "review_title": "Unreal smash angle from the back line",
+            "review_text": "Strung at 26 lbs with Yonex BG80 by the Papakura team. The stiffness took two sessions to settle into, but overhead power is noticeably steeper. Superb frame for competitive doubles.",
+            "reviewer": "Marcus T. (Counties Rep)"
+          }
+        },
+        "review_2": {
+          "type": "_cb-review",
+          "settings": {
+            "sample": true,
+            "review_title": "Solid stringing service in-shop",
+            "review_text": "Great in-person advice on choosing 4U over 3U for match endurance. Racket was strung perfectly and ready before my weekly club night at the complex.",
+            "reviewer": "Sarah W. (Papakura Club)"
+          }
+        }
+      },
+      "block_order": ["review_1", "review_2"]
+    }
+  ]
+}
+{% endschema %}

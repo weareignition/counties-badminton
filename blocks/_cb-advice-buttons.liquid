@@ -1,0 +1,73 @@
+<div
+  class="cb-advice__buttons"
+  style="--cbn-button-gap: {{ block.settings.gap }}px; --cbn-buttons-space: {{ block.settings.space_above }}px;"
+  {{ block.shopify_attributes }}
+>
+  {% content_for 'blocks' %}
+</div>
+
+{% stylesheet %}
+  .cb-advice__buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--cbn-button-gap, 12px);
+  }
+
+  /* Phones: buttons fill the width, one per row once they wrap. */
+  @media screen and (max-width: 749px) {
+    .cb-advice__buttons {
+      align-self: stretch;
+    }
+
+    .cb-advice__buttons > .cb-advice__button {
+      flex: 1 1 auto;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Buttons",
+  "tag": null,
+  "blocks": [{ "type": "_cb-advice-button" }],
+  "settings": [
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Space between buttons",
+      "min": 4,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "space_above",
+      "label": "Extra space above",
+      "min": 0,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Buttons",
+      "blocks": {
+        "ask": { "type": "_cb-advice-button", "settings": { "label": "Ask the Pro Shop", "style": "primary" } },
+        "visit": {
+          "type": "_cb-advice-button",
+          "settings": {
+            "label": "Visit us at Papakura",
+            "directions_address": "41R Elliot Street, Papakura, Auckland",
+            "style": "secondary"
+          }
+        }
+      },
+      "block_order": ["ask", "visit"]
+    }
+  ]
+}
+{% endschema %}

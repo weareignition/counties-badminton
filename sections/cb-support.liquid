@@ -1,0 +1,291 @@
+{%- liquid
+  assign s = section.settings
+  assign font_scope = '#cb-support-' | append: section.id
+-%}
+
+{% render 'cb-font-styles',
+  selector: font_scope,
+  prefix: 'cbsu',
+  heading_font: s.heading_font,
+  body_font: s.body_font
+%}
+
+<section
+  id="cb-support-{{ section.id }}"
+  class="cb-support"
+  style="
+    --cbsu-bg: {{ s.background_color }};
+    --cbsu-panel: {{ s.panel_background_color }};
+    --cbsu-box: {{ s.box_background_color }};
+    --cbsu-box-border: {{ s.box_border_color }};
+    --cbsu-text: {{ s.text_color }};
+    --cbsu-muted: {{ s.muted_text_color }};
+    --cbsu-accent: {{ s.accent_color }};
+    --cbsu-secondary: {{ s.secondary_button_color }};
+    --cbsu-radius: {{ s.panel_radius }}px;
+    --cbsu-pad: {{ s.panel_padding }}px;
+    --cbsu-max-width: {{ s.max_width }}px;
+    --cbsu-pt: {{ s.padding_top }}px;
+    --cbsu-pb: {{ s.padding_bottom }}px;
+  "
+>
+  <div class="cb-support__panel">
+    {% content_for 'blocks' %}
+  </div>
+</section>
+
+{% stylesheet %}
+  .cb-support {
+    color: var(--cbsu-text);
+    background: var(--cbsu-bg);
+    padding: calc(var(--cbsu-pt) * 0.75) 16px calc(var(--cbsu-pb) * 0.75);
+  }
+
+  /* Phones and tablets stack the text and the box; desktop puts the box beside the text, vertically centred. */
+  .cb-support__panel {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 28px;
+    max-width: var(--cbsu-max-width);
+    margin-inline: auto;
+    padding: calc(var(--cbsu-pad) * 0.55);
+    border-radius: var(--cbsu-radius);
+    background: var(--cbsu-panel);
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-support {
+      padding: var(--cbsu-pt) 32px var(--cbsu-pb);
+    }
+
+    .cb-support__panel {
+      padding: calc(var(--cbsu-pad) * 0.75);
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .cb-support {
+      padding-inline: 48px;
+    }
+
+    /* Text across 7 of 12 columns; the box centred in the other 5 (either order). */
+    .cb-support__panel {
+      display: grid;
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      align-items: center;
+      gap: 48px;
+      padding: calc(var(--cbsu-pad) * 0.92) var(--cbsu-pad);
+    }
+
+    .cb-support__panel:has(> .cb-support-box:first-child) {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    }
+
+    .cb-support__panel > .cb-support-box {
+      justify-self: center;
+    }
+
+    /* Optical centring: the eyebrow sits high in its line, so nudge the text block down a touch. */
+    .cb-support__panel > .cb-support__content {
+      padding-top: 6px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Support banner",
+  "tag": "div",
+  "class": "section-wrapper",
+  "blocks": [
+    { "type": "_cb-support-content" },
+    { "type": "_cb-support-box" }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "paragraph",
+      "content": "Reorder the content group and checklist box to swap sides."
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width",
+      "min": 560,
+      "max": 1800,
+      "step": 20,
+      "unit": "px",
+      "default": 1400
+    },
+    {
+      "type": "range",
+      "id": "panel_padding",
+      "label": "Panel padding",
+      "info": "Phones and tablets use less.",
+      "min": 16,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 44
+    },
+    {
+      "type": "range",
+      "id": "panel_radius",
+      "label": "Panel corner radius",
+      "min": 0,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "space_grotesk_n7"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "info": "Used for the eyebrow, text, buttons and checklist.",
+      "default": "inter_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#0b0b0b"
+    },
+    {
+      "type": "color",
+      "id": "panel_background_color",
+      "label": "Panel",
+      "default": "#181818"
+    },
+    {
+      "type": "color",
+      "id": "box_background_color",
+      "label": "Checklist box",
+      "default": "#0e0e0e"
+    },
+    {
+      "type": "color",
+      "id": "box_border_color",
+      "label": "Checklist box border",
+      "default": "#ffffff40"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "muted_text_color",
+      "label": "Body text",
+      "default": "#a1a1aa"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "info": "Eyebrow, main button and list icons.",
+      "default": "#d71f27"
+    },
+    {
+      "type": "color",
+      "id": "secondary_button_color",
+      "label": "Grey button background",
+      "default": "#2a2a2a"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Support banner",
+      "category": "t:categories.banners",
+      "blocks": {
+        "content": {
+          "type": "_cb-support-content",
+          "blocks": {
+            "eyebrow": {
+              "type": "cb-subheader",
+              "settings": { "subheader_text": "McDavid support", "show_dot": true, "letter_spacing": 0 }
+            },
+            "heading": {
+              "type": "cb-heading",
+              "settings": { "heading_text": "Support gear available in the Pro Shop.", "wrap": "wrap" }
+            },
+            "text": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>Explore McDavid support sleeves and compression gear available through Counties Badminton Pro Shop.</p>",
+                "letter_spacing": -1,
+                "max_width_unit": "px",
+                "max_width_px": 520
+              }
+            },
+            "buttons": {
+              "type": "_cb-support-buttons",
+              "blocks": {
+                "shop": {
+                  "type": "_cb-support-button",
+                  "settings": { "label": "Shop McDavid support", "link": "/search?type=product&q=mcdavid", "style": "primary" }
+                },
+                "ask": {
+                  "type": "_cb-support-button",
+                  "settings": { "label": "Ask the Pro Shop", "link": "shopify://pages/contact", "style": "secondary" }
+                }
+              },
+              "block_order": ["shop", "ask"]
+            }
+          },
+          "block_order": ["eyebrow", "heading", "text", "buttons"]
+        },
+        "box": { "type": "_cb-support-box" }
+      },
+      "block_order": ["content", "box"]
+    }
+  ]
+}
+{% endschema %}

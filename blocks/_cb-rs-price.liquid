@@ -1,0 +1,335 @@
+{%- liquid
+  assign link = block.settings.button_link
+  if link == blank
+    assign link = routes.root_url | append: 'pages/contact'
+  endif
+-%}
+
+<div
+  class="cb-rs__price"
+  style="
+    --cb-rs-price-label-size: {{ block.settings.label_size }}px;
+    --cb-rs-price-label-weight: {{ block.settings.label_weight }};
+    --cb-rs-price-amount-size: {{ block.settings.price_size }}px;
+    --cb-rs-price-amount-weight: {{ block.settings.price_weight }};
+    --cb-rs-price-unit-size: {{ block.settings.unit_size }}px;
+    --cb-rs-price-unit-weight: {{ block.settings.unit_weight }};
+    --cb-rs-price-note-size: {{ block.settings.note_size }}px;
+    --cb-rs-price-note-weight: {{ block.settings.note_weight }};
+    --cb-rs-price-button-size: {{ block.settings.button_size }}px;
+    --cb-rs-price-button-weight: {{ block.settings.button_weight }};
+  "
+  {{ block.shopify_attributes }}
+>
+  {%- if block.settings.price_value != blank or block.settings.price_note != blank -%}
+    <div class="cb-rs__price-top">
+      <div class="cb-rs__price-main">
+        {%- if block.settings.price_label != blank -%}
+          <p class="cb-rs__price-label">{{ block.settings.price_label | escape }}</p>
+        {%- endif -%}
+        {%- if block.settings.price_value != blank -%}
+          <p class="cb-rs__price-value">
+            <span class="cb-rs__price-amount">{{ block.settings.price_value | escape }}</span>
+            {%- if block.settings.price_unit != blank -%}
+              <span class="cb-rs__price-unit"> {{ block.settings.price_unit | escape }}</span>
+            {%- endif -%}
+          </p>
+        {%- endif -%}
+      </div>
+      {%- if block.settings.price_note != blank -%}
+        <p class="cb-rs__price-note">{{ block.settings.price_note | escape }}</p>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  {%- if block.settings.button_label != blank -%}
+    <a class="cb-rs__price-button" href="{{ link }}">{{ block.settings.button_label | escape }}</a>
+  {%- endif -%}
+</div>
+
+{% stylesheet %}
+  .cb-rs__price {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    margin-top: 6px;
+    padding: 18px;
+    border: 1px solid var(--cbr-border);
+    border-radius: var(--cbr-radius);
+    background: var(--cbr-card);
+  }
+
+  .cb-rs__price-top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 10px 20px;
+  }
+
+  .cb-rs__price-label {
+    margin: 0 0 4px;
+    font-family: var(--cbr-font-body);
+    font-weight: var(--cb-rs-price-label-weight, var(--cbr-font-body-strong));
+    font-size: var(--cb-rs-price-label-size, 9px);
+    line-height: 1.3;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--cbr-accent);
+  }
+
+  .cb-rs__price-value {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 6px;
+    margin: 0;
+  }
+
+  .cb-rs__price-amount {
+    font-family: var(--cbr-font-heading);
+    font-weight: var(--cb-rs-price-amount-weight, var(--cbr-font-heading-weight));
+    font-size: var(--cb-rs-price-amount-size, 26px);
+    line-height: 1.1;
+    color: var(--cbr-text);
+  }
+
+  .cb-rs__price-unit {
+    font-family: var(--cbr-font-body);
+    font-weight: var(--cb-rs-price-unit-weight, var(--cbr-font-body-strong));
+    font-size: var(--cb-rs-price-unit-size, 9px);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--cbr-muted);
+  }
+
+  .cb-rs__price-note {
+    max-width: 26ch;
+    margin: 0 0 0 auto;
+    font-family: var(--cbr-font-body);
+    font-weight: var(--cb-rs-price-note-weight, inherit);
+    font-size: var(--cb-rs-price-note-size, 10px);
+    line-height: 1.5;
+    text-align: right;
+    color: var(--cbr-muted);
+  }
+
+  .cb-rs__price-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 12px 18px;
+    border-radius: 2px;
+    background: var(--cbr-accent);
+    font-family: var(--cbr-font-body);
+    font-weight: var(--cb-rs-price-button-weight, var(--cbr-font-body-strong));
+    font-size: var(--cb-rs-price-button-size, 11px);
+    line-height: 1.2;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #fff;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+  }
+
+  .cb-rs__price-button:hover {
+    background: color-mix(in srgb, var(--cbr-accent) 85%, #000);
+  }
+
+  .cb-rs__price-button:focus-visible {
+    outline: 2px solid var(--cbr-text);
+    outline-offset: 3px;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Price panel",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "price_label",
+      "label": "Label",
+      "default": "String options from"
+    },
+    {
+      "type": "text",
+      "id": "price_value",
+      "label": "Price",
+      "default": "$27–$32"
+    },
+    {
+      "type": "text",
+      "id": "price_unit",
+      "label": "Unit",
+      "default": "per set"
+    },
+    {
+      "type": "text",
+      "id": "price_note",
+      "label": "Note",
+      "default": "Labour & restringing setup confirmed in-store"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button",
+      "default": "Request a restring"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link",
+      "info": "Leave empty to open the Contact page."
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "label_size",
+      "label": "Label size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 9
+    },
+    {
+      "type": "select",
+      "id": "label_weight",
+      "label": "Label weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "price_size",
+      "label": "Price size",
+      "min": 10,
+      "max": 56,
+      "step": 0.5,
+      "unit": "px",
+      "default": 26
+    },
+    {
+      "type": "select",
+      "id": "price_weight",
+      "label": "Price weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "unit_size",
+      "label": "Unit size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 9
+    },
+    {
+      "type": "select",
+      "id": "unit_weight",
+      "label": "Unit weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "note_size",
+      "label": "Note size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "note_weight",
+      "label": "Note weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "button_size",
+      "label": "Button text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "select",
+      "id": "button_weight",
+      "label": "Button text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    }
+  ],
+  "presets": [{ "name": "[CB] Price panel" }]
+}
+{% endschema %}

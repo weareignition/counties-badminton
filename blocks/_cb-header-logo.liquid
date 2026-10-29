@@ -13,6 +13,16 @@
 <a
   href="{{ routes.root_url }}"
   class="cb-header__brand"
+  style="
+    --cb-header-logo-shop-name-size: {{ block.settings.shop_name_size }}px;
+    --cb-header-logo-shop-name-weight: {{ block.settings.shop_name_weight }};
+    --cb-header-logo-title-size: {{ block.settings.title_size }}px;
+    --cb-header-logo-title-weight: {{ block.settings.title_weight }};
+    --cb-header-logo-badge-size: {{ block.settings.badge_size }}px;
+    --cb-header-logo-badge-weight: {{ block.settings.badge_weight }};
+    --cb-header-logo-subtitle-size: {{ block.settings.subtitle_size }}px;
+    --cb-header-logo-subtitle-weight: {{ block.settings.subtitle_weight }};
+  "
   {% if block.settings.keep_text_visible %}
     data-keep-text
   {% endif %}
@@ -89,8 +99,8 @@
 
   .cb-header__shop-name {
     font-family: var(--cbhd-font-heading);
-    font-weight: var(--cbhd-font-heading-weight);
-    font-size: 18px;
+    font-weight: var(--cb-header-logo-shop-name-weight, var(--cbhd-font-heading-weight));
+    font-size: var(--cb-header-logo-shop-name-size, 18px);
     line-height: 1.1;
     color: var(--cbhd-text);
   }
@@ -112,8 +122,8 @@
 
   .cb-header__brand-title {
     font-family: var(--cbhd-font-heading);
-    font-weight: var(--cbhd-font-heading-weight);
-    font-size: 14px;
+    font-weight: var(--cb-header-logo-title-weight, var(--cbhd-font-heading-weight));
+    font-size: var(--cb-header-logo-title-size, 14px);
     line-height: 1.2;
     letter-spacing: 0.01em;
     text-transform: uppercase;
@@ -127,8 +137,8 @@
     border-radius: 4px;
     background: color-mix(in srgb, var(--cbhd-accent) 15%, transparent);
     font-family: var(--cbhd-font-body);
-    font-weight: var(--cbhd-font-body-strong);
-    font-size: 10px;
+    font-weight: var(--cb-header-logo-badge-weight, var(--cbhd-font-body-strong));
+    font-size: var(--cb-header-logo-badge-size, 10px);
     line-height: 1.3;
     letter-spacing: 0.06em;
     text-transform: uppercase;
@@ -139,8 +149,8 @@
   .cb-header__brand-subtitle {
     max-width: 16ch;
     font-family: var(--cbhd-font-body);
-    font-weight: var(--cbhd-font-body-weight);
-    font-size: 11px;
+    font-weight: var(--cb-header-logo-subtitle-weight, var(--cbhd-font-body-weight));
+    font-size: var(--cb-header-logo-subtitle-size, 11px);
     line-height: 1.25;
     color: var(--cbhd-muted);
   }
@@ -209,6 +219,123 @@
       "id": "subtitle",
       "label": "Subtitle",
       "default": "Specialist Workshop & Rigging Lab"
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "shop_name_size",
+      "label": "Store name size",
+      "info": "Shown when no logo is chosen.",
+      "min": 10,
+      "max": 56,
+      "step": 0.5,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "select",
+      "id": "shop_name_weight",
+      "label": "Store name weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Title size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Title weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "badge_size",
+      "label": "Badge size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "badge_weight",
+      "label": "Badge weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size",
+      "label": "Subtitle size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "select",
+      "id": "subtitle_weight",
+      "label": "Subtitle weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
     }
   ],
   "presets": [{ "name": "[CB] Logo" }]

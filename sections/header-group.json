@@ -87,6 +87,7 @@
             "logo_background": "#ffffff",
             "logo_height": 28,
             "title_text": "Pro shop",
+            "keep_text_visible": true,
             "badge_text": "Papakura",
             "subtitle": "Specialist Workshop & Rigging Lab"
           },
@@ -141,7 +142,7 @@
         "max_width": 1920,
         "heading_font": "space_grotesk_n7",
         "body_font": "inter_n4",
-        "background_color": "#121212",
+        "background_color": "{{ settings.color_palette.foreground }}",
         "text_color": "#ffffff",
         "border_color": "#ffffff1f",
         "field_background_color": "#1a1a1a",

@@ -31,30 +31,52 @@
     href="{{ url }}"
   {% endif %}
   class="cb-guide-card"
+  style="
+    --cb-guides-card-label-size: {{ block.settings.label_size }}px;
+    --cb-guides-card-label-weight: {{ block.settings.label_weight }};
+    --cb-guides-card-title-size: {{ block.settings.title_size }}px;
+    --cb-guides-card-title-weight: {{ block.settings.title_weight }};
+    --cb-guides-card-summary-size: {{ block.settings.summary_size }}px;
+    --cb-guides-card-summary-weight: {{ block.settings.summary_weight }};
+    --cb-guides-card-point-size: {{ block.settings.point_size }}px;
+    --cb-guides-card-point-weight: {{ block.settings.point_weight }};
+    --cb-guides-card-link-size: {{ block.settings.link_size }}px;
+    --cb-guides-card-link-weight: {{ block.settings.link_weight }};
+  "
   {{ block.shopify_attributes }}
 >
   {%- if block.settings.label != blank -%}
     <p class="cb-guide-card__label">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        {%- case block.settings.icon -%}
-          {%- when 'player' -%}
-            <circle cx="12" cy="6" r="2.5"/><path d="M6.5 21v-2a5.5 5.5 0 0 1 11 0v2"/>
-          {%- when 'racket' -%}
-            <ellipse cx="9" cy="9" rx="5" ry="6.2" transform="rotate(-45 9 9)"/><path d="m12.6 12.6 7.4 7.4"/>
-          {%- when 'strings' -%}
-            <ellipse cx="12" cy="9.5" rx="6" ry="7.5"/><path d="M12 17v5M9.5 2.5v14M14.5 2.5v14M6 7.5h12M6 11.5h12"/>
-          {%- when 'shoe' -%}
-            <path d="M3 18h17a1 1 0 0 0 .4-1.9L15 13.5 13 9h-3l-1 2-3-1-3 1z"/><path d="M3 21h18"/>
-          {%- when 'shield' -%}
-            <path d="M12 3 4.5 6v5.5c0 4.6 3.2 8.1 7.5 9.5 4.3-1.4 7.5-4.9 7.5-9.5V6z"/><path d="m9 12 2 2 4-4"/>
-          {%- when 'book' -%}
-            <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 1 6.5 18H20"/>
-          {%- when 'bulb' -%}
-            <path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/>
-          {%- when 'info' -%}
-            <circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>
-        {%- endcase -%}
-      </svg>
+      {%- if block.settings.custom_icon != blank -%}
+        {%- render 'cb-icon-upload', image: block.settings.custom_icon, size: 14, tint: block.settings.custom_icon_tint -%}
+      {%- elsif block.settings.icon != 'none' -%}
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          {%- case block.settings.icon -%}
+            {%- when 'player' -%}
+              <circle cx="12" cy="6" r="2.5"/><path d="M6.5 21v-2a5.5 5.5 0 0 1 11 0v2"/>
+            {%- when 'racket' -%}
+              <ellipse cx="9" cy="9" rx="5" ry="6.2" transform="rotate(-45 9 9)"/><path d="m12.6 12.6 7.4 7.4"/>
+            {%- when 'strings' -%}
+              <ellipse cx="12" cy="9.5" rx="6" ry="7.5"/><path d="M12 17v5M9.5 2.5v14M14.5 2.5v14M6 7.5h12M6 11.5h12"/>
+            {%- when 'shoe' -%}
+              <path d="M3 18h17a1 1 0 0 0 .4-1.9L15 13.5 13 9h-3l-1 2-3-1-3 1z"/><path d="M3 21h18"/>
+            {%- when 'shield' -%}
+              <path d="M12 3 4.5 6v5.5c0 4.6 3.2 8.1 7.5 9.5 4.3-1.4 7.5-4.9 7.5-9.5V6z"/><path d="m9 12 2 2 4-4"/>
+            {%- when 'book' -%}
+              <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 1 6.5 18H20"/>
+            {%- when 'bulb' -%}
+              <path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/>
+            {%- when 'info' -%}
+              <circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>
+            {%- when 'athlete' -%}
+              <circle cx="14.5" cy="4" r="2"/><path d="m12.5 7.5-2 6 3.5 3-1 4.5"/><path d="m10.5 13.5-3 7"/><path d="m7.5 10 5-2.5 3.5 2.5 2.5-3"/>
+            {%- when 'bag' -%}
+              <rect x="5" y="7" width="14" height="14" rx="2.5"/><path d="M9 7V4.5h6V7"/><path d="M9 13h6v2"/>
+            {%- when 'wrench' -%}
+              <path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.4-.6-.6-2.4z"/>
+          {%- endcase -%}
+        </svg>
+      {%- endif -%}
       {{- block.settings.label | escape -}}
     </p>
   {%- endif -%}
@@ -62,7 +84,23 @@
   <h3 class="cb-guide-card__title">{{ card_title | escape }}</h3>
 
   {%- if summary != blank -%}
-    <p class="cb-guide-card__summary">{{ summary | escape }}</p>
+    {%- comment -%}
+      An empty line in the summary starts a new paragraph (with a one-line gap). Single line breaks flow on as
+      before, so text pasted with hard wraps keeps reading as one paragraph.
+    {%- endcomment -%}
+    {%- assign paragraphs = summary | escape | newline_to_br | strip_newlines | split: '<br /><br />' -%}
+    <div class="cb-guide-card__summary">
+      {%- for paragraph in paragraphs -%}
+        {%- assign line = paragraph | replace: '<br />', ' ' | strip -%}
+        {%- if line != blank -%}
+          <p>{{ line }}</p>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+
+  {%- if block.settings.point_text != blank -%}
+    <p class="cb-guide-card__point">{{ block.settings.point_text | escape }}</p>
   {%- endif -%}
 
   {%- if block.settings.link_label != blank -%}
@@ -106,8 +144,8 @@
     gap: 8px;
     margin: 0 0 4px;
     font-family: var(--cbg-font-body);
-    font-weight: var(--cbg-font-body-strong);
-    font-size: 10px;
+    font-weight: var(--cb-guides-card-label-weight, var(--cbg-font-body-strong));
+    font-size: var(--cb-guides-card-label-size, 10px);
     line-height: 1.3;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -121,19 +159,54 @@
   .cb-guide-card__title {
     margin: 0;
     font-family: var(--cbg-font-heading);
-    font-weight: var(--cbg-font-heading-weight);
-    font-size: 17px;
+    font-weight: var(--cb-guides-card-title-weight, var(--cbg-font-heading-weight));
+    font-size: var(--cb-guides-card-title-size, 17px);
     line-height: 1.3;
     color: var(--cbg-text);
+  }
+
+  .cb-guide-card__summary > p {
+    margin: 0;
+  }
+
+  /* One empty line between paragraphs (1.6em = the line height, for browsers without the lh unit). */
+  .cb-guide-card__summary > p + p {
+    margin-top: 1.6em;
+    margin-top: 1lh;
   }
 
   .cb-guide-card__summary {
     margin: 0;
     font-family: var(--cbg-font-body);
-    font-weight: var(--cbg-font-body-weight);
-    font-size: 13px;
+    font-weight: var(--cb-guides-card-summary-weight, var(--cbg-font-body-weight));
+    font-size: var(--cb-guides-card-summary-size, 13px);
     line-height: 1.6;
     color: var(--cbg-muted);
+  }
+
+  /* Key point under a divider, with an accent dot. */
+  .cb-guide-card__point {
+    display: flex;
+    align-items: center;
+    align-self: stretch;
+    gap: 8px;
+    margin: 4px 0 0;
+    padding-top: 14px;
+    border-top: 1px solid var(--cbg-border);
+    font-family: var(--cbg-font-body);
+    font-weight: var(--cb-guides-card-point-weight, var(--cbg-font-body-weight));
+    font-size: var(--cb-guides-card-point-size, 12px);
+    line-height: 1.4;
+    color: var(--cbg-text);
+  }
+
+  .cb-guide-card__point::before {
+    content: '';
+    flex: none;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--cbg-accent);
   }
 
   /* margin-top: auto keeps the links lined up along the bottom of every card. */
@@ -144,8 +217,8 @@
     margin-top: auto;
     padding-top: 10px;
     font-family: var(--cbg-font-body);
-    font-weight: var(--cbg-font-body-strong);
-    font-size: 12px;
+    font-weight: var(--cb-guides-card-link-weight, var(--cbg-font-body-strong));
+    font-size: var(--cb-guides-card-link-size, 12px);
     line-height: 1.3;
     color: var(--cbg-accent);
   }
@@ -193,7 +266,7 @@
       "type": "textarea",
       "id": "summary",
       "label": "Custom summary",
-      "info": "Used when the box above is on, and as a preview before an article is chosen."
+      "info": "Used when the box above is on, and as a preview before an article is chosen. Leave an empty line to start a new paragraph with a gap."
     },
     {
       "type": "header",
@@ -211,9 +284,27 @@
         { "value": "shield", "label": "Shield" },
         { "value": "book", "label": "Book" },
         { "value": "bulb", "label": "Light bulb" },
-        { "value": "info", "label": "Info" }
+        { "value": "info", "label": "Info" },
+        { "value": "athlete", "label": "Athlete" },
+        { "value": "bag", "label": "Bag" },
+        { "value": "wrench", "label": "Wrench" },
+        { "value": "none", "label": "None" }
       ],
       "default": "book"
+    },
+    {
+      "type": "image_picker",
+      "id": "custom_icon",
+      "label": "Custom icon",
+      "info": "Upload your own SVG (or PNG). It replaces the built-in icon above."
+    },
+    {
+      "type": "checkbox",
+      "id": "custom_icon_tint",
+      "label": "Colour it like the built-in icons",
+      "info": "For one-colour SVGs: uses this section's icon colour. Turn off to keep the file's own colours.",
+      "default": true,
+      "visible_if": "{{ block.settings.custom_icon != blank }}"
     },
     {
       "type": "text",
@@ -221,6 +312,12 @@
       "label": "Label",
       "info": "Shown in capitals above the title.",
       "default": "Guide"
+    },
+    {
+      "type": "text",
+      "id": "point_text",
+      "label": "Key point",
+      "info": "Optional line under a divider, with an accent dot."
     },
     {
       "type": "header",
@@ -237,6 +334,150 @@
       "id": "link",
       "label": "Link",
       "info": "Leave empty to link to the article."
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "label_size",
+      "label": "Label size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "label_weight",
+      "label": "Label weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Title size",
+      "min": 10,
+      "max": 56,
+      "step": 0.5,
+      "unit": "px",
+      "default": 17
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Title weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "summary_size",
+      "label": "Summary size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "select",
+      "id": "summary_weight",
+      "label": "Summary weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "point_size",
+      "label": "Key point size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "point_weight",
+      "label": "Key point weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "link_size",
+      "label": "Link text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "link_weight",
+      "label": "Link text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
     }
   ],
   "presets": [{ "name": "[CB] Guide card" }]

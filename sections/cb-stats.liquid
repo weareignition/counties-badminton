@@ -1,0 +1,195 @@
+{%- liquid
+  assign s = section.settings
+  assign font_scope = '#cb-stats-' | append: section.id
+-%}
+
+{% render 'cb-font-styles',
+  selector: font_scope,
+  prefix: 'cby',
+  heading_font: s.heading_font,
+  body_font: s.body_font
+%}
+
+<section
+  id="cb-stats-{{ section.id }}"
+  class="cb-stats"
+  style="
+    --cby-bg: {{ s.background_color }};
+    --cby-text: {{ s.text_color }};
+    --cby-muted: {{ s.text_color | color_modify: 'alpha', 0.55 }};
+    --cby-accent: {{ s.accent_color }};
+    --cby-box-border: {{ s.box_border_color }};
+    --cby-columns: {{ s.columns }};
+    --cby-max-width: {{ s.max_width }}px;
+    --cby-pt: {{ s.padding_top }}px;
+    --cby-pb: {{ s.padding_bottom }}px;
+  "
+>
+  <div class="cb-stats__inner">
+    {% content_for 'blocks' %}
+  </div>
+</section>
+
+{% stylesheet %}
+  .cb-stats {
+    color: var(--cby-text);
+    background: var(--cby-bg);
+    padding: var(--cby-pt) 16px var(--cby-pb);
+  }
+
+  .cb-stats__inner {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px 20px;
+    max-width: var(--cby-max-width);
+    margin-inline: auto;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-stats {
+      padding-inline: 32px;
+    }
+
+    .cb-stats__inner {
+      grid-template-columns: repeat(var(--cby-columns, 4), minmax(0, 1fr));
+      gap: 16px 24px;
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .cb-stats {
+      padding-inline: 48px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Stats bar",
+  "tag": "div",
+  "class": "section-wrapper",
+  "blocks": [{ "type": "_cb-stats-item" }],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Items per row",
+      "info": "Phones show 2 per row.",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width",
+      "min": 960,
+      "max": 1800,
+      "step": 20,
+      "unit": "px",
+      "default": 1400
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Stat font",
+      "default": "space_grotesk_n7"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Text font",
+      "default": "inter_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#161616"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Icons",
+      "default": "#d71f27"
+    },
+    {
+      "type": "color",
+      "id": "box_border_color",
+      "label": "Icon box border",
+      "default": "#ffffff26"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Stats bar",
+      "category": "t:categories.banners",
+      "blocks": {
+        "days": {
+          "type": "_cb-stats-item",
+          "settings": { "icon": "calendar", "stat_title": "7 days", "stat_text": "Restringing available" }
+        },
+        "dropoff": {
+          "type": "_cb-stats-item",
+          "settings": { "icon": "clock", "stat_title": "After 10am", "stat_text": "Daily drop-off service" }
+        },
+        "price": {
+          "type": "_cb-stats-item",
+          "settings": { "icon": "tag", "stat_title": "From $27", "stat_text": "Quality string options" }
+        },
+        "advice": {
+          "type": "_cb-stats-item",
+          "settings": { "icon": "racket", "stat_title": "Expert advice", "stat_text": "Tension + string calibration" }
+        }
+      },
+      "block_order": ["days", "dropoff", "price", "advice"]
+    }
+  ]
+}
+{% endschema %}

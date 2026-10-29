@@ -1,0 +1,335 @@
+{%- liquid
+  assign s = block.settings
+
+  assign brand = ''
+  if s.show_brand or s.top_left contains '[brand]' or s.top_right contains '[brand]'
+    capture brand
+      render 'cb-product-brand', product: product, brands: section.settings.brand_names
+    endcapture
+    assign brand = brand | strip
+  endif
+
+  # Top line: the product's custom.subtitle metafield, else the text; [brand], [collection] and [type] are filled in.
+  # A side whose placeholder finds nothing is left out.
+  assign collection_title = collection.title | default: product.collections.first.title
+  assign top_left = product.metafields.custom.subtitle.value | default: s.top_left
+  assign top_right = s.top_right
+  if top_left contains '[brand]' and brand == blank
+    assign top_left = ''
+  endif
+  if top_right contains '[brand]' and brand == blank
+    assign top_right = ''
+  endif
+  assign top_left = top_left | replace: '[brand]', brand | replace: '[collection]', collection_title | replace: '[type]', product.type | strip
+  assign top_right = top_right | replace: '[brand]', brand | replace: '[collection]', collection_title | replace: '[type]', product.type | strip
+
+  # Style pill: the first product tag that is in the list, else the custom.racket_style metafield, else (optionally)
+  # detected from the description like the [CB] Racket specs table.
+  assign style = ''
+  if s.show_style
+    assign styles = s.style_tags | split: ','
+    for tag in product.tags
+      assign tag_down = tag | strip | downcase
+      for item in styles
+        assign style_name = item | strip
+        assign style_down = style_name | downcase
+        if style_name != blank and tag_down == style_down
+          assign style = style_name
+          break
+        endif
+      endfor
+      if style != blank
+        break
+      endif
+    endfor
+    if style == blank
+      assign style = product.metafields.custom.racket_style.value
+    endif
+    if style == blank
+      capture style
+        render 'cb-metafield-text', field: product.metafields.custom.player_style
+        render 'cb-metafield-text', field: product.metafields.custom.play_style
+      endcapture
+      assign style = style | strip
+    endif
+    if style == blank and s.detect_style
+      capture style
+        render 'cb-racket-trait', product: product, trait: 'style'
+      endcapture
+      assign style = style | strip
+    endif
+  endif
+-%}
+
+<div class="cb-pd-title" style="--cbpd-title-size: {{ s.title_size }}px; --cbpd-title-size-mobile: {{ s.phone_title_size }}px; --cbpd-title-weight: {{ s.title_weight }}; --cb-pd-title-top-size: {{ s.top_size }}px; --cb-pd-title-top-weight: {{ s.top_weight }}; --cb-pd-title-style-size: {{ s.style_size }}px; --cb-pd-title-style-weight: {{ s.style_weight }}; --cb-pd-title-brand-size: {{ s.brand_size }}px; --cb-pd-title-brand-weight: {{ s.brand_weight }};" {{ block.shopify_attributes }}>
+  {%- if top_left != blank or top_right != blank -%}
+    <p class="cb-pd-title__top">
+      <span>{{ top_left | escape }}</span>
+      {%- if top_right != blank -%}<span class="cb-pd-title__top-right">{{ top_right | escape }}</span>{%- endif -%}
+    </p>
+  {%- endif -%}
+  {%- if style != blank or brand != blank and s.show_brand -%}
+    <p class="cb-pd-title__tags">
+      {%- if style != blank -%}<span class="cb-pd-title__style">{{ style | escape }}</span>{%- endif -%}
+      {%- if brand != blank and s.show_brand -%}<span class="cb-pd-title__brand">{{ brand | escape }}</span>{%- endif -%}
+    </p>
+  {%- endif -%}
+  <h1 class="cb-pd-title__name">{{ product.title | escape }}</h1>
+</div>
+
+{% stylesheet %}
+  .cb-pd-title {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    min-width: 0;
+  }
+
+  .cb-pd-title .cb-pd-title__tags {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+  }
+
+  .cb-pd-title .cb-pd-title__top {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 4px 16px;
+    margin: 0;
+    font-family: var(--cb-font-body, var(--font-body--family));
+    font-weight: var(--cb-pd-title-top-weight, var(--cb-font-body-strong, 600));
+    font-size: var(--cb-pd-title-top-size, 9px);
+    line-height: 1.3;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--cbpd-label, #a1a1aa);
+  }
+
+  .cb-pd-title__top-right {
+    color: #f2aaa0;
+  }
+
+  .cb-pd-title__style,
+  .cb-pd-title__brand {
+    font-family: var(--cb-font-body, var(--font-body--family));
+    font-weight: var(--cb-pd-title-brand-weight, var(--cb-font-body-strong, 600));
+    font-size: var(--cb-pd-title-brand-size, 8px);
+    line-height: 1;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .cb-pd-title__style {
+    display: inline-flex;
+    align-items: center;
+    height: 19px;
+    padding: 0 10px;
+    font-weight: var(--cb-pd-title-style-weight, var(--cb-font-body-strong, 600));
+    font-size: var(--cb-pd-title-style-size, 8.5px);
+    letter-spacing: 0.06em;
+    border-radius: 2px;
+    background: var(--cb-color-accent, #d71f27);
+    color: #ffffff;
+  }
+
+  .cb-pd-title__brand {
+    color: var(--cbpd-label, #a1a1aa);
+  }
+
+  .cb-pd-title .cb-pd-title__name {
+    margin: 0;
+    font-family: var(--cb-font-heading, var(--font-heading--family));
+    font-weight: var(--cbpd-title-weight, var(--cb-font-heading-weight, 700));
+    font-size: var(--cbpd-title-size, 28px);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    color: var(--cb-color-text, #ffffff);
+    text-wrap: balance;
+  }
+
+  @media screen and (max-width: 749px) {
+    .cb-pd-title .cb-pd-title__name {
+      font-size: var(--cbpd-title-size-mobile, 24px);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Product title",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "top_left",
+      "label": "Line above the title",
+      "info": "[collection], [brand] and [type] are filled in. A product's custom.subtitle metafield replaces it."
+    },
+    {
+      "type": "text",
+      "id": "top_right",
+      "label": "Right of that line",
+      "info": "e.g. \"[brand] authorized\". Hidden when the brand isn't found."
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Title size",
+      "min": 20,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "phone_title_size",
+      "label": "Title size on phones",
+      "min": 16,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Title weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_style",
+      "label": "Show playing style",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "style_tags",
+      "label": "Style tags",
+      "info": "Comma-separated. The first product tag in this list shows as the red label. Without one, the custom.racket_style or custom.player_style metafield is used.",
+      "default": "Attack, Speed, All-round, Control, Defence",
+      "visible_if": "{{ block.settings.show_style }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "detect_style",
+      "label": "Detect the style from the description",
+      "info": "When there's no tag or metafield: Attack, Speed or Control, whichever the description mentions most.",
+      "default": true,
+      "visible_if": "{{ block.settings.show_style }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_brand",
+      "label": "Show brand",
+      "info": "Taken from the product title using the section's brand names.",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "top_size",
+      "label": "Top line size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 9
+    },
+    {
+      "type": "select",
+      "id": "top_weight",
+      "label": "Top line weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "style_size",
+      "label": "Playing style label size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 8.5
+    },
+    {
+      "type": "select",
+      "id": "style_weight",
+      "label": "Playing style label weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "brand_size",
+      "label": "Brand size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "select",
+      "id": "brand_weight",
+      "label": "Brand weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    }
+  ],
+  "presets": [{ "name": "[CB] Product title" }]
+}
+{% endschema %}

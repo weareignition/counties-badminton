@@ -1,0 +1,451 @@
+<article
+  class="cb-speed-card{% if block.settings.highlight %} cb-speed-card--highlight{% endif %}"
+  style="
+    --cb-speed-card-tag-size: {{ block.settings.tag_size }}px;
+    --cb-speed-card-tag-weight: {{ block.settings.tag_weight }};
+    --cb-speed-card-title-size: {{ block.settings.title_size }}px;
+    --cb-speed-card-title-weight: {{ block.settings.title_weight }};
+    --cb-speed-card-subtitle-size: {{ block.settings.subtitle_size }}px;
+    --cb-speed-card-subtitle-weight: {{ block.settings.subtitle_weight }};
+    --cb-speed-card-text-size: {{ block.settings.text_size }}px;
+    --cb-speed-card-text-weight: {{ block.settings.text_weight }};
+    --cb-speed-card-footer-size: {{ block.settings.footer_size }}px;
+    --cb-speed-card-footer-weight: {{ block.settings.footer_weight }};
+    --cb-speed-card-tab-size: {{ block.settings.tab_size }}px;
+    --cb-speed-card-tab-weight: {{ block.settings.tab_weight }};
+  "
+  {{ block.shopify_attributes }}
+>
+  {%- if block.settings.highlight and block.settings.highlight_label != blank -%}
+    <span class="cb-speed-card__flag">{{ block.settings.highlight_label | escape }}</span>
+  {%- endif -%}
+
+  {%- if block.settings.speed_tag != blank or block.settings.icon != 'none' or block.settings.custom_icon != blank -%}
+    <div class="cb-speed-card__top">
+      {%- if block.settings.speed_tag != blank -%}
+        <span class="cb-speed-card__tag">{{ block.settings.speed_tag | escape }}</span>
+      {%- endif -%}
+      {%- if block.settings.custom_icon != blank or block.settings.icon != 'none' -%}
+        <span class="cb-speed-card__icon" style="--cbd-icon: {{ block.settings.icon_color }};">
+          {%- if block.settings.custom_icon != blank -%}
+            {%- render 'cb-icon-upload', image: block.settings.custom_icon, size: 16, tint: block.settings.custom_icon_tint -%}
+          {%- else -%}
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              {%- case block.settings.icon -%}
+                {%- when 'thermometer' -%}
+                  <path d="M11 14.8V5a2 2 0 0 0-4 0v9.8a3.5 3.5 0 1 0 4 0z"/><path d="M15 5h3M15 8.5h3M15 12h2"/>
+                {%- when 'check' -%}
+                  <circle cx="12" cy="12" r="9"/><path d="m8.5 12.5 2.5 2.5 4.5-5"/>
+                {%- when 'snowflake' -%}
+                  <path d="M12 2.5v19M3.8 7.25l16.4 9.5M3.8 16.75l16.4-9.5"/><path d="m9.5 4.5 2.5 2.5 2.5-2.5M9.5 19.5l2.5-2.5 2.5 2.5"/>
+                {%- when 'sun' -%}
+                  <circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>
+                {%- when 'wind' -%}
+                  <path d="M3 8h10a3 3 0 1 0-3-3M3 12h15a3 3 0 1 1-3 3M3 16h7"/>
+                {%- when 'gauge' -%}
+                  <path d="M4.5 17a8.5 8.5 0 1 1 15 0"/><path d="m12 13 4-4"/>
+              {%- endcase -%}
+            </svg>
+          {%- endif -%}
+        </span>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  {%- if block.settings.card_title != blank -%}
+    <h3 class="cb-speed-card__title">{{ block.settings.card_title | escape }}</h3>
+  {%- endif -%}
+  {%- if block.settings.subtitle != blank -%}
+    <p class="cb-speed-card__subtitle">{{ block.settings.subtitle | escape }}</p>
+  {%- endif -%}
+  {%- if block.settings.card_text != blank -%}
+    <p class="cb-speed-card__text">{{ block.settings.card_text | escape | newline_to_br }}</p>
+  {%- endif -%}
+  {%- if block.settings.footer_text != blank -%}
+    <p class="cb-speed-card__footer">{{ block.settings.footer_text | escape }}</p>
+  {%- endif -%}
+</article>
+
+{% stylesheet %}
+  .cb-speed-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+    height: 100%;
+    padding: 18px;
+    border: 1px solid var(--cbd-border);
+    border-radius: var(--cbd-radius);
+    background: var(--cbd-card);
+  }
+
+  .cb-speed-card--highlight {
+    border-color: var(--cbd-accent);
+    box-shadow: 0 0 28px var(--cbd-glow);
+  }
+
+  /* Tab sitting on the top border of the highlighted card. */
+  .cb-speed-card__flag {
+    position: absolute;
+    top: 0;
+    left: 14px;
+    padding: 4px 8px;
+    border-radius: 2px;
+    background: var(--cbd-accent);
+    font-family: var(--cbd-font-body);
+    font-weight: var(--cb-speed-card-tab-weight, var(--cbd-font-body-strong));
+    font-size: var(--cb-speed-card-tab-size, 9px);
+    line-height: 1.3;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #fff;
+    transform: translateY(-50%);
+  }
+
+  .cb-speed-card__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+
+  .cb-speed-card--highlight .cb-speed-card__top {
+    margin-top: 6px;
+  }
+
+  .cb-speed-card__tag {
+    padding: 4px 8px;
+    border: 1px solid var(--cbd-border-strong);
+    border-radius: 2px;
+    background: var(--cbd-chip);
+    font-family: var(--cbd-font-body);
+    font-weight: var(--cb-speed-card-tag-weight, var(--cbd-font-body-strong));
+    font-size: var(--cb-speed-card-tag-size, 9px);
+    line-height: 1.3;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--cbd-soft);
+  }
+
+  .cb-speed-card__icon {
+    display: inline-flex;
+    flex: none;
+    margin-left: auto;
+    color: var(--cbd-icon, var(--cbd-accent));
+  }
+
+  .cb-speed-card__title {
+    margin: 0;
+    font-family: var(--cbd-font-heading);
+    font-weight: var(--cb-speed-card-title-weight, var(--cbd-font-heading-weight));
+    font-size: var(--cb-speed-card-title-size, 18px);
+    line-height: 1.2;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    color: var(--cbd-text);
+  }
+
+  .cb-speed-card__subtitle {
+    margin: -4px 0 4px;
+    font-family: var(--cbd-font-body);
+    font-weight: var(--cb-speed-card-subtitle-weight, var(--cbd-font-body-strong));
+    font-size: var(--cb-speed-card-subtitle-size, 9px);
+    line-height: 1.4;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--cbd-muted);
+  }
+
+  .cb-speed-card__text {
+    margin: 0 0 8px;
+    font-family: var(--cbd-font-body);
+    font-weight: var(--cb-speed-card-text-weight, var(--cbd-font-body-weight));
+    font-size: var(--cb-speed-card-text-size, 12px);
+    line-height: 1.6;
+    color: var(--cbd-soft);
+  }
+
+  .cb-speed-card__footer {
+    margin: auto 0 0;
+    padding-top: 12px;
+    border-top: 1px solid var(--cbd-border);
+    font-family: var(--cbd-font-body);
+    font-weight: var(--cb-speed-card-footer-weight, inherit);
+    font-size: var(--cb-speed-card-footer-size, 10px);
+    line-height: 1.5;
+    color: var(--cbd-muted);
+  }
+
+  .cb-speed-card--highlight .cb-speed-card__text,
+  .cb-speed-card--highlight .cb-speed-card__footer {
+    color: var(--cbd-text);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Speed card",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "speed_tag",
+      "label": "Speed tag",
+      "default": "Speed 77 / Yonex 3"
+    },
+    {
+      "type": "select",
+      "id": "icon",
+      "label": "Icon",
+      "options": [
+        { "value": "thermometer", "label": "Thermometer" },
+        { "value": "check", "label": "Tick" },
+        { "value": "snowflake", "label": "Snowflake" },
+        { "value": "sun", "label": "Sun" },
+        { "value": "wind", "label": "Wind" },
+        { "value": "gauge", "label": "Gauge" },
+        { "value": "none", "label": "None" }
+      ],
+      "default": "check"
+    },
+    {
+      "type": "image_picker",
+      "id": "custom_icon",
+      "label": "Custom icon",
+      "info": "Upload your own SVG (or PNG). It replaces the built-in icon above."
+    },
+    {
+      "type": "checkbox",
+      "id": "custom_icon_tint",
+      "label": "Colour it like the built-in icons",
+      "info": "For one-colour SVGs: uses this section's icon colour. Turn off to keep the file's own colours.",
+      "default": true,
+      "visible_if": "{{ block.settings.custom_icon != blank }}"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon color",
+      "default": "#22c55e"
+    },
+    {
+      "type": "text",
+      "id": "card_title",
+      "label": "Title",
+      "info": "Shown in capitals.",
+      "default": "Medium"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "The everyday starting point"
+    },
+    {
+      "type": "textarea",
+      "id": "card_text",
+      "label": "Text",
+      "default": "Calibrated for typical NZ indoor club conditions and unheated school halls."
+    },
+    {
+      "type": "text",
+      "id": "footer_text",
+      "label": "Footer note",
+      "default": "Standard Papakura club & junior spec"
+    },
+    {
+      "type": "header",
+      "content": "Highlight"
+    },
+    {
+      "type": "checkbox",
+      "id": "highlight",
+      "label": "Highlight this card",
+      "info": "Accent border and glow, with the tab below.",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "highlight_label",
+      "label": "Tab text",
+      "default": "CMBA standard spec",
+      "visible_if": "{{ block.settings.highlight }}"
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "tag_size",
+      "label": "Speed tag size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 9
+    },
+    {
+      "type": "select",
+      "id": "tag_weight",
+      "label": "Speed tag weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Title size",
+      "min": 10,
+      "max": 56,
+      "step": 0.5,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Title weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size",
+      "label": "Subtitle size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 9
+    },
+    {
+      "type": "select",
+      "id": "subtitle_weight",
+      "label": "Subtitle weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "text_weight",
+      "label": "Text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "footer_size",
+      "label": "Footer note size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "footer_weight",
+      "label": "Footer note weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "tab_size",
+      "label": "Tab text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 9
+    },
+    {
+      "type": "select",
+      "id": "tab_weight",
+      "label": "Tab text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    }
+  ],
+  "presets": [{ "name": "[CB] Speed card" }]
+}
+{% endschema %}

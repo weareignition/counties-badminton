@@ -1,10 +1,21 @@
 {%- if block.settings.meta_text != blank -%}
   {%- if block.settings.link != blank -%}
-    <a href="{{ block.settings.link }}" class="cb-footer__meta" {{ block.shopify_attributes }}>
+    <a
+      href="{{ block.settings.link }}"
+      class="cb-footer__meta"
+      style="--cb-footer-meta-text-size: {{ block.settings.text_size }}px; --cb-footer-meta-text-weight: {{ block.settings.text_weight }};"
+      {{ block.shopify_attributes }}
+    >
       {{- block.settings.meta_text | escape -}}
     </a>
   {%- else -%}
-    <p class="cb-footer__meta" {{ block.shopify_attributes }}>{{ block.settings.meta_text | escape }}</p>
+    <p
+      class="cb-footer__meta"
+      style="--cb-footer-meta-text-size: {{ block.settings.text_size }}px; --cb-footer-meta-text-weight: {{ block.settings.text_weight }};"
+      {{ block.shopify_attributes }}
+    >
+      {{- block.settings.meta_text | escape -}}
+    </p>
   {%- endif -%}
 {%- endif -%}
 
@@ -12,8 +23,8 @@
   .cb-footer__meta {
     margin: 0;
     font-family: var(--cbft-font-body);
-    font-weight: var(--cbft-font-body-weight);
-    font-size: 13px;
+    font-weight: var(--cb-footer-meta-text-weight, var(--cbft-font-body-weight));
+    font-size: var(--cb-footer-meta-text-size, 13px);
     line-height: 1.5;
     color: var(--cbft-muted);
     text-decoration: none;
@@ -44,6 +55,38 @@
       "type": "url",
       "id": "link",
       "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "select",
+      "id": "text_weight",
+      "label": "Text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
     }
   ],
   "presets": [{ "name": "[CB] Bottom text" }]

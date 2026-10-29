@@ -1,0 +1,366 @@
+{%- liquid
+  assign s = section.settings
+  assign font_scope = '#cb-speed-' | append: section.id
+-%}
+
+{% render 'cb-font-styles',
+  selector: font_scope,
+  prefix: 'cbd',
+  heading_font: s.heading_font,
+  body_font: s.body_font
+%}
+
+<section
+  id="cb-speed-{{ section.id }}"
+  class="cb-speed"
+  style="
+    --cbd-bg: {{ s.background_color }};
+    --cbd-card: {{ s.card_background_color }};
+    --cbd-chip: {{ s.text_color | color_modify: 'alpha', 0.05 }};
+    --cbd-border: {{ s.border_color }};
+    --cbd-border-strong: {{ s.text_color | color_modify: 'alpha', 0.16 }};
+    --cbd-text: {{ s.text_color }};
+    --cbd-soft: {{ s.text_color | color_modify: 'alpha', 0.75 }};
+    --cbd-muted: {{ s.text_color | color_modify: 'alpha', 0.55 }};
+    --cbd-accent: {{ s.accent_color }};
+    --cbd-glow: {{ s.accent_color | color_modify: 'alpha', 0.28 }};
+    --cbd-radius: {{ s.card_radius }}px;
+    --cbd-max-width: {{ s.max_width }}px;
+    --cbd-stack-gap: {{ s.stack_gap }}px;
+    --cbd-pt: {{ s.padding_top }}px;
+    --cbd-pb: {{ s.padding_bottom }}px;
+  "
+>
+  <div class="cb-speed__inner">
+    {% content_for 'blocks' %}
+  </div>
+</section>
+
+{% stylesheet %}
+  .cb-speed {
+    color: var(--cbd-text);
+    background: var(--cbd-bg);
+    padding: calc(var(--cbd-pt) * 0.7) 16px calc(var(--cbd-pb) * 0.7);
+  }
+
+  .cb-speed__inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--cbd-stack-gap);
+    max-width: var(--cbd-max-width);
+    margin-inline: auto;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-speed {
+      padding: var(--cbd-pt) 32px var(--cbd-pb);
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .cb-speed {
+      padding-inline: 48px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Speed guide",
+  "tag": "div",
+  "class": "section-wrapper",
+  "blocks": [
+    { "type": "_cb-speed-header" },
+    { "type": "_cb-speed-cards" },
+    { "type": "_cb-speed-notice" }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width",
+      "min": 960,
+      "max": 1800,
+      "step": 20,
+      "unit": "px",
+      "default": 1400
+    },
+    {
+      "type": "range",
+      "id": "stack_gap",
+      "label": "Space between blocks",
+      "min": 8,
+      "max": 72,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Card corner radius",
+      "min": 0,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 3
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "info": "Used for the heading and card titles.",
+      "default": "space_grotesk_n7"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "inter_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#0d0d0d"
+    },
+    {
+      "type": "color",
+      "id": "card_background_color",
+      "label": "Card background",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Borders",
+      "default": "#ffffff14"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "default": "#d71f27"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Speed guide",
+      "category": "t:categories.storytelling",
+      "blocks": {
+        "header": {
+          "type": "_cb-speed-header",
+          "blocks": {
+            "eyebrow": { "type": "cb-subheader", "settings": { "subheader_text": "CMBA temperature calibration" } },
+            "heading": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "Shuttle speed, explained simply.",
+                "size": 30,
+                "mobile_scale": 80,
+                "line_height": 112,
+                "wrap": "wrap"
+              }
+            },
+            "text": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>Temperature, altitude and hall draft affect how quickly a shuttle travels. The right speed helps the shuttle behave naturally instead of flying long or falling short.</p>",
+                "size": 13,
+                "mobile_size": 13,
+                "line_height": 165,
+                "max_width_unit": "ch",
+                "max_width_ch": 62
+              }
+            }
+          },
+          "block_order": ["eyebrow", "heading", "text"]
+        },
+        "cards": {
+          "type": "_cb-speed-cards",
+          "blocks": {
+            "slower": {
+              "type": "_cb-speed-card",
+              "settings": {
+                "speed_tag": "Speed 76 / Yonex 2",
+                "icon": "thermometer",
+                "icon_color": "#f5a524",
+                "card_title": "Slower",
+                "subtitle": "For warmer conditions / summer play",
+                "card_text": "Helps prevent the shuttle travelling too far and flying baseline out.",
+                "footer_text": "Warm hall or summer match play"
+              }
+            },
+            "medium": {
+              "type": "_cb-speed-card",
+              "settings": {
+                "speed_tag": "Speed 77 / Yonex 3",
+                "icon": "check",
+                "icon_color": "#22c55e",
+                "card_title": "Medium",
+                "subtitle": "The everyday starting point",
+                "card_text": "Calibrated for typical NZ indoor club conditions and unheated school halls.",
+                "footer_text": "Standard Papakura club & junior spec",
+                "highlight": true,
+                "highlight_label": "CMBA standard spec"
+              }
+            },
+            "faster": {
+              "type": "_cb-speed-card",
+              "settings": {
+                "speed_tag": "Speed 78 / Yonex 4",
+                "icon": "snowflake",
+                "icon_color": "#60a5fa",
+                "card_title": "Faster",
+                "subtitle": "For cooler conditions / winter play",
+                "card_text": "Maintains proper flight depth without arm strain in cooler, denser air.",
+                "footer_text": "Unheated stadiums or winter play"
+              }
+            }
+          },
+          "block_order": ["slower", "medium", "faster"]
+        },
+        "notice": {
+          "type": "_cb-speed-notice",
+          "settings": {
+            "notice_text": "Speed numbers vary by brand. If you're unsure, ask the pro shop and we'll help you choose.",
+            "button_label": "Ask the Pro Shop",
+            "link_label": "Read the Full Shuttle Guide"
+          }
+        }
+      },
+      "block_order": ["header", "cards", "notice"]
+    },
+    {
+      "name": "[CB] Tension guide",
+      "category": "t:categories.storytelling",
+      "settings": { "card_radius": 6 },
+      "blocks": {
+        "header": {
+          "type": "_cb-speed-header",
+          "blocks": {
+            "eyebrow": { "type": "cb-subheader", "settings": { "subheader_text": "String tension guide" } },
+            "heading": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "Tension, explained simply.",
+                "size": 30,
+                "mobile_scale": 80,
+                "line_height": 112,
+                "wrap": "wrap"
+              }
+            },
+            "text": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>Your ideal tension depends on your racket, technique and the feel you prefer. Use this as a starting point, then ask the team if you are unsure.</p>",
+                "size": 13,
+                "mobile_size": 13,
+                "line_height": 165,
+                "max_width_unit": "ch",
+                "max_width_ch": 62
+              }
+            }
+          },
+          "block_order": ["eyebrow", "heading", "text"]
+        },
+        "cards": {
+          "type": "_cb-speed-cards",
+          "blocks": {
+            "lower": {
+              "type": "_cb-speed-tcard",
+              "settings": {
+                "card_label": "Lower tension",
+                "range_tag": "20–23 lbs",
+                "card_title": "More forgiving",
+                "points": "Larger sweet spot\nEasier power\nSofter feel",
+                "suited_text": "Best for beginners and players wanting an easier response."
+              }
+            },
+            "medium": {
+              "type": "_cb-speed-tcard",
+              "settings": {
+                "card_label": "Medium tension",
+                "range_tag": "24–26 lbs",
+                "card_title": "Balanced response",
+                "points": "Power + control\nFamiliar all-round feel\nGreat starting point for club players",
+                "suited_text": "Regular club players looking for the optimal starting point.",
+                "highlight": true,
+                "highlight_label": "CMBA popular starting point"
+              }
+            },
+            "higher": {
+              "type": "_cb-speed-tcard",
+              "settings": {
+                "card_label": "Higher tension",
+                "range_tag": "27–30+ lbs",
+                "card_title": "More direct control",
+                "points": "Firmer response\nSmaller sweet spot\nRewards consistent technique",
+                "suited_text": "Best for experienced players who already know their preferred feel."
+              }
+            }
+          },
+          "block_order": ["lower", "medium", "higher"]
+        },
+        "notice": {
+          "type": "_cb-speed-notice",
+          "settings": {
+            "notice_title": "Not sure what tension to request?",
+            "icon_type": "question",
+            "button_caps": true,
+            "notice_text": "Ask the pro shop staff in Papakura and we'll calibrate the tension to your racket model.",
+            "button_label": "Ask the Pro Shop",
+            "link_label": "Read the String Tension Guide"
+          }
+        }
+      },
+      "block_order": ["header", "cards", "notice"]
+    }
+  ]
+}
+{% endschema %}

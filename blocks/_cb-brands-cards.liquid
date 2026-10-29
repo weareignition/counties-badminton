@@ -1,0 +1,67 @@
+<div
+  class="cb-brands__cards"
+  style="--cbb-columns: {{ block.settings.columns }}; --cbb-card-gap: {{ block.settings.gap }}px;"
+  {{ block.shopify_attributes }}
+>
+  {% content_for 'blocks' %}
+</div>
+
+{% stylesheet %}
+  .cb-brands__cards {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--cbb-card-gap, 12px);
+  }
+
+  @media screen and (min-width: 600px) {
+    .cb-brands__cards {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media screen and (min-width: 1100px) {
+    .cb-brands__cards {
+      grid-template-columns: repeat(var(--cbb-columns, 4), minmax(0, 1fr));
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Brand cards",
+  "tag": null,
+  "blocks": [{ "type": "_cb-brands-card" }],
+  "settings": [
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Cards per row on desktop",
+      "info": "Tablets show 2 per row, phones 1.",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Gap",
+      "min": 8,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Brand cards",
+      "blocks": {
+        "card_1": { "type": "_cb-brands-card" },
+        "card_2": { "type": "_cb-brands-card", "settings": { "brand_name": "Victor", "origin": "Taiwan", "description": "Thruster Ryuga & Auraspeed series. Explosive swing speeds & Free Core synthetic handles." } }
+      },
+      "block_order": ["card_1", "card_2"]
+    }
+  ]
+}
+{% endschema %}

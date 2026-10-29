@@ -23,25 +23,65 @@
               "type": "_cb-hero-badge",
               "settings": {
                 "badge_text": "Counties Manukau Badminton Association Official Store",
+                "badge_secondary": "",
                 "show_dot": true
               },
               "blocks": {}
             },
             "cb_hero_heading_LtngVJ": {
-              "type": "_cb-hero-heading",
+              "type": "cb-heading",
               "settings": {
                 "heading_text": "Built for badminton.",
+                "tag": "h1",
                 "size": 64,
-                "tag": "h1"
+                "mobile_sizing": "fluid",
+                "mobile_scale": 82,
+                "fluid_min": 36,
+                "fluid_vw": 8,
+                "weight": "font",
+                "color": "text",
+                "custom_color": "#ffffff",
+                "line_height": 105,
+                "letter_spacing": -2,
+                "uppercase": false,
+                "wrap": "balance",
+                "width": "auto",
+                "width_px": 400,
+                "max_width": 0,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
               },
               "blocks": {}
             },
             "cb_hero_text_jV8iHn": {
-              "type": "_cb-hero-text",
+              "type": "cb-paragraph",
               "settings": {
                 "body_text": "<p>Expert-selected rackets, gear and professional stringing from people who actually play, coach and string.</p>",
                 "size": 18,
-                "max_width": 52
+                "mobile_sizing": "fluid",
+                "mobile_size": 15,
+                "fluid_vw": 2.2,
+                "weight": "regular",
+                "color": "muted",
+                "custom_color": "#ffffff",
+                "line_height": 155,
+                "letter_spacing": 0,
+                "wrap": "wrap",
+                "width": "auto",
+                "width_px": 400,
+                "max_width_unit": "ch",
+                "max_width_px": 640,
+                "max_width_ch": 52,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
               },
               "blocks": {}
             },
@@ -89,6 +129,7 @@
                   "type": "_cb-hero-feature",
                   "settings": {
                     "icon": "check",
+                    "custom_icon_tint": true,
                     "feature_text": "Expert Advice"
                   },
                   "blocks": {}
@@ -97,6 +138,7 @@
                   "type": "_cb-hero-feature",
                   "settings": {
                     "icon": "sliders",
+                    "custom_icon_tint": true,
                     "feature_text": "Professional Stringing"
                   },
                   "blocks": {}
@@ -105,6 +147,7 @@
                   "type": "_cb-hero-feature",
                   "settings": {
                     "icon": "calendar",
+                    "custom_icon_tint": true,
                     "feature_text": "Open 7 Days"
                   },
                   "blocks": {}
@@ -139,6 +182,8 @@
               "type": "_cb-hero-label",
               "settings": {
                 "label_text": "41R Elliot St Pro Shop",
+                "label_secondary": "",
+                "uppercase": false,
                 "position": "bottom-left",
                 "style": "dark"
               },
@@ -148,6 +193,8 @@
               "type": "_cb-hero-label",
               "settings": {
                 "label_text": "Master Rigging Lab",
+                "label_secondary": "",
+                "uppercase": false,
                 "position": "bottom-right",
                 "style": "accent"
               },
@@ -166,6 +213,7 @@
       ],
       "name": "[CB] Hero",
       "settings": {
+        "design": "1",
         "content_width": 55,
         "column_gap": 40,
         "max_width": 1400,
@@ -193,26 +241,83 @@
           },
           "blocks": {
             "cb_category_eyebrow_xMwN9B": {
-              "type": "_cb-category-eyebrow",
+              "type": "cb-subheader",
               "settings": {
-                "eyebrow_text": "Shop by category"
+                "subheader_text": "Shop by category",
+                "secondary": "",
+                "show_dot": false,
+                "size": 11,
+                "weight": "strong",
+                "color": "accent",
+                "custom_color": "#ffffff",
+                "letter_spacing": 12,
+                "uppercase": true,
+                "space_below": 10,
+                "width": "auto",
+                "width_px": 400,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
               },
               "blocks": {}
             },
             "cb_category_heading_Pdh3UT": {
-              "type": "_cb-category-heading",
+              "type": "cb-heading",
               "settings": {
                 "heading_text": "Shop badminton gear",
+                "tag": "h2",
                 "size": 40,
-                "tag": "h2"
+                "mobile_sizing": "fluid",
+                "mobile_scale": 82,
+                "fluid_min": 28,
+                "fluid_vw": 6,
+                "weight": "font",
+                "color": "text",
+                "custom_color": "#ffffff",
+                "line_height": 110,
+                "letter_spacing": -2,
+                "uppercase": false,
+                "wrap": "balance",
+                "width": "auto",
+                "width_px": 400,
+                "max_width": 0,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
               },
               "blocks": {}
             },
             "cb_category_text_HdUYq6": {
-              "type": "_cb-category-text",
+              "type": "cb-paragraph",
               "settings": {
                 "body_text": "<p>Curated directly by Counties Manukau stringers and players. Tested on Papakura courts.</p>",
-                "size": 13
+                "size": 13,
+                "mobile_sizing": "same",
+                "mobile_size": 13,
+                "fluid_vw": 2,
+                "weight": "regular",
+                "color": "muted",
+                "custom_color": "#ffffff",
+                "line_height": 155,
+                "letter_spacing": 0,
+                "wrap": "wrap",
+                "width": "auto",
+                "width_px": 400,
+                "max_width_unit": "ch",
+                "max_width_px": 640,
+                "max_width_ch": 60,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
               },
               "blocks": {}
             }
@@ -351,19 +456,59 @@
               "blocks": {}
             },
             "cb_finder_heading_B8xcCd": {
-              "type": "_cb-finder-heading",
+              "type": "cb-heading",
               "settings": {
                 "heading_text": "Not sure which racket suits you?",
+                "tag": "h2",
                 "size": 56,
-                "tag": "h2"
+                "mobile_sizing": "fluid",
+                "mobile_scale": 82,
+                "fluid_min": 34,
+                "fluid_vw": 8,
+                "weight": "font",
+                "color": "text",
+                "custom_color": "#ffffff",
+                "line_height": 105,
+                "letter_spacing": -2,
+                "uppercase": false,
+                "wrap": "pretty",
+                "width": "auto",
+                "width_px": 400,
+                "max_width": 0,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
               },
               "blocks": {}
             },
             "cb_finder_text_W6Uc69": {
-              "type": "_cb-finder-text",
+              "type": "cb-paragraph",
               "settings": {
                 "body_text": "<p>Tell us how you play and we'll recommend the frames we'd actually put in your hand on the shop floor at 41R Elliot Street.</p>",
-                "size": 15
+                "size": 15,
+                "mobile_sizing": "same",
+                "mobile_size": 15,
+                "fluid_vw": 2,
+                "weight": "regular",
+                "color": "muted",
+                "custom_color": "#ffffff",
+                "line_height": 160,
+                "letter_spacing": 0,
+                "wrap": "wrap",
+                "width": "auto",
+                "width_px": 400,
+                "max_width_unit": "ch",
+                "max_width_px": 640,
+                "max_width_ch": 56,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
               },
               "blocks": {}
             }
@@ -435,6 +580,7 @@
               "type": "_cb-finder-note",
               "settings": {
                 "icon": "check",
+                "custom_icon_tint": true,
                 "note_text": "Takes less than 2 minutes. No generic algorithm, vetted by CMBA head stringer."
               },
               "blocks": {}
@@ -489,18 +635,55 @@
           },
           "blocks": {
             "cb_frames_eyebrow_T89pp7": {
-              "type": "_cb-frames-eyebrow",
+              "type": "cb-subheader",
               "settings": {
-                "eyebrow_text": "Association curated"
+                "subheader_text": "Association curated",
+                "secondary": "",
+                "show_dot": false,
+                "size": 11,
+                "weight": "strong",
+                "color": "accent",
+                "custom_color": "#ffffff",
+                "letter_spacing": 12,
+                "uppercase": true,
+                "space_below": 10,
+                "width": "auto",
+                "width_px": 400,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
               },
               "blocks": {}
             },
             "cb_frames_heading_dgetK9": {
-              "type": "_cb-frames-heading",
+              "type": "cb-heading",
               "settings": {
                 "heading_text": "Featured Specialist Frames",
+                "tag": "h2",
                 "size": 36,
-                "tag": "h2"
+                "mobile_sizing": "fluid",
+                "mobile_scale": 82,
+                "fluid_min": 26,
+                "fluid_vw": 5.5,
+                "weight": "font",
+                "color": "text",
+                "custom_color": "#ffffff",
+                "line_height": 110,
+                "letter_spacing": -2,
+                "uppercase": false,
+                "wrap": "balance",
+                "width": "auto",
+                "width_px": 400,
+                "max_width": 0,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
               },
               "blocks": {}
             },
@@ -669,6 +852,7 @@
           "type": "_cb-frames-callout",
           "settings": {
             "icon": "racket",
+            "custom_icon_tint": true,
             "callout_title": "Want to test before you buy?",
             "callout_text": "Borrow any of our demo frames on Papakura courts for 30 minutes during shop hours.",
             "button_label": "Learn about Demo Program",
@@ -731,19 +915,59 @@
               "blocks": {}
             },
             "cb_string_heading_w8ibaV": {
-              "type": "_cb-string-heading",
+              "type": "cb-heading",
               "settings": {
                 "heading_text": "Professional stringing. Seven days a week.",
+                "tag": "h2",
                 "size": 44,
-                "tag": "h2"
+                "mobile_sizing": "fluid",
+                "mobile_scale": 82,
+                "fluid_min": 30,
+                "fluid_vw": 6,
+                "weight": "font",
+                "color": "text",
+                "custom_color": "#ffffff",
+                "line_height": 108,
+                "letter_spacing": -2,
+                "uppercase": false,
+                "wrap": "balance",
+                "width": "auto",
+                "width_px": 400,
+                "max_width": 0,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
               },
               "blocks": {}
             },
             "cb_string_text_dw6KWJ": {
-              "type": "_cb-string-text",
+              "type": "cb-paragraph",
               "settings": {
                 "body_text": "<p>Factory pre-strung rackets come with loose, generic nylon that deadens touch and control. Every frame at CMBA is hand-mounted on our electronic constant-pull machines at 41R Elliot Street. Choose Yonex BG80, BG66UM, Victor VBS, or Ashaway with tension calibrated specifically to your swing and arm comfort.</p>",
-                "size": 14
+                "size": 14,
+                "mobile_sizing": "same",
+                "mobile_size": 14,
+                "fluid_vw": 2,
+                "weight": "regular",
+                "color": "muted",
+                "custom_color": "#ffffff",
+                "line_height": 165,
+                "letter_spacing": 0,
+                "wrap": "wrap",
+                "width": "auto",
+                "width_px": 400,
+                "max_width_unit": "ch",
+                "max_width_px": 640,
+                "max_width_ch": 62,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
               },
               "blocks": {}
             },
@@ -755,6 +979,7 @@
                   "type": "_cb-string-feature",
                   "settings": {
                     "icon": "timer",
+                    "custom_icon_tint": true,
                     "feature_title": "24-Hour Express Turnaround",
                     "feature_text": "Drop off before 6pm on club night, pick up strung and calibrated for your match tomorrow."
                   },
@@ -764,6 +989,7 @@
                   "type": "_cb-string-feature",
                   "settings": {
                     "icon": "gauge",
+                    "custom_icon_tint": true,
                     "feature_title": "Certified 6-Point Electronic Pull (±0.2 lbs accuracy)",
                     "feature_text": "Prevents frame warping, head distortion, and grommet crushing with genuine micro-tension accuracy."
                   },
@@ -773,6 +999,7 @@
                   "type": "_cb-string-feature",
                   "settings": {
                     "icon": "sliders",
+                    "custom_icon_tint": true,
                     "feature_title": "Custom Tension Calibration (20 to 32 lbs)",
                     "feature_text": "Not sure whether to pull 24 or 28 lbs? Our certified master stringers match tension to your technique to protect elbow health."
                   },
@@ -858,26 +1085,83 @@
           },
           "blocks": {
             "cb_guides_eyebrow_Gt37Pa": {
-              "type": "_cb-guides-eyebrow",
+              "type": "cb-subheader",
               "settings": {
-                "eyebrow_text": "Technical guidance"
+                "subheader_text": "Technical guidance",
+                "secondary": "",
+                "show_dot": false,
+                "size": 11,
+                "weight": "strong",
+                "color": "accent",
+                "custom_color": "#ffffff",
+                "letter_spacing": 12,
+                "uppercase": true,
+                "space_below": -4,
+                "width": "auto",
+                "width_px": 400,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
               },
               "blocks": {}
             },
             "cb_guides_heading_CJyaVr": {
-              "type": "_cb-guides-heading",
+              "type": "cb-heading",
               "settings": {
                 "heading_text": "We don’t expect you to know what 4U, head-heavy or 26&nbsp;lbs means. That’s our job.",
+                "tag": "h2",
                 "size": 48,
-                "tag": "h2"
+                "mobile_sizing": "fluid",
+                "mobile_scale": 82,
+                "fluid_min": 30,
+                "fluid_vw": 6.5,
+                "weight": "font",
+                "color": "text",
+                "custom_color": "#ffffff",
+                "line_height": 106,
+                "letter_spacing": -2,
+                "uppercase": false,
+                "wrap": "balance",
+                "width": "full",
+                "width_px": 400,
+                "max_width": 0,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
               },
               "blocks": {}
             },
             "cb_guides_text_E6aGjc": {
-              "type": "_cb-guides-text",
+              "type": "cb-paragraph",
               "settings": {
                 "body_text": "<p>Read technical briefings straight from Counties Manukau stringers and coaching staff to demystify badminton gear.</p>",
-                "size": 14
+                "size": 14,
+                "mobile_sizing": "same",
+                "mobile_size": 14,
+                "fluid_vw": 2,
+                "weight": "regular",
+                "color": "muted",
+                "custom_color": "#ffffff",
+                "line_height": 160,
+                "letter_spacing": 0,
+                "wrap": "wrap",
+                "width": "auto",
+                "width_px": 400,
+                "max_width_unit": "ch",
+                "max_width_px": 640,
+                "max_width_ch": 120,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
               },
               "blocks": {}
             }
@@ -904,7 +1188,9 @@
                 "card_title": "Choosing Your First Racket",
                 "summary": "A 3U racket (85-89g) delivers heavier smash weight, but demands shoulder strength during 3-set matches. A 4U racket (80-84g) provides much quicker net defense without sacrificing punch if strung right.",
                 "icon": "player",
+                "custom_icon_tint": true,
                 "label": "Player guide",
+                "point_text": "",
                 "link_label": "Read full weight guide",
                 "link": ""
               },
@@ -918,7 +1204,9 @@
                 "card_title": "String Tension Guide: Why higher tension shrinks sweet spot",
                 "summary": "Pro players string at 28-32 lbs for surgical shuttle placement. But if your hitting timing isn't millimeter-perfect, high tension robs power and transfers harsh vibrations straight to your elbow joint.",
                 "icon": "strings",
+                "custom_icon_tint": true,
                 "label": "String lab insight",
+                "point_text": "",
                 "link_label": "Read tension recommendations",
                 "link": ""
               },
@@ -932,7 +1220,9 @@
                 "card_title": "Choosing Court Shoes: Why running shoes cause rolled ankles",
                 "summary": "Running shoes are built for forward stride with tall foam stacks. Badminton requires rapid 45-degree lateral lunges, requiring low-profile gum outsoles and anti-torsion carbon shank plates.",
                 "icon": "shoe",
+                "custom_icon_tint": true,
                 "label": "Injury prevention",
+                "point_text": "",
                 "link_label": "Read court footwear guide",
                 "link": ""
               },
@@ -952,6 +1242,7 @@
       ],
       "name": "[CB] Technical guides",
       "settings": {
+        "design": "1",
         "max_width": 1400,
         "stack_gap": 40,
         "card_radius": 10,
@@ -1002,19 +1293,59 @@
               ]
             },
             "cb_info_heading_NnykP7": {
-              "type": "_cb-info-heading",
+              "type": "cb-heading",
               "settings": {
                 "heading_text": "Strung by players who play and coaches who coach.",
+                "tag": "h2",
                 "size": 44,
-                "tag": "h2"
+                "mobile_sizing": "fluid",
+                "mobile_scale": 82,
+                "fluid_min": 30,
+                "fluid_vw": 6,
+                "weight": "font",
+                "color": "text",
+                "custom_color": "#ffffff",
+                "line_height": 108,
+                "letter_spacing": -2,
+                "uppercase": false,
+                "wrap": "balance",
+                "width": "auto",
+                "width_px": 400,
+                "max_width": 0,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
               },
               "blocks": {}
             },
             "cb_info_text_htMeyz": {
-              "type": "_cb-info-text",
+              "type": "cb-paragraph",
               "settings": {
                 "body_text": "<p>When you shop here, 100% of proceeds directly support Counties Manukau Badminton Association (CMBA), junior squad coaching, subsidized school racquets, court resurfacing, and representative teams across South Auckland.</p>",
-                "size": 14
+                "size": 14,
+                "mobile_sizing": "same",
+                "mobile_size": 14,
+                "fluid_vw": 2,
+                "weight": "regular",
+                "color": "muted",
+                "custom_color": "#ffffff",
+                "line_height": 165,
+                "letter_spacing": 0,
+                "wrap": "wrap",
+                "width": "auto",
+                "width_px": 400,
+                "max_width_unit": "ch",
+                "max_width_px": 640,
+                "max_width_ch": 64,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
               },
               "blocks": {}
             },
@@ -1060,7 +1391,8 @@
                     "directions_address": "41R Elliot Street, Papakura, Auckland",
                     "open_in_new_tab": false,
                     "style": "primary",
-                    "icon": "directions"
+                    "icon": "directions",
+                    "custom_icon_tint": true
                   },
                   "blocks": {}
                 },
@@ -1072,7 +1404,8 @@
                     "directions_address": "",
                     "open_in_new_tab": false,
                     "style": "secondary",
-                    "icon": "none"
+                    "icon": "none",
+                    "custom_icon_tint": true
                   },
                   "blocks": {}
                 }

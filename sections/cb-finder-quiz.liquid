@@ -1,0 +1,608 @@
+{%- liquid
+  assign s = section.settings
+  assign font_scope = '#cb-quiz-' | append: section.id
+-%}
+
+{% render 'cb-font-styles',
+  selector: font_scope,
+  prefix: 'cbq',
+  heading_font: s.heading_font,
+  body_font: s.body_font
+%}
+
+<div
+  id="cb-quiz-{{ section.id }}"
+  class="cb-quiz{% if s.show_glow %} cb-quiz--glow{% endif %}"
+  data-cb-quiz-section
+  style="
+    --cbq-bg: {{ s.background_color }};
+    --cbq-card: {{ s.card_background_color }};
+    --cbq-option: {{ s.option_background_color }};
+    --cbq-border: {{ s.border_color }};
+    --cbq-border-strong: {{ s.text_color | color_modify: 'alpha', 0.3 }};
+    --cbq-track: {{ s.text_color | color_modify: 'alpha', 0.1 }};
+    --cbq-text: {{ s.text_color }};
+    --cbq-soft: {{ s.text_color | color_modify: 'alpha', 0.82 }};
+    --cbq-muted: {{ s.text_color | color_modify: 'alpha', 0.55 }};
+    --cbq-accent: {{ s.accent_color }};
+    --cbq-glow: {{ s.accent_color | color_modify: 'alpha', 0.2 }};
+    --cbq-radius: {{ s.card_radius }}px;
+    --cbq-content-col: {{ s.content_width }}fr;
+    --cbq-card-col: {{ 100 | minus: s.content_width }}fr;
+    --cbq-gap: {{ s.column_gap }}px;
+    --cbq-max-width: {{ s.max_width }}px;
+    --cbq-pt: {{ s.padding_top }}px;
+    --cbq-pb: {{ s.padding_bottom }}px;
+  "
+>
+  {%- comment -%} Stable target for links like /collections/rackets#racket-finder ([CB] Racket finder intro). {%- endcomment -%}
+  <span id="racket-finder" class="cb-quiz__anchor" aria-hidden="true"></span>
+  <div class="cb-quiz__inner">
+    {% content_for 'blocks' %}
+  </div>
+</div>
+
+{% stylesheet %}
+  .cb-quiz {
+    color: var(--cbq-text);
+    background: var(--cbq-bg);
+    padding: calc(var(--cbq-pt) * 0.6) 16px calc(var(--cbq-pb) * 0.6);
+  }
+
+  .cb-quiz__anchor {
+    display: block;
+    height: 0;
+  }
+
+  /* Glow on the right edge: behind the quiz card when stacked, mid-height beside it on large screens. */
+  .cb-quiz--glow {
+    background: radial-gradient(70% 35% at 100% 75%, var(--cbq-glow), transparent 72%), var(--cbq-bg);
+  }
+
+  .cb-quiz__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: center;
+    gap: 40px;
+    max-width: var(--cbq-max-width);
+    margin-inline: auto;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-quiz {
+      padding: calc(var(--cbq-pt) * 0.8) 32px calc(var(--cbq-pb) * 0.8);
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .cb-quiz {
+      padding: var(--cbq-pt) 48px var(--cbq-pb);
+    }
+
+    .cb-quiz--glow {
+      background: radial-gradient(40% 75% at 100% 55%, var(--cbq-glow), transparent 72%), var(--cbq-bg);
+    }
+
+    .cb-quiz__inner {
+      grid-template-columns: minmax(0, var(--cbq-content-col)) minmax(0, var(--cbq-card-col));
+      gap: var(--cbq-gap);
+    }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  (() => {
+    const CARD = '[data-cb-quiz]';
+    const ADVANCE_DELAY = 350;
+    const states = new WeakMap();
+
+    const pad = (number) => String(number).padStart(2, '0');
+    const fill = (template, values) =>
+      (template || '').replace(/\[(\w+)\]/g, (token, key) => (key in values ? values[key] : token));
+    const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const questionsOf = (card) => [...card.querySelectorAll('[data-cb-quiz-question]')];
+
+    const setProgress = (card, current, total) => {
+      const percent = total ? Math.round((current / total) * 100) : 0;
+      card.style.setProperty('--cbq-progress', `${percent}%`);
+      const label = card.querySelector('[data-cb-quiz-progress]');
+      if (label) label.textContent = fill(card.dataset.progressLabel, { percent, current, total });
+    };
+
+    const show = (card, index, { focus = false } = {}) => {
+      const state = states.get(card);
+      const questions = questionsOf(card);
+      if (!state || !questions[index]) return;
+      state.index = index;
+      card.classList.remove('is-complete');
+      card.querySelector('[data-cb-quiz-results]')?.setAttribute('hidden', '');
+      questions.forEach((question, i) => question.classList.toggle('is-active', i === index));
+      const back = card.querySelector('[data-cb-quiz-back]');
+      if (back) back.hidden = index === 0;
+      setProgress(card, index + 1, questions.length);
+      if (focus) questions[index].querySelector('[data-cb-quiz-title]')?.focus({ preventScroll: true });
+    };
+
+    // Scores each candidate racket by how many match words of the chosen answers it has (tags or title words).
+    // Ties keep the collection's order, so with no matches at all the collection's first rackets are shown.
+    const rank = (card, answers) => {
+      const pool = card.querySelector('template[data-cb-quiz-pool]');
+      if (!pool) return { items: [], matched: false };
+      const terms = answers.flatMap((answer) => (answer?.dataset.match || '').split('|').filter(Boolean));
+      const scored = [...pool.content.querySelectorAll('[data-cb-quiz-product]')].map((item, order) => {
+        const keys = item.dataset.keys || '';
+        const title = item.dataset.title || '';
+        const score = terms.filter((term) => keys.includes(`|${term}|`) || title.includes(`-${term}-`)).length;
+        return { item, order, score };
+      });
+      scored.sort((a, b) => b.score - a.score || a.order - b.order);
+      const count = Number(card.dataset.resultsCount) || 3;
+      return { items: scored.slice(0, count).map(({ item }) => item), matched: scored[0]?.score > 0 };
+    };
+
+    const showResults = (card) => {
+      const state = states.get(card);
+      const results = card.querySelector('[data-cb-quiz-results]');
+      if (!state || !results) return;
+      const { items, matched } = rank(card, state.answers);
+
+      const list = results.querySelector('[data-cb-quiz-matches]');
+      list.replaceChildren(...items.map((item) => document.importNode(item, true)));
+      list.hidden = items.length === 0;
+
+      const title = results.querySelector('[data-cb-quiz-results-title]');
+      title.textContent = fill(matched ? title.dataset.matchTitle : title.dataset.fallbackTitle, { count: items.length });
+
+      const summary = results.querySelector('[data-cb-quiz-summary]');
+      if (summary) {
+        summary.textContent = state.answers
+          .filter(Boolean)
+          .map((answer) => answer.querySelector('.cb-quiz-opt__title')?.textContent.trim())
+          .join(' · ');
+      }
+
+      card.classList.add('is-complete');
+      results.hidden = false;
+      const back = card.querySelector('[data-cb-quiz-back]');
+      if (back) back.hidden = false;
+      const total = questionsOf(card).length;
+      setProgress(card, total, total);
+      title.focus({ preventScroll: true });
+    };
+
+    const restart = (card, { focus = true } = {}) => {
+      const state = states.get(card);
+      if (!state) return;
+      clearTimeout(state.timer);
+      state.answers = [];
+      for (const option of card.querySelectorAll('[data-cb-quiz-option]')) option.setAttribute('aria-pressed', 'false');
+      show(card, 0, { focus });
+    };
+
+    const init = (card) => {
+      const questions = questionsOf(card);
+      if (!questions.length) return;
+      questions.forEach((question, i) => {
+        const step = question.querySelector('[data-cb-quiz-step]');
+        if (step) step.textContent = fill(card.dataset.stepLabel, { current: pad(i + 1), total: pad(questions.length) });
+      });
+      states.set(card, { index: 0, answers: [], timer: null });
+      card.querySelector('[data-cb-quiz-questions]')?.classList.add('is-ready');
+      show(card, 0);
+      // Announce progress from now on (not the first fill on page load).
+      card.querySelector('[data-cb-quiz-progress]')?.setAttribute('aria-live', 'polite');
+    };
+
+    document.addEventListener('click', (event) => {
+      if (!(event.target instanceof Element)) return;
+
+      // Choosing an answer marks it, then moves on to the next question (or the results).
+      const option = event.target.closest('[data-cb-quiz-option]');
+      if (option) {
+        const card = option.closest(CARD);
+        const state = card && states.get(card);
+        const question = option.closest('[data-cb-quiz-question]');
+        if (!state || !question) return;
+        const questions = questionsOf(card);
+        const index = questions.indexOf(question);
+        for (const other of question.querySelectorAll('[data-cb-quiz-option]')) {
+          other.setAttribute('aria-pressed', String(other === option));
+        }
+        state.answers[index] = option;
+        clearTimeout(state.timer);
+        state.timer = setTimeout(() => {
+          if (index < questions.length - 1) show(card, index + 1, { focus: true });
+          else showResults(card);
+        }, reducedMotion() ? 0 : ADVANCE_DELAY);
+        return;
+      }
+
+      const back = event.target.closest('[data-cb-quiz-back]');
+      if (back) {
+        const card = back.closest(CARD);
+        const state = card && states.get(card);
+        if (!state) return;
+        clearTimeout(state.timer);
+        const index = card.classList.contains('is-complete') ? questionsOf(card).length - 1 : state.index - 1;
+        show(card, Math.max(0, index), { focus: true });
+        return;
+      }
+
+      const again = event.target.closest('[data-cb-quiz-restart]');
+      if (again) {
+        const card = again.closest(CARD);
+        if (card) restart(card);
+        return;
+      }
+
+      // "Launch racket finder" without a link: start over and bring the card into view.
+      const launch = event.target.closest('[data-cb-quiz-launch]');
+      if (launch) {
+        const card = launch.closest('[data-cb-quiz-section]')?.querySelector(CARD);
+        if (!card || !states.get(card) || event.metaKey || event.ctrlKey || event.shiftKey) return;
+        event.preventDefault();
+        restart(card, { focus: false });
+        const headerHeight = parseFloat(getComputedStyle(document.body).getPropertyValue('--header-height')) || 0;
+        const box = card.getBoundingClientRect();
+        if (box.top < headerHeight || box.bottom > window.innerHeight) {
+          card.scrollIntoView({ behavior: reducedMotion() ? 'auto' : 'smooth', block: 'start' });
+        }
+        card.querySelector('.cb-quiz-q.is-active [data-cb-quiz-title]')?.focus({ preventScroll: true });
+      }
+    });
+
+    // Theme editor: selecting a question (or one of its answers) shows that question.
+    document.addEventListener('shopify:block:select', (event) => {
+      const card = event.target.closest?.(CARD);
+      const question = event.target.closest?.('[data-cb-quiz-question]');
+      if (card && question && states.get(card)) show(card, questionsOf(card).indexOf(question));
+    });
+
+    const initAll = (root) => root.querySelectorAll(CARD).forEach(init);
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => initAll(document));
+    else initAll(document);
+    document.addEventListener('shopify:section:load', (event) => initAll(event.target));
+  })();
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "[CB] Racket finder quiz",
+  "tag": "div",
+  "class": "section-wrapper",
+  "blocks": [
+    { "type": "_cb-quiz-content" },
+    { "type": "_cb-quiz-card" }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "label": "Text column width",
+      "info": "Share of the width on large screens; the quiz card takes the rest.",
+      "min": 30,
+      "max": 60,
+      "step": 1,
+      "unit": "%",
+      "default": 46
+    },
+    {
+      "type": "range",
+      "id": "column_gap",
+      "label": "Space between columns",
+      "min": 24,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width",
+      "min": 960,
+      "max": 1800,
+      "step": 20,
+      "unit": "px",
+      "default": 1400
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Card corner radius",
+      "min": 0,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "default": 4
+    },
+    {
+      "type": "checkbox",
+      "id": "show_glow",
+      "label": "Accent glow on the right",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "info": "Used for the heading, questions and answers.",
+      "default": "space_grotesk_n7"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "inter_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#0e0e0e"
+    },
+    {
+      "type": "color",
+      "id": "card_background_color",
+      "label": "Quiz card",
+      "default": "#131313"
+    },
+    {
+      "type": "color",
+      "id": "option_background_color",
+      "label": "Answers",
+      "default": "#171717"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Borders and dividers",
+      "default": "#ffffff14"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "default": "#d71f27"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 88
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 88
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Racket finder quiz",
+      "category": "t:categories.banners",
+      "blocks": {
+        "content": {
+          "type": "_cb-quiz-content",
+          "blocks": {
+            "eyebrow": {
+              "type": "cb-subheader",
+              "settings": { "subheader_text": "Not sure what you need?", "show_dot": true, "letter_spacing": 12 }
+            },
+            "heading": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "Let us find your racket.",
+                "mobile_scale": 80,
+                "line_height": 108,
+                "uppercase": true,
+                "wrap": "wrap"
+              }
+            },
+            "text": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>Tell us your level, playing tactics and string preferences. We will calculate frame weight, flex stiffness and balance point to narrow down to your top 3 calibrated matches.</p>",
+                "line_height": 165,
+                "max_width_unit": "ch",
+                "max_width_ch": 52
+              }
+            },
+            "button": { "type": "_cb-quiz-button", "settings": { "label": "Launch racket finder" } },
+            "features": {
+              "type": "_cb-quiz-features",
+              "blocks": {
+                "feature_1": { "type": "_cb-quiz-feature", "settings": { "feature_text": "60-Second Guided Match" } },
+                "feature_2": { "type": "_cb-quiz-feature", "settings": { "feature_text": "Calibrated to Local Courts" } },
+                "feature_3": { "type": "_cb-quiz-feature", "settings": { "feature_text": "Verified String Pairing" } }
+              },
+              "block_order": ["feature_1", "feature_2", "feature_3"]
+            }
+          },
+          "block_order": ["eyebrow", "heading", "text", "button", "features"]
+        },
+        "card": {
+          "type": "_cb-quiz-card",
+          "blocks": {
+            "level": {
+              "type": "_cb-quiz-question",
+              "settings": { "question_text": "What level do you play at?", "tag_label": "Player profile" },
+              "blocks": {
+                "beginner": {
+                  "type": "_cb-quiz-option",
+                  "settings": {
+                    "option_title": "Beginner",
+                    "option_text": "New to the game or playing socially once a week.",
+                    "match_tags": "beginner, junior, kid, starter"
+                  }
+                },
+                "club": {
+                  "type": "_cb-quiz-option",
+                  "settings": {
+                    "option_title": "Club Intermediate",
+                    "option_text": "Regular club nights, building consistent technique.",
+                    "match_tags": "intermediate"
+                  }
+                },
+                "advanced": {
+                  "type": "_cb-quiz-option",
+                  "settings": {
+                    "option_title": "Advanced & Interclub",
+                    "option_text": "Interclub and tournament play with solid fundamentals.",
+                    "match_tags": "pro, tour"
+                  }
+                },
+                "elite": {
+                  "type": "_cb-quiz-option",
+                  "settings": {
+                    "option_title": "Competitive & Elite",
+                    "option_text": "National-level training, high swing speed and precision.",
+                    "match_tags": "pro, tour"
+                  }
+                }
+              },
+              "block_order": ["beginner", "club", "advanced", "elite"]
+            },
+            "tactics": {
+              "type": "_cb-quiz-question",
+              "settings": { "question_text": "How do you typically win points in rallies?", "tag_label": "Primary tactical style" },
+              "blocks": {
+                "attack": {
+                  "type": "_cb-quiz-option",
+                  "settings": {
+                    "option_title": "Rear-Court Attack",
+                    "option_text": "Aggressive smashes, steep angle clears, heavy baseline offense.",
+                    "match_tags": "Astrox, Thruster, TK, Axforce"
+                  }
+                },
+                "speed": {
+                  "type": "_cb-quiz-option",
+                  "settings": {
+                    "option_title": "Midcourt Drive & Speed",
+                    "option_text": "Fast flat exchanges, rapid doubles counter-attacks.",
+                    "match_tags": "Nanoflare, Jetspeed, Auraspeed, ARS, BladeX, Blade X"
+                  }
+                },
+                "net": {
+                  "type": "_cb-quiz-option",
+                  "settings": {
+                    "option_title": "Net Dominance & Touch",
+                    "option_text": "Tight spinning net shots, deceptive lifts, high touch control.",
+                    "match_tags": "Arcsaber, DriveX, DX, Halbertec"
+                  }
+                },
+                "defence": {
+                  "type": "_cb-quiz-option",
+                  "settings": {
+                    "option_title": "Defensive Consistency",
+                    "option_text": "Returning hard smashes, prolonged patient counter rallies.",
+                    "match_tags": "Arcsaber, Halbertec, Nanoflare"
+                  }
+                }
+              },
+              "block_order": ["attack", "speed", "net", "defence"]
+            },
+            "feel": {
+              "type": "_cb-quiz-question",
+              "settings": { "question_text": "How should the racket feel in your hand?", "tag_label": "Frame weight & balance" },
+              "blocks": {
+                "head_heavy": {
+                  "type": "_cb-quiz-option",
+                  "settings": {
+                    "option_title": "Head-Heavy Power",
+                    "option_text": "Extra mass in the head for heavier smashes and clears.",
+                    "match_tags": "Astrox, Thruster, TK, Axforce"
+                  }
+                },
+                "even": {
+                  "type": "_cb-quiz-option",
+                  "settings": {
+                    "option_title": "Even Balance",
+                    "option_text": "All-round feel that switches easily between attack and defence.",
+                    "match_tags": "Arcsaber, DriveX, DX, Halbertec"
+                  }
+                },
+                "head_light": {
+                  "type": "_cb-quiz-option",
+                  "settings": {
+                    "option_title": "Head-Light Speed",
+                    "option_text": "Quick swings, fast reactions and easy defence at the net.",
+                    "match_tags": "Nanoflare, Jetspeed, Auraspeed, ARS, BladeX, Blade X"
+                  }
+                },
+                "unsure": {
+                  "type": "_cb-quiz-option",
+                  "settings": {
+                    "option_title": "Not Sure Yet",
+                    "option_text": "We'll balance it against your level and playing style."
+                  }
+                }
+              },
+              "block_order": ["head_heavy", "even", "head_light", "unsure"]
+            },
+            "strings": {
+              "type": "_cb-quiz-question",
+              "settings": { "question_text": "What string tension suits your game?", "tag_label": "String pairing" },
+              "blocks": {
+                "soft": {
+                  "type": "_cb-quiz-option",
+                  "settings": { "option_title": "Under 22 lbs", "option_text": "Softer feel, bigger sweet spot and easy power." }
+                },
+                "medium": {
+                  "type": "_cb-quiz-option",
+                  "settings": { "option_title": "22–25 lbs", "option_text": "Balanced repulsion and control for most club players." }
+                },
+                "high": {
+                  "type": "_cb-quiz-option",
+                  "settings": { "option_title": "26 lbs and Above", "option_text": "Crisp feedback and precision for fast, clean strikers." }
+                },
+                "not_sure": {
+                  "type": "_cb-quiz-option",
+                  "settings": { "option_title": "Not Sure", "option_text": "Our Papakura stringers will match tension to your swing." }
+                }
+              },
+              "block_order": ["soft", "medium", "high", "not_sure"]
+            }
+          },
+          "block_order": ["level", "tactics", "feel", "strings"]
+        }
+      },
+      "block_order": ["content", "card"]
+    }
+  ]
+}
+{% endschema %}

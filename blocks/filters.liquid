@@ -29,6 +29,15 @@
   assign filters = filters | default: results.filters
   assign total_active_values = 0
 
+  # On collection pages every filter the store has shows, with the options this collection has none of greyed out (a
+  # filter it has no products for at all shows every option greyed out). Search results keep only their own filters.
+  assign shown_filters = filters
+  assign show_store_filters = false
+  if collection
+    assign shown_filters = collections.all.filters
+    assign show_store_filters = true
+  endif
+
   # Calculate facets margin style
   capture facets_margin_style
     echo '--facets-margin: 0px '
@@ -201,8 +210,23 @@
               {% assign total_active_values = 0 %}
 
               {% capture rendered_filters %}
-                {%- for filter in filters -%}
-                  {% case filter.type %}
+                {%- for shown_filter in shown_filters -%}
+                  {%- liquid
+                    # This collection's own filter (nil when it has no products with it) and the store's
+                    assign filter = shown_filter
+                    assign store_filter = nil
+                    if show_store_filters
+                      assign store_filter = shown_filter
+                      assign filter = nil
+                      for candidate in filters
+                        if candidate.param_name == shown_filter.param_name
+                          assign filter = candidate
+                          break
+                        endif
+                      endfor
+                    endif
+                  -%}
+                  {% case shown_filter.type %}
                     {% when 'price_range' %}
                       {%- liquid
                         if filter.min_value.value != null or filter.max_value.value != null
@@ -216,7 +240,8 @@
                           assign should_render_clear = false
                         endif
 
-                        render 'price-filter', filter: filter, filter_style: block_settings.filter_style, should_render_clear: should_render_clear, id_prefix: 'horizontal'
+                        assign price_filter = filter | default: store_filter
+                        render 'price-filter', filter: price_filter, filter_style: block_settings.filter_style, should_render_clear: should_render_clear, id_prefix: 'horizontal'
                       -%}
                     {% else %}
                       {% liquid
@@ -231,7 +256,7 @@
                         else
                           assign should_render_clear = false
                         endif
-                        render 'list-filter', filter: filter, filter_style: block_settings.filter_style, active_value_count: active_value_count, should_render_clear: should_render_clear, show_swatch_label: block_settings.show_swatch_label, sectionId: section.id
+                        render 'list-filter', filter: filter, store_filter: store_filter, filter_style: block_settings.filter_style, active_value_count: active_value_count, should_render_clear: should_render_clear, show_swatch_label: block_settings.show_swatch_label, sectionId: section.id
                       %}
                   {% endcase %}
                 {%- endfor -%}
@@ -471,8 +496,22 @@
                 {% assign total_active_values = 0 %}
                 {% assign is_active = false %}
 
-                {%- for filter in filters -%}
-                  {% case filter.type %}
+                {%- for shown_filter in shown_filters -%}
+                  {%- liquid
+                    assign filter = shown_filter
+                    assign store_filter = nil
+                    if show_store_filters
+                      assign store_filter = shown_filter
+                      assign filter = nil
+                      for candidate in filters
+                        if candidate.param_name == shown_filter.param_name
+                          assign filter = candidate
+                          break
+                        endif
+                      endfor
+                    endif
+                  -%}
+                  {% case shown_filter.type %}
                     {% when 'price_range' %}
                       {%- liquid
                         if filter.min_value.value != null or filter.max_value.value != null
@@ -480,7 +519,8 @@
                           assign is_active = true
                         endif
 
-                        render 'price-filter', filter: filter, filter_style: 'vertical', should_render_clear: false, id_prefix: 'dialog'
+                        assign price_filter = filter | default: store_filter
+                        render 'price-filter', filter: price_filter, filter_style: 'vertical', should_render_clear: false, id_prefix: 'dialog'
                       -%}
                     {% else %}
                       {% liquid
@@ -490,7 +530,7 @@
 
                         assign active_value_count = filter.active_values | size
                         assign total_active_values = total_active_values | plus: active_value_count
-                        render 'list-filter', filter: filter, filter_style: 'vertical', active_value_count: active_value_count, should_render_clear: false, in_drawer: true, sectionId: section.id
+                        render 'list-filter', filter: filter, store_filter: store_filter, filter_style: 'vertical', active_value_count: active_value_count, should_render_clear: false, in_drawer: true, sectionId: section.id
                       %}
                   {% endcase %}
                 {%- endfor -%}

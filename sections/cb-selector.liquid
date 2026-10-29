@@ -1,0 +1,332 @@
+{%- liquid
+  assign s = section.settings
+  assign font_scope = '#cb-sel-' | append: section.id
+-%}
+
+{% render 'cb-font-styles',
+  selector: font_scope,
+  prefix: 'cbx',
+  heading_font: s.heading_font,
+  body_font: s.body_font
+%}
+
+<section
+  id="cb-sel-{{ section.id }}"
+  class="cb-sel"
+  style="
+    --cbx-bg: {{ s.background_color }};
+    --cbx-card: {{ s.card_background_color }};
+    --cbx-chip: {{ s.chip_background_color }};
+    --cbx-border: {{ s.border_color }};
+    --cbx-text: {{ s.text_color }};
+    --cbx-soft: {{ s.text_color | color_modify: 'alpha', 0.8 }};
+    --cbx-muted: {{ s.text_color | color_modify: 'alpha', 0.55 }};
+    --cbx-accent: {{ s.accent_color }};
+    --cbx-media-bg: {{ s.media_background_color }};
+    --cbx-media-size: {{ s.media_size }}px;
+    --cbx-radius: {{ s.card_radius }}px;
+    --cbx-max-width: {{ s.max_width }}px;
+    --cbx-stack-gap: {{ s.stack_gap }}px;
+    --cbx-pt: {{ s.padding_top }}px;
+    --cbx-pb: {{ s.padding_bottom }}px;
+  "
+>
+  <div class="cb-sel__inner">
+    {% content_for 'blocks' %}
+  </div>
+</section>
+
+{% stylesheet %}
+  .cb-sel {
+    color: var(--cbx-text);
+    background: var(--cbx-bg);
+    padding: calc(var(--cbx-pt) * 0.75) 16px calc(var(--cbx-pb) * 0.75);
+  }
+
+  .cb-sel__inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--cbx-stack-gap);
+    max-width: var(--cbx-max-width);
+    margin-inline: auto;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-sel {
+      padding: var(--cbx-pt) 32px var(--cbx-pb);
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .cb-sel {
+      padding-inline: 48px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Quick selector",
+  "tag": "div",
+  "class": "section-wrapper",
+  "blocks": [
+    { "type": "_cb-sel-header" },
+    { "type": "_cb-sel-cards" }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width",
+      "min": 960,
+      "max": 1800,
+      "step": 20,
+      "unit": "px",
+      "default": 1400
+    },
+    {
+      "type": "range",
+      "id": "stack_gap",
+      "label": "Space between header and cards",
+      "min": 8,
+      "max": 64,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Card corner radius",
+      "min": 0,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "media_size",
+      "label": "Photo size",
+      "min": 56,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 84
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "info": "Used for the heading and card titles.",
+      "default": "space_grotesk_n7"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "inter_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#0d0d0d"
+    },
+    {
+      "type": "color",
+      "id": "card_background_color",
+      "label": "Card background",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "chip_background_color",
+      "label": "Tag background",
+      "default": "#222222"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Borders",
+      "default": "#ffffff14"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "default": "#d71f27"
+    },
+    {
+      "type": "color",
+      "id": "media_background_color",
+      "label": "Photo background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Quick selector",
+      "category": "t:categories.collections",
+      "blocks": {
+        "header": {
+          "type": "_cb-sel-header",
+          "blocks": {
+            "eyebrow": { "type": "cb-subheader", "settings": { "subheader_text": "Quick selector" } },
+            "heading": {
+              "type": "cb-heading",
+              "settings": { "heading_text": "Choose your shuttle", "size": 26, "mobile_scale": 85, "wrap": "wrap" }
+            },
+            "text": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>Start with how and where you play.</p>",
+                "size": 12,
+                "mobile_size": 12,
+                "max_width_unit": "ch",
+                "max_width_ch": 70
+              }
+            }
+          },
+          "block_order": ["eyebrow", "heading", "text"]
+        },
+        "cards": {
+          "type": "_cb-sel-cards",
+          "blocks": {
+            "feather": {
+              "type": "_cb-sel-card",
+              "settings": {
+                "card_eyebrow": "Competition & club standard",
+                "eyebrow_style": "accent",
+                "card_title": "Feather Shuttles",
+                "card_text": "Natural flight, better touch and the preferred choice for club and match play.",
+                "chips": "Natural Flight, Match & Club Play, Premium Portuguese Cork",
+                "match_keywords": "feather, tournament, official",
+                "button_label": "Shop Feather"
+              }
+            },
+            "nylon": {
+              "type": "_cb-sel-card",
+              "settings": {
+                "card_eyebrow": "Training & school spec",
+                "eyebrow_style": "muted",
+                "card_title": "Nylon Shuttles",
+                "card_text": "Durable, affordable and ideal for training, schools, social games and newer players.",
+                "chips": "High Durability, Consistent Flight, Beginner & School Friendly",
+                "match_keywords": "nylon, synthetic, ncs",
+                "button_label": "Shop Nylon"
+              }
+            }
+          },
+          "block_order": ["feather", "nylon"]
+        }
+      },
+      "block_order": ["header", "cards"]
+    },
+    {
+      "name": "[CB] Service selector",
+      "category": "t:categories.collections",
+      "settings": { "stack_gap": 28 },
+      "blocks": {
+        "header": {
+          "type": "_cb-sel-header",
+          "settings": { "alignment": "center", "gap": 8 },
+          "blocks": {
+            "eyebrow": { "type": "cb-subheader", "settings": { "subheader_text": "Quick selector" } },
+            "heading": {
+              "type": "cb-heading",
+              "settings": { "heading_text": "What do you need today?", "size": 34, "mobile_scale": 85, "wrap": "wrap" }
+            },
+            "text": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>Choose a service or shop string directly for your tournament preparation.</p>",
+                "size": 12,
+                "mobile_size": 12,
+                "max_width_unit": "ch",
+                "max_width_ch": 70
+              }
+            }
+          },
+          "block_order": ["eyebrow", "heading", "text"]
+        },
+        "cards": {
+          "type": "_cb-sel-cards",
+          "settings": { "columns": 2, "gap": 20 },
+          "blocks": {
+            "restring": {
+              "type": "_cb-sel-link-card",
+              "settings": {
+                "card_eyebrow": "Service",
+                "card_title": "Get your racket restrung",
+                "card_text": "Bring us your racket and choose your string and tension, or ask the team for a personalized recommendation based on your play style.",
+                "link_label": "Request a restring",
+                "link": "shopify://pages/contact",
+                "icon": "wrench"
+              }
+            },
+            "strings": {
+              "type": "_cb-sel-link-card",
+              "settings": {
+                "card_eyebrow": "String range",
+                "card_title": "Choose your string",
+                "card_text": "Browse available tournament options for feel, durability, control and repulsion from certified brands like Yonex, Victor, and Ashaway.",
+                "link_label": "Shop string",
+                "link": "shopify://collections/stringing",
+                "icon": "target"
+              }
+            }
+          },
+          "block_order": ["restring", "strings"]
+        }
+      },
+      "block_order": ["header", "cards"]
+    }
+  ]
+}
+{% endschema %}

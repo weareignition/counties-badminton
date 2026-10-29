@@ -1,0 +1,91 @@
+{%- doc -%}
+  Puts a [CB] Filter's options in the order of its "Always show these options" text, under the names written there.
+  Each listed name takes the option it names: by its full name, by its name without the bracketed part (Victor for
+  Victor (Taiwan)), or by the same number written another way (7.0 for 7). The options not listed follow in the
+  store's order under their own names. Prints them comma-separated: "c<n>" is this collection's option n, "s<n>" the
+  store's option n, "m<n>" listed option n that no product has yet; a listed option ends with "=" and its listed name.
+
+  @param {string[]} tokens - The filter's options as "c<n>" / "s<n>", in the store's order.
+  @param {object} [filter] - This collection's filter.
+  @param {object} [store_filter] - The same filter across the whole store.
+  @param {string} [wanted] - The "Always show these options" text.
+  @param {string[]} [missing] - Listed options that no product has yet.
+{%- enddoc -%}
+{%- liquid
+  assign done = ','
+  assign ordered = ''
+  assign items = wanted | split: ','
+  for item in items
+    assign item_label = item | strip
+    assign item_key = item_label | downcase
+    # A plain number ("7", "7.0") also matches the same number written another way
+    assign item_number = ''
+    assign item_check = item_key | plus: 0 | append: ''
+    if item_check == item_key
+      assign item_number = item_key | plus: 0 | times: 1.0 | append: ''
+    endif
+
+    assign found = ''
+    for token in tokens
+      assign index = token | remove_first: 'c' | remove_first: 's' | plus: 0
+      assign value = filter.values[index]
+      if token contains 's'
+        assign value = store_filter.values[index]
+      endif
+      assign label_key = value.label | downcase | strip
+      assign short_key = label_key | split: ' (' | first | strip
+      assign label_number = ''
+      assign label_check = label_key | plus: 0 | append: ''
+      if label_check == label_key
+        assign label_number = label_key | plus: 0 | times: 1.0 | append: ''
+      endif
+      if item_key == label_key or item_key == short_key
+        assign found = token
+        break
+      endif
+      if item_number != '' and item_number == label_number
+        assign found = token
+        break
+      endif
+    endfor
+
+    # A listed name the block counted as missing (it only matched by number) is done once its option is placed
+    for name in missing
+      assign name_key = name | strip | downcase
+      if name_key == item_key
+        assign missing_token = 'm' | append: forloop.index0
+        if found == ''
+          assign found = missing_token
+        else
+          assign done = done | append: missing_token | append: ','
+        endif
+      endif
+    endfor
+
+    assign found_key = ',' | append: found | append: ','
+    unless found == '' or done contains found_key
+      assign ordered = ordered | append: found
+      unless found contains 'm'
+        assign ordered = ordered | append: '=' | append: item_label
+      endunless
+      assign ordered = ordered | append: ','
+      assign done = done | append: found | append: ','
+    endunless
+  endfor
+
+  # Then everything not listed, in the store's order
+  for token in tokens
+    assign token_key = ',' | append: token | append: ','
+    unless done contains token_key
+      assign ordered = ordered | append: token | append: ','
+    endunless
+  endfor
+  for name in missing
+    assign token_key = ',m' | append: forloop.index0 | append: ','
+    unless done contains token_key
+      assign ordered = ordered | append: 'm' | append: forloop.index0 | append: ','
+    endunless
+  endfor
+
+  echo ordered
+-%}

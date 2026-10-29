@@ -1,0 +1,389 @@
+{%- comment -%}
+  Stringing builder, string column: the string product's variants as radio rows with their price. Lines in
+  "Strings to show" pick and order the variants ("BG80 | Hard feel, max repulsion" shows the first variant whose
+  name contains BG80, with that description). With no lines, the first variants are shown.
+  An optional labour product is added with the string and included in the price.
+{%- endcomment -%}
+{%- liquid
+  assign s = block.settings
+  assign string_product = s.string_product
+  assign labour = s.labour_product.selected_or_first_available_variant
+
+  assign brand = ''
+  if s.show_brand and string_product != blank
+    assign brand = string_product.title | split: ' ' | first
+  endif
+
+  assign lines = s.string_lines | newline_to_br | split: '<br />'
+  assign has_lines = false
+  for line in lines
+    if line != blank
+      assign has_lines = true
+      break
+    endif
+  endfor
+-%}
+
+<div
+  class="cb-sb-col cb-sb-strings"
+  style="
+    --cb-sb-col-label-size: {{ s.label_size }}px;
+    --cb-sb-col-label-weight: {{ s.label_weight }};
+    --cb-sb-col-title-size: {{ s.title_size }}px;
+    --cb-sb-col-title-weight: {{ s.title_weight }};
+    --cb-sb-strings-name-size: {{ s.string_name_size }}px;
+    --cb-sb-strings-name-weight: {{ s.string_name_weight }};
+    --cb-sb-strings-description-size: {{ s.description_size }}px;
+    --cb-sb-strings-description-weight: {{ s.description_weight }};
+    --cb-sb-strings-price-size: {{ s.price_size }}px;
+    --cb-sb-strings-price-weight: {{ s.price_weight }};
+  "
+  {{ block.shopify_attributes }}
+>
+  {%- if s.label != blank -%}<p class="cb-sb-col__label">{{ s.label | escape }}</p>{%- endif -%}
+  {%- if s.title != blank -%}<h3 class="cb-sb-col__title">{{ s.title | escape }}</h3>{%- endif -%}
+
+  {%- if string_product != blank -%}
+    <div class="cb-sb-strings__list" role="radiogroup" aria-label="{{ s.title | default: s.label | escape }}">
+      {%- assign picked = false -%}
+      {%- if has_lines -%}
+        {%- for line in lines -%}
+          {%- liquid
+            assign parts = line | split: '|'
+            assign key = parts[0] | strip | downcase
+            if key == blank
+              continue
+            endif
+            assign match = nil
+            for v in string_product.variants
+              assign v_title = v.title | downcase
+              if v_title contains key
+                assign match = v
+                break
+              endif
+            endfor
+            if match == nil
+              continue
+            endif
+            assign note = parts[1] | strip
+          -%}
+          {%- render 'cb-sb-string-row', variant: match, brand: brand, note: note, labour: labour, checked: picked, group: block.id -%}
+          {%- if match.available -%}{%- assign picked = true -%}{%- endif -%}
+        {%- endfor -%}
+      {%- else -%}
+        {%- for v in string_product.variants limit: s.max_strings -%}
+          {%- render 'cb-sb-string-row', variant: v, brand: brand, note: '', labour: labour, checked: picked, group: block.id -%}
+          {%- if v.available -%}{%- assign picked = true -%}{%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+    {%- if labour != blank -%}
+      <input type="hidden" data-cb-sb-labour value="{{ labour.id }}">
+    {%- endif -%}
+  {%- endif -%}
+</div>
+
+{% stylesheet %}
+  .cb-sb-strings__list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .cb-sb-string {
+    position: relative;
+    display: block;
+    cursor: pointer;
+  }
+
+  .cb-sb-string .cb-sb-string__input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  .cb-sb-string__card {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 3px 8px;
+    min-height: 50px;
+    box-sizing: border-box;
+    padding: 8px 16px 8px 8px;
+    border: 1px solid transparent;
+    border-radius: 2px;
+    background: var(--cbsb-option, #1f1f1f);
+    transition: border-color 0.2s ease;
+  }
+
+  .cb-sb-string__radio {
+    grid-row: span 2;
+    position: relative;
+    width: 12px;
+    height: 12px;
+    box-sizing: border-box;
+    border: 1px solid rgb(255 255 255 / 0.3);
+    border-radius: 50%;
+  }
+
+  .cb-sb-string__name {
+    font-family: var(--cb-font-heading, var(--font-heading--family));
+    font-weight: var(--cb-sb-strings-name-weight, var(--cb-font-heading-weight, 700));
+    font-size: var(--cb-sb-strings-name-size, 9.5px);
+    line-height: 1.3;
+    color: var(--cb-color-text, #ffffff);
+  }
+
+  .cb-sb-string__note {
+    grid-column: 2;
+    font-family: var(--cb-font-body, var(--font-body--family));
+    font-weight: var(--cb-sb-strings-description-weight, inherit);
+    font-size: var(--cb-sb-strings-description-size, 9px);
+    line-height: 1.3;
+    color: var(--cbsb-grey, #a1a1aa);
+  }
+
+  .cb-sb-string__price {
+    grid-column: 3;
+    grid-row: 1 / span 2;
+    font-family: var(--cb-font-heading, var(--font-heading--family));
+    font-weight: var(--cb-sb-strings-price-weight, var(--cb-font-heading-weight, 700));
+    font-size: var(--cb-sb-strings-price-size, 10px);
+    color: var(--cb-color-text, #ffffff);
+  }
+
+  .cb-sb-string__input:checked + .cb-sb-string__card {
+    border-color: var(--cb-color-accent, #d71f27);
+  }
+
+  .cb-sb-string__input:checked + .cb-sb-string__card .cb-sb-string__radio {
+    border-color: var(--cb-color-accent, #d71f27);
+    background: var(--cb-color-accent, #d71f27);
+  }
+
+  .cb-sb-string__input:checked + .cb-sb-string__card .cb-sb-string__radio::after {
+    content: '';
+    position: absolute;
+    inset: 3px;
+    border-radius: 50%;
+    background: #ffffff;
+  }
+
+  .cb-sb-string:hover .cb-sb-string__input:not(:checked) + .cb-sb-string__card {
+    border-color: rgb(255 255 255 / 0.2);
+  }
+
+  .cb-sb-string__input:focus-visible + .cb-sb-string__card {
+    outline: 2px solid var(--cb-color-text, #ffffff);
+    outline-offset: 2px;
+  }
+
+  .cb-sb-string__input:disabled + .cb-sb-string__card {
+    opacity: 0.45;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] String choice",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "Column 1 • String"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Choose Your String"
+    },
+    {
+      "type": "product",
+      "id": "string_product",
+      "label": "String product",
+      "info": "Its variants are the strings to choose from."
+    },
+    {
+      "type": "textarea",
+      "id": "string_lines",
+      "label": "Strings to show",
+      "info": "One per line: part of the variant name | short description. Leave empty to show the first variants.",
+      "default": "BG80 | Hard feel, max repulsion\nBG66 Ultimax | High hitting sound, thin 0.65mm\nBG65 | Durable all-rounder, 0.70mm"
+    },
+    {
+      "type": "range",
+      "id": "max_strings",
+      "label": "Strings shown without lines",
+      "min": 1,
+      "max": 12,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "checkbox",
+      "id": "show_brand",
+      "label": "Put the brand before each name",
+      "info": "The first word of the product title, e.g. Yonex.",
+      "default": true
+    },
+    {
+      "type": "product",
+      "id": "labour_product",
+      "label": "Stringing labour product",
+      "info": "Optional. Added with the string, and its price is included in each string's price."
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "label_size",
+      "label": "Column label size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "select",
+      "id": "label_weight",
+      "label": "Column label weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Column title size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Column title weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "string_name_size",
+      "label": "String name size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 9.5
+    },
+    {
+      "type": "select",
+      "id": "string_name_weight",
+      "label": "String name weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "description_size",
+      "label": "Description size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 9
+    },
+    {
+      "type": "select",
+      "id": "description_weight",
+      "label": "Description weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "price_size",
+      "label": "Price size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "price_weight",
+      "label": "Price weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    }
+  ],
+  "presets": [{ "name": "[CB] String choice" }]
+}
+{% endschema %}

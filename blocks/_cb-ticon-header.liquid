@@ -1,0 +1,109 @@
+<div
+  class="cb-ticons__header cb-ticons__header--{{ block.settings.alignment }}{% if block.settings.text_position == 'right' %} cb-ticons__header--split{% endif %}"
+  style="--cbtc-header-gap: {{ block.settings.gap }}px;"
+  {{ block.shopify_attributes }}
+>
+  {% content_for 'blocks' %}
+</div>
+
+{% stylesheet %}
+  .cb-ticons__header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--cbtc-header-gap, 7px);
+    min-width: 0;
+  }
+
+  .cb-ticons__header--center {
+    align-items: center;
+    text-align: center;
+  }
+
+  /* Paragraph to the right of the eyebrow and heading on wider screens; phones stack it underneath. */
+  @media screen and (min-width: 990px) {
+    .cb-ticons__header.cb-ticons__header--split {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: end;
+      gap: var(--cbtc-header-gap, 7px) 48px;
+      text-align: left;
+    }
+
+    .cb-ticons__header--split > * {
+      grid-column: 1;
+    }
+
+    .cb-ticons__header--split > .cb-paragraph {
+      grid-column: 2;
+      grid-row: 1 / span 3;
+      align-self: end;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Header",
+  "tag": null,
+  "blocks": [
+    { "type": "cb-subheader" },
+    { "type": "cb-heading" },
+    { "type": "cb-paragraph" },
+    { "type": "cb-button" }
+  ],
+  "settings": [
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "text_position",
+      "label": "Paragraph position",
+      "info": "Right of heading applies on desktop; phones and tablets show it underneath.",
+      "options": [
+        { "value": "below", "label": "Below heading" },
+        { "value": "right", "label": "Right of heading" }
+      ],
+      "default": "below"
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Space between lines",
+      "min": 0,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 7
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Header",
+      "settings": { "text_position": "right" },
+      "blocks": {
+        "eyebrow": { "type": "cb-subheader", "settings": { "subheader_text": "Shop by type", "letter_spacing": 0 } },
+        "heading": { "type": "cb-heading", "settings": { "heading_text": "Gear up for the court.", "wrap": "wrap" } },
+        "text": {
+          "type": "cb-paragraph",
+          "settings": {
+            "body_text": "<p>Shirts, shorts, compression and support gear for training and match play, available online and at the Papakura Pro Shop.</p>",
+            "letter_spacing": -1,
+            "max_width_unit": "px",
+            "max_width_px": 440
+          }
+        }
+      },
+      "block_order": ["eyebrow", "heading", "text"]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,63 @@
+<ul
+  class="cb-quiz__features{% if block.settings.show_divider %} cb-quiz__features--divider{% endif %}"
+  role="list"
+  style="--cbq-feature-gap: {{ block.settings.gap }}px;"
+  {{ block.shopify_attributes }}
+>
+  {% content_for 'blocks' %}
+</ul>
+
+{% stylesheet %}
+  .cb-quiz__features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px var(--cbq-feature-gap, 26px);
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .cb-quiz__features--divider {
+    margin-top: 8px;
+    padding-top: 20px;
+    border-top: 1px solid var(--cbq-border);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Features",
+  "tag": null,
+  "blocks": [{ "type": "_cb-quiz-feature" }],
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_divider",
+      "label": "Line above",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Space between features",
+      "min": 8,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 26
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Features",
+      "blocks": {
+        "feature_1": { "type": "_cb-quiz-feature", "settings": { "feature_text": "60-Second Guided Match" } },
+        "feature_2": { "type": "_cb-quiz-feature", "settings": { "feature_text": "Calibrated to Local Courts" } },
+        "feature_3": { "type": "_cb-quiz-feature", "settings": { "feature_text": "Verified String Pairing" } }
+      },
+      "block_order": ["feature_1", "feature_2", "feature_3"]
+    }
+  ]
+}
+{% endschema %}

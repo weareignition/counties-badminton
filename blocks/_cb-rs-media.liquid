@@ -1,0 +1,371 @@
+{%- liquid
+  assign image = block.settings.image
+  assign fill = false
+  if block.settings.image_ratio == 'fill'
+    assign fill = true
+  endif
+  assign has_caption = false
+  if block.settings.overlay_title != blank or block.settings.overlay_text != blank
+    assign has_caption = true
+  endif
+-%}
+
+<figure
+  class="cb-rs__media{% if fill %} cb-rs__media--fill{% endif %}"
+  style="
+    {% unless fill %}--cbr-ratio: {{ block.settings.image_ratio }};{% endunless %}
+    --cbr-ratio-mobile: {{ block.settings.image_ratio_mobile }};
+    --cbr-focal: {{ image.presentation.focal_point | default: 'center' }};
+    --cb-rs-media-title-size: {{ block.settings.title_size }}px;
+    --cb-rs-media-title-weight: {{ block.settings.title_weight }};
+    --cb-rs-media-subtitle-size: {{ block.settings.subtitle_size }}px;
+    --cb-rs-media-subtitle-weight: {{ block.settings.subtitle_weight }};
+    --cb-rs-media-tag-size: {{ block.settings.tag_size }}px;
+    --cb-rs-media-tag-weight: {{ block.settings.tag_weight }};
+  "
+  {{ block.shopify_attributes }}
+>
+  {%- if image != blank -%}
+    {{
+      image
+      | image_url: width: 1800
+      | image_tag:
+        widths: '400, 600, 800, 1000, 1200, 1500, 1800',
+        sizes: '(min-width: 990px) 55vw, 100vw',
+        loading: 'lazy',
+        class: 'cb-rs__image'
+    }}
+  {%- else -%}
+    {{ 'lifestyle-2' | placeholder_svg_tag: 'cb-rs__image cb-rs__image--placeholder' }}
+  {%- endif -%}
+
+  {%- if has_caption or block.settings.tag_text != blank -%}
+    <figcaption class="cb-rs__overlay{% if block.settings.shade %} cb-rs__overlay--shade{% endif %}">
+      {%- if has_caption -%}
+        <span class="cb-rs__caption">
+          {%- if block.settings.custom_icon != blank or block.settings.overlay_icon != 'none' -%}
+            <span class="cb-rs__caption-icon" aria-hidden="true">
+              {%- if block.settings.custom_icon != blank -%}
+                {%- render 'cb-icon-upload', image: block.settings.custom_icon, size: 20, tint: block.settings.custom_icon_tint -%}
+              {%- else -%}
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  {%- case block.settings.overlay_icon -%}
+                    {%- when 'check' -%}
+                      <circle cx="12" cy="12" r="9"/><path d="m8.5 12.5 2.5 2.5 4.5-5"/>
+                    {%- when 'shield' -%}
+                      <path d="M12 3 4.5 6v5.5c0 4.6 3.2 8.1 7.5 9.5 4.3-1.4 7.5-4.9 7.5-9.5V6z"/><path d="m9 12 2 2 4-4"/>
+                    {%- when 'star' -%}
+                      <path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/>
+                    {%- when 'tools' -%}
+                      <path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.4-.6-.6-2.4z"/>
+                  {%- endcase -%}
+                </svg>
+              {%- endif -%}
+            </span>
+          {%- endif -%}
+          <span class="cb-rs__caption-body">
+            {%- if block.settings.overlay_title != blank -%}
+              <span class="cb-rs__caption-title">{{ block.settings.overlay_title | escape }}</span>
+            {%- endif -%}
+            {%- if block.settings.overlay_text != blank -%}
+              <span class="cb-rs__caption-text">{{ block.settings.overlay_text | escape }}</span>
+            {%- endif -%}
+          </span>
+        </span>
+      {%- endif -%}
+      {%- if block.settings.tag_text != blank -%}
+        <span class="cb-rs__tag">{{ block.settings.tag_text | escape }}</span>
+      {%- endif -%}
+    </figcaption>
+  {%- endif -%}
+</figure>
+
+{% stylesheet %}
+  .cb-rs__media {
+    position: relative;
+    min-width: 0;
+    margin: 0;
+    overflow: hidden;
+    border-radius: var(--cbr-radius);
+    background: var(--cbr-card);
+    aspect-ratio: var(--cbr-ratio-mobile, 4 / 3);
+  }
+
+  .cb-rs__media .cb-rs__image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: var(--cbr-focal, center);
+  }
+
+  .cb-rs__image--placeholder {
+    fill: var(--cbr-muted);
+  }
+
+  /* Caption bottom-left, tag bottom-right; the tag drops under the caption when space runs out. */
+  .cb-rs__overlay {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 10px 16px;
+    padding: 40px 16px 14px;
+  }
+
+  .cb-rs__overlay--shade {
+    background: linear-gradient(to top, rgb(0 0 0 / 0.8), rgb(0 0 0 / 0));
+  }
+
+  .cb-rs__caption {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+  }
+
+  .cb-rs__caption-icon {
+    display: inline-flex;
+    flex: none;
+    color: var(--cbr-accent);
+  }
+
+  .cb-rs__caption-body {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  .cb-rs__caption-title {
+    font-family: var(--cbr-font-heading);
+    font-weight: var(--cb-rs-media-title-weight, var(--cbr-font-heading-weight));
+    font-size: var(--cb-rs-media-title-size, 15px);
+    line-height: 1.2;
+    color: #fff;
+  }
+
+  .cb-rs__caption-text {
+    font-family: var(--cbr-font-body);
+    font-weight: var(--cb-rs-media-subtitle-weight, inherit);
+    font-size: var(--cb-rs-media-subtitle-size, 10px);
+    line-height: 1.4;
+    color: rgb(255 255 255 / 0.72);
+  }
+
+  .cb-rs__tag {
+    flex: none;
+    padding: 4px 10px;
+    border: 1px solid rgb(255 255 255 / 0.55);
+    border-radius: 2px;
+    background: rgb(0 0 0 / 0.55);
+    font-family: var(--cbr-font-body);
+    font-weight: var(--cb-rs-media-tag-weight, var(--cbr-font-body-strong));
+    font-size: var(--cb-rs-media-tag-size, 10px);
+    line-height: 1.4;
+    color: #fff;
+  }
+
+  @media screen and (min-width: 990px) {
+    .cb-rs__media {
+      aspect-ratio: var(--cbr-ratio, 16 / 10);
+    }
+
+    /* "Match the text": the photo stretches to the text column's height. */
+    .cb-rs__media--fill {
+      align-self: stretch;
+      min-height: 320px;
+      aspect-ratio: auto;
+    }
+
+    .cb-rs__overlay {
+      padding: 56px 20px 18px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Photo",
+  "tag": null,
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "Shape on large screens",
+      "options": [
+        { "value": "16 / 10", "label": "Landscape" },
+        { "value": "4 / 3", "label": "Standard" },
+        { "value": "1 / 1", "label": "Square" },
+        { "value": "fill", "label": "Match the text height" }
+      ],
+      "default": "16 / 10"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio_mobile",
+      "label": "Shape on phones and tablets",
+      "options": [
+        { "value": "4 / 3", "label": "Landscape" },
+        { "value": "1 / 1", "label": "Square" },
+        { "value": "4 / 5", "label": "Portrait" }
+      ],
+      "default": "4 / 3"
+    },
+    {
+      "type": "header",
+      "content": "Caption"
+    },
+    {
+      "type": "select",
+      "id": "overlay_icon",
+      "label": "Icon",
+      "options": [
+        { "value": "check", "label": "Tick" },
+        { "value": "shield", "label": "Shield" },
+        { "value": "star", "label": "Star" },
+        { "value": "tools", "label": "Tools" },
+        { "value": "none", "label": "None" }
+      ],
+      "default": "check"
+    },
+    {
+      "type": "image_picker",
+      "id": "custom_icon",
+      "label": "Custom icon",
+      "info": "Upload your own SVG (or PNG). It replaces the built-in icon above."
+    },
+    {
+      "type": "checkbox",
+      "id": "custom_icon_tint",
+      "label": "Colour it like the built-in icons",
+      "info": "For one-colour SVGs: uses this section's icon colour. Turn off to keep the file's own colours.",
+      "default": true,
+      "visible_if": "{{ block.settings.custom_icon != blank }}"
+    },
+    {
+      "type": "text",
+      "id": "overlay_title",
+      "label": "Title",
+      "default": "Official Certified Technicians"
+    },
+    {
+      "type": "text",
+      "id": "overlay_text",
+      "label": "Subtitle",
+      "default": "Counties Manukau Badminton Association Pro Shop Workshop"
+    },
+    {
+      "type": "text",
+      "id": "tag_text",
+      "label": "Tag (bottom right)",
+      "default": "Papakura Stadium"
+    },
+    {
+      "type": "checkbox",
+      "id": "shade",
+      "label": "Dark fade behind the caption",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Title size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Title weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size",
+      "label": "Subtitle size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "subtitle_weight",
+      "label": "Subtitle weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "tag_size",
+      "label": "Tag size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "tag_weight",
+      "label": "Tag weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    }
+  ],
+  "presets": [{ "name": "[CB] Photo" }]
+}
+{% endschema %}

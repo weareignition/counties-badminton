@@ -1,0 +1,471 @@
+{%- assign points = block.settings.points | newline_to_br | split: '<br />' -%}
+<article
+  class="cb-speed-tcard{% if block.settings.highlight %} cb-speed-tcard--highlight{% endif %}"
+  style="
+    --cb-speed-tcard-label-size: {{ block.settings.label_size }}px;
+    --cb-speed-tcard-label-weight: {{ block.settings.label_weight }};
+    --cb-speed-tcard-tag-size: {{ block.settings.tag_size }}px;
+    --cb-speed-tcard-tag-weight: {{ block.settings.tag_weight }};
+    --cb-speed-tcard-title-size: {{ block.settings.title_size }}px;
+    --cb-speed-tcard-title-weight: {{ block.settings.title_weight }};
+    --cb-speed-tcard-points-size: {{ block.settings.points_size }}px;
+    --cb-speed-tcard-points-weight: {{ block.settings.points_weight }};
+    --cb-speed-tcard-footer-label-size: {{ block.settings.footer_label_size }}px;
+    --cb-speed-tcard-footer-label-weight: {{ block.settings.footer_label_weight }};
+    --cb-speed-tcard-footer-text-size: {{ block.settings.footer_text_size }}px;
+    --cb-speed-tcard-footer-text-weight: {{ block.settings.footer_text_weight }};
+    --cb-speed-tcard-tab-size: {{ block.settings.tab_size }}px;
+    --cb-speed-tcard-tab-weight: {{ block.settings.tab_weight }};
+  "
+  {{ block.shopify_attributes }}
+>
+  {%- if block.settings.highlight and block.settings.highlight_label != blank -%}
+    <span class="cb-speed-tcard__flag">{{ block.settings.highlight_label | escape }}</span>
+  {%- endif -%}
+
+  <div class="cb-speed-tcard__top">
+    {%- if block.settings.card_label != blank -%}
+      <p class="cb-speed-tcard__label">{{ block.settings.card_label | escape }}</p>
+    {%- endif -%}
+    {%- if block.settings.range_tag != blank -%}
+      <span class="cb-speed-tcard__tag">{{ block.settings.range_tag | escape }}</span>
+    {%- endif -%}
+  </div>
+
+  {%- if block.settings.card_title != blank -%}
+    <h3 class="cb-speed-tcard__title">{{ block.settings.card_title | escape }}</h3>
+  {%- endif -%}
+
+  {%- if block.settings.points != blank -%}
+    <ul class="cb-speed-tcard__points" role="list">
+      {%- for point in points -%}
+        {%- assign point_text = point | strip -%}
+        {%- if point_text != blank -%}
+          <li>{{ point_text | escape }}</li>
+        {%- endif -%}
+      {%- endfor -%}
+    </ul>
+  {%- endif -%}
+
+  {%- if block.settings.suited_label != blank or block.settings.suited_text != blank -%}
+    <div class="cb-speed-tcard__suited">
+      {%- if block.settings.suited_label != blank -%}
+        <p class="cb-speed-tcard__suited-label">{{ block.settings.suited_label | escape }}</p>
+      {%- endif -%}
+      {%- if block.settings.suited_text != blank -%}
+        <p class="cb-speed-tcard__suited-text">{{ block.settings.suited_text | escape }}</p>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+</article>
+
+{% stylesheet %}
+  .cb-speed-tcard {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 0;
+    height: 100%;
+    padding: 20px;
+    border: 1px solid var(--cbd-border);
+    border-radius: var(--cbd-radius);
+    background: var(--cbd-card);
+  }
+
+  .cb-speed-tcard--highlight {
+    border-color: var(--cbd-accent);
+    box-shadow: 0 0 28px var(--cbd-glow);
+  }
+
+  .cb-speed-tcard__flag {
+    position: absolute;
+    top: 0;
+    right: 14px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: var(--cbd-accent);
+    font-family: var(--cbd-font-body);
+    font-weight: var(--cb-speed-tcard-tab-weight, var(--cbd-font-body-strong));
+    font-size: var(--cb-speed-tcard-tab-size, 9px);
+    line-height: 1.3;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #fff;
+    transform: translateY(-50%);
+  }
+
+  .cb-speed-tcard__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 4px;
+  }
+
+  .cb-speed-tcard__label,
+  .cb-speed-tcard__suited-label {
+    margin: 0;
+    font-family: var(--cbd-font-body);
+    font-weight: var(--cb-speed-tcard-label-weight, var(--cbd-font-body-strong));
+    font-size: var(--cb-speed-tcard-label-size, 9px);
+    line-height: 1.4;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--cbd-muted);
+  }
+
+  .cb-speed-tcard__suited-label {
+    font-weight: var(--cb-speed-tcard-footer-label-weight, var(--cbd-font-body-strong));
+    font-size: var(--cb-speed-tcard-footer-label-size, 9px);
+  }
+
+  .cb-speed-tcard--highlight .cb-speed-tcard__label {
+    color: var(--cbd-accent);
+  }
+
+  .cb-speed-tcard__tag {
+    flex: none;
+    margin-left: auto;
+    padding: 3px 8px;
+    border: 1px solid var(--cbd-accent);
+    border-radius: 2px;
+    font-family: var(--cbd-font-body);
+    font-weight: var(--cb-speed-tcard-tag-weight, var(--cbd-font-body-strong));
+    font-size: var(--cb-speed-tcard-tag-size, 9px);
+    line-height: 1.3;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--cbd-accent);
+  }
+
+  .cb-speed-tcard__title {
+    margin: 4px 0 4px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--cbd-border-strong);
+    font-family: var(--cbd-font-heading);
+    font-weight: var(--cb-speed-tcard-title-weight, var(--cbd-font-heading-weight));
+    font-size: var(--cb-speed-tcard-title-size, 19px);
+    line-height: 1.2;
+    text-transform: uppercase;
+    color: var(--cbd-text);
+  }
+
+  .cb-speed-tcard__points {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin: 0 0 6px;
+    padding: 0;
+    list-style: none;
+  }
+
+  .cb-speed-tcard__points li {
+    display: flex;
+    align-items: baseline;
+    gap: 9px;
+    font-family: var(--cbd-font-body);
+    font-weight: var(--cb-speed-tcard-points-weight, inherit);
+    font-size: var(--cb-speed-tcard-points-size, 11px);
+    line-height: 1.5;
+    color: var(--cbd-soft);
+  }
+
+  .cb-speed-tcard__points li::before {
+    content: '';
+    flex: none;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--cbd-accent);
+    transform: translateY(-1px);
+  }
+
+  .cb-speed-tcard__suited {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: auto;
+    padding-top: 14px;
+    border-top: 1px solid var(--cbd-border);
+  }
+
+  .cb-speed-tcard__suited-text {
+    margin: 0;
+    font-family: var(--cbd-font-body);
+    font-weight: var(--cb-speed-tcard-footer-text-weight, inherit);
+    font-size: var(--cb-speed-tcard-footer-text-size, 11px);
+    line-height: 1.55;
+    color: var(--cbd-soft);
+  }
+
+  .cb-speed-tcard--highlight .cb-speed-tcard__points li,
+  .cb-speed-tcard--highlight .cb-speed-tcard__suited-text {
+    color: var(--cbd-text);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Tension card",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "card_label",
+      "label": "Label",
+      "default": "Medium tension"
+    },
+    {
+      "type": "text",
+      "id": "range_tag",
+      "label": "Range tag",
+      "default": "24–26 lbs"
+    },
+    {
+      "type": "text",
+      "id": "card_title",
+      "label": "Title",
+      "info": "Shown in capitals.",
+      "default": "Balanced response"
+    },
+    {
+      "type": "textarea",
+      "id": "points",
+      "label": "Points",
+      "info": "One per line.",
+      "default": "Power + control\nFamiliar all-round feel\nGreat starting point for club players"
+    },
+    {
+      "type": "text",
+      "id": "suited_label",
+      "label": "Footer label",
+      "default": "Best suited for"
+    },
+    {
+      "type": "textarea",
+      "id": "suited_text",
+      "label": "Footer text",
+      "default": "Regular club players looking for the optimal starting point."
+    },
+    {
+      "type": "header",
+      "content": "Highlight"
+    },
+    {
+      "type": "checkbox",
+      "id": "highlight",
+      "label": "Highlight this card",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "highlight_label",
+      "label": "Tab text",
+      "default": "CMBA popular starting point",
+      "visible_if": "{{ block.settings.highlight }}"
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "label_size",
+      "label": "Label size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 9
+    },
+    {
+      "type": "select",
+      "id": "label_weight",
+      "label": "Label weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "tag_size",
+      "label": "Range tag size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 9
+    },
+    {
+      "type": "select",
+      "id": "tag_weight",
+      "label": "Range tag weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Title size",
+      "min": 10,
+      "max": 56,
+      "step": 0.5,
+      "unit": "px",
+      "default": 19
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Title weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "points_size",
+      "label": "Points size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "select",
+      "id": "points_weight",
+      "label": "Points weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "footer_label_size",
+      "label": "Footer label size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 9
+    },
+    {
+      "type": "select",
+      "id": "footer_label_weight",
+      "label": "Footer label weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "footer_text_size",
+      "label": "Footer text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "select",
+      "id": "footer_text_weight",
+      "label": "Footer text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "tab_size",
+      "label": "Tab text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 9
+    },
+    {
+      "type": "select",
+      "id": "tab_weight",
+      "label": "Tab text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    }
+  ],
+  "presets": [{ "name": "[CB] Tension card" }]
+}
+{% endschema %}

@@ -1,0 +1,56 @@
+<div
+  class="cb-support__buttons"
+  style="--cbsu-button-gap: {{ block.settings.gap }}px;"
+  {{ block.shopify_attributes }}
+>
+  {% content_for 'blocks' %}
+</div>
+
+{% stylesheet %}
+  .cb-support__buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--cbsu-button-gap, 14px);
+  }
+
+  /* Phones: buttons fill the width, one per row once they wrap. */
+  @media screen and (max-width: 749px) {
+    .cb-support__buttons {
+      align-self: stretch;
+    }
+
+    .cb-support__buttons > .cb-support__button {
+      flex: 1 1 auto;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Buttons",
+  "tag": null,
+  "blocks": [{ "type": "_cb-support-button" }],
+  "settings": [
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Space between buttons",
+      "min": 4,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Buttons",
+      "blocks": {
+        "shop": { "type": "_cb-support-button", "settings": { "label": "Shop McDavid support", "link": "/search?type=product&q=mcdavid", "style": "primary" } },
+        "ask": { "type": "_cb-support-button", "settings": { "label": "Ask the Pro Shop", "link": "shopify://pages/contact", "style": "secondary" } }
+      },
+      "block_order": ["shop", "ask"]
+    }
+  ]
+}
+{% endschema %}

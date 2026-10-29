@@ -1,0 +1,99 @@
+<div
+  class="cb-brands__header{% if block.settings.show_divider %} cb-brands__header--divider{% endif %}"
+  {{ block.shopify_attributes }}
+>
+  {% content_for 'blocks' %}
+</div>
+
+{% stylesheet %}
+  .cb-brands__header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+    min-width: 0;
+  }
+
+  .cb-brands__header > .cb-paragraph {
+    margin-top: 4px;
+  }
+
+  .cb-brands__header--divider {
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--cbb-border);
+  }
+
+  /* Eyebrow and heading on the left, intro text bottom-right, whatever the block order. */
+  @media screen and (min-width: 990px) {
+    .cb-brands__header {
+      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-rows: auto auto;
+      grid-auto-flow: row dense;
+      column-gap: 48px;
+    }
+
+    .cb-brands__header > * {
+      grid-column: 1;
+    }
+
+    .cb-brands__header > .cb-paragraph {
+      grid-column: 2;
+      grid-row: 1 / -1;
+      align-self: end;
+      margin-top: 0;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Header",
+  "tag": null,
+  "blocks": [
+    { "type": "cb-subheader" },
+    { "type": "cb-heading" },
+    { "type": "cb-paragraph" },
+    { "type": "cb-button" }
+  ],
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_divider",
+      "label": "Line below",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Header",
+      "blocks": {
+        "eyebrow": {
+          "type": "cb-subheader",
+          "settings": { "subheader_text": "Official brand stockists", "show_dot": true, "letter_spacing": 12 }
+        },
+        "heading": {
+          "type": "cb-heading",
+          "settings": {
+            "heading_text": "Looking for a specific brand?",
+            "size": 28,
+            "mobile_scale": 80,
+            "line_height": 110,
+            "uppercase": true,
+            "wrap": "wrap"
+          }
+        },
+        "intro": {
+          "type": "cb-paragraph",
+          "settings": {
+            "body_text": "<p>While we recommend choosing by play style first, we carry certified genuine stock from all four premier manufacturers.</p>",
+            "size": 12,
+            "mobile_size": 12,
+            "max_width_unit": "px",
+            "max_width_px": 360
+          }
+        }
+      },
+      "block_order": ["eyebrow", "heading", "intro"]
+    }
+  ]
+}
+{% endschema %}

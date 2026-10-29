@@ -1,0 +1,93 @@
+{%- comment -%}
+  Square logo tile. Without a chosen image it uses the store's square logo (Settings → Brand), then the favicon.
+{%- endcomment -%}
+{%- liquid
+  assign logo = block.settings.image
+  if logo == blank
+    assign logo = shop.brand.square_logo
+  endif
+  if logo == blank
+    assign logo = settings.favicon
+  endif
+-%}
+
+{%- if logo != blank -%}
+  <div
+    class="cb-visit__logo"
+    style="
+      --cbv-logo-size: {{ block.settings.size }}px;
+      --cbv-logo-bg: {{ block.settings.background }};
+      --cbv-logo-pad: {{ block.settings.inner_padding }}px;
+    "
+    {{ block.shopify_attributes }}
+  >
+    {{
+      logo
+      | image_url: width: 200
+      | image_tag: widths: '100, 200', sizes: '96px', alt: shop.name, class: 'cb-visit__logo-image'
+    }}
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  .cb-visit__logo {
+    display: flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: var(--cbv-logo-size, 52px);
+    height: var(--cbv-logo-size, 52px);
+    padding: var(--cbv-logo-pad, 6px);
+    overflow: hidden;
+    border-radius: 3px;
+    background: var(--cbv-logo-bg, #fff);
+  }
+
+  .cb-visit__logo-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Logo",
+  "tag": null,
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Logo",
+      "info": "Leave empty to use your square logo (Settings → Brand) or, failing that, the favicon."
+    },
+    {
+      "type": "range",
+      "id": "size",
+      "label": "Size",
+      "min": 36,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "default": 52
+    },
+    {
+      "type": "range",
+      "id": "inner_padding",
+      "label": "Inner padding",
+      "min": 0,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "default": 6
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Tile background",
+      "default": "#ffffff"
+    }
+  ],
+  "presets": [{ "name": "[CB] Logo" }]
+}
+{% endschema %}

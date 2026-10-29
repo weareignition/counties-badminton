@@ -1,0 +1,282 @@
+{%- comment -%}
+  One answer. "Matches" lists racket traits this answer favours (see the Results block for the trait names);
+  the price range, when set, favours rackets inside it.
+{%- endcomment -%}
+{%- liquid
+  assign terms = '|'
+  assign raw_terms = block.settings.match_terms | split: ','
+  for raw in raw_terms
+    assign term = raw | strip | handleize
+    if term != blank
+      assign terms = terms | append: term | append: '|'
+    endif
+  endfor
+  assign min_cents = ''
+  if block.settings.price_min != blank
+    assign min_cents = block.settings.price_min | times: 100
+  endif
+  assign max_cents = ''
+  if block.settings.price_max != blank
+    assign max_cents = block.settings.price_max | times: 100
+  endif
+-%}
+<button
+  type="button"
+  class="cb-rmatch-opt"
+  role="radio"
+  aria-checked="false"
+  data-cb-rmatch-option
+  data-match="{{ terms }}"
+  data-min="{{ min_cents }}"
+  data-max="{{ max_cents }}"
+  style="
+    --cb-rmatch-option-title-size: {{ block.settings.title_size }}px;
+    --cb-rmatch-option-title-weight: {{ block.settings.title_weight }};
+    --cb-rmatch-option-text-size: {{ block.settings.text_size }}px;
+    --cb-rmatch-option-text-weight: {{ block.settings.text_weight }};
+    --cb-rmatch-option-tag-size: {{ block.settings.tag_size }}px;
+    --cb-rmatch-option-tag-weight: {{ block.settings.tag_weight }};
+  "
+  {{ block.shopify_attributes }}
+>
+  <span class="cb-rmatch-opt__radio" aria-hidden="true"></span>
+  <span class="cb-rmatch-opt__title">{{ block.settings.option_title | escape }}</span>
+  {%- if block.settings.option_text != blank -%}
+    <span class="cb-rmatch-opt__text">{{ block.settings.option_text | escape }}</span>
+  {%- endif -%}
+  {%- if block.settings.tag != blank -%}
+    <span class="cb-rmatch-opt__tag">{{ block.settings.tag | escape }}</span>
+  {%- endif -%}
+</button>
+
+{% stylesheet %}
+  .cb-rmatch-opt {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 0;
+    margin: 0;
+    padding: 20px 40px 22px 22px;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    background: var(--cbrm-option);
+    color: var(--cbrm-text);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .cb-rmatch-opt:hover {
+    background: color-mix(in srgb, var(--cbrm-text) 4%, var(--cbrm-option));
+  }
+
+  .cb-rmatch-opt[aria-checked='true'] {
+    border-color: color-mix(in srgb, var(--cbrm-accent) 75%, transparent);
+    background: var(--cbrm-option-selected);
+  }
+
+  .cb-rmatch-opt:focus-visible {
+    outline: 2px solid var(--cbrm-text);
+    outline-offset: 2px;
+  }
+
+  .cb-rmatch-opt__radio {
+    position: absolute;
+    top: 22px;
+    right: 22px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--cbrm-radio);
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .cb-rmatch-opt[aria-checked='true'] .cb-rmatch-opt__radio {
+    background: var(--cbrm-text);
+    box-shadow: inset 0 0 0 5px var(--cbrm-accent);
+  }
+
+  .cb-rmatch-opt__title {
+    font-family: var(--cbrm-font-heading);
+    font-weight: var(--cb-rmatch-option-title-weight, var(--cbrm-font-heading-regular-weight));
+    font-size: calc(var(--cb-rmatch-option-title-size, 22px) * 20 / 22);
+    line-height: 1.25;
+  }
+
+  .cb-rmatch-opt__text {
+    margin-top: 10px;
+    font-family: var(--cbrm-font-body);
+    font-weight: var(--cb-rmatch-option-text-weight, var(--cbrm-font-body-weight));
+    font-size: var(--cb-rmatch-option-text-size, 12px);
+    line-height: 1.55;
+    color: var(--cbrm-muted);
+  }
+
+  .cb-rmatch-opt__tag {
+    margin-top: 16px;
+    padding: 5px 8px;
+    border-radius: 2px;
+    background: var(--cbrm-bg);
+    font-family: var(--cbrm-font-body);
+    font-weight: var(--cb-rmatch-option-tag-weight, var(--cbrm-font-body-strong));
+    font-size: var(--cb-rmatch-option-tag-size, 9px);
+    line-height: 1.2;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    color: var(--cbrm-accent);
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-rmatch-opt__title {
+      font-size: var(--cb-rmatch-option-title-size, 22px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cb-rmatch-opt,
+    .cb-rmatch-opt__radio {
+      transition: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Answer",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "option_title",
+      "label": "Title",
+      "default": "Attack"
+    },
+    {
+      "type": "textarea",
+      "id": "option_text",
+      "label": "Text",
+      "default": "Pressure, steep overhead angles, and heavier rear-court smash power."
+    },
+    {
+      "type": "text",
+      "id": "tag",
+      "label": "Tag",
+      "info": "Optional small label, shown in capitals."
+    },
+    {
+      "type": "header",
+      "content": "Matching"
+    },
+    {
+      "type": "text",
+      "id": "match_terms",
+      "label": "Favours rackets with",
+      "info": "Comma separated traits, e.g. style-attack, balance-head-heavy, flex-stiff, level-beginner, weight-4u, or any product tag. Leave empty for no preference.",
+      "default": "style-attack, balance-head-heavy"
+    },
+    {
+      "type": "number",
+      "id": "price_min",
+      "label": "Budget from ($)",
+      "info": "Optional. Rackets inside the budget rank first."
+    },
+    {
+      "type": "number",
+      "id": "price_max",
+      "label": "Budget up to ($)"
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Title size",
+      "info": "Scaled down on phones.",
+      "min": 10,
+      "max": 56,
+      "step": 0.5,
+      "unit": "px",
+      "default": 22
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Title weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "text_weight",
+      "label": "Text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "tag_size",
+      "label": "Tag size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 9
+    },
+    {
+      "type": "select",
+      "id": "tag_weight",
+      "label": "Tag weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    }
+  ],
+  "presets": [{ "name": "[CB] Answer" }]
+}
+{% endschema %}

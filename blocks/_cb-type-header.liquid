@@ -1,0 +1,67 @@
+<div
+  class="cb-type__header cb-type__header--{{ block.settings.alignment }}"
+  style="--cbty-header-gap: {{ block.settings.gap }}px;"
+  {{ block.shopify_attributes }}
+>
+  {% content_for 'blocks' %}
+</div>
+
+{% stylesheet %}
+  .cb-type__header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--cbty-header-gap, 6px);
+    min-width: 0;
+  }
+
+  .cb-type__header--center {
+    align-items: center;
+    text-align: center;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Header",
+  "tag": null,
+  "blocks": [
+    { "type": "cb-subheader" },
+    { "type": "cb-heading" },
+    { "type": "cb-paragraph" },
+    { "type": "cb-button" }
+  ],
+  "settings": [
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Space between lines",
+      "min": 0,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 6
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Header",
+      "blocks": {
+        "eyebrow": { "type": "cb-subheader", "settings": { "subheader_text": "Shop by type", "letter_spacing": 0 } },
+        "heading": { "type": "cb-heading", "settings": { "heading_text": "Find the extras you need.", "wrap": "wrap" } }
+      },
+      "block_order": ["eyebrow", "heading"]
+    }
+  ]
+}
+{% endschema %}

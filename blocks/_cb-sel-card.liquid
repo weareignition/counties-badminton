@@ -1,0 +1,576 @@
+{%- comment -%}
+  A product-type card (e.g. Feather / Nylon). "Starting from" and the photo come from in-stock products of the
+  chosen collection (the Shuttles collection by default) that match the card's words; custom ones override them.
+{%- endcomment -%}
+{%- liquid
+  assign pool = block.settings.collection
+  if pool == blank
+    assign pool = collections['shuttles']
+  endif
+
+  assign raw_terms = block.settings.match_keywords | split: ','
+  assign terms = ''
+  for raw in raw_terms
+    assign term = raw | strip | handleize
+    if term != blank
+      assign terms = terms | append: term | append: ','
+    endif
+  endfor
+  assign term_list = terms | split: ','
+
+  # Lowest in-stock price and first photo among matching products (the collection's first 50).
+  assign min_price = nil
+  assign first_image = nil
+  if pool != blank
+    for product in pool.products
+      if product.available
+        assign hit = true
+        if term_list.size > 0
+          assign hit = false
+          assign title_key = product.title | handleize | prepend: '-' | append: '-'
+          for term in term_list
+            assign term_key = '-' | append: term | append: '-'
+            if title_key contains term_key
+              assign hit = true
+              break
+            endif
+            for tag in product.tags
+              assign tag_key = tag | handleize
+              if tag_key == term
+                assign hit = true
+                break
+              endif
+            endfor
+            if hit
+              break
+            endif
+          endfor
+        endif
+        if hit
+          if min_price == nil
+            assign min_price = product.price_min
+          elsif product.price_min < min_price
+            assign min_price = product.price_min
+          endif
+          if first_image == nil and product.featured_image
+            assign first_image = product.featured_image
+          endif
+        endif
+      endif
+    endfor
+  endif
+
+  assign price_text = block.settings.custom_price | strip
+  if price_text == blank and min_price != nil
+    assign price_text = min_price | money
+  endif
+
+  assign image = block.settings.image | default: first_image
+
+  assign link = block.settings.link
+  if link == blank
+    assign link = pool.url | default: routes.all_products_collection_url
+  endif
+
+  assign chips = block.settings.chips | split: ','
+-%}
+
+<article
+  class="cb-sel-card"
+  style="
+    --cb-sel-card-eyebrow-size: {{ block.settings.eyebrow_size }}px;
+    --cb-sel-card-eyebrow-weight: {{ block.settings.eyebrow_weight }};
+    --cb-sel-card-title-size: {{ block.settings.title_size }}px;
+    --cb-sel-card-title-weight: {{ block.settings.title_weight }};
+    --cb-sel-card-description-size: {{ block.settings.description_size }}px;
+    --cb-sel-card-description-weight: {{ block.settings.description_weight }};
+    --cb-sel-card-tags-size: {{ block.settings.tags_size }}px;
+    --cb-sel-card-tags-weight: {{ block.settings.tags_weight }};
+    --cb-sel-card-price-size: {{ block.settings.price_size }}px;
+    --cb-sel-card-price-weight: {{ block.settings.price_weight }};
+    --cb-sel-card-button-size: {{ block.settings.button_size }}px;
+    --cb-sel-card-button-weight: {{ block.settings.button_weight }};
+  "
+  {{ block.shopify_attributes }}
+>
+  <div class="cb-sel-card__body">
+    {%- if block.settings.card_eyebrow != blank -%}
+      <p class="cb-sel-card__eyebrow cb-sel-card__eyebrow--{{ block.settings.eyebrow_style }}">
+        {{- block.settings.card_eyebrow | escape -}}
+      </p>
+    {%- endif -%}
+
+    {%- if block.settings.card_title != blank -%}
+      <h3 class="cb-sel-card__title">{{ block.settings.card_title | escape }}</h3>
+    {%- endif -%}
+
+    {%- if block.settings.card_text != blank -%}
+      <p class="cb-sel-card__text">{{ block.settings.card_text | escape }}</p>
+    {%- endif -%}
+
+    {%- if block.settings.chips != blank -%}
+      <ul class="cb-sel-card__chips" role="list">
+        {%- for chip in chips -%}
+          {%- assign chip_text = chip | strip -%}
+          {%- if chip_text != blank -%}
+            <li class="cb-sel-card__chip">{{ chip_text | escape }}</li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+
+    {%- if price_text != blank or block.settings.button_label != blank -%}
+      <div class="cb-sel-card__footer">
+        {%- if price_text != blank -%}
+          <p class="cb-sel-card__price">
+            {%- if block.settings.price_label != blank -%}
+              {{ block.settings.price_label | escape }}
+            {% endif -%}
+            <span>{{ price_text | escape }}</span>
+          </p>
+        {%- endif -%}
+        {%- if block.settings.button_label != blank -%}
+          <a class="cb-sel-card__button" href="{{ link }}">
+            {{- block.settings.button_label | escape -}}
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+
+  <div class="cb-sel-card__media">
+    {%- if image != blank -%}
+      {{ image | image_url: width: 320 | image_tag: widths: '160, 240, 320', sizes: '140px', loading: 'lazy', alt: '', class: 'cb-sel-card__image' }}
+    {%- else -%}
+      {{ 'product-1' | placeholder_svg_tag: 'cb-sel-card__image cb-sel-card__image--placeholder' }}
+    {%- endif -%}
+  </div>
+</article>
+
+{% stylesheet %}
+  .cb-sel-card {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    min-width: 0;
+    height: 100%;
+    padding: 18px 20px;
+    border: 1px solid var(--cbx-border);
+    border-radius: var(--cbx-radius);
+    background: var(--cbx-card);
+  }
+
+  .cb-sel-card__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-self: stretch;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .cb-sel-card__eyebrow {
+    margin: 0;
+    font-family: var(--cbx-font-body);
+    font-weight: var(--cb-sel-card-eyebrow-weight, var(--cbx-font-body-strong));
+    font-size: var(--cb-sel-card-eyebrow-size, 9px);
+    line-height: 1.4;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .cb-sel-card__eyebrow--accent {
+    color: var(--cbx-accent);
+  }
+
+  .cb-sel-card__eyebrow--muted {
+    color: var(--cbx-muted);
+  }
+
+  .cb-sel-card__title {
+    margin: 2px 0 0;
+    font-family: var(--cbx-font-heading);
+    font-weight: var(--cb-sel-card-title-weight, var(--cbx-font-heading-weight));
+    font-size: var(--cb-sel-card-title-size, 18px);
+    line-height: 1.2;
+    color: var(--cbx-text);
+  }
+
+  .cb-sel-card__text {
+    margin: 0;
+    font-family: var(--cbx-font-body);
+    font-weight: var(--cb-sel-card-description-weight, var(--cbx-font-body-weight));
+    font-size: var(--cb-sel-card-description-size, 11px);
+    line-height: 1.6;
+    color: var(--cbx-muted);
+  }
+
+  .cb-sel-card__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 4px 0 8px;
+    padding: 0;
+    list-style: none;
+  }
+
+  .cb-sel-card__chip {
+    padding: 4px 8px;
+    border: 1px solid var(--cbx-border);
+    border-radius: 2px;
+    background: var(--cbx-chip);
+    font-family: var(--cbx-font-body);
+    font-weight: var(--cb-sel-card-tags-weight, inherit);
+    font-size: var(--cb-sel-card-tags-size, 10px);
+    line-height: 1.3;
+    color: var(--cbx-soft);
+  }
+
+  .cb-sel-card__footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px 16px;
+    margin-top: auto;
+    padding-top: 12px;
+    border-top: 1px solid var(--cbx-border);
+  }
+
+  .cb-sel-card__price {
+    margin: 0;
+    font-family: var(--cbx-font-body);
+    font-weight: var(--cb-sel-card-price-weight, var(--cbx-font-body-strong));
+    font-size: var(--cb-sel-card-price-size, 12px);
+    color: var(--cbx-text);
+  }
+
+  .cb-sel-card__button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: 2px;
+    background: var(--cbx-accent);
+    font-family: var(--cbx-font-body);
+    font-weight: var(--cb-sel-card-button-weight, var(--cbx-font-body-strong));
+    font-size: var(--cb-sel-card-button-size, 11px);
+    line-height: 1.2;
+    color: #fff;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+  }
+
+  .cb-sel-card__button svg {
+    flex: none;
+  }
+
+  .cb-sel-card__button:hover {
+    background: color-mix(in srgb, var(--cbx-accent) 85%, #000);
+  }
+
+  .cb-sel-card__button:focus-visible {
+    outline: 2px solid var(--cbx-text);
+    outline-offset: 2px;
+  }
+
+  .cb-sel-card__media {
+    display: flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: var(--cbx-media-size, 84px);
+    aspect-ratio: 1;
+    padding: 6px;
+    overflow: hidden;
+    border-radius: 2px;
+    background: var(--cbx-media-bg);
+  }
+
+  .cb-sel-card__media .cb-sel-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .cb-sel-card__image--placeholder {
+    fill: rgb(0 0 0 / 0.25);
+  }
+
+  /* Phones: the photo shrinks and sits top-right beside the text. */
+  @media screen and (max-width: 599px) {
+    .cb-sel-card {
+      align-items: flex-start;
+      gap: 14px;
+      padding: 16px;
+    }
+
+    .cb-sel-card__media {
+      width: min(var(--cbx-media-size, 84px), 72px);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Type card",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "card_eyebrow",
+      "label": "Eyebrow",
+      "default": "Competition & club standard"
+    },
+    {
+      "type": "select",
+      "id": "eyebrow_style",
+      "label": "Eyebrow color",
+      "options": [
+        { "value": "accent", "label": "Accent" },
+        { "value": "muted", "label": "Grey" }
+      ],
+      "default": "accent"
+    },
+    {
+      "type": "text",
+      "id": "card_title",
+      "label": "Title",
+      "default": "Feather Shuttles"
+    },
+    {
+      "type": "textarea",
+      "id": "card_text",
+      "label": "Description",
+      "default": "Natural flight, better touch and the preferred choice for club and match play."
+    },
+    {
+      "type": "text",
+      "id": "chips",
+      "label": "Tags",
+      "info": "Separate with commas.",
+      "default": "Natural Flight, Match & Club Play, Premium Portuguese Cork"
+    },
+    {
+      "type": "header",
+      "content": "Products"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection",
+      "info": "Leave empty to use the Shuttles collection. The button opens it, and the price and photo come from its in-stock products."
+    },
+    {
+      "type": "text",
+      "id": "match_keywords",
+      "label": "Only products with these words",
+      "info": "In the title or tags, separated by commas, e.g. feather, tournament. Leave empty to use every product in the collection."
+    },
+    {
+      "type": "text",
+      "id": "price_label",
+      "label": "Price label",
+      "default": "Starting from:"
+    },
+    {
+      "type": "text",
+      "id": "custom_price",
+      "label": "Custom price text",
+      "info": "Replaces the lowest in-stock price."
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Custom photo",
+      "info": "Leave empty to use the first matching product's photo."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button",
+      "default": "Shop Feather"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Button link",
+      "info": "Leave empty to open the collection."
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_size",
+      "label": "Eyebrow size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 9
+    },
+    {
+      "type": "select",
+      "id": "eyebrow_weight",
+      "label": "Eyebrow weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Title size",
+      "min": 10,
+      "max": 56,
+      "step": 0.5,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Title weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "description_size",
+      "label": "Description size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "select",
+      "id": "description_weight",
+      "label": "Description weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "tags_size",
+      "label": "Tags size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "tags_weight",
+      "label": "Tags weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "price_size",
+      "label": "Price size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "price_weight",
+      "label": "Price weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "button_size",
+      "label": "Button text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "select",
+      "id": "button_weight",
+      "label": "Button text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    }
+  ],
+  "presets": [{ "name": "[CB] Type card" }]
+}
+{% endschema %}

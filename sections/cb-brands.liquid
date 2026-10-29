@@ -1,0 +1,296 @@
+{%- liquid
+  assign s = section.settings
+  assign font_scope = '#cb-brands-' | append: section.id
+-%}
+
+{% render 'cb-font-styles',
+  selector: font_scope,
+  prefix: 'cbb',
+  heading_font: s.heading_font,
+  body_font: s.body_font
+%}
+
+<section
+  id="cb-brands-{{ section.id }}"
+  class="cb-brands"
+  style="
+    --cbb-bg: {{ s.background_color }};
+    --cbb-card: {{ s.card_background_color }};
+    --cbb-border: {{ s.border_color }};
+    --cbb-border-strong: {{ s.text_color | color_modify: 'alpha', 0.22 }};
+    --cbb-text: {{ s.text_color }};
+    --cbb-muted: {{ s.text_color | color_modify: 'alpha', 0.55 }};
+    --cbb-accent: {{ s.accent_color }};
+    --cbb-radius: {{ s.card_radius }}px;
+    --cbb-max-width: {{ s.max_width }}px;
+    --cbb-stack-gap: {{ s.stack_gap }}px;
+    --cbb-pt: {{ s.padding_top }}px;
+    --cbb-pb: {{ s.padding_bottom }}px;
+  "
+>
+  <div class="cb-brands__inner">
+    {% content_for 'blocks' %}
+  </div>
+</section>
+
+{% stylesheet %}
+  .cb-brands {
+    color: var(--cbb-text);
+    background: var(--cbb-bg);
+    padding: calc(var(--cbb-pt) * 0.75) 16px calc(var(--cbb-pb) * 0.75);
+  }
+
+  .cb-brands__inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--cbb-stack-gap);
+    max-width: var(--cbb-max-width);
+    margin-inline: auto;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-brands {
+      padding: var(--cbb-pt) 32px var(--cbb-pb);
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .cb-brands {
+      padding-inline: 48px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Brand stockists",
+  "tag": "div",
+  "class": "section-wrapper",
+  "blocks": [
+    { "type": "_cb-brands-header" },
+    { "type": "_cb-brands-cards" }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width",
+      "min": 960,
+      "max": 1800,
+      "step": 20,
+      "unit": "px",
+      "default": 1400
+    },
+    {
+      "type": "range",
+      "id": "stack_gap",
+      "label": "Space between header and cards",
+      "min": 8,
+      "max": 64,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Card corner radius",
+      "min": 0,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Stock count"
+    },
+    {
+      "type": "collection",
+      "id": "count_collection",
+      "label": "Count rackets from",
+      "info": "Leave empty to use the Rackets collection. Cards count its in-stock products with the brand name in the title, unless a card has its own brand collection."
+    },
+    {
+      "type": "text",
+      "id": "count_label",
+      "label": "Count label",
+      "info": "[count] is replaced. Hidden when nothing is in stock.",
+      "default": "[count] Rackets in Stock"
+    },
+    {
+      "type": "text",
+      "id": "count_label_one",
+      "label": "Count label for 1",
+      "default": "[count] Racket in Stock"
+    },
+    {
+      "type": "text",
+      "id": "explore_label",
+      "label": "Link label",
+      "default": "Explore"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "info": "Used for the heading and brand names.",
+      "default": "space_grotesk_n7"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "inter_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "id": "card_background_color",
+      "label": "Card background",
+      "default": "#181818"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Borders and dividers",
+      "default": "#ffffff14"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "default": "#d71f27"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 56
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Brand stockists",
+      "category": "t:categories.collections",
+      "blocks": {
+        "header": {
+          "type": "_cb-brands-header",
+          "blocks": {
+            "eyebrow": {
+              "type": "cb-subheader",
+              "settings": { "subheader_text": "Official brand stockists", "show_dot": true, "letter_spacing": 12 }
+            },
+            "heading": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "Looking for a specific brand?",
+                "size": 28,
+                "mobile_scale": 80,
+                "line_height": 110,
+                "uppercase": true,
+                "wrap": "wrap"
+              }
+            },
+            "intro": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>While we recommend choosing by play style first, we carry certified genuine stock from all four premier manufacturers.</p>",
+                "size": 12,
+                "mobile_size": 12,
+                "max_width_unit": "px",
+                "max_width_px": 360
+              }
+            }
+          },
+          "block_order": ["eyebrow", "heading", "intro"]
+        },
+        "cards": {
+          "type": "_cb-brands-cards",
+          "blocks": {
+            "yonex": {
+              "type": "_cb-brands-card",
+              "settings": {
+                "brand_name": "Yonex",
+                "origin": "Japan",
+                "description": "Astrox, Nanoflare & Arcsaber series. World tour benchmark in carbon engineering."
+              }
+            },
+            "victor": {
+              "type": "_cb-brands-card",
+              "settings": {
+                "brand_name": "Victor",
+                "origin": "Taiwan",
+                "description": "Thruster Ryuga & Auraspeed series. Explosive swing speeds & Free Core synthetic handles.",
+                "highlight": true
+              }
+            },
+            "ashaway": {
+              "type": "_cb-brands-card",
+              "settings": {
+                "brand_name": "Ashaway",
+                "origin": "USA",
+                "description": "Phantom carbon graphite series. Famous for string tension retention and touch."
+              }
+            },
+            "babolat": {
+              "type": "_cb-brands-card",
+              "settings": {
+                "brand_name": "Babolat",
+                "origin": "France",
+                "description": "Satelite Gravity series. Ultra-light specs engineered for high-cadence doubles reactions."
+              }
+            }
+          },
+          "block_order": ["yonex", "victor", "ashaway", "babolat"]
+        }
+      },
+      "block_order": ["header", "cards"]
+    }
+  ]
+}
+{% endschema %}

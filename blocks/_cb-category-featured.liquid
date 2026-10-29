@@ -9,7 +9,19 @@
 <a
   href="{{ url }}"
   class="cb-category__card cb-category-featured"
-  style="--cbc-image-ratio: {{ block.settings.image_ratio }};"
+  style="
+    --cbc-image-ratio: {{ block.settings.image_ratio }};
+    --cb-category-featured-badge-size: {{ block.settings.badge_size }}px;
+    --cb-category-featured-badge-weight: {{ block.settings.badge_weight }};
+    --cb-category-featured-image-label-size: {{ block.settings.image_label_size }}px;
+    --cb-category-featured-image-label-weight: {{ block.settings.image_label_weight }};
+    --cb-category-featured-title-size: {{ block.settings.title_size }}px;
+    --cb-category-featured-title-weight: {{ block.settings.title_weight }};
+    --cb-category-featured-description-size: {{ block.settings.description_size }}px;
+    --cb-category-featured-description-weight: {{ block.settings.description_weight }};
+    --cb-category-featured-link-size: {{ block.settings.link_size }}px;
+    --cb-category-featured-link-weight: {{ block.settings.link_weight }};
+  "
   {{ block.shopify_attributes }}
 >
   <div class="cb-category-featured__media">
@@ -86,7 +98,8 @@
     top: 10px;
     left: 10px;
     padding: 4px 8px;
-    font-size: 10px;
+    font-weight: var(--cb-category-featured-badge-weight, var(--cbc-font-body-strong));
+    font-size: var(--cb-category-featured-badge-size, 10px);
   }
 
   .cb-category-featured__label {
@@ -102,8 +115,8 @@
     backdrop-filter: blur(6px);
     color: #fff;
     font-family: var(--cbc-font-body);
-    font-weight: var(--cbc-font-body-strong);
-    font-size: 11px;
+    font-weight: var(--cb-category-featured-image-label-weight, var(--cbc-font-body-strong));
+    font-size: var(--cb-category-featured-image-label-size, 11px);
     line-height: 1.25;
     white-space: nowrap;
     overflow: hidden;
@@ -137,8 +150,8 @@
   .cb-category-featured__title {
     margin: 0;
     font-family: var(--cbc-font-heading);
-    font-weight: var(--cbc-font-heading-weight);
-    font-size: clamp(20px, 3vw, 26px);
+    font-weight: var(--cb-category-featured-title-weight, var(--cbc-font-heading-weight));
+    font-size: clamp(calc(var(--cb-category-featured-title-size, 26px) * 20 / 26), 3vw, var(--cb-category-featured-title-size, 26px));
     line-height: 1.15;
     letter-spacing: -0.01em;
     color: var(--cbc-text);
@@ -148,15 +161,16 @@
     margin: 0;
     max-width: 56ch;
     font-family: var(--cbc-font-body);
-    font-weight: var(--cbc-font-body-weight);
-    font-size: 14px;
+    font-weight: var(--cb-category-featured-description-weight, var(--cbc-font-body-weight));
+    font-size: var(--cb-category-featured-description-size, 14px);
     line-height: 1.55;
     color: var(--cbc-muted);
   }
 
   .cb-category-featured .cb-category__cta {
     margin-top: 6px;
-    font-size: 13px;
+    font-weight: var(--cb-category-featured-link-weight, var(--cbc-font-body-strong));
+    font-size: var(--cb-category-featured-link-size, 13px);
   }
 
   @media screen and (min-width: 750px) {
@@ -251,6 +265,151 @@
         { "value": "text", "label": "Text" }
       ],
       "default": "accent"
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "badge_size",
+      "label": "Badge size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "badge_weight",
+      "label": "Badge weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "image_label_size",
+      "label": "Image label size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "select",
+      "id": "image_label_weight",
+      "label": "Image label weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Title size",
+      "info": "Scaled down on phones and small tablets.",
+      "min": 10,
+      "max": 56,
+      "step": 0.5,
+      "unit": "px",
+      "default": 26
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Title weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "description_size",
+      "label": "Description size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "description_weight",
+      "label": "Description weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "link_size",
+      "label": "Link text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "select",
+      "id": "link_weight",
+      "label": "Link text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
     }
   ],
   "presets": [{ "name": "[CB] Featured card" }]

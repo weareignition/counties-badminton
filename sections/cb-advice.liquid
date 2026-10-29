@@ -1,0 +1,342 @@
+{%- liquid
+  assign s = section.settings
+  assign font_scope = '#cb-advice-' | append: section.id
+-%}
+
+{% render 'cb-font-styles',
+  selector: font_scope,
+  prefix: 'cbn',
+  heading_font: s.heading_font,
+  body_font: s.body_font
+%}
+
+<section
+  id="cb-advice-{{ section.id }}"
+  class="cb-advice{% if s.show_border %} cb-advice--border{% endif %}"
+  style="
+    --cbn-bg: {{ s.background_color }};
+    --cbn-panel: {{ s.panel_background_color }};
+    --cbn-border: {{ s.border_color }};
+    --cbn-text: {{ s.text_color }};
+    --cbn-muted: {{ s.muted_text_color }};
+    --cbn-accent: {{ s.accent_color }};
+    --cbn-secondary: {{ s.secondary_button_color }};
+    --cbn-radius: {{ s.panel_radius }}px;
+    --cbn-pad: {{ s.panel_padding }}px;
+    --cbn-max-width: {{ s.max_width }}px;
+    --cbn-pt: {{ s.padding_top }}px;
+    --cbn-pb: {{ s.padding_bottom }}px;
+  "
+>
+  <div class="cb-advice__panel">
+    {% content_for 'blocks' %}
+  </div>
+</section>
+
+{% stylesheet %}
+  .cb-advice {
+    color: var(--cbn-text);
+    background: var(--cbn-bg);
+    padding: calc(var(--cbn-pt) * 0.75) 16px calc(var(--cbn-pb) * 0.75);
+  }
+
+  /* Phones stack the blocks; wider screens put the icon beside the text, vertically centred. */
+  .cb-advice__panel {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    max-width: var(--cbn-max-width);
+    margin-inline: auto;
+    padding: calc(var(--cbn-pad) * 0.55);
+    border-radius: var(--cbn-radius);
+    background: var(--cbn-panel);
+  }
+
+  .cb-advice--border .cb-advice__panel {
+    border: 1px solid var(--cbn-border);
+  }
+
+  /* When stacked on phones, the icon follows a centred content group. */
+  .cb-advice__panel:has(> .cb-advice__content--center) > .cb-advice__icon {
+    align-self: center;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-advice {
+      padding: var(--cbn-pt) 32px var(--cbn-pb);
+    }
+
+    .cb-advice__panel {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+      padding: calc(var(--cbn-pad) * 0.75);
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .cb-advice {
+      padding-inline: 48px;
+    }
+
+    .cb-advice__panel {
+      padding: var(--cbn-pad);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Advice banner",
+  "tag": "div",
+  "class": "section-wrapper",
+  "blocks": [
+    { "type": "_cb-advice-content" },
+    { "type": "_cb-advice-icon" }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "paragraph",
+      "content": "Reorder the content group and icon blocks to swap sides."
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width",
+      "min": 560,
+      "max": 1800,
+      "step": 20,
+      "unit": "px",
+      "default": 1400
+    },
+    {
+      "type": "range",
+      "id": "panel_padding",
+      "label": "Panel padding",
+      "info": "Phones and tablets use less.",
+      "min": 16,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 44
+    },
+    {
+      "type": "range",
+      "id": "panel_radius",
+      "label": "Panel corner radius",
+      "min": 0,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "checkbox",
+      "id": "show_border",
+      "label": "Panel border",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "space_grotesk_n7"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "info": "Used for the eyebrow, text and buttons.",
+      "default": "inter_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#0b0b0b"
+    },
+    {
+      "type": "color",
+      "id": "panel_background_color",
+      "label": "Panel",
+      "default": "#181818"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Panel border",
+      "default": "#ffffff14"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "muted_text_color",
+      "label": "Body text",
+      "default": "#a1a1aa"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "default": "#d71f27"
+    },
+    {
+      "type": "color",
+      "id": "secondary_button_color",
+      "label": "Grey button background",
+      "default": "#2a2a2a"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Advice banner",
+      "category": "t:categories.banners",
+      "blocks": {
+        "content": {
+          "type": "_cb-advice-content",
+          "blocks": {
+            "eyebrow": {
+              "type": "cb-subheader",
+              "settings": { "subheader_text": "Expert string advice", "letter_spacing": 0 }
+            },
+            "heading": {
+              "type": "cb-heading",
+              "settings": { "heading_text": "Not sure which string suits your game?", "wrap": "wrap" }
+            },
+            "text": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>Tell us what you want more of — feel, durability, control or repulsion — and the team can recommend a practical setup for your racket and level.</p>",
+                "letter_spacing": -1,
+                "max_width_unit": "px",
+                "max_width_px": 600
+              }
+            },
+            "buttons": {
+              "type": "_cb-advice-buttons",
+              "blocks": {
+                "ask": {
+                  "type": "_cb-advice-button",
+                  "settings": { "label": "Ask the Pro Shop", "link": "shopify://pages/contact", "style": "primary" }
+                },
+                "visit": {
+                  "type": "_cb-advice-button",
+                  "settings": {
+                    "label": "Visit us at Papakura",
+                    "directions_address": "41R Elliot Street, Papakura, Auckland",
+                    "style": "secondary"
+                  }
+                }
+              },
+              "block_order": ["ask", "visit"]
+            }
+          },
+          "block_order": ["eyebrow", "heading", "text", "buttons"]
+        },
+        "icon": { "type": "_cb-advice-icon" }
+      },
+      "block_order": ["content", "icon"]
+    },
+    {
+      "name": "[CB] Restring CTA",
+      "category": "t:categories.banners",
+      "settings": {
+        "max_width": 820,
+        "panel_padding": 52,
+        "panel_radius": 14,
+        "padding_top": 48,
+        "padding_bottom": 48
+      },
+      "blocks": {
+        "content": {
+          "type": "_cb-advice-content",
+          "settings": { "alignment": "center", "gap": 21 },
+          "blocks": {
+            "eyebrow": {
+              "type": "cb-subheader",
+              "settings": { "subheader_text": "Ready to restring?", "letter_spacing": 0 }
+            },
+            "heading": {
+              "type": "cb-heading",
+              "settings": { "heading_text": "Give your racket a fresh setup.", "wrap": "wrap" }
+            },
+            "text": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>Choose your string or let the Counties Badminton team help you find the right setup.</p>",
+                "letter_spacing": -1,
+                "max_width_unit": "px",
+                "max_width_px": 520
+              }
+            },
+            "buttons": {
+              "type": "_cb-advice-buttons",
+              "settings": { "gap": 14, "space_above": 6 },
+              "blocks": {
+                "request": {
+                  "type": "_cb-advice-button",
+                  "settings": { "label": "Request a restring", "link": "shopify://pages/contact", "style": "primary" }
+                },
+                "shop": {
+                  "type": "_cb-advice-button",
+                  "settings": { "label": "Shop string", "link": "shopify://collections/stringing", "style": "outline" }
+                }
+              },
+              "block_order": ["request", "shop"]
+            },
+            "note": { "type": "_cb-advice-note", "settings": { "note_text": "41r Elliot Street, Papakura • Open 7 days", "space_above": 15 } }
+          },
+          "block_order": ["eyebrow", "heading", "text", "buttons", "note"]
+        }
+      },
+      "block_order": ["content"]
+    }
+  ]
+}
+{% endschema %}

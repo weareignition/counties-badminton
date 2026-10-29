@@ -1,0 +1,41 @@
+{%- doc -%}
+  One string row for the [CB] String choice block.
+
+  @param {object} variant - The string variant.
+  @param {string} brand - Shown before the variant name; may be empty.
+  @param {string} note - Short description; may be empty.
+  @param {object} [labour] - Labour variant whose price is added to the string's.
+  @param {boolean} checked - True once an earlier row was selected; the first available row is selected.
+  @param {string} group - Radio group name.
+{%- enddoc -%}
+
+{%- liquid
+  assign price = variant.price
+  if labour != blank
+    assign price = price | plus: labour.price
+  endif
+  assign name = variant.title
+  if brand != blank
+    assign name = brand | append: ' ' | append: variant.title
+  endif
+-%}
+
+<label class="cb-sb-string">
+  <input
+    class="cb-sb-string__input"
+    type="radio"
+    name="cb-sb-string-{{ group }}"
+    value="{{ variant.id }}"
+    data-name="{{ name | escape }}"
+    {% if checked == false and variant.available %}checked{% endif %}
+    {% unless variant.available %}disabled{% endunless %}
+  >
+  <span class="cb-sb-string__card">
+    <span class="cb-sb-string__radio" aria-hidden="true"></span>
+    <span class="cb-sb-string__name">{{ name | escape }}</span>
+    {%- if note != blank -%}<span class="cb-sb-string__note">{{ note | escape }}</span>{%- endif -%}
+    <span class="cb-sb-string__price">
+      {%- if variant.available -%}+{{ price | money_without_trailing_zeros }}{%- else -%}{{ 'blocks.sold_out' | t }}{%- endif -%}
+    </span>
+  </span>
+</label>

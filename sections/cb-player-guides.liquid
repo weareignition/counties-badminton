@@ -1,0 +1,517 @@
+{%- liquid
+  assign s = section.settings
+  assign font_scope = '#cb-pguides-' | append: section.id
+  assign tablet_columns = s.columns | at_most: 2
+-%}
+
+{% render 'cb-font-styles',
+  selector: font_scope,
+  prefix: 'cbpg',
+  heading_font: s.heading_font,
+  body_font: s.body_font
+%}
+
+<section
+  id="cb-pguides-{{ section.id }}"
+  class="cb-pguides{% if s.equal_height %} cb-pguides--equal{% endif %}"
+  style="
+    --cbpg-bg: {{ s.background_color }};
+    --cbpg-card: {{ s.card_color }};
+    --cbpg-frame: {{ s.frame_color }};
+    --cbpg-text: {{ s.text_color }};
+    --cbpg-muted: {{ s.muted_text_color }};
+    --cbpg-accent: {{ s.accent_color }};
+    --cbpg-button-bg: {{ s.button_color }};
+    --cbpg-button-border: {{ s.button_border_color }};
+    --cbpg-columns: {{ s.columns }};
+    --cbpg-columns-tablet: {{ tablet_columns }};
+    --cbpg-col-gap: {{ s.column_gap }}px;
+    --cbpg-row-gap: {{ s.row_gap }}px;
+    --cbpg-header-gap: {{ s.header_gap }}px;
+    --cbpg-max-width: {{ s.max_width }}px;
+    --cbpg-card-padding: {{ s.card_padding }}px;
+    --cbpg-card-radius: {{ s.card_radius }}px;
+    --cbpg-photo-height: {{ s.photo_height }}px;
+    --cbpg-pt: {{ s.padding_top }}px;
+    --cbpg-pb: {{ s.padding_bottom }}px;
+    {%- if s.title_font == 'heading' %} --cbpg-title-font: var(--cbpg-font-heading); --cbpg-title-weight: var(--cbpg-font-heading-medium-weight);{% endif %}
+  "
+>
+  <div class="cb-pguides__inner">
+    <div class="cb-pguides__grid">
+      {% content_for 'blocks' %}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .cb-pguides {
+    color: var(--cbpg-text);
+    background: var(--cbpg-bg);
+    padding: calc(var(--cbpg-pt) * 0.6) 16px calc(var(--cbpg-pb) * 0.6);
+  }
+
+  .cb-pguides__inner {
+    max-width: var(--cbpg-max-width);
+    margin-inline: auto;
+  }
+
+  /* The header spans the whole row; cards fill the columns. On phones the cards stack with the column gap. */
+  .cb-pguides__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    gap: var(--cbpg-col-gap);
+  }
+
+  .cb-pguides--equal .cb-pguides__grid {
+    align-items: stretch;
+  }
+
+  .cb-pguides--equal .cb-pguide .cb-pguide__button {
+    margin-top: auto;
+  }
+
+  /* Three classes: beats the card's own margin rule whatever order Shopify bundles the stylesheets in. */
+  .cb-pguides--equal .cb-pguide .cb-pguide__text {
+    margin-bottom: 14px;
+  }
+
+  .cb-pguides__grid > .cb-pguides__header {
+    grid-column: 1 / -1;
+    margin-bottom: calc(var(--cbpg-header-gap) * 0.5 - var(--cbpg-col-gap));
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-pguides {
+      padding: var(--cbpg-pt) 32px var(--cbpg-pb);
+    }
+
+    .cb-pguides__grid {
+      grid-template-columns: repeat(var(--cbpg-columns-tablet, 2), minmax(0, 1fr));
+      gap: var(--cbpg-row-gap) var(--cbpg-col-gap);
+    }
+
+    .cb-pguides__grid > .cb-pguides__header {
+      margin-bottom: calc(var(--cbpg-header-gap) - var(--cbpg-row-gap));
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .cb-pguides {
+      padding-inline: 48px;
+    }
+
+    .cb-pguides__grid {
+      grid-template-columns: repeat(var(--cbpg-columns, 2), minmax(0, 1fr));
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Player guides",
+  "tag": "div",
+  "class": "section-wrapper",
+  "blocks": [{ "type": "_cb-pguide-header" }, { "type": "_cb-pguide-card" }, { "type": "cb-highlight-card" }, { "type": "cb-card" }],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Cards per row on desktop",
+      "info": "Tablets show up to 2, phones 1.",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width",
+      "min": 600,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "default": 1120
+    },
+    {
+      "type": "range",
+      "id": "column_gap",
+      "label": "Space between cards",
+      "min": 0,
+      "max": 64,
+      "step": 1,
+      "unit": "px",
+      "default": 22
+    },
+    {
+      "type": "range",
+      "id": "row_gap",
+      "label": "Space between rows",
+      "info": "Phones use the space between cards.",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "header_gap",
+      "label": "Space below the heading",
+      "info": "Halved on phones.",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "checkbox",
+      "id": "equal_height",
+      "label": "Same height cards",
+      "info": "All cards in a row match the tallest one and their buttons line up. Off: each card fits its own content.",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Cards"
+    },
+    {
+      "type": "range",
+      "id": "card_padding",
+      "label": "Card padding",
+      "min": 12,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 26
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Card corner radius",
+      "min": 0,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "checkbox",
+      "id": "show_photos",
+      "label": "Show photos",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "photo_height",
+      "label": "Photo height",
+      "min": 120,
+      "max": 400,
+      "step": 4,
+      "unit": "px",
+      "default": 196,
+      "visible_if": "{{ section.settings.show_photos }}"
+    },
+    {
+      "type": "header",
+      "content": "Fonts"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "info": "The chosen style sets the heading weight.",
+      "default": "space_grotesk_n7"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "inter_n4"
+    },
+    {
+      "type": "select",
+      "id": "title_font",
+      "label": "Card title font",
+      "options": [
+        { "value": "body", "label": "Body font, semibold" },
+        { "value": "heading", "label": "Heading font, medium" }
+      ],
+      "default": "body"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "card_color",
+      "label": "Cards",
+      "default": "#1b1b1b"
+    },
+    {
+      "type": "color",
+      "id": "frame_color",
+      "label": "Photo frame",
+      "default": "#ffffff14"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "muted_text_color",
+      "label": "Muted text",
+      "info": "Intro and card summaries.",
+      "default": "#d0d0d4"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "info": "Subheader, card labels and button text.",
+      "default": "#d71f27"
+    },
+    {
+      "type": "color",
+      "id": "button_color",
+      "label": "Button background",
+      "default": "#ffffff05"
+    },
+    {
+      "type": "color",
+      "id": "button_border_color",
+      "label": "Button border",
+      "default": "#ffffff14"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Player guides",
+      "category": "t:categories.text",
+      "blocks": {
+        "header": {
+          "type": "_cb-pguide-header",
+          "blocks": {
+            "eyebrow": {
+              "type": "cb-subheader",
+              "settings": { "subheader_text": "Guides", "size": 11, "space_below": 3 }
+            },
+            "heading": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "Start with the questions players ask most",
+                "size": 40,
+                "mobile_scale": 70,
+                "line_height": 120
+              }
+            },
+            "text": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>No jargon for the sake of it. Just useful advice, explained in plain language.</p>",
+                "size": 15
+              }
+            }
+          },
+          "block_order": ["eyebrow", "heading", "text"]
+        },
+        "racket": {
+          "type": "_cb-pguide-card",
+          "settings": {
+            "card_title": "Choosing Your First Racket",
+            "summary": "Selecting your first racket can feel overwhelming, but it doesn't need to be. Learn how weight, balance, flex and frame shape affect the way a racket feels and performs.",
+            "product": "hundred-nitrix-thunder-badminton-rcket"
+          }
+        },
+        "tension": {
+          "type": "_cb-pguide-card",
+          "settings": {
+            "card_title": "Understanding String Tension",
+            "summary": "See how higher and lower tensions change control, power and forgiveness, and how to find a practical starting point for your game.",
+            "product": "yonex-badminton-string-10m-packet"
+          }
+        },
+        "shuttles": {
+          "type": "_cb-pguide-card",
+          "settings": {
+            "card_title": "Shuttle Speeds Explained",
+            "summary": "Understand speed ratings, temperature and hall conditions so you can choose a shuttle that flies correctly for training or competition.",
+            "product": "victor-ncs-caron-sonic-shuttlecock-tube-of-6"
+          }
+        },
+        "grip": {
+          "type": "_cb-pguide-card",
+          "settings": {
+            "card_title": "Grip Sizing & Comfort",
+            "summary": "Explore how thickness, texture and absorbency affect control and comfort, plus simple ways to adjust your grip for your hand and playing intensity.",
+            "product": "yonex-cushion-leather-grip"
+          }
+        }
+      },
+      "block_order": ["header", "racket", "tension", "shuttles", "grip"]
+    },
+    {
+      "name": "[CB] Related guides",
+      "category": "t:categories.text",
+      "settings": {
+        "columns": 3,
+        "show_photos": false,
+        "equal_height": false
+      },
+      "blocks": {
+        "header": {
+          "type": "_cb-pguide-header",
+          "blocks": {
+            "eyebrow": {
+              "type": "cb-subheader",
+              "settings": {
+                "subheader_text": "Keep learning",
+                "size": 11,
+                "space_below": 3
+              }
+            },
+            "heading": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "Related guides",
+                "size": 40,
+                "mobile_scale": 70,
+                "line_height": 120
+              }
+            },
+            "text": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>Continue with the setup choices that have the biggest impact on feel and consistency.</p>",
+                "size": 15
+              }
+            }
+          },
+          "block_order": [
+            "eyebrow",
+            "heading",
+            "text"
+          ]
+        },
+        "tension": {
+          "type": "_cb-pguide-card",
+          "settings": {
+            "label": "Related guide",
+            "card_title": "Understanding String Tension",
+            "summary": "See how higher and lower tensions change control, power and forgiveness, and how to find a practical starting point for your game.",
+            "product": "yonex-badminton-string-10m-packet"
+          }
+        },
+        "shuttles": {
+          "type": "_cb-pguide-card",
+          "settings": {
+            "label": "Related guide",
+            "card_title": "Shuttle Speeds Explained",
+            "summary": "Understand speed ratings, temperature and hall conditions so you can choose a shuttle that flies correctly for training or competition.",
+            "product": "victor-ncs-caron-sonic-shuttlecock-tube-of-6"
+          }
+        },
+        "grip": {
+          "type": "_cb-pguide-card",
+          "settings": {
+            "label": "Related guide",
+            "card_title": "Grip Sizing & Comfort",
+            "summary": "Explore how thickness, texture and absorbency affect control and comfort, plus simple ways to adjust your grip for your hand and playing intensity.",
+            "product": "yonex-cushion-leather-grip"
+          }
+        }
+      },
+      "block_order": [
+        "header",
+        "tension",
+        "shuttles",
+        "grip"
+      ]
+    },
+    {
+      "name": "[CB] Highlight cards",
+      "category": "t:categories.text",
+      "settings": {
+        "columns": 3,
+        "show_photos": false,
+        "equal_height": false
+      },
+      "blocks": {
+        "coaching": {
+          "type": "cb-highlight-card",
+          "settings": {
+            "label": "Coaching",
+            "title_text": "<em>3</em> internationally experienced coaches",
+            "body_text": "Playing insight and practical guidance for players at every stage."
+          }
+        },
+        "qualifications": {
+          "type": "cb-highlight-card",
+          "settings": {
+            "label": "Qualifications",
+            "title_text": "<em>BWF Level 1 &amp; 2</em> coaches",
+            "body_text": "Coaching support informed by recognised global standards."
+          }
+        },
+        "support": {
+          "type": "cb-highlight-card",
+          "settings": {
+            "label": "Technical support",
+            "title_text": "<em>International</em> stringing experience",
+            "body_text": "Professional-grade racket preparation delivered in house."
+          }
+        }
+      },
+      "block_order": [
+        "coaching",
+        "qualifications",
+        "support"
+      ]
+    }
+  ]
+}
+{% endschema %}

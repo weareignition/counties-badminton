@@ -4,6 +4,7 @@
   {% if block.settings.filter_label != blank %}
     aria-label="{{ block.settings.filter_label | escape }}"
   {% endif %}
+  style="--cb-frames-filters-label-size: {{ block.settings.label_size }}px; --cb-frames-filters-label-weight: {{ block.settings.label_weight }}; --cb-frames-filters-button-size: {{ block.settings.button_size }}px; --cb-frames-filters-button-weight: {{ block.settings.button_weight }};"
   {{ block.shopify_attributes }}
 >
   {%- if block.settings.filter_label != blank -%}
@@ -28,8 +29,8 @@
   .cb-frames__filters-label {
     flex: none;
     font-family: var(--cbp-font-body);
-    font-weight: var(--cbp-font-body-weight);
-    font-size: 11px;
+    font-weight: var(--cb-frames-filters-label-weight, var(--cbp-font-body-weight));
+    font-size: var(--cb-frames-filters-label-size, 11px);
     color: var(--cbp-muted);
   }
 
@@ -56,8 +57,8 @@
     border-radius: 999px;
     background: transparent;
     font-family: var(--cbp-font-body);
-    font-weight: var(--cbp-font-body-strong);
-    font-size: 11px;
+    font-weight: var(--cb-frames-filters-button-weight, var(--cbp-font-body-strong));
+    font-size: var(--cb-frames-filters-button-size, 11px);
     line-height: 1.2;
     color: var(--cbp-text);
     cursor: pointer;
@@ -97,6 +98,67 @@
       "id": "all_label",
       "label": "\"Show all\" button",
       "default": "All"
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "label_size",
+      "label": "Label size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "select",
+      "id": "label_weight",
+      "label": "Label weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "button_size",
+      "label": "Filter button text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 11,
+      "info": "Every filter button in this bar."
+    },
+    {
+      "type": "select",
+      "id": "button_weight",
+      "label": "Filter button text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
     }
   ],
   "presets": [

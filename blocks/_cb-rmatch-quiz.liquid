@@ -1,0 +1,597 @@
+{%- comment -%}
+  The question card: one question at a time with progress, Back / Skip / Continue, and a status pill underneath.
+  The section script runs it; [current], [total] and [count] in the texts are filled in live.
+{%- endcomment -%}
+<div
+  class="cb-rmatch-quiz"
+  data-cb-rmatch-quiz
+  data-progress-label="{{ block.settings.progress_label | escape }}"
+  data-step-label="{{ block.settings.step_label | escape }}"
+  data-continue-label="{{ block.settings.continue_label | escape }}"
+  data-finish-label="{{ block.settings.finish_label | escape }}"
+  data-pill-pending="{{ block.settings.pill_pending | escape }}"
+  data-pill-done="{{ block.settings.pill_done | escape }}"
+  style="
+    --cb-rmatch-quiz-progress-size: {{ block.settings.progress_size }}px;
+    --cb-rmatch-quiz-progress-weight: {{ block.settings.progress_weight }};
+    --cb-rmatch-quiz-step-size: {{ block.settings.step_size }}px;
+    --cb-rmatch-quiz-step-weight: {{ block.settings.step_weight }};
+    --cb-rmatch-quiz-done-heading-size: {{ block.settings.done_heading_size }}px;
+    --cb-rmatch-quiz-done-heading-weight: {{ block.settings.done_heading_weight }};
+    --cb-rmatch-quiz-summary-size: {{ block.settings.summary_size }}px;
+    --cb-rmatch-quiz-summary-weight: {{ block.settings.summary_weight }};
+    --cb-rmatch-quiz-link-size: {{ block.settings.link_size }}px;
+    --cb-rmatch-quiz-link-weight: {{ block.settings.link_weight }};
+    --cb-rmatch-quiz-continue-size: {{ block.settings.continue_size }}px;
+    --cb-rmatch-quiz-continue-weight: {{ block.settings.continue_weight }};
+    --cb-rmatch-quiz-pill-size: {{ block.settings.pill_size }}px;
+    --cb-rmatch-quiz-pill-weight: {{ block.settings.pill_weight }};
+  "
+  {{ block.shopify_attributes }}
+>
+  <div class="cb-rmatch-quiz__card">
+    <div class="cb-rmatch-quiz__head">
+      <p class="cb-rmatch-quiz__progress" data-cb-rmatch-progress></p>
+      <p class="cb-rmatch-quiz__step" data-cb-rmatch-step></p>
+    </div>
+    <div class="cb-rmatch-quiz__bar" aria-hidden="true"><span class="cb-rmatch-quiz__fill"></span></div>
+
+    <div class="cb-rmatch-quiz__questions" data-cb-rmatch-questions>
+      {% content_for 'blocks' %}
+    </div>
+
+    <div class="cb-rmatch-quiz__done" data-cb-rmatch-done hidden>
+      <h3 class="cb-rmatch-quiz__done-title" tabindex="-1">{{ block.settings.done_title | escape }}</h3>
+      <p class="cb-rmatch-quiz__summary" data-cb-rmatch-summary></p>
+    </div>
+
+    <div class="cb-rmatch-quiz__footer">
+      <div class="cb-rmatch-quiz__secondary">
+        <button type="button" class="cb-rmatch-quiz__link" data-cb-rmatch-back hidden>
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M13 8H3M7 4 3 8l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          {{- block.settings.back_label | escape -}}
+        </button>
+        <button type="button" class="cb-rmatch-quiz__link" data-cb-rmatch-skip>{{ block.settings.skip_label | escape }}</button>
+        <button type="button" class="cb-rmatch-quiz__link" data-cb-rmatch-restart hidden>{{ block.settings.restart_label | escape }}</button>
+      </div>
+      <button type="button" class="cb-rmatch-quiz__continue" data-cb-rmatch-continue>
+        <span data-cb-rmatch-continue-text>{{ block.settings.continue_label | escape }}</span>
+        <svg width="12" height="12" viewBox="4 4 16 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+  </div>
+
+  {%- if block.settings.pill_pending != blank or block.settings.pill_done != blank -%}
+    <p class="cb-rmatch-quiz__pill" data-cb-rmatch-pill aria-live="polite">
+      <span class="cb-rmatch-quiz__pill-dot" aria-hidden="true"></span>
+      <span data-cb-rmatch-pill-text></span>
+    </p>
+  {%- endif -%}
+</div>
+
+{% stylesheet %}
+  .cb-rmatch-quiz {
+    --cbrm-progress: 0%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  .cb-rmatch-quiz__card {
+    width: 100%;
+    max-width: var(--cbrm-card-width, 814px);
+    padding: 28px 18px 22px;
+    border-radius: var(--cbrm-radius);
+    background: var(--cbrm-card);
+    scroll-margin-top: calc(var(--header-height, 0px) + 16px);
+  }
+
+  .cb-rmatch-quiz__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 4px 16px;
+  }
+
+  .cb-rmatch-quiz .cb-rmatch-quiz__progress {
+    margin: 0;
+    font-family: var(--cbrm-font-body);
+    font-weight: var(--cb-rmatch-quiz-progress-weight, var(--cbrm-font-body-strong));
+    font-size: var(--cb-rmatch-quiz-progress-size, 10px);
+    line-height: 1.3;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--cbrm-accent);
+  }
+
+  .cb-rmatch-quiz .cb-rmatch-quiz__step {
+    margin: 0;
+    font-family: var(--cbrm-font-body);
+    font-weight: var(--cb-rmatch-quiz-step-weight, var(--cbrm-font-body-weight));
+    font-size: var(--cb-rmatch-quiz-step-size, 12px);
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: var(--cbrm-muted);
+  }
+
+  .cb-rmatch-quiz__bar {
+    height: 6px;
+    margin-top: 9px;
+    overflow: hidden;
+    border-radius: 3px;
+    background: var(--cbrm-option);
+  }
+
+  .cb-rmatch-quiz__fill {
+    display: block;
+    width: var(--cbrm-progress, 0%);
+    height: 100%;
+    border-radius: inherit;
+    background: var(--cbrm-accent);
+    transition: width 0.3s ease;
+  }
+
+  .cb-rmatch-quiz__questions {
+    margin-top: 35px;
+  }
+
+  /* Before the script runs only the first question shows; afterwards only the current one. */
+  .cb-rmatch-quiz__questions > .cb-rmatch-q:not(:first-child),
+  .cb-rmatch-quiz__questions.is-ready > .cb-rmatch-q:not(.is-active),
+  .cb-rmatch-quiz.is-complete .cb-rmatch-quiz__questions {
+    display: none;
+  }
+
+  .cb-rmatch-quiz__questions.is-ready > .cb-rmatch-q.is-active {
+    display: block;
+  }
+
+  .cb-rmatch-quiz__done {
+    margin-top: 32px;
+  }
+
+  .cb-rmatch-quiz .cb-rmatch-quiz__done-title {
+    margin: 0;
+    font-family: var(--cbrm-font-heading);
+    font-weight: var(--cb-rmatch-quiz-done-heading-weight, var(--cbrm-font-heading-medium-weight));
+    font-size: calc(var(--cb-rmatch-quiz-done-heading-size, 32px) * 26 / 32);
+    line-height: 1.2;
+    color: var(--cbrm-text);
+  }
+
+  .cb-rmatch-quiz__done-title:focus {
+    outline: none;
+  }
+
+  .cb-rmatch-quiz .cb-rmatch-quiz__summary {
+    margin: 12px 0 0;
+    font-family: var(--cbrm-font-body);
+    font-weight: var(--cb-rmatch-quiz-summary-weight, inherit);
+    font-size: var(--cb-rmatch-quiz-summary-size, 14px);
+    line-height: 1.5;
+    color: var(--cbrm-muted);
+  }
+
+  .cb-rmatch-quiz__footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 36px;
+  }
+
+  .cb-rmatch-quiz__secondary {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 21px;
+  }
+
+  .cb-rmatch-quiz .cb-rmatch-quiz__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+    padding: 4px 0;
+    border: 0;
+    background: none;
+    font-family: var(--cbrm-font-body);
+    font-weight: var(--cb-rmatch-quiz-link-weight, var(--cbrm-font-body-weight));
+    font-size: var(--cb-rmatch-quiz-link-size, 12px);
+    line-height: 1.3;
+    color: var(--cbrm-muted);
+    cursor: pointer;
+  }
+
+  .cb-rmatch-quiz__link[hidden] {
+    display: none;
+  }
+
+  .cb-rmatch-quiz .cb-rmatch-quiz__link:hover {
+    color: var(--cbrm-text);
+  }
+
+  .cb-rmatch-quiz .cb-rmatch-quiz__continue {
+    display: inline-flex;
+    flex: 1 1 100%;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 46px;
+    margin: 0;
+    padding: 0 22px;
+    border: 0;
+    border-radius: 4px;
+    background: var(--cbrm-accent);
+    font-family: var(--cbrm-font-heading);
+    font-weight: var(--cb-rmatch-quiz-continue-weight, var(--cbrm-font-heading-medium-weight));
+    font-size: calc(var(--cb-rmatch-quiz-continue-size, 18px) * 16 / 18);
+    line-height: 1.2;
+    color: var(--cbrm-text);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  .cb-rmatch-quiz .cb-rmatch-quiz__continue:hover {
+    background: color-mix(in srgb, var(--cbrm-accent) 88%, #000);
+  }
+
+  .cb-rmatch-quiz__continue svg {
+    flex: none;
+    transition: transform 0.2s ease;
+  }
+
+  .cb-rmatch-quiz__continue:hover svg {
+    transform: translateX(3px);
+  }
+
+  .cb-rmatch-quiz__link:focus-visible,
+  .cb-rmatch-quiz__continue:focus-visible {
+    outline: 2px solid var(--cbrm-text);
+    outline-offset: 3px;
+  }
+
+  .cb-rmatch-quiz .cb-rmatch-quiz__pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    max-width: 100%;
+    margin: 40px 0 0;
+    padding: 8px 18px;
+    border-radius: 999px;
+    background: var(--cbrm-card);
+    font-family: var(--cbrm-font-body);
+    font-weight: var(--cb-rmatch-quiz-pill-weight, 700);
+    font-size: var(--cb-rmatch-quiz-pill-size, 10px);
+    line-height: 15px;
+    letter-spacing: 0.05em;
+    text-align: center;
+    text-transform: uppercase;
+    color: var(--cbrm-text);
+  }
+
+  .cb-rmatch-quiz__pill-dot {
+    flex: none;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--cbrm-accent);
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-rmatch-quiz__card {
+      padding: 82px 44px 44px;
+    }
+
+    .cb-rmatch-quiz .cb-rmatch-quiz__done-title {
+      font-size: var(--cb-rmatch-quiz-done-heading-size, 32px);
+    }
+
+    .cb-rmatch-quiz__footer {
+      margin-top: 52px;
+    }
+
+    .cb-rmatch-quiz .cb-rmatch-quiz__continue {
+      flex: none;
+      min-width: 0;
+      font-size: var(--cb-rmatch-quiz-continue-size, 18px);
+    }
+
+    .cb-rmatch-quiz .cb-rmatch-quiz__pill {
+      margin-top: 76px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cb-rmatch-quiz__fill,
+    .cb-rmatch-quiz__continue,
+    .cb-rmatch-quiz__continue svg {
+      transition: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Question card",
+  "tag": null,
+  "blocks": [{ "type": "_cb-rmatch-question" }],
+  "settings": [
+    {
+      "type": "text",
+      "id": "progress_label",
+      "label": "Progress label",
+      "info": "[current] and [total] are filled in.",
+      "default": "Question [current] of [total]"
+    },
+    {
+      "type": "text",
+      "id": "step_label",
+      "label": "Step label",
+      "info": "[step] is each question's step name.",
+      "default": "Step: [step]"
+    },
+    {
+      "type": "text",
+      "id": "back_label",
+      "label": "Back",
+      "default": "Back"
+    },
+    {
+      "type": "text",
+      "id": "skip_label",
+      "label": "Skip",
+      "default": "Skip this question"
+    },
+    {
+      "type": "text",
+      "id": "continue_label",
+      "label": "Continue button",
+      "default": "Continue to Next Question"
+    },
+    {
+      "type": "text",
+      "id": "finish_label",
+      "label": "Last question button",
+      "default": "See My Matches"
+    },
+    {
+      "type": "text",
+      "id": "done_title",
+      "label": "Finished heading",
+      "default": "Your matches are ready."
+    },
+    {
+      "type": "text",
+      "id": "restart_label",
+      "label": "Start again",
+      "default": "Start again"
+    },
+    {
+      "type": "header",
+      "content": "Status pill"
+    },
+    {
+      "type": "text",
+      "id": "pill_pending",
+      "label": "While answering",
+      "info": "[total] is the number of questions. Leave both empty to hide the pill.",
+      "default": "Answer [total] quick questions to see your matches"
+    },
+    {
+      "type": "text",
+      "id": "pill_done",
+      "label": "When finished",
+      "info": "[count] is the number of rackets shown.",
+      "default": "Matching complete · [count] curated frames identified"
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "progress_size",
+      "label": "Progress label size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "progress_weight",
+      "label": "Progress label weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "step_size",
+      "label": "Step label size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "step_weight",
+      "label": "Step label weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "done_heading_size",
+      "label": "Finished heading size",
+      "info": "Scaled down on phones.",
+      "min": 16,
+      "max": 112,
+      "step": 1,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "select",
+      "id": "done_heading_weight",
+      "label": "Finished heading weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "summary_size",
+      "label": "Answer summary size",
+      "info": "The chosen answers under the finished heading.",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "summary_weight",
+      "label": "Answer summary weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "link_size",
+      "label": "Back, Skip and Start again size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "link_weight",
+      "label": "Back, Skip and Start again weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "continue_size",
+      "label": "Continue button text size",
+      "info": "Scaled down on phones.",
+      "min": 10,
+      "max": 56,
+      "step": 0.5,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "select",
+      "id": "continue_weight",
+      "label": "Continue button text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "pill_size",
+      "label": "Status pill size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "pill_weight",
+      "label": "Status pill weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    }
+  ],
+  "presets": [{ "name": "[CB] Question card" }]
+}
+{% endschema %}

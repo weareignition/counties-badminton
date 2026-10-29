@@ -6,7 +6,21 @@
   assign link_label = block.settings.link_label | replace: '[count]', linked_collection.products_count
 -%}
 
-<a href="{{ url }}" class="cb-category__card cb-category-card" {{ block.shopify_attributes }}>
+<a
+  href="{{ url }}"
+  class="cb-category__card cb-category-card"
+  style="
+    --cb-category-card-badge-size: {{ block.settings.badge_size }}px;
+    --cb-category-card-badge-weight: {{ block.settings.badge_weight }};
+    --cb-category-card-title-size: {{ block.settings.title_size }}px;
+    --cb-category-card-title-weight: {{ block.settings.title_weight }};
+    --cb-category-card-description-size: {{ block.settings.description_size }}px;
+    --cb-category-card-description-weight: {{ block.settings.description_weight }};
+    --cb-category-card-link-size: {{ block.settings.link_size }}px;
+    --cb-category-card-link-weight: {{ block.settings.link_weight }};
+  "
+  {{ block.shopify_attributes }}
+>
   <div class="cb-category-card__media">
     {%- if image != blank -%}
       {{
@@ -64,6 +78,12 @@
     background: var(--cbc-surface);
   }
 
+  /* The badge and link are styled in the section; their sizes are set per card here. */
+  .cb-category-card .cb-category__badge {
+    font-weight: var(--cb-category-card-badge-weight, var(--cbc-font-body-strong));
+    font-size: var(--cb-category-card-badge-size, 9px);
+  }
+
   .cb-category-card__body {
     display: flex;
     flex-direction: column;
@@ -75,8 +95,8 @@
   .cb-category-card__title {
     margin: 0;
     font-family: var(--cbc-font-heading);
-    font-weight: var(--cbc-font-heading-weight);
-    font-size: 16px;
+    font-weight: var(--cb-category-card-title-weight, var(--cbc-font-heading-weight));
+    font-size: calc(var(--cb-category-card-title-size, 17px) * 16 / 17);
     line-height: 1.2;
     color: var(--cbc-text);
   }
@@ -84,14 +104,16 @@
   .cb-category-card__description {
     margin: 0;
     font-family: var(--cbc-font-body);
-    font-weight: var(--cbc-font-body-weight);
-    font-size: 12px;
+    font-weight: var(--cb-category-card-description-weight, var(--cbc-font-body-weight));
+    font-size: calc(var(--cb-category-card-description-size, 13px) * 12 / 13);
     line-height: 1.5;
     color: var(--cbc-muted);
   }
 
   .cb-category-card .cb-category__cta {
     margin-top: 4px;
+    font-weight: var(--cb-category-card-link-weight, var(--cbc-font-body-strong));
+    font-size: var(--cb-category-card-link-size, 12px);
   }
 
   @media screen and (min-width: 750px) {
@@ -101,11 +123,11 @@
     }
 
     .cb-category-card__title {
-      font-size: 17px;
+      font-size: var(--cb-category-card-title-size, 17px);
     }
 
     .cb-category-card__description {
-      font-size: 13px;
+      font-size: var(--cb-category-card-description-size, 13px);
     }
   }
 {% endstylesheet %}
@@ -174,6 +196,124 @@
         { "value": "accent", "label": "Accent" }
       ],
       "default": "text"
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "badge_size",
+      "label": "Badge size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 9
+    },
+    {
+      "type": "select",
+      "id": "badge_weight",
+      "label": "Badge weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Title size",
+      "info": "Scaled down on phones.",
+      "min": 10,
+      "max": 56,
+      "step": 0.5,
+      "unit": "px",
+      "default": 17
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Title weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "description_size",
+      "label": "Description size",
+      "info": "Scaled down on phones.",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "select",
+      "id": "description_weight",
+      "label": "Description weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "link_size",
+      "label": "Link text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "link_weight",
+      "label": "Link text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
     }
   ],
   "presets": [{ "name": "[CB] Category card" }]

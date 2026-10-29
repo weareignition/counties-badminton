@@ -9,6 +9,587 @@
  */
 {
   "sections": {
+    "cb_blank_BCCKBz": {
+      "type": "cb-blank",
+      "blocks": {
+        "cb_subheader_BUyqKg": {
+          "type": "cb-subheader",
+          "name": "[CB] Subheader",
+          "settings": {
+            "subheader_text": "VISIT US",
+            "secondary": "",
+            "show_dot": false,
+            "size": 10,
+            "weight": "strong",
+            "color": "accent",
+            "custom_color": "#ffffff",
+            "letter_spacing": 10,
+            "uppercase": true,
+            "space_below": 0,
+            "width": "auto",
+            "width_px": 400,
+            "background_color": "",
+            "padding_y": 0,
+            "padding_x": 0,
+            "border_width": 0,
+            "border_color": "",
+            "radius": 0
+          },
+          "blocks": {}
+        },
+        "cb_heading_kzjUrP": {
+          "type": "cb-heading",
+          "name": "[CB] Heading",
+          "settings": {
+            "heading_text": "Your local badminton specialists.&nbsp;",
+            "tag": "h2",
+            "size": 32,
+            "mobile_sizing": "scale",
+            "mobile_scale": 82,
+            "fluid_min": 28,
+            "fluid_vw": 6,
+            "weight": "font",
+            "color": "text",
+            "custom_color": "#ffffff",
+            "line_height": 115,
+            "letter_spacing": -1,
+            "uppercase": false,
+            "wrap": "balance",
+            "width": "auto",
+            "width_px": 400,
+            "max_width": 0,
+            "background_color": "",
+            "padding_y": 0,
+            "padding_x": 0,
+            "border_width": 0,
+            "border_color": "",
+            "radius": 0
+          },
+          "blocks": {}
+        },
+        "cb_paragraph_pG8xPd": {
+          "type": "cb-paragraph",
+          "name": "[CB] Paragraph",
+          "settings": {
+            "body_text": "<p>Shop, collect, arrange racket drop-off, or talk through your equipment in person at 41R Elliot Street, Papakura.</p>",
+            "size": 16,
+            "mobile_sizing": "same",
+            "mobile_size": 14,
+            "fluid_vw": 2,
+            "weight": "regular",
+            "color": "muted",
+            "custom_color": "#ffffff",
+            "line_height": 160,
+            "letter_spacing": 0,
+            "wrap": "wrap",
+            "width": "auto",
+            "width_px": 400,
+            "max_width_unit": "none",
+            "max_width_px": 640,
+            "max_width_ch": 60,
+            "background_color": "",
+            "padding_y": 0,
+            "padding_x": 0,
+            "border_width": 0,
+            "border_color": "",
+            "radius": 0
+          },
+          "blocks": {}
+        },
+        "cb_button_MUeq4B": {
+          "type": "cb-button",
+          "name": "[CB] Button",
+          "settings": {
+            "label": "Get directions →",
+            "link": "https://www.google.com/maps/dir/?api=1&destination=41R%20Elliot%20Street%2C%20Papakura%2C%20Auckland",
+            "new_tab": true,
+            "style": "solid",
+            "size": 14,
+            "radius": 8,
+            "uppercase": false,
+            "button_color": "#b8262f",
+            "text_color": "{{ settings.color_palette.background }}",
+            "border_color": "",
+            "custom_icon_tint": true,
+            "icon_position": "after",
+            "alignment": "auto",
+            "full_width": false,
+            "space_above": 0
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "cb_subheader_BUyqKg",
+        "cb_heading_kzjUrP",
+        "cb_paragraph_pG8xPd",
+        "cb_button_MUeq4B"
+      ],
+      "custom_css": [],
+      "name": "[CB] Blank section",
+      "settings": {
+        "alignment": "left",
+        "max_width": 1600,
+        "gap": 12,
+        "text_gap": 12,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "#111111",
+        "text_color": "#ffffff",
+        "soft_text_color": "#dcdcde",
+        "muted_text_color": "#d0d0d4",
+        "accent_color": "#d71f27",
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
+    },
+    "cb_guides_iaGMm7": {
+      "type": "cb-guides",
+      "blocks": {
+        "cb_guides_grid_QUnwwY": {
+          "type": "_cb-guides-grid",
+          "settings": {
+            "columns": 3,
+            "mobile_layout": "stack",
+            "gap": 22
+          },
+          "blocks": {
+            "cb_guides_card_eBzgH8": {
+              "type": "_cb-guides-card",
+              "settings": {
+                "article": "",
+                "use_custom_text": false,
+                "card_title": "Monday–Friday",
+                "summary": "3:30 pm–8:00 pm\n\nWeekends\n10:00 am–6:00 pm",
+                "icon": "none",
+                "custom_icon_tint": true,
+                "label": "SHOP HOURS",
+                "point_text": "",
+                "link_label": "",
+                "link": ""
+              },
+              "blocks": {}
+            },
+            "cb_guides_card_mppfHF": {
+              "type": "_cb-guides-card",
+              "settings": {
+                "article": "",
+                "use_custom_text": false,
+                "card_title": "Weekdays",
+                "summary": "9:30 am–5:00 pm\n\nRacket drop-off can be arranged during office hours.",
+                "icon": "none",
+                "custom_icon_tint": true,
+                "label": "OFFICE & RACKET DROP-OFF",
+                "point_text": "",
+                "link_label": "",
+                "link": ""
+              },
+              "blocks": {}
+            },
+            "cb_guides_card_YETdLM": {
+              "type": "_cb-guides-card",
+              "settings": {
+                "article": "",
+                "use_custom_text": false,
+                "card_title": "41R Elliot Street",
+                "summary": "Papakura\n\nVisit for equipment, advice, click & collect and stringing support.",
+                "icon": "none",
+                "custom_icon_tint": true,
+                "label": "LOCATION",
+                "point_text": "",
+                "link_label": "",
+                "link": ""
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "cb_guides_card_eBzgH8",
+            "cb_guides_card_mppfHF",
+            "cb_guides_card_YETdLM"
+          ]
+        }
+      },
+      "block_order": [
+        "cb_guides_grid_QUnwwY"
+      ],
+      "name": "[CB] Setup guidance",
+      "settings": {
+        "design": "1",
+        "max_width": 1400,
+        "stack_gap": 40,
+        "card_radius": 4,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "#111112",
+        "card_background_color": "#181818",
+        "border_color": "#ffffff0d",
+        "text_color": "#ffffff",
+        "accent_color": "#d71f27",
+        "padding_top": 52,
+        "padding_bottom": 44
+      }
+    },
+    "cb_advice_Azw9jy": {
+      "type": "cb-advice",
+      "blocks": {
+        "cb_advice_content_TipBHP": {
+          "type": "_cb-advice-content",
+          "settings": {
+            "alignment": "left",
+            "gap": 12
+          },
+          "blocks": {
+            "cb_subheader_YM9ehE": {
+              "type": "cb-subheader",
+              "settings": {
+                "subheader_text": "PAPAKURA",
+                "secondary": "",
+                "show_dot": false,
+                "size": 10,
+                "weight": "strong",
+                "color": "accent",
+                "custom_color": "#ffffff",
+                "letter_spacing": 0,
+                "uppercase": true,
+                "space_below": 0,
+                "width": "auto",
+                "width_px": 400,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_heading_BRVBki": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "&nbsp;41R Elliot Street&nbsp;",
+                "tag": "h2",
+                "size": 32,
+                "mobile_sizing": "scale",
+                "mobile_scale": 82,
+                "fluid_min": 28,
+                "fluid_vw": 6,
+                "weight": "font",
+                "color": "text",
+                "custom_color": "#ffffff",
+                "line_height": 115,
+                "letter_spacing": -1,
+                "uppercase": false,
+                "wrap": "wrap",
+                "width": "auto",
+                "width_px": 400,
+                "max_width": 0,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_paragraph_wDUxNn": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>Counties Manukau Badminton • Pro Shop, coaching and racket services</p>",
+                "size": 14,
+                "mobile_sizing": "same",
+                "mobile_size": 14,
+                "fluid_vw": 2,
+                "weight": "regular",
+                "color": "muted",
+                "custom_color": "#ffffff",
+                "line_height": 160,
+                "letter_spacing": -1,
+                "wrap": "wrap",
+                "width": "auto",
+                "width_px": 400,
+                "max_width_unit": "px",
+                "max_width_px": 600,
+                "max_width_ch": 60,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_advice_buttons_RhaCcy": {
+              "type": "_cb-advice-buttons",
+              "settings": {
+                "gap": 12,
+                "space_above": 16
+              },
+              "blocks": {
+                "cb_advice_button_Ty7PUC": {
+                  "type": "_cb-advice-button",
+                  "settings": {
+                    "label": "Get directions",
+                    "link": "",
+                    "directions_address": "41R Elliot Street, Papakura, Auckland",
+                    "style": "primary",
+                    "icon": "arrow",
+                    "custom_icon_tint": true,
+                    "new_tab": false
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "cb_advice_button_Ty7PUC"
+              ]
+            }
+          },
+          "block_order": [
+            "cb_subheader_YM9ehE",
+            "cb_heading_BRVBki",
+            "cb_paragraph_wDUxNn",
+            "cb_advice_buttons_RhaCcy"
+          ]
+        },
+        "cb_advice_icon_tcxYGH": {
+          "type": "_cb-advice-icon",
+          "settings": {
+            "icon": "racket_shuttle",
+            "custom_icon": "shopify://shop_images/cta-icon.png",
+            "custom_icon_tint": true,
+            "color": "text",
+            "size": 136,
+            "opacity": 12,
+            "show_on_mobile": false
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "cb_advice_content_TipBHP",
+        "cb_advice_icon_tcxYGH"
+      ],
+      "name": "[CB] Advice banner",
+      "settings": {
+        "max_width": 1400,
+        "panel_padding": 44,
+        "panel_radius": 10,
+        "show_border": false,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "#0b0b0b",
+        "panel_background_color": "#181818",
+        "border_color": "#ffffff14",
+        "text_color": "#ffffff",
+        "muted_text_color": "#a1a1aa",
+        "accent_color": "#d71f27",
+        "secondary_button_color": "#2a2a2a",
+        "padding_top": 32,
+        "padding_bottom": 32
+      }
+    },
+    "cb_contact_dWUXkR": {
+      "type": "cb-contact",
+      "blocks": {
+        "cb_pguide_header_Fc43Uz": {
+          "type": "_cb-pguide-header",
+          "settings": {
+            "alignment": "left",
+            "gap": 12
+          },
+          "blocks": {
+            "cb_subheader_BrHpDK": {
+              "type": "cb-subheader",
+              "settings": {
+                "subheader_text": "Contact",
+                "secondary": "",
+                "show_dot": false,
+                "size": 11,
+                "weight": "strong",
+                "color": "accent",
+                "custom_color": "#ffffff",
+                "letter_spacing": 10,
+                "uppercase": true,
+                "space_below": 3,
+                "width": "auto",
+                "width_px": 400,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_heading_FN6wAj": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "How can we help?",
+                "tag": "h2",
+                "size": 40,
+                "mobile_sizing": "scale",
+                "mobile_scale": 70,
+                "fluid_min": 28,
+                "fluid_vw": 6,
+                "weight": "font",
+                "color": "text",
+                "custom_color": "#ffffff",
+                "line_height": 120,
+                "letter_spacing": -1,
+                "uppercase": false,
+                "wrap": "balance",
+                "width": "auto",
+                "width_px": 400,
+                "max_width": 0,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_paragraph_ADGjDn": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>Questions about products, click &amp; collect, stringing or visiting the pro shop? Send us a message and we'll get back to you.</p>",
+                "size": 15,
+                "mobile_sizing": "same",
+                "mobile_size": 14,
+                "fluid_vw": 2,
+                "weight": "regular",
+                "color": "muted",
+                "custom_color": "#ffffff",
+                "line_height": 160,
+                "letter_spacing": 0,
+                "wrap": "wrap",
+                "width": "auto",
+                "width_px": 400,
+                "max_width_unit": "none",
+                "max_width_px": 640,
+                "max_width_ch": 60,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "cb_subheader_BrHpDK",
+            "cb_heading_FN6wAj",
+            "cb_paragraph_ADGjDn"
+          ]
+        },
+        "cb_cform_3QU7zF": {
+          "type": "_cb-cform",
+          "settings": {
+            "button_label": "Send enquiry",
+            "success_message": "Thanks for getting in touch. We'll reply as soon as we can.",
+            "width": "full",
+            "width_px": 400,
+            "background_color": "#1b1b1b",
+            "padding_y": 34,
+            "padding_x": 34,
+            "border_width": 0,
+            "border_color": "",
+            "radius": 15
+          },
+          "blocks": {
+            "cb_cform_field_HbyYb7": {
+              "type": "_cb-cform-field",
+              "settings": {
+                "kind": "name",
+                "label": "Name",
+                "placeholder": "Your name",
+                "options": "",
+                "message_height": 124,
+                "required": true,
+                "show_required": false,
+                "width": "half"
+              },
+              "blocks": {}
+            },
+            "cb_cform_field_9LDedX": {
+              "type": "_cb-cform-field",
+              "settings": {
+                "kind": "email",
+                "label": "Email",
+                "placeholder": "you@example.com",
+                "options": "",
+                "message_height": 124,
+                "required": false,
+                "show_required": false,
+                "width": "half"
+              },
+              "blocks": {}
+            },
+            "cb_cform_field_zdwTEq": {
+              "type": "_cb-cform-field",
+              "settings": {
+                "kind": "dropdown",
+                "label": "What do you need help with?",
+                "placeholder": "Choose a topic",
+                "options": "Product question\nClick & collect\nStringing support\nPlanning a visit\nSomething else",
+                "message_height": 124,
+                "required": false,
+                "show_required": false,
+                "width": "full"
+              },
+              "blocks": {}
+            },
+            "cb_cform_field_bVWbBr": {
+              "type": "_cb-cform-field",
+              "settings": {
+                "kind": "message",
+                "label": "Message",
+                "placeholder": "Tell us how we can help",
+                "options": "",
+                "message_height": 124,
+                "required": true,
+                "show_required": false,
+                "width": "full"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "cb_cform_field_HbyYb7",
+            "cb_cform_field_9LDedX",
+            "cb_cform_field_zdwTEq",
+            "cb_cform_field_bVWbBr"
+          ]
+        }
+      },
+      "block_order": [
+        "cb_pguide_header_Fc43Uz",
+        "cb_cform_3QU7zF"
+      ],
+      "name": "[CB] Contact",
+      "settings": {
+        "max_width": 1400,
+        "header_gap": 80,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "#111111",
+        "text_color": "#ffffff",
+        "muted_text_color": "#d0d0d4",
+        "accent_color": "#d71f27",
+        "input_color": "#171717",
+        "input_border_color": "#ffffff14",
+        "placeholder_color": "#8a8a8a",
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
+    },
     "main": {
       "type": "main-page",
       "blocks": {
@@ -27,6 +608,7 @@
             "letter_spacing": "normal",
             "case": "none",
             "wrap": "pretty",
+            "text_color": "",
             "background": false,
             "background_color": "#00000026",
             "corner_radius": 0,
@@ -52,6 +634,7 @@
             "letter_spacing": "normal",
             "case": "none",
             "wrap": "pretty",
+            "text_color": "",
             "background": false,
             "background_color": "#00000026",
             "corner_radius": 0,
@@ -67,80 +650,21 @@
         "title",
         "content"
       ],
+      "disabled": true,
       "settings": {
         "content_direction": "column",
         "gap": 32,
+        "background_color": "",
         "padding-block-start": 40,
         "padding-block-end": 0
-      }
-    },
-    "form": {
-      "type": "section",
-      "blocks": {
-        "contact_form_UwiCkQ": {
-          "type": "contact-form",
-          "settings": {
-            "width": "custom",
-            "custom_width": 50,
-            "width_mobile": "custom",
-            "custom_width_mobile": 100,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {
-            "submit-button": {
-              "type": "contact-form-submit-button",
-              "static": true,
-              "settings": {
-                "label": "Submit",
-                "style_class": "button",
-                "width": "fit-content",
-                "custom_width": 100,
-                "width_mobile": "fit-content",
-                "custom_width_mobile": 100
-              },
-              "blocks": {}
-            }
-          },
-          "block_order": []
-        }
-      },
-      "block_order": [
-        "contact_form_UwiCkQ"
-      ],
-      "name": "t:names.contact_form",
-      "settings": {
-        "content_direction": "column",
-        "vertical_on_mobile": true,
-        "horizontal_alignment": "flex-start",
-        "vertical_alignment": "center",
-        "align_baseline": false,
-        "horizontal_alignment_flex_direction_column": "center",
-        "vertical_alignment_flex_direction_column": "center",
-        "gap": 32,
-        "section_width": "page-width",
-        "section_height": "",
-        "section_height_custom": 50,
-        "background_media": "none",
-        "video_position": "cover",
-        "background_image_position": "cover",
-        "toggle_overlay": false,
-        "overlay_color": "#00000026",
-        "overlay_style": "solid",
-        "gradient_direction": "to top",
-        "border": "none",
-        "border_width": 1,
-        "border_opacity": 100,
-        "border_radius": 0,
-        "padding-block-start": 32,
-        "padding-block-end": 84
       }
     }
   },
   "order": [
-    "main",
-    "form"
+    "cb_blank_BCCKBz",
+    "cb_guides_iaGMm7",
+    "cb_advice_Azw9jy",
+    "cb_contact_dWUXkR",
+    "main"
   ]
 }

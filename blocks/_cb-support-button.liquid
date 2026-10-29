@@ -1,0 +1,149 @@
+{%- liquid
+  assign link = block.settings.link
+  if link == blank
+    assign link = routes.root_url | append: 'pages/contact'
+  endif
+-%}
+
+{%- if block.settings.label != blank -%}
+  <a
+    href="{{ link }}"
+    class="cb-support__button cb-support__button--{{ block.settings.style }}"
+    {% if block.settings.new_tab %}
+      target="_blank" rel="noopener"
+    {% endif %}
+    style="--cb-support-button-text-size: {{ block.settings.text_size }}px; --cb-support-button-text-weight: {{ block.settings.text_weight }};"
+    {{ block.shopify_attributes }}
+  >
+    {{- block.settings.label | escape -}}
+    {%- if block.settings.new_tab -%}
+      <span class="visually-hidden"> (opens in a new tab)</span>
+    {%- endif -%}
+  </a>
+{%- endif -%}
+
+{% stylesheet %}
+  .cb-support__button {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    min-height: 39px;
+    padding: 11px 28px;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    font-family: var(--cbsu-font-body);
+    font-weight: var(--cb-support-button-text-weight, var(--cbsu-font-body-strong));
+    font-size: var(--cb-support-button-text-size, 10px);
+    line-height: 1.2;
+    letter-spacing: 0;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .cb-support__button--primary {
+    background: var(--cbsu-accent);
+    color: #fff;
+  }
+
+  .cb-support__button--primary:hover {
+    background: color-mix(in srgb, var(--cbsu-accent) 85%, #000);
+  }
+
+  .cb-support__button--secondary {
+    border-color: color-mix(in srgb, var(--cbsu-text) 8%, transparent);
+    background: var(--cbsu-secondary);
+    color: var(--cbsu-text);
+  }
+
+  .cb-support__button--secondary:hover {
+    background: color-mix(in srgb, var(--cbsu-secondary) 82%, var(--cbsu-text));
+  }
+
+  .cb-support__button--outline {
+    border-color: color-mix(in srgb, var(--cbsu-text) 55%, transparent);
+    background: transparent;
+    color: var(--cbsu-text);
+  }
+
+  .cb-support__button--outline:hover {
+    border-color: var(--cbsu-text);
+  }
+
+  .cb-support__button:focus-visible {
+    outline: 2px solid var(--cbsu-text);
+    outline-offset: 3px;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Button",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "Ask the Pro Shop"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link",
+      "info": "Leave empty to open the Contact page."
+    },
+    {
+      "type": "select",
+      "id": "style",
+      "label": "Style",
+      "options": [
+        { "value": "primary", "label": "Accent" },
+        { "value": "secondary", "label": "Grey" },
+        { "value": "outline", "label": "Outline" }
+      ],
+      "default": "primary"
+    },
+    {
+      "type": "checkbox",
+      "id": "new_tab",
+      "label": "Open in a new tab",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Button text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "text_weight",
+      "label": "Button text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    }
+  ],
+  "presets": [{ "name": "[CB] Button" }]
+}
+{% endschema %}

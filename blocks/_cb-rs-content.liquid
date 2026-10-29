@@ -1,0 +1,73 @@
+<div
+  class="cb-rs__content"
+  style="--cbr-content-gap: {{ block.settings.gap }}px;"
+  {{ block.shopify_attributes }}
+>
+  {% content_for 'blocks' %}
+</div>
+
+{% stylesheet %}
+  .cb-rs__content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--cbr-content-gap, 16px);
+    min-width: 0;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Content group",
+  "tag": null,
+  "blocks": [
+    { "type": "cb-subheader" },
+    { "type": "cb-heading" },
+    { "type": "cb-paragraph" },
+    { "type": "cb-button" },
+    { "type": "_cb-rs-facts" },
+    { "type": "_cb-rs-price" }
+  ],
+  "settings": [
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Space between blocks",
+      "min": 6,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Content group",
+      "blocks": {
+        "eyebrow": { "type": "cb-subheader", "settings": { "subheader_text": "Pro shop stringing" } },
+        "heading": {
+          "type": "cb-heading",
+          "settings": {
+            "heading_text": "Professional restringing, done in-house.",
+            "mobile_scale": 80,
+            "line_height": 112,
+            "wrap": "wrap"
+          }
+        },
+        "text": {
+          "type": "cb-paragraph",
+          "settings": {
+            "body_text": "<p>Your string and tension affect feel, control, power and comfort. The pro shop can help match the setup to your racket, level and playing style instead of leaving you to guess.</p>",
+            "size": 13,
+            "mobile_size": 13,
+            "line_height": 165,
+            "max_width_unit": "ch",
+            "max_width_ch": 62
+          }
+        }
+      },
+      "block_order": ["eyebrow", "heading", "text"]
+    }
+  ]
+}
+{% endschema %}

@@ -18,8 +18,9 @@
   "tag": null,
   "blocks": [
     { "type": "_cb-string-badge" },
-    { "type": "_cb-string-heading" },
-    { "type": "_cb-string-text" },
+    { "type": "cb-heading" },
+    { "type": "cb-paragraph" },
+    { "type": "cb-button" },
     { "type": "_cb-string-features" },
     { "type": "_cb-string-actions" }
   ],
@@ -28,8 +29,26 @@
       "name": "[CB] Content",
       "blocks": {
         "badge": { "type": "_cb-string-badge" },
-        "heading": { "type": "_cb-string-heading" },
-        "text": { "type": "_cb-string-text" }
+        "heading": {
+          "type": "cb-heading",
+          "settings": {
+            "heading_text": "Professional stringing. Seven days a week.",
+            "size": 44,
+            "mobile_sizing": "fluid",
+            "fluid_min": 30,
+            "line_height": 108,
+            "letter_spacing": -2
+          }
+        },
+        "text": {
+          "type": "cb-paragraph",
+          "settings": {
+            "body_text": "<p>Tell customers about your stringing service.</p>",
+            "line_height": 165,
+            "max_width_unit": "ch",
+            "max_width_ch": 62
+          }
+        }
       },
       "block_order": ["badge", "heading", "text"]
     }

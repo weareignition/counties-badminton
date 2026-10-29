@@ -1,0 +1,71 @@
+{%- doc -%}
+  Width and box styles (background, padding, border, corner radius) for the shared [CB] Heading, Subheader and
+  Paragraph blocks. Outputs either the extra classes or the inline CSS variables for the block's element, so render
+  it twice: once inside class="", once inside style="". With every box setting at its default it outputs nothing,
+  so blocks that don't use a box look exactly as before.
+
+  Expects these block settings: width, width_px, background_color, padding_y, padding_x, border_width,
+  border_color, radius.
+
+  @param {object} settings - The block's settings (block.settings).
+  @param {string} part - 'class' or 'style'.
+{%- enddoc -%}
+
+{%- liquid
+  assign s = settings
+
+  assign has_box = false
+  if s.background_color != blank or s.padding_y > 0 or s.padding_x > 0 or s.border_width > 0 or s.radius > 0
+    assign has_box = true
+  endif
+
+  if part == 'class'
+    if has_box
+      echo ' cb-box'
+    endif
+    if s.width != blank and s.width != 'auto'
+      echo ' cb-box--' | append: s.width
+    endif
+  else
+    if s.width == 'custom'
+      echo ' --cb-box-w: ' | append: s.width_px | append: 'px;'
+    endif
+    if has_box
+      echo ' --cb-box-py: ' | append: s.padding_y | append: 'px; --cb-box-px: ' | append: s.padding_x | append: 'px;'
+      echo ' --cb-box-r: ' | append: s.radius | append: 'px;'
+      if s.background_color != blank
+        echo ' --cb-box-bg: ' | append: s.background_color | append: ';'
+      endif
+      if s.border_width > 0
+        echo ' --cb-box-bw: ' | append: s.border_width | append: 'px;'
+        if s.border_color != blank
+          echo ' --cb-box-bc: ' | append: s.border_color | append: ';'
+        endif
+      endif
+    endif
+  endif
+-%}
+
+{% stylesheet %}
+  .cb-box {
+    box-sizing: border-box;
+    padding: var(--cb-box-py, 0px) var(--cb-box-px, 0px);
+    border: var(--cb-box-bw, 0px) solid var(--cb-box-bc, color-mix(in srgb, currentColor 25%, transparent));
+    border-radius: var(--cb-box-r, 0px);
+    background: var(--cb-box-bg, transparent);
+  }
+
+  .cb-box--fit {
+    width: fit-content;
+  }
+
+  .cb-box--full {
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  .cb-box--custom {
+    box-sizing: border-box;
+    width: min(var(--cb-box-w, 320px), 100%);
+  }
+{% endstylesheet %}

@@ -1,0 +1,756 @@
+{%- comment -%}
+  Option cards for one choice (e.g. Weight class).
+  Variants: when the product has an option whose name contains "Option name", the cards pick real variants
+  (price, stock and photo follow). Choices: otherwise the cards come from the "Choices" list, and the pick is saved on
+  the cart line (and order) as a line item property named after the label.
+  Each choices line is "Value | short description | note", e.g. "4U (80-84g) | Fast whip & precision control | ~83g".
+  In variant mode, lines whose value starts with the option value (e.g. "4U") add the description and note.
+  Every option: one group per product option (standard page). Colour options show as swatch pills (the option value's
+  Shopify swatch, else a colour from "Colour names" or the value's first word), the others as size buttons.
+{%- endcomment -%}
+{%- liquid
+  assign s = block.settings
+  assign want = s.option_name | strip | downcase
+  assign product_option = nil
+  if want != blank and product.has_only_default_variant == false
+    for item in product.options_with_values
+      assign name_down = item.name | downcase
+      if name_down == want or name_down contains want
+        assign product_option = item
+        break
+      endif
+    endfor
+  endif
+
+  assign lines = s.choices | newline_to_br | split: '<br />'
+  assign has_choices = false
+  for line in lines
+    if line != blank
+      assign has_choices = true
+      break
+    endif
+  endfor
+
+  assign mode = 'none'
+  if s.mode == 'all'
+    if product.has_only_default_variant == false
+      assign mode = 'all'
+    endif
+  elsif s.mode != 'choices' and product_option != nil
+    assign mode = 'variant'
+  elsif s.mode != 'variants' and has_choices
+    assign mode = 'choice'
+  endif
+
+  assign label = s.label | default: product_option.name | default: s.option_name
+  assign group = 'cb-opt-' | append: block.id
+
+  assign swatch_pairs = s.swatch_colors | newline_to_br | split: '<br />'
+  assign known_colours = ',black,white,red,blue,navy,green,yellow,orange,pink,purple,grey,gray,silver,gold,teal,olive,brown,beige,maroon,lime,cyan,aqua,turquoise,crimson,coral,lavender,mint,'
+  capture guide_html
+    if s.guide_label != blank and s.guide_link != blank
+      assign guide_label = s.guide_label | escape
+      echo '<a class="cb-pd-option__guide" href="' | append: s.guide_link | append: '">'
+      echo '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="10" rx="1.5"/><path d="M6 7v3M10 7v4M14 7v3M18 7v4"/></svg>'
+      echo '<span>' | append: guide_label | append: '</span></a>'
+    endif
+  endcapture
+-%}
+
+{%- if mode == 'all' -%}
+  <div
+    class="cb-pd-option cb-pd-option--all"
+    style="
+      --cb-pd-option-label-size: {{ s.label_size }}px;
+      --cb-pd-option-label-weight: {{ s.label_weight }};
+      --cb-pd-option-selected-size: {{ s.selected_size }}px;
+      --cb-pd-option-selected-weight: {{ s.selected_weight }};
+      --cb-pd-option-title-size: {{ s.title_size }}px;
+      --cb-pd-option-title-weight: {{ s.title_weight }};
+      --cb-pd-option-description-size: {{ s.description_size }}px;
+      --cb-pd-option-description-weight: {{ s.description_weight }};
+      --cb-pd-option-guide-size: {{ s.guide_size }}px;
+      --cb-pd-option-guide-weight: {{ s.guide_weight }};
+    "
+    {{ block.shopify_attributes }}
+  >
+    {%- for option in product.options_with_values -%}
+      {%- liquid
+        assign name_down = option.name | downcase
+        # A colour option: its name says so, or its first value is a colour name (e.g. an option named "Black").
+        assign first_value = option.values.first | downcase | replace: '/', ' ' | split: ' ' | first
+        assign first_key = ',' | append: first_value | append: ','
+        assign is_colour = false
+        if name_down contains 'colo' or known_colours contains first_key
+          assign is_colour = true
+        endif
+        if is_colour
+          assign heading = s.swatch_label | replace: '[name]', option.name
+          assign style = 'pills'
+        else
+          assign heading = s.button_label | replace: '[name]', option.name
+          assign style = 'buttons'
+        endif
+        assign group_id = group | append: '-' | append: option.position
+      -%}
+      <div
+        class="cb-pd-option__group cb-pd-option--{{ style }}"
+        role="radiogroup"
+        aria-labelledby="{{ group_id }}-label"
+        data-cb-pdp-option
+      >
+        <div class="cb-pd-option__head">
+          <p class="cb-pd-option__label" id="{{ group_id }}-label">
+            {{- heading | escape -}}
+            {%- if is_colour -%}
+              {{ ' ' }}<span class="cb-pd-option__value" data-cb-pdp-selected data-template="[value]"></span>
+            {%- endif -%}
+          </p>
+          {%- if is_colour == false and name_down contains 'size' -%}{{ guide_html }}{%- endif -%}
+        </div>
+        <div class="cb-pd-option__cards">
+          {%- for value in option.values -%}
+            {%- liquid
+              assign swatch = ''
+              if is_colour
+                assign swatch = value.swatch.color
+                if swatch == blank
+                  assign value_down = value | downcase | strip
+                  for pair in swatch_pairs
+                    assign pair_name = pair | split: ':' | first | strip | downcase
+                    if pair_name != blank and value_down contains pair_name
+                      assign swatch = pair | split: ':' | last | strip
+                      break
+                    endif
+                  endfor
+                endif
+                if swatch == blank
+                  assign first_word = value | downcase | replace: '/', ' ' | split: ' ' | first
+                  assign key = ',' | append: first_word | append: ','
+                  if known_colours contains key
+                    assign swatch = first_word
+                  else
+                    assign swatch = '#6b6b6b'
+                  endif
+                endif
+              endif
+            -%}
+            <label class="cb-pd-opt">
+              <input
+                class="cb-pd-opt__input"
+                type="radio"
+                name="{{ group_id }}"
+                value="{{ value | escape }}"
+                data-position="{{ option.position }}"
+                data-short="{{ value | escape }}"
+                {% if value == option.selected_value %}checked{% endif %}
+              >
+              <span class="cb-pd-opt__card">
+                {%- if is_colour -%}<span class="cb-pd-opt__swatch" style="background: {{ swatch }};" aria-hidden="true"></span>{%- endif -%}
+                <span class="cb-pd-opt__title">{{ value | escape }}</span>
+              </span>
+            </label>
+          {%- endfor -%}
+        </div>
+      </div>
+    {%- endfor -%}
+  </div>
+{%- elsif mode != 'none' -%}
+  <div
+    class="cb-pd-option{% if s.style != 'cards' %} cb-pd-option--{{ s.style }}{% endif %}"
+    role="radiogroup"
+    aria-labelledby="{{ group }}-label"
+    data-cb-pdp-option
+    style="
+      --cb-pd-option-label-size: {{ s.label_size }}px;
+      --cb-pd-option-label-weight: {{ s.label_weight }};
+      --cb-pd-option-selected-size: {{ s.selected_size }}px;
+      --cb-pd-option-selected-weight: {{ s.selected_weight }};
+      --cb-pd-option-title-size: {{ s.title_size }}px;
+      --cb-pd-option-title-weight: {{ s.title_weight }};
+      --cb-pd-option-description-size: {{ s.description_size }}px;
+      --cb-pd-option-description-weight: {{ s.description_weight }};
+      --cb-pd-option-guide-size: {{ s.guide_size }}px;
+      --cb-pd-option-guide-weight: {{ s.guide_weight }};
+    "
+    {{ block.shopify_attributes }}
+  >
+    <div class="cb-pd-option__head">
+      <p class="cb-pd-option__label" id="{{ group }}-label">{{ label | escape }}</p>
+      {%- if s.show_selected -%}
+        <p class="cb-pd-option__selected" data-cb-pdp-selected data-template="{{ s.selected_text | escape }}"></p>
+      {%- endif -%}
+      {{- guide_html -}}
+    </div>
+
+    <div class="cb-pd-option__cards">
+      {%- if mode == 'variant' -%}
+        {%- for value in product_option.values -%}
+          {%- liquid
+            assign value_down = value | downcase | strip
+            assign sub = ''
+            assign note = ''
+            for line in lines
+              assign parts = line | split: '|'
+              assign head = parts[0] | strip | downcase
+              assign head_first = head | split: ' ' | first
+              if head == value_down or head_first == value_down
+                assign sub = parts[1] | strip
+                assign note = parts[2] | strip
+                break
+              endif
+            endfor
+            assign short = value | split: ' (' | first
+          -%}
+          <label class="cb-pd-opt">
+            <input
+              class="cb-pd-opt__input"
+              type="radio"
+              name="{{ group }}"
+              value="{{ value | escape }}"
+              data-position="{{ product_option.position }}"
+              data-short="{{ short | escape }}"
+              data-note="{{ note | escape }}"
+              {% if value == product_option.selected_value %}checked{% endif %}
+            >
+            <span class="cb-pd-opt__card">
+              <span class="cb-pd-opt__title">{{ value | escape }}</span>
+              {%- if sub != blank -%}<span class="cb-pd-opt__sub">{{ sub | escape }}</span>{%- endif -%}
+              <span class="cb-pd-opt__dot" aria-hidden="true"></span>
+            </span>
+          </label>
+        {%- endfor -%}
+      {%- else -%}
+        {%- assign first_done = false -%}
+        {%- for line in lines -%}
+          {%- liquid
+            assign parts = line | split: '|'
+            assign title = parts[0] | strip
+            if title == blank
+              continue
+            endif
+            assign sub = parts[1] | strip
+            assign note = parts[2] | strip
+            assign short = title | split: ' (' | first
+          -%}
+          <label class="cb-pd-opt">
+            <input
+              class="cb-pd-opt__input"
+              type="radio"
+              name="properties[{{ label | escape }}]"
+              value="{{ title | escape }}"
+              data-short="{{ short | escape }}"
+              data-note="{{ note | escape }}"
+              {% unless first_done %}checked{% endunless %}
+            >
+            <span class="cb-pd-opt__card">
+              <span class="cb-pd-opt__title">{{ title | escape }}</span>
+              {%- if sub != blank -%}<span class="cb-pd-opt__sub">{{ sub | escape }}</span>{%- endif -%}
+              <span class="cb-pd-opt__dot" aria-hidden="true"></span>
+            </span>
+          </label>
+          {%- assign first_done = true -%}
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  .cb-pd-option {
+    min-width: 0;
+  }
+
+  .cb-pd-option__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 4px 12px;
+    margin-bottom: 6px;
+  }
+
+  .cb-pd-option .cb-pd-option__label {
+    margin: 0;
+    font-family: var(--cb-font-body, var(--font-body--family));
+    font-weight: var(--cb-pd-option-label-weight, var(--cb-font-body-strong, 600));
+    font-size: var(--cb-pd-option-label-size, 8px);
+    line-height: 1.3;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--cbpd-label, #a1a1aa);
+  }
+
+  .cb-pd-option .cb-pd-option__selected {
+    margin: 0;
+    font-family: var(--cb-font-body, var(--font-body--family));
+    font-weight: var(--cb-pd-option-selected-weight, inherit);
+    font-size: var(--cb-pd-option-selected-size, 10px);
+    line-height: 1.3;
+    color: #f2aaa0;
+  }
+
+  .cb-pd-option__cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+  }
+
+  /* Phones: two cards per row, text wraps inside them. */
+  @media screen and (max-width: 749px) {
+    .cb-pd-option__cards {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .cb-pd-opt__card {
+      height: 100%;
+      box-sizing: border-box;
+    }
+  }
+
+  .cb-pd-opt {
+    position: relative;
+    display: block;
+    cursor: pointer;
+  }
+
+  .cb-pd-opt .cb-pd-opt__input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  .cb-pd-opt__card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 56px;
+    padding: 9px 16px 9px 9px;
+    border: 1px solid transparent;
+    border-radius: 2px;
+    background: var(--cbpd-card, #212121);
+    transition: border-color 0.2s ease;
+  }
+
+  .cb-pd-opt__title {
+    font-family: var(--cb-font-body, var(--font-body--family));
+    font-weight: var(--cb-pd-option-title-weight, var(--cb-font-body-strong, 600));
+    font-size: var(--cb-pd-option-title-size, 11px);
+    line-height: 1.6;
+    color: var(--cbpd-grey, #a1a1aa);
+    transition: color 0.2s ease;
+  }
+
+  .cb-pd-opt__sub {
+    font-family: var(--cb-font-body, var(--font-body--family));
+    font-weight: var(--cb-pd-option-description-weight, var(--cb-font-body-weight, 400));
+    font-size: var(--cb-pd-option-description-size, 10.5px);
+    line-height: 1.6;
+    color: var(--cbpd-grey, #a1a1aa);
+  }
+
+  .cb-pd-opt__dot {
+    position: absolute;
+    top: 24px;
+    right: 10px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--cb-color-accent, #d71f27);
+    opacity: 0;
+  }
+
+  .cb-pd-opt__input:checked + .cb-pd-opt__card {
+    border-color: var(--cb-color-accent, #d71f27);
+  }
+
+  .cb-pd-opt__input:checked + .cb-pd-opt__card .cb-pd-opt__title {
+    color: var(--cb-color-text, #ffffff);
+  }
+
+  .cb-pd-opt__input:checked + .cb-pd-opt__card .cb-pd-opt__dot {
+    opacity: 1;
+  }
+
+  .cb-pd-opt:hover .cb-pd-opt__card {
+    border-color: rgb(255 255 255 / 0.2);
+  }
+
+  .cb-pd-opt:hover .cb-pd-opt__input:checked + .cb-pd-opt__card {
+    border-color: var(--cb-color-accent, #d71f27);
+  }
+
+  .cb-pd-opt__input:focus-visible + .cb-pd-opt__card {
+    outline: 2px solid var(--cb-color-text, #ffffff);
+    outline-offset: 2px;
+  }
+
+  /* Every option: one group per option. */
+  .cb-pd-option--all {
+    display: flex;
+    flex-direction: column;
+    gap: 19px;
+  }
+
+  .cb-pd-option__value {
+    color: var(--cb-color-text, #ffffff);
+  }
+
+  .cb-pd-option .cb-pd-option__guide {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-family: var(--cb-font-body, var(--font-body--family));
+    font-weight: var(--cb-pd-option-guide-weight, inherit);
+    font-size: var(--cb-pd-option-guide-size, 10.5px);
+    line-height: 1.3;
+    text-decoration: none;
+    color: #f2aaa0;
+  }
+
+  .cb-pd-option__guide svg {
+    flex: none;
+    color: var(--cb-color-accent, #d71f27);
+  }
+
+  .cb-pd-option .cb-pd-option__guide:hover {
+    text-decoration: underline;
+  }
+
+  /* Open design (standard page) labels. */
+  .cb-pdp--open .cb-pd-option .cb-pd-option__label {
+    font-size: calc(var(--cb-pd-option-label-size, 8px) * 9 / 8);
+    letter-spacing: 0.1em;
+  }
+
+  .cb-pdp--open .cb-pd-option .cb-pd-option__head {
+    margin-bottom: 9px;
+  }
+
+  /* Pills (colours) and buttons (sizes). */
+  .cb-pd-option--pills .cb-pd-option__cards {
+    gap: 7px;
+  }
+
+  .cb-pd-option--pills .cb-pd-opt__card {
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    min-height: 37px;
+    padding: 0 14px 0 12px;
+    background: var(--cbpd-panel, #181818);
+  }
+
+  .cb-pd-option--buttons .cb-pd-option__cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(62px, 1fr));
+    gap: 7px;
+  }
+
+  .cb-pd-option--buttons .cb-pd-opt__card {
+    align-items: center;
+    justify-content: center;
+    min-height: 39px;
+    padding: 4px 6px;
+    background: var(--cbpd-panel, #181818);
+    text-align: center;
+  }
+
+  .cb-pd-option--pills .cb-pd-opt__title,
+  .cb-pd-option--buttons .cb-pd-opt__title {
+    font-weight: var(--cb-pd-option-title-weight, 500);
+    font-size: calc(var(--cb-pd-option-title-size, 11px) * 12 / 11);
+    line-height: 1.2;
+  }
+
+  .cb-pd-option--buttons .cb-pd-opt__title {
+    font-size: calc(var(--cb-pd-option-title-size, 11px) * 11.5 / 11);
+  }
+
+  .cb-pd-option--pills .cb-pd-opt__sub,
+  .cb-pd-option--pills .cb-pd-opt__dot,
+  .cb-pd-option--buttons .cb-pd-opt__sub,
+  .cb-pd-option--buttons .cb-pd-opt__dot {
+    display: none;
+  }
+
+  .cb-pd-opt__swatch {
+    flex: none;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    box-shadow: 0 0 0 1px rgb(255 255 255 / 0.35);
+  }
+
+  /* With the other picks, this value is sold out or doesn't exist. */
+  .cb-pd-opt.is-unavailable .cb-pd-opt__title {
+    opacity: 0.45;
+    text-decoration: line-through;
+  }
+
+  .cb-pd-option__hint {
+    margin: 0;
+    padding: 10px 12px;
+    border: 1px dashed rgb(255 255 255 / 0.2);
+    border-radius: 4px;
+    font-size: 11px;
+    color: rgb(255 255 255 / 0.6);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Option picker",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "Weight class"
+    },
+    {
+      "type": "select",
+      "id": "mode",
+      "label": "Cards come from",
+      "options": [
+        { "value": "auto", "label": "Product variants, else the choices below" },
+        { "value": "variants", "label": "Product variants only" },
+        { "value": "choices", "label": "The choices below only" },
+        { "value": "all", "label": "Every product option (standard page)" }
+      ],
+      "default": "auto"
+    },
+    {
+      "type": "select",
+      "id": "style",
+      "label": "Look",
+      "info": "With \"Every product option\", colours are pills and other options are buttons.",
+      "options": [
+        { "value": "cards", "label": "Cards with descriptions" },
+        { "value": "pills", "label": "Pills" },
+        { "value": "buttons", "label": "Buttons in a grid" }
+      ],
+      "default": "cards"
+    },
+    {
+      "type": "text",
+      "id": "option_name",
+      "label": "Product option name",
+      "info": "The variant option to use, e.g. Weight or Grip. Matching ignores capitals.",
+      "default": "Weight"
+    },
+    {
+      "type": "textarea",
+      "id": "choices",
+      "label": "Choices and descriptions",
+      "info": "One per line: Value | short description | note. As choices, the pick is saved on the order under the label. With variants, a line adds the description and note to the matching value.",
+      "default": "4U (80-84g) | Fast whip & precision control | ~83g\n3U (85-89g) | Maximum offensive smash weight | ~88g"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_selected",
+      "label": "Show the selected value on the right",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "selected_text",
+      "label": "Selected text",
+      "info": "[value] is the selected value (before any brackets) and [note] its note.",
+      "default": "[value] selected ([note])",
+      "visible_if": "{{ block.settings.show_selected }}"
+    },
+    {
+      "type": "header",
+      "content": "Every product option"
+    },
+    {
+      "type": "text",
+      "id": "swatch_label",
+      "label": "Colour label",
+      "info": "[name] is the option name; the chosen colour follows it.",
+      "default": "[name]:"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Other options label",
+      "default": "Select [name]:"
+    },
+    {
+      "type": "textarea",
+      "id": "swatch_colors",
+      "label": "Colour names",
+      "info": "For colour names browsers don't know, one per line: name: #hex, e.g. Obsidian: #111111. Shopify's own option swatches are used first."
+    },
+    {
+      "type": "header",
+      "content": "Size guide link"
+    },
+    {
+      "type": "text",
+      "id": "guide_label",
+      "label": "Link text",
+      "info": "Shown next to size options."
+    },
+    {
+      "type": "url",
+      "id": "guide_link",
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "label_size",
+      "label": "Label size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 8,
+      "info": "Slightly larger in the product section's Open design."
+    },
+    {
+      "type": "select",
+      "id": "label_weight",
+      "label": "Label weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "selected_size",
+      "label": "Selected text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "selected_weight",
+      "label": "Selected text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Option title size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 11,
+      "info": "The value on each card, pill or button. Pills and buttons show it slightly larger."
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Option title weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "description_size",
+      "label": "Description size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 10.5
+    },
+    {
+      "type": "select",
+      "id": "description_weight",
+      "label": "Description weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "guide_size",
+      "label": "Size guide link size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 10.5
+    },
+    {
+      "type": "select",
+      "id": "guide_weight",
+      "label": "Size guide link weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    }
+  ],
+  "presets": [{ "name": "[CB] Option picker" }]
+}
+{% endschema %}

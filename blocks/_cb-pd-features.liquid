@@ -1,0 +1,104 @@
+<div class="cb-pd-features{% if block.settings.style == 'cards' %} cb-pd-features--cards{% endif %}" {{ block.shopify_attributes }}>
+  {% content_for 'blocks' %}
+</div>
+
+{% stylesheet %}
+  /* One bar of small features; it scrolls sideways when they don't fit. */
+  .cb-pd-features {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    min-height: 37px;
+    padding: 0 12px;
+    overflow-x: auto;
+    border-radius: 4px;
+    background: var(--cbpd-bar, #1c1b1b);
+    scrollbar-width: none;
+  }
+
+  .cb-pd-features::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Phones: a 2 x 2 grid instead of a bar that scrolls. */
+  @media screen and (max-width: 749px) {
+    .cb-pd-features {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px 12px;
+      padding: 11px 12px;
+    }
+
+    .cb-pd-features .cb-pd-feature {
+      white-space: normal;
+    }
+  }
+
+  /* Cards: one small card per feature, text wrapping beside the icon. */
+  .cb-pd-features.cb-pd-features--cards {
+    display: grid;
+    grid-auto-columns: minmax(0, 1fr);
+    grid-auto-flow: column;
+    gap: 9px;
+    min-height: 0;
+    padding: 0;
+    overflow: visible;
+    background: none;
+  }
+
+  .cb-pd-features--cards .cb-pd-feature {
+    align-items: flex-start;
+    gap: 8px;
+    min-height: 61px;
+    box-sizing: border-box;
+    padding: 11px 10px;
+    border-radius: 3px;
+    background: var(--cbpd-bar, #121212);
+    white-space: normal;
+    line-height: 1.4;
+  }
+
+  @media screen and (max-width: 749px) {
+    .cb-pd-features.cb-pd-features--cards {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-auto-flow: row;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Product features",
+  "tag": null,
+  "blocks": [{ "type": "_cb-pd-feature" }],
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "A row of short features under the buttons. Add one block per feature."
+    },
+    {
+      "type": "select",
+      "id": "style",
+      "label": "Look",
+      "options": [
+        { "value": "bar", "label": "One bar" },
+        { "value": "cards", "label": "A card each" }
+      ],
+      "default": "bar"
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Product features",
+      "blocks": {
+        "collect": { "type": "_cb-pd-feature", "settings": { "icon": "bag", "feature_text": "Click & collect Papakura" } },
+        "open": { "type": "_cb-pd-feature", "settings": { "icon": "clock", "feature_text": "Open 7 days" } },
+        "advice": { "type": "_cb-pd-feature", "settings": { "icon": "chat", "feature_text": "Specialist advice" } },
+        "stringing": { "type": "_cb-pd-feature", "settings": { "icon": "wrench", "feature_text": "Professional stringing" } }
+      },
+      "block_order": ["collect", "open", "advice", "stringing"]
+    }
+  ]
+}
+{% endschema %}

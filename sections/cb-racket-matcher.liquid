@@ -1,0 +1,644 @@
+{%- liquid
+  assign s = section.settings
+  assign font_scope = '#cb-rmatch-' | append: section.id
+-%}
+
+{% render 'cb-font-styles',
+  selector: font_scope,
+  prefix: 'cbrm',
+  heading_font: s.heading_font,
+  body_font: s.body_font
+%}
+
+<section
+  id="cb-rmatch-{{ section.id }}"
+  class="cb-rmatch"
+  data-cb-rmatch
+  style="
+    --cbrm-bg: {{ s.background_color }};
+    --cbrm-card: {{ s.card_color }};
+    --cbrm-option: {{ s.option_color }};
+    --cbrm-option-selected: {{ s.option_selected_color }};
+    --cbrm-radio: {{ s.radio_color }};
+    --cbrm-results-card: {{ s.results_card_color }};
+    --cbrm-chip-strong: {{ s.panel_color }};
+    --cbrm-image-bg: {{ s.image_background_color }};
+    --cbrm-table-stripe: {{ s.table_line_color }};
+    --cbrm-text: {{ s.text_color }};
+    --cbrm-soft: {{ s.text_color | color_modify: 'alpha', 0.85 }};
+    --cbrm-muted: {{ s.muted_text_color }};
+    --cbrm-accent: {{ s.accent_color }};
+    --cbrm-radius: {{ s.radius }}px;
+    --cbrm-card-width: {{ s.card_width }}px;
+    --cbrm-results-width: {{ s.results_width }}px;
+    --cbrm-stack-gap: {{ s.stack_gap }}px;
+    --cbrm-pt: {{ s.padding_top }}px;
+    --cbrm-pb: {{ s.padding_bottom }}px;
+  "
+>
+  {%- comment -%} Stable target for links like /collections/rackets#racket-finder ([CB] Racket finder intro). {%- endcomment -%}
+  <span id="racket-finder" class="cb-rmatch__anchor" aria-hidden="true"></span>
+  <div class="cb-rmatch__inner">
+    {% content_for 'blocks' %}
+  </div>
+</section>
+
+{% stylesheet %}
+  .cb-rmatch {
+    color: var(--cbrm-text);
+    background: var(--cbrm-bg);
+    padding: calc(var(--cbrm-pt) * 0.6) 16px calc(var(--cbrm-pb) * 0.6);
+  }
+
+  .cb-rmatch__anchor {
+    display: block;
+    height: 0;
+  }
+
+  .cb-rmatch__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: calc(var(--cbrm-stack-gap) * 0.6);
+    max-width: 1400px;
+    margin-inline: auto;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-rmatch {
+      padding: calc(var(--cbrm-pt) * 0.8) 32px calc(var(--cbrm-pb) * 0.8);
+    }
+
+    .cb-rmatch__inner {
+      gap: var(--cbrm-stack-gap);
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .cb-rmatch {
+      padding: var(--cbrm-pt) 48px var(--cbrm-pb);
+    }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  (() => {
+    const ROOT = '[data-cb-rmatch]';
+    const states = new WeakMap();
+    const fill = (template, values) => (template || '').replace(/\[(\w+)\]/g, (token, key) => (key in values ? values[key] : token));
+    const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const parts = (root) => {
+      const quiz = root.querySelector('[data-cb-rmatch-quiz]');
+      return {
+        quiz,
+        questions: quiz ? [...quiz.querySelectorAll('[data-cb-rmatch-question]')] : [],
+        results: root.querySelector('[data-cb-rmatch-results]'),
+      };
+    };
+
+    // --- Ranking -----------------------------------------------------------------------------------------------
+    // Each answer earns a racket 1 point when any of its traits match (plus a little per extra trait); a budget
+    // answer ranks rackets inside its price range first. Ties keep the collection's order.
+    const termsOf = (option) => (option?.dataset.match || '').split('|').filter(Boolean);
+    const rank = (results, answers) => {
+      const pool = results.querySelector('template[data-cb-rmatch-pool]');
+      if (!pool) return [];
+      const chosen = answers.filter(Boolean);
+      const scored = [...pool.content.querySelectorAll('[data-cb-rmatch-product]')].map((item, order) => {
+        const keys = item.dataset.keys || '';
+        const price = Number(item.dataset.price) || 0;
+        let score = 0;
+        let budget = 0;
+        const matched = [];
+        for (const option of chosen) {
+          const hits = termsOf(option).filter((term) => keys.includes(`|${term}|`)).length;
+          if (hits) {
+            score += 1 + 0.2 * (hits - 1);
+            matched.push(option);
+          }
+          const min = option.dataset.min ? Number(option.dataset.min) : null;
+          const max = option.dataset.max ? Number(option.dataset.max) : null;
+          if (min !== null || max !== null) {
+            const inside = (min === null || price >= min) && (max === null || price <= max);
+            budget += inside ? 1 : -1;
+            if (inside) matched.push(option);
+          }
+        }
+        return { item, order, score, budget, matched };
+      });
+      scored.sort((a, b) => b.budget - a.budget || b.score - a.score || a.order - b.order);
+      const count = Number(results.dataset.count) || 3;
+      return scored.slice(0, count);
+    };
+
+    const optionTitle = (option) => option.querySelector('.cb-rmatch-opt__title')?.textContent.trim() || '';
+
+    const renderResults = (root, answers) => {
+      const { results } = parts(root);
+      if (!results) return 0;
+      const ranked = rank(results, answers);
+      const grid = results.querySelector('[data-cb-rmatch-grid]');
+      const labels = (results.dataset.otherLabels || '').split('|');
+      const cards = ranked.map(({ item, matched }, i) => {
+        const card = document.importNode(item, true);
+        card.classList.toggle('is-best', i === 0);
+        card.dataset.index = String(i);
+        const style = card.dataset.style;
+        const label = i === 0 ? results.dataset.bestLabel : labels[i - 1] || labels[labels.length - 1] || '';
+        const tag = card.querySelector('[data-cb-rmatch-tag]');
+        if (tag) tag.textContent = [style, label].filter(Boolean).join(' · ');
+        const why = card.querySelector('[data-cb-rmatch-why]');
+        if (why) {
+          const names = [...new Set(matched.map(optionTitle))].filter(Boolean);
+          why.textContent = card.dataset.why || (names.length ? fill(results.dataset.whyPrefix, { answers: names.join(' · ') }) : results.dataset.whyFallback);
+        }
+        return card;
+      });
+      grid.replaceChildren(...cards);
+      grid.style.setProperty('--cbrm-columns', String(Math.max(cards.length, 1)));
+      root.style.setProperty('--cbrm-columns', String(Math.max(cards.length, 1)));
+      for (const el of root.querySelectorAll('[data-cb-rmatch-count]')) el.textContent = String(cards.length);
+      renderTable(results, cards);
+      return cards.length;
+    };
+
+    const renderTable = (results, cards) => {
+      const table = results.querySelector('[data-cb-rmatch-table]');
+      if (!table) return;
+      const [style, level, weight, balance, flex, price] = (results.dataset.rows || '').split('|');
+      const rows = [
+        [style, 'style'],
+        [level, 'level'],
+        [weight, 'weight'],
+        [balance, 'balance'],
+        [flex, 'flex'],
+      ].filter(([label]) => label);
+      const cell = (tag, text, best, scope) => {
+        const el = document.createElement(tag);
+        el.textContent = text;
+        if (best) el.classList.add('is-best');
+        if (scope) el.scope = scope;
+        return el;
+      };
+      const thead = document.createElement('thead');
+      const head = document.createElement('tr');
+      head.append(cell('th', results.dataset.firstCol || '', false, 'col'));
+      cards.forEach((card, i) => {
+        const name = card.dataset.title + (i === 0 && results.dataset.bestSuffix ? ` ${results.dataset.bestSuffix}` : '');
+        head.append(cell('th', name, i === 0, 'col'));
+      });
+      thead.append(head);
+      const tbody = document.createElement('tbody');
+      for (const [label, key] of rows) {
+        const tr = document.createElement('tr');
+        tr.append(cell('th', label, false, 'row'));
+        cards.forEach((card, i) => tr.append(cell('td', card.dataset[key] || '—', i === 0)));
+        tbody.append(tr);
+      }
+      if (price) {
+        const tr = document.createElement('tr');
+        tr.className = 'is-price';
+        tr.append(cell('th', price, false, 'row'));
+        cards.forEach((card, i) => tr.append(cell('td', card.dataset.money || '', i === 0)));
+        tbody.append(tr);
+      }
+      table.replaceChildren(thead, tbody);
+    };
+
+    // --- Quiz ----------------------------------------------------------------------------------------------------
+    const show = (root, index, { focus = false } = {}) => {
+      const state = states.get(root);
+      const { quiz, questions } = parts(root);
+      if (!state || !quiz || !questions[index]) return;
+      state.index = index;
+      quiz.classList.remove('is-complete');
+      quiz.querySelector('[data-cb-rmatch-done]').hidden = true;
+      questions.forEach((question, i) => question.classList.toggle('is-active', i === index));
+      const total = questions.length;
+      quiz.style.setProperty('--cbrm-progress', `${Math.round(((index + 1) / total) * 100)}%`);
+      quiz.querySelector('[data-cb-rmatch-progress]').textContent = fill(quiz.dataset.progressLabel, { current: index + 1, total });
+      const step = questions[index].dataset.step;
+      quiz.querySelector('[data-cb-rmatch-step]').textContent = step ? fill(quiz.dataset.stepLabel, { step }) : '';
+      quiz.querySelector('[data-cb-rmatch-back]').hidden = index === 0;
+      quiz.querySelector('[data-cb-rmatch-skip]').hidden = false;
+      quiz.querySelector('[data-cb-rmatch-restart]').hidden = true;
+      quiz.querySelector('[data-cb-rmatch-continue-text]').textContent = index === total - 1 ? quiz.dataset.finishLabel : quiz.dataset.continueLabel;
+      if (focus) questions[index].querySelector('.cb-rmatch-q__title')?.focus({ preventScroll: true });
+    };
+
+    const setPill = (root, done, count) => {
+      const { quiz, questions } = parts(root);
+      const text = quiz?.querySelector('[data-cb-rmatch-pill-text]');
+      if (!text) return;
+      const template = done ? quiz.dataset.pillDone : quiz.dataset.pillPending;
+      text.textContent = fill(template, { total: questions.length, count });
+      text.closest('[data-cb-rmatch-pill]').hidden = !template;
+    };
+
+    const finish = (root) => {
+      const state = states.get(root);
+      const { quiz, questions, results } = parts(root);
+      if (!state || !quiz) return;
+      const count = renderResults(root, state.answers);
+      quiz.classList.add('is-complete');
+      const done = quiz.querySelector('[data-cb-rmatch-done]');
+      done.hidden = false;
+      quiz.querySelector('[data-cb-rmatch-summary]').textContent = state.answers.filter(Boolean).map(optionTitle).join(' · ');
+      quiz.style.setProperty('--cbrm-progress', '100%');
+      quiz.querySelector('[data-cb-rmatch-progress]').textContent = fill(quiz.dataset.progressLabel, { current: questions.length, total: questions.length });
+      quiz.querySelector('[data-cb-rmatch-step]').textContent = '';
+      quiz.querySelector('[data-cb-rmatch-skip]').hidden = true;
+      quiz.querySelector('[data-cb-rmatch-restart]').hidden = false;
+      quiz.querySelector('[data-cb-rmatch-back]').hidden = false;
+      setPill(root, true, count);
+      if (results) {
+        results.hidden = false;
+        results.scrollIntoView({ behavior: reducedMotion() ? 'auto' : 'smooth', block: 'start' });
+        results.querySelector('[data-cb-rmatch-results-heading]')?.focus({ preventScroll: true });
+      }
+    };
+
+    const restart = (root) => {
+      const state = states.get(root);
+      const { quiz, results } = parts(root);
+      if (!state || !quiz) return;
+      state.answers = [];
+      for (const option of quiz.querySelectorAll('[data-cb-rmatch-option]')) option.setAttribute('aria-checked', 'false');
+      if (results && !window.Shopify?.designMode) results.hidden = true;
+      setPill(root, false, 0);
+      show(root, 0, { focus: true });
+      quiz.querySelector('.cb-rmatch-quiz__card')?.scrollIntoView({ behavior: reducedMotion() ? 'auto' : 'smooth', block: 'start' });
+    };
+
+    const next = (root) => {
+      const state = states.get(root);
+      const { questions } = parts(root);
+      if (!state) return;
+      if (state.index >= questions.length - 1) finish(root);
+      else show(root, state.index + 1, { focus: true });
+    };
+
+    const init = (root) => {
+      const { quiz, questions, results } = parts(root);
+      if (quiz && questions.length) {
+        states.set(root, { index: 0, answers: [] });
+        quiz.querySelector('[data-cb-rmatch-questions]')?.classList.add('is-ready');
+        show(root, 0);
+        setPill(root, false, 0);
+      }
+      // In the theme editor, show sample results (no answers yet) so they can be styled.
+      if (results && window.Shopify?.designMode) renderResults(root, []);
+    };
+
+    document.addEventListener('click', (event) => {
+      if (!(event.target instanceof Element)) return;
+      const root = event.target.closest(ROOT);
+      if (!root) return;
+      const state = states.get(root);
+
+      const option = event.target.closest('[data-cb-rmatch-option]');
+      if (option && state) {
+        const question = option.closest('[data-cb-rmatch-question]');
+        for (const other of question.querySelectorAll('[data-cb-rmatch-option]')) other.setAttribute('aria-checked', String(other === option));
+        state.answers[parts(root).questions.indexOf(question)] = option;
+        return;
+      }
+      if (event.target.closest('[data-cb-rmatch-continue]') && state) {
+        if (parts(root).quiz.classList.contains('is-complete')) {
+          parts(root).results?.scrollIntoView({ behavior: reducedMotion() ? 'auto' : 'smooth', block: 'start' });
+          return;
+        }
+        next(root);
+        return;
+      }
+      if (event.target.closest('[data-cb-rmatch-skip]') && state) {
+        state.answers[state.index] = null;
+        const question = parts(root).questions[state.index];
+        for (const other of question.querySelectorAll('[data-cb-rmatch-option]')) other.setAttribute('aria-checked', 'false');
+        next(root);
+        return;
+      }
+      if (event.target.closest('[data-cb-rmatch-back]') && state) {
+        const { quiz, questions } = parts(root);
+        if (quiz.classList.contains('is-complete')) show(root, questions.length - 1, { focus: true });
+        else if (state.index > 0) show(root, state.index - 1, { focus: true });
+        return;
+      }
+      if (event.target.closest('[data-cb-rmatch-restart]')) {
+        restart(root);
+        return;
+      }
+      // Compare: scroll to the table and briefly highlight this racket's column.
+      const compare = event.target.closest('[data-cb-rmatch-compare-btn]');
+      if (compare) {
+        const card = compare.closest('[data-cb-rmatch-product]');
+        const table = root.querySelector('[data-cb-rmatch-compare]');
+        if (!table) return;
+        table.scrollIntoView({ behavior: reducedMotion() ? 'auto' : 'smooth', block: 'start' });
+        const column = Number(card?.dataset.index) + 2;
+        const cells = table.querySelectorAll(`tr > :nth-child(${column})`);
+        cells.forEach((c) => c.classList.add('is-flash'));
+        setTimeout(() => cells.forEach((c) => c.classList.remove('is-flash')), 1600);
+      }
+    });
+
+    // Arrow keys move between answers inside a question (radio group behaviour).
+    document.addEventListener('keydown', (event) => {
+      const option = event.target.closest?.('[data-cb-rmatch-option]');
+      if (!option || !['ArrowDown', 'ArrowRight', 'ArrowUp', 'ArrowLeft'].includes(event.key)) return;
+      const options = [...option.closest('[role="radiogroup"]').querySelectorAll('[data-cb-rmatch-option]')];
+      const step = event.key === 'ArrowDown' || event.key === 'ArrowRight' ? 1 : -1;
+      const target = options[(options.indexOf(option) + step + options.length) % options.length];
+      event.preventDefault();
+      target.focus();
+      target.click();
+    });
+
+    // Theme editor: selecting a question block shows it.
+    document.addEventListener('shopify:block:select', (event) => {
+      const question = event.target.closest?.('[data-cb-rmatch-question]');
+      const root = question?.closest(ROOT);
+      if (!root) return;
+      show(root, parts(root).questions.indexOf(question));
+    });
+
+    const initAll = () => document.querySelectorAll(ROOT).forEach(init);
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initAll);
+    else initAll();
+    document.addEventListener('shopify:section:load', (event) => {
+      const root = event.target.querySelector?.(ROOT);
+      if (root) init(root);
+    });
+  })();
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "[CB] Racket matcher",
+  "tag": "div",
+  "class": "section-wrapper",
+  "blocks": [
+    { "type": "_cb-rmatch-quiz" },
+    { "type": "_cb-rmatch-results" }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "card_width",
+      "label": "Question card max width",
+      "min": 610,
+      "max": 1210,
+      "step": 6,
+      "unit": "px",
+      "default": 814
+    },
+    {
+      "type": "range",
+      "id": "results_width",
+      "label": "Results max width",
+      "min": 800,
+      "max": 1600,
+      "step": 8,
+      "unit": "px",
+      "default": 1208
+    },
+    {
+      "type": "range",
+      "id": "stack_gap",
+      "label": "Space above the results",
+      "min": 24,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 96
+    },
+    {
+      "type": "range",
+      "id": "radius",
+      "label": "Card corner radius",
+      "min": 0,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "info": "Headings use its medium style, answer titles its regular style, prices the chosen style.",
+      "default": "space_grotesk_n7"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "inter_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#0b0b0b"
+    },
+    {
+      "type": "color",
+      "id": "card_color",
+      "label": "Question card and table",
+      "default": "#181818"
+    },
+    {
+      "type": "color",
+      "id": "option_color",
+      "label": "Answers, chips and progress track",
+      "default": "#201f1f"
+    },
+    {
+      "type": "color",
+      "id": "option_selected_color",
+      "label": "Chosen answer",
+      "default": "#2b2b2b"
+    },
+    {
+      "type": "color",
+      "id": "radio_color",
+      "label": "Answer circles",
+      "default": "#353534"
+    },
+    {
+      "type": "color",
+      "id": "results_card_color",
+      "label": "Racket cards",
+      "default": "#191919"
+    },
+    {
+      "type": "color",
+      "id": "panel_color",
+      "label": "Tags, buttons, notes and table header",
+      "default": "#2a2a2a"
+    },
+    {
+      "type": "color",
+      "id": "image_background_color",
+      "label": "Photo background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "table_line_color",
+      "label": "Table striped rows",
+      "info": "Every second row of the compare table.",
+      "default": "#1c1b1b"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "muted_text_color",
+      "label": "Secondary text",
+      "default": "#a1a1aa"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "default": "#d71f27"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Racket matcher",
+      "category": "t:categories.products",
+      "blocks": {
+        "quiz": {
+          "type": "_cb-rmatch-quiz",
+          "blocks": {
+            "level": {
+              "type": "_cb-rmatch-question",
+              "settings": {
+                "step_name": "Player Level",
+                "question_title": "Where are you at with your game?",
+                "question_text": "This sets how forgiving the frame should be and how much power it should give back."
+              },
+              "blocks": {
+                "beginner": { "type": "_cb-rmatch-option", "settings": { "option_title": "Getting started", "option_text": "New to badminton or coming back after a long break.", "tag": "", "match_terms": "level-beginner, flex-flexible" } },
+                "club": { "type": "_cb-rmatch-option", "settings": { "option_title": "Club player", "option_text": "Regular social or club nights, building consistency.", "tag": "", "match_terms": "level-intermediate, flex-medium" } },
+                "competitive": { "type": "_cb-rmatch-option", "settings": { "option_title": "Competitive", "option_text": "Interclub, tournaments and regular coached training.", "tag": "", "match_terms": "level-advanced, flex-stiff" } },
+                "unsure": { "type": "_cb-rmatch-option", "settings": { "option_title": "Not sure yet", "option_text": "Our Pro Shop team can help you work it out in store.", "tag": "", "match_terms": "" } }
+              },
+              "block_order": ["beginner", "club", "competitive", "unsure"]
+            },
+            "style": {
+              "type": "_cb-rmatch-question",
+              "settings": {
+                "step_name": "Playing Style Identification",
+                "question_title": "How do you like to win points?",
+                "question_text": "Pick the style that feels closest to your game on court. This guides whether you need whip speed, smash power, or placement consistency."
+              },
+              "blocks": {
+                "attack": { "type": "_cb-rmatch-option", "settings": { "option_title": "Attack", "option_text": "Pressure, steep overhead angles, and heavier rear-court smash power.", "tag": "Popular for offensive singles & doubles", "match_terms": "style-attack, balance-head-heavy" } },
+                "speed": { "type": "_cb-rmatch-option", "settings": { "option_title": "Speed", "option_text": "Fast defensive reactions, rapid net intercepts, and quick flat exchanges.", "tag": "", "match_terms": "style-speed, balance-head-light" } },
+                "control": { "type": "_cb-rmatch-option", "settings": { "option_title": "Control / Balanced", "option_text": "Pinpoint placement, defensive consistency, and versatile touch.", "tag": "", "match_terms": "style-control, balance-even" } },
+                "unsure": { "type": "_cb-rmatch-option", "settings": { "option_title": "Not sure yet", "option_text": "Let our Pro Shop team recommend based on your player level.", "tag": "", "match_terms": "" } }
+              },
+              "block_order": ["attack", "speed", "control", "unsure"]
+            },
+            "format": {
+              "type": "_cb-rmatch-question",
+              "settings": {
+                "step_name": "Game Format",
+                "question_title": "What do you play most?",
+                "question_text": "Doubles rewards fast hands at the net; singles rewards reach, power and placement."
+              },
+              "blocks": {
+                "singles": { "type": "_cb-rmatch-option", "settings": { "option_title": "Singles", "option_text": "Full-court rallies with clears, drops and smashes.", "tag": "", "match_terms": "style-attack, style-control" } },
+                "doubles": { "type": "_cb-rmatch-option", "settings": { "option_title": "Doubles", "option_text": "Fast drives, net kills and quick defence.", "tag": "", "match_terms": "style-speed, balance-head-light" } },
+                "both": { "type": "_cb-rmatch-option", "settings": { "option_title": "A mix of both", "option_text": "Social nights with singles and doubles.", "tag": "", "match_terms": "balance-even, style-control" } },
+                "unsure": { "type": "_cb-rmatch-option", "settings": { "option_title": "Not sure yet", "option_text": "We’ll keep the recommendation all-round.", "tag": "", "match_terms": "" } }
+              },
+              "block_order": ["singles", "doubles", "both", "unsure"]
+            },
+            "swing": {
+              "type": "_cb-rmatch-question",
+              "settings": {
+                "step_name": "Swing Speed",
+                "question_title": "How fast is your swing?",
+                "question_text": "Faster swings get more from a stiffer shaft; smoother swings get free power from a flexible one."
+              },
+              "blocks": {
+                "smooth": { "type": "_cb-rmatch-option", "settings": { "option_title": "Smooth", "option_text": "Compact, relaxed swing that’s still building power.", "tag": "", "match_terms": "flex-flexible, flex-medium" } },
+                "moderate": { "type": "_cb-rmatch-option", "settings": { "option_title": "Moderate", "option_text": "Solid technique with a good, repeatable swing.", "tag": "", "match_terms": "flex-medium, flex-medium-stiff" } },
+                "fast": { "type": "_cb-rmatch-option", "settings": { "option_title": "Fast", "option_text": "Quick, aggressive swing with strong wrist snap.", "tag": "", "match_terms": "flex-stiff" } },
+                "unsure": { "type": "_cb-rmatch-option", "settings": { "option_title": "Not sure yet", "option_text": "We’ll suggest a forgiving, all-round shaft.", "tag": "", "match_terms": "" } }
+              },
+              "block_order": ["smooth", "moderate", "fast", "unsure"]
+            },
+            "budget": {
+              "type": "_cb-rmatch-question",
+              "settings": {
+                "step_name": "Budget",
+                "question_title": "What would you like to spend?",
+                "question_text": "We’ll show rackets inside your budget first."
+              },
+              "blocks": {
+                "low": { "type": "_cb-rmatch-option", "settings": { "option_title": "Under $150", "option_text": "Great value frames for learning and social play.", "tag": "", "match_terms": "", "price_max": 150 } },
+                "mid": { "type": "_cb-rmatch-option", "settings": { "option_title": "$150 – $250", "option_text": "Club and interclub frames with more feel.", "tag": "", "match_terms": "", "price_min": 150, "price_max": 250 } },
+                "high": { "type": "_cb-rmatch-option", "settings": { "option_title": "$250+", "option_text": "Flagship frames from the top of each range.", "tag": "", "match_terms": "", "price_min": 250 } },
+                "any": { "type": "_cb-rmatch-option", "settings": { "option_title": "No set budget", "option_text": "Show me the best match, whatever the price.", "tag": "", "match_terms": "" } }
+              },
+              "block_order": ["low", "mid", "high", "any"]
+            }
+          },
+          "block_order": ["level", "style", "format", "swing", "budget"]
+        },
+        "results": { "type": "_cb-rmatch-results" }
+      },
+      "block_order": ["quiz", "results"]
+    }
+  ]
+}
+{% endschema %}

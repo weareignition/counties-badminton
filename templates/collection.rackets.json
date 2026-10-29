@@ -9,67 +9,618 @@
  */
 {
   "sections": {
+    "cb_hero_Lzei93": {
+      "type": "cb-hero",
+      "blocks": {
+        "cb_hero_content_jNXVAY": {
+          "type": "_cb-hero-content",
+          "settings": {
+            "gap": 24,
+            "alignment": "start"
+          },
+          "blocks": {
+            "cb_hero_badge_9dH9PW": {
+              "type": "_cb-hero-badge",
+              "settings": {
+                "badge_text": "Counties Manukau Badminton Association Official Store",
+                "badge_secondary": "",
+                "show_dot": true
+              },
+              "blocks": {}
+            },
+            "cb_hero_heading_P4n6ax": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "&nbsp;Find the frame that fits your&nbsp;",
+                "tag": "h1",
+                "size": 64,
+                "mobile_sizing": "fluid",
+                "mobile_scale": 82,
+                "fluid_min": 36,
+                "fluid_vw": 8,
+                "weight": "font",
+                "color": "text",
+                "custom_color": "#ffffff",
+                "line_height": 105,
+                "letter_spacing": -2,
+                "uppercase": false,
+                "wrap": "balance",
+                "width": "auto",
+                "width_px": 400,
+                "max_width": 0,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_hero_text_V9bYqM": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>We don't sell rackets by logo alone. Choose by your swing speed, tactical play style and court needs — calibrated by CMBA certified stringers and competitive coaches.</p>",
+                "size": 18,
+                "mobile_sizing": "fluid",
+                "mobile_size": 15,
+                "fluid_vw": 2.2,
+                "weight": "regular",
+                "color": "muted",
+                "custom_color": "#ffffff",
+                "line_height": 155,
+                "letter_spacing": 0,
+                "wrap": "wrap",
+                "width": "auto",
+                "width_px": 400,
+                "max_width_unit": "ch",
+                "max_width_px": 640,
+                "max_width_ch": 52,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_hero_buttons_DdhF9n": {
+              "type": "_cb-hero-buttons",
+              "settings": {
+                "stack_mobile": true
+              },
+              "blocks": {
+                "cb_hero_button_LKytPf": {
+                  "type": "_cb-hero-button",
+                  "settings": {
+                    "label": "Find My Racket",
+                    "link": "",
+                    "open_in_new_tab": false,
+                    "style": "primary",
+                    "show_arrow": true
+                  },
+                  "blocks": {}
+                },
+                "cb_hero_button_UJUkwW": {
+                  "type": "_cb-hero-button",
+                  "settings": {
+                    "label": "SHOP BY PLAY STYLE",
+                    "link": "",
+                    "open_in_new_tab": false,
+                    "style": "secondary",
+                    "show_arrow": false
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "cb_hero_button_LKytPf",
+                "cb_hero_button_UJUkwW"
+              ]
+            },
+            "cb_hero_features_wYQ7g4": {
+              "type": "_cb-hero-features",
+              "settings": {
+                "show_divider": true
+              },
+              "blocks": {
+                "cb_hero_feature_eDNxjc": {
+                  "type": "_cb-hero-feature",
+                  "settings": {
+                    "icon": "check",
+                    "custom_icon": "shopify://shop_images/check.svg",
+                    "custom_icon_tint": true,
+                    "feature_text": "100% Genuine Spec"
+                  },
+                  "blocks": {}
+                },
+                "cb_hero_feature_FxWP83": {
+                  "type": "_cb-hero-feature",
+                  "settings": {
+                    "icon": "sliders",
+                    "custom_icon": "shopify://shop_images/Icon_1.svg",
+                    "custom_icon_tint": true,
+                    "feature_text": "Custom Stringing Option"
+                  },
+                  "blocks": {}
+                },
+                "cb_hero_feature_PDr4Un": {
+                  "type": "_cb-hero-feature",
+                  "settings": {
+                    "icon": "calendar",
+                    "custom_icon": "shopify://shop_images/store.svg",
+                    "custom_icon_tint": true,
+                    "feature_text": "Papakura Pickup Today"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "cb_hero_feature_eDNxjc",
+                "cb_hero_feature_FxWP83",
+                "cb_hero_feature_PDr4Un"
+              ]
+            }
+          },
+          "block_order": [
+            "cb_hero_badge_9dH9PW",
+            "cb_hero_heading_P4n6ax",
+            "cb_hero_text_V9bYqM",
+            "cb_hero_buttons_DdhF9n",
+            "cb_hero_features_wYQ7g4"
+          ]
+        },
+        "cb_hero_media_zxCMk7": {
+          "type": "_cb-hero-media",
+          "settings": {
+            "image": "shopify://shop_images/20261021_140153.jpg",
+            "aspect_ratio": "4 / 3",
+            "aspect_ratio_mobile": "4 / 3",
+            "radius": 12
+          },
+          "blocks": {
+            "cb_hero_label_bTJmtH": {
+              "type": "_cb-hero-label",
+              "name": "[CB] Image label",
+              "settings": {
+                "label_text": "41R ELLIOT ST PRO SHOP",
+                "label_secondary": "",
+                "uppercase": false,
+                "position": "top-left",
+                "style": "dark"
+              },
+              "blocks": {}
+            },
+            "cb_hero_label_TQDyPr": {
+              "type": "_cb-hero-label",
+              "settings": {
+                "label_text": "MASTER CALIBRATION LAB",
+                "label_secondary": "",
+                "uppercase": false,
+                "position": "top-left",
+                "style": "accent"
+              },
+              "blocks": {}
+            },
+            "cb_hero_label_k4tQnF": {
+              "type": "_cb-hero-label",
+              "settings": {
+                "label_text": "In-Store Demo Rackets Available:",
+                "label_secondary": "Yonex · Victor · Ashaway",
+                "uppercase": false,
+                "position": "bottom-right",
+                "style": "dark"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "cb_hero_label_bTJmtH",
+            "cb_hero_label_TQDyPr",
+            "cb_hero_label_k4tQnF"
+          ]
+        }
+      },
+      "block_order": [
+        "cb_hero_content_jNXVAY",
+        "cb_hero_media_zxCMk7"
+      ],
+      "name": "[CB] Hero",
+      "settings": {
+        "design": "2",
+        "content_width": 55,
+        "column_gap": 40,
+        "max_width": 1400,
+        "media_first_mobile": false,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "#121212",
+        "glow_color": "#3a0c10",
+        "text_color": "#ffffff",
+        "accent_color": "#d71f27",
+        "accent_text_color": "#ffffff",
+        "padding_top": 32,
+        "padding_bottom": 32
+      }
+    },
+    "cb_tactics_fHRWw3": {
+      "type": "cb-tactics",
+      "blocks": {
+        "cb_tactics_header_Hqg4Yb": {
+          "type": "_cb-tactics-header",
+          "settings": {},
+          "blocks": {
+            "cb_tactics_eyebrow_cXzKdg": {
+              "type": "cb-subheader",
+              "settings": {
+                "subheader_text": "Choose by playing tactics",
+                "secondary": "",
+                "show_dot": true,
+                "size": 11,
+                "weight": "strong",
+                "color": "soft",
+                "custom_color": "#ffffff",
+                "letter_spacing": 12,
+                "uppercase": true,
+                "space_below": 0,
+                "width": "auto",
+                "width_px": 400,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_tactics_note_3KYWqf": {
+              "type": "_cb-tactics-note",
+              "settings": {
+                "note_text": "Click a style card to filter collection below"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "cb_tactics_eyebrow_cXzKdg",
+            "cb_tactics_note_3KYWqf"
+          ]
+        },
+        "cb_tactics_cards_p6UqBi": {
+          "type": "_cb-tactics-cards",
+          "settings": {
+            "columns": 4,
+            "gap": 16,
+            "show_numbers": true,
+            "number_prefix": "Style"
+          },
+          "blocks": {
+            "cb_tactics_card_PtDwU4": {
+              "type": "_cb-tactics-card",
+              "settings": {
+                "icon": "zap",
+                "custom_icon_tint": true,
+                "tactic_label": "Rapid drive",
+                "tactic_title": "Speed & Drive",
+                "tactic_text": "Fast exchanges, rapid doubles defense, light swing inertia & aerodynamic head-light frames.",
+                "highlight": false,
+                "collection": "",
+                "count_label": "Frames",
+                "custom_count": "16 Frames",
+                "cta_label": "Browse Speed",
+                "link": "",
+                "filter_value": "Speed"
+              },
+              "blocks": {}
+            },
+            "cb_tactics_card_8zUYac": {
+              "type": "_cb-tactics-card",
+              "settings": {
+                "icon": "arrows",
+                "custom_icon_tint": true,
+                "tactic_label": "Rear-court power",
+                "tactic_title": "Attack & Smash",
+                "tactic_text": "Steep offensive smashes, explosive baseline clears, heavy momentum & stiff power shafts.",
+                "highlight": false,
+                "collection": "",
+                "count_label": "Frames",
+                "custom_count": "18 Frames",
+                "cta_label": "Browse Attack",
+                "link": "",
+                "filter_value": "Attack"
+              },
+              "blocks": {}
+            },
+            "cb_tactics_card_Pgy77d": {
+              "type": "_cb-tactics-card",
+              "settings": {
+                "icon": "racket",
+                "custom_icon_tint": true,
+                "tactic_label": "Tactical touch",
+                "tactic_title": "Control & Balanced",
+                "tactic_text": "Tactical placement, net touch, sharp spinning slices, even balance & predictable stringbed hold.",
+                "highlight": false,
+                "collection": "",
+                "count_label": "Frames",
+                "custom_count": "10 Frames",
+                "cta_label": "Browse Control",
+                "link": "",
+                "filter_value": "Control"
+              },
+              "blocks": {}
+            },
+            "cb_tactics_card_HtEtL9": {
+              "type": "_cb-tactics-card",
+              "settings": {
+                "icon": "shield",
+                "custom_icon_tint": true,
+                "tactic_label": "Foundation",
+                "tactic_title": "Beginner & Club",
+                "tactic_text": "Forgiving oversized sweet spots, flexible shafts for easy depth, lightweight and arm protection.",
+                "highlight": false,
+                "collection": "",
+                "count_label": "Frames",
+                "custom_count": "8 Frames",
+                "cta_label": "Browse Beginner",
+                "link": "",
+                "filter_value": "Beginner"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "cb_tactics_card_PtDwU4",
+            "cb_tactics_card_8zUYac",
+            "cb_tactics_card_Pgy77d",
+            "cb_tactics_card_HtEtL9"
+          ]
+        }
+      },
+      "block_order": [
+        "cb_tactics_header_Hqg4Yb",
+        "cb_tactics_cards_p6UqBi"
+      ],
+      "name": "[CB] Playing tactics",
+      "settings": {
+        "max_width": 1400,
+        "stack_gap": 18,
+        "card_radius": 6,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "#121212",
+        "card_background_color": "#181818",
+        "border_color": "#ffffff14",
+        "text_color": "#ffffff",
+        "accent_color": "#d71f27",
+        "padding_top": 100,
+        "padding_bottom": 100
+      }
+    },
     "main": {
       "type": "cb-catalogue",
       "blocks": {
         "play_style": {
           "type": "_cb-cat-filter",
           "settings": {
-            "filter_label": "Play style",
-            "display": "list"
-          }
+            "filter_label": "Player style, Play style",
+            "title_text": "",
+            "always_values": "Attack, Speed, Control, All-round",
+            "empty_text": "No options yet",
+            "panel_style": "lines",
+            "reset_label": "",
+            "display": "list",
+            "button_columns": "2",
+            "button_style": "filled",
+            "show_counts": true,
+            "count_style": "plain",
+            "check_shape": "square",
+            "numbered": true,
+            "collapsible": true,
+            "collapsed": false,
+            "note": "",
+            "title_link_label": "",
+            "title_link": "",
+            "guide_text": "",
+            "price_display": "slider",
+            "price_prefix": "Up to",
+            "price_buckets": "Under $30 | 0-30\n$30 – $60 | 30-60\nOver $60 | 60+",
+            "price_multi": false
+          },
+          "blocks": {}
         },
         "player_level": {
           "type": "_cb-cat-filter",
           "settings": {
-            "filter_label": "Player level",
+            "filter_label": "Recommended skill level, Player level",
+            "title_text": "Player level",
+            "always_values": "",
+            "empty_text": "No options yet",
+            "panel_style": "lines",
+            "reset_label": "",
             "display": "buttons",
             "button_columns": "2",
-            "button_style": "filled"
-          }
+            "button_style": "filled",
+            "show_counts": true,
+            "count_style": "plain",
+            "check_shape": "square",
+            "numbered": true,
+            "collapsible": true,
+            "collapsed": false,
+            "note": "",
+            "title_link_label": "",
+            "title_link": "",
+            "guide_text": "",
+            "price_display": "slider",
+            "price_prefix": "Up to",
+            "price_buckets": "Under $30 | 0-30\n$30 – $60 | 30-60\nOver $60 | 60+",
+            "price_multi": false
+          },
+          "blocks": {}
         },
         "balance": {
           "type": "_cb-cat-filter",
           "settings": {
-            "filter_label": "Balance",
+            "filter_label": "Balance & swing, Racket balance, Balance",
             "title_text": "Balance & swing",
-            "display": "list"
-          }
+            "always_values": "",
+            "empty_text": "No options yet",
+            "panel_style": "lines",
+            "reset_label": "",
+            "display": "list",
+            "button_columns": "2",
+            "button_style": "filled",
+            "show_counts": true,
+            "count_style": "plain",
+            "check_shape": "square",
+            "numbered": true,
+            "collapsible": true,
+            "collapsed": false,
+            "note": "",
+            "title_link_label": "",
+            "title_link": "",
+            "guide_text": "",
+            "price_display": "slider",
+            "price_prefix": "Up to",
+            "price_buckets": "Under $30 | 0-30\n$30 – $60 | 30-60\nOver $60 | 60+",
+            "price_multi": false
+          },
+          "blocks": {}
         },
         "weight": {
           "type": "_cb-cat-filter",
           "settings": {
-            "filter_label": "Frame weight",
+            "filter_label": "Racket weight class, Frame weight",
+            "title_text": "Frame weight",
+            "always_values": "",
+            "empty_text": "No options yet",
+            "panel_style": "lines",
+            "reset_label": "",
             "display": "buttons",
             "button_columns": "3",
             "button_style": "outline",
-            "note": "4U is standard for fast modern competitive badminton"
-          }
+            "show_counts": true,
+            "count_style": "plain",
+            "check_shape": "square",
+            "numbered": true,
+            "collapsible": true,
+            "collapsed": false,
+            "note": "4U is standard for fast modern competitive badminton",
+            "title_link_label": "",
+            "title_link": "",
+            "guide_text": "",
+            "price_display": "slider",
+            "price_prefix": "Up to",
+            "price_buckets": "Under $30 | 0-30\n$30 – $60 | 30-60\nOver $60 | 60+",
+            "price_multi": false
+          },
+          "blocks": {}
         },
         "price": {
           "type": "_cb-cat-filter",
           "settings": {
             "filter_label": "Price",
-            "title_text": "Price range (NZD)"
-          }
+            "title_text": "Price range (NZD)",
+            "always_values": "",
+            "empty_text": "No options yet",
+            "panel_style": "lines",
+            "reset_label": "",
+            "display": "list",
+            "button_columns": "2",
+            "button_style": "filled",
+            "show_counts": true,
+            "count_style": "plain",
+            "check_shape": "square",
+            "numbered": true,
+            "collapsible": true,
+            "collapsed": false,
+            "note": "",
+            "title_link_label": "",
+            "title_link": "",
+            "guide_text": "",
+            "price_display": "slider",
+            "price_prefix": "Up to",
+            "price_buckets": "Under $30 | 0-30\n$30 – $60 | 30-60\nOver $60 | 60+",
+            "price_multi": false
+          },
+          "blocks": {}
         },
         "brand": {
           "type": "_cb-cat-filter",
           "settings": {
-            "filter_label": "Brand",
+            "filter_label": "Vendor, Brand",
             "title_text": "Brand (optional filter)",
-            "numbered": false
-          }
+            "always_values": "Yonex (Japan), Victor (Taiwan), Ashaway (USA), Babolat (France)",
+            "empty_text": "No options yet",
+            "panel_style": "lines",
+            "reset_label": "",
+            "display": "list",
+            "button_columns": "2",
+            "button_style": "filled",
+            "show_counts": true,
+            "count_style": "plain",
+            "check_shape": "square",
+            "numbered": false,
+            "collapsible": true,
+            "collapsed": false,
+            "note": "",
+            "title_link_label": "",
+            "title_link": "",
+            "guide_text": "",
+            "price_display": "slider",
+            "price_prefix": "Up to",
+            "price_buckets": "Under $30 | 0-30\n$30 – $60 | 30-60\nOver $60 | 60+",
+            "price_multi": false
+          },
+          "blocks": {}
         },
         "promo": {
           "type": "_cb-cat-promo",
           "settings": {
             "icon": "tools",
+            "custom_icon_tint": true,
+            "look": "compact",
+            "accent_border": false,
+            "icon_layout": "inline",
+            "title_color": "accent",
+            "show_dot": false,
             "promo_title": "Certified restring service",
             "promo_text": "Add any string of your choice. Our Papakura master stringers prepare your tension calibration before dispatch or pickup.",
             "footer_label": "Electronic constant pull",
-            "footer_value": "±0.5 lbs precision"
-          }
+            "footer_value": "±0.5 lbs precision",
+            "link": ""
+          },
+          "blocks": {}
+        },
+        "intro": {
+          "type": "cb-paragraph",
+          "static": true,
+          "settings": {
+            "body_text": "",
+            "size": 14,
+            "mobile_sizing": "same",
+            "mobile_size": 14,
+            "fluid_vw": 2,
+            "weight": "regular",
+            "color": "muted",
+            "custom_color": "#ffffff",
+            "line_height": 160,
+            "letter_spacing": 0,
+            "wrap": "wrap",
+            "width": "auto",
+            "width_px": 400,
+            "max_width_unit": "none",
+            "max_width_px": 640,
+            "max_width_ch": 60,
+            "background_color": "",
+            "padding_y": 0,
+            "padding_x": 0,
+            "border_width": 0,
+            "border_color": "",
+            "radius": 0
+          },
+          "blocks": {}
         }
       },
       "block_order": [
@@ -81,10 +632,975 @@
         "brand",
         "promo"
       ],
-      "settings": {}
+      "settings": {
+        "title_text": "All frames",
+        "heading_tag": "h1",
+        "show_count": true,
+        "count_label": "products",
+        "quick_filter": "Player style, Play style",
+        "all_label": "All styles",
+        "show_sort": true,
+        "sort_label": "Sort by:",
+        "show_view_toggle": true,
+        "filter_heading": "Filter by spec",
+        "clear_label": "Clear all",
+        "collection": "shuttles",
+        "products_per_page": 8,
+        "columns": "4",
+        "image_ratio": "4 / 5",
+        "image_fit": "contain",
+        "show_wishlist": true,
+        "button_label": "Configure setup",
+        "quick_add_mode": "tag",
+        "quick_collect_tag": "quick-collect",
+        "quick_label": "Quick collect",
+        "stock_label": "In Stock Papakura",
+        "low_stock_threshold": 2,
+        "low_stock_label": "[count] In Stock Papakura",
+        "brand_names": "Yonex, Victor, Li-Ning, Babolat, Ashaway, Hundred, Apacs, Carlton, Felet, Kawasaki, Mizuno, Forza, RSL",
+        "showing_text": "Showing [from]–[to] of [total] calibrated rackets",
+        "empty_text": "No rackets match these filters.",
+        "sidebar_width": 220,
+        "max_width": 1400,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "#0b0b0b",
+        "card_background_color": "#141414",
+        "border_color": "#ffffff1a",
+        "text_color": "#ffffff",
+        "accent_color": "#d71f27",
+        "image_background_color": "#ffffff",
+        "success_color": "#22c55e",
+        "padding_top": 100,
+        "padding_bottom": 100
+      }
+    },
+    "cb_finder_quiz_63GJEM": {
+      "type": "cb-finder-quiz",
+      "blocks": {
+        "cb_quiz_content_KARx4b": {
+          "type": "_cb-quiz-content",
+          "settings": {
+            "gap": 18
+          },
+          "blocks": {
+            "cb_quiz_eyebrow_Q3nMVU": {
+              "type": "cb-subheader",
+              "settings": {
+                "subheader_text": "Not sure what you need?",
+                "secondary": "",
+                "show_dot": true,
+                "size": 10,
+                "weight": "strong",
+                "color": "accent",
+                "custom_color": "#ffffff",
+                "letter_spacing": 12,
+                "uppercase": true,
+                "space_below": 0,
+                "width": "auto",
+                "width_px": 400,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_quiz_heading_Tw7RmK": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "Let us find your racket.",
+                "tag": "h2",
+                "size": 32,
+                "mobile_sizing": "scale",
+                "mobile_scale": 80,
+                "fluid_min": 28,
+                "fluid_vw": 6,
+                "weight": "font",
+                "color": "text",
+                "custom_color": "#ffffff",
+                "line_height": 108,
+                "letter_spacing": -1,
+                "uppercase": true,
+                "wrap": "wrap",
+                "width": "auto",
+                "width_px": 400,
+                "max_width": 0,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_quiz_text_RPaipr": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>Tell us your level, playing tactics and string preferences. We will calculate frame weight, flex stiffness and balance point to narrow down to your top 3 calibrated matches.</p>",
+                "size": 14,
+                "mobile_sizing": "same",
+                "mobile_size": 14,
+                "fluid_vw": 2,
+                "weight": "regular",
+                "color": "muted",
+                "custom_color": "#ffffff",
+                "line_height": 165,
+                "letter_spacing": 0,
+                "wrap": "wrap",
+                "width": "auto",
+                "width_px": 400,
+                "max_width_unit": "ch",
+                "max_width_px": 640,
+                "max_width_ch": 52,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_quiz_button_6384rm": {
+              "type": "_cb-quiz-button",
+              "settings": {
+                "label": "Launch racket finder",
+                "link": "",
+                "style": "primary",
+                "show_arrow": true
+              },
+              "blocks": {}
+            },
+            "cb_quiz_features_PQxG64": {
+              "type": "_cb-quiz-features",
+              "settings": {
+                "show_divider": true,
+                "gap": 26
+              },
+              "blocks": {
+                "cb_quiz_feature_tafWnj": {
+                  "type": "_cb-quiz-feature",
+                  "settings": {
+                    "feature_text": "60-Second Guided Match"
+                  },
+                  "blocks": {}
+                },
+                "cb_quiz_feature_mQipCP": {
+                  "type": "_cb-quiz-feature",
+                  "settings": {
+                    "feature_text": "Calibrated to Local Courts"
+                  },
+                  "blocks": {}
+                },
+                "cb_quiz_feature_HFX3KG": {
+                  "type": "_cb-quiz-feature",
+                  "settings": {
+                    "feature_text": "Verified String Pairing"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "cb_quiz_feature_tafWnj",
+                "cb_quiz_feature_mQipCP",
+                "cb_quiz_feature_HFX3KG"
+              ]
+            }
+          },
+          "block_order": [
+            "cb_quiz_eyebrow_Q3nMVU",
+            "cb_quiz_heading_Tw7RmK",
+            "cb_quiz_text_RPaipr",
+            "cb_quiz_button_6384rm",
+            "cb_quiz_features_PQxG64"
+          ]
+        },
+        "cb_quiz_card_Ym9kTD": {
+          "type": "_cb-quiz-card",
+          "settings": {
+            "step_label": "Question [current] of [total]",
+            "progress_label": "[percent]% Completed (Step [current]/[total])",
+            "back_label": "Back",
+            "collection": "",
+            "results_count": 3,
+            "results_label": "Finder complete",
+            "results_tag": "Calibrated picks",
+            "results_heading": "Your top [count] matches",
+            "fallback_heading": "Popular picks to start with",
+            "restart_label": "Start again",
+            "view_all_label": "See all rackets",
+            "view_all_link": ""
+          },
+          "blocks": {
+            "cb_quiz_question_cFyEFA": {
+              "type": "_cb-quiz-question",
+              "settings": {
+                "question_text": "What level do you play at?",
+                "tag_label": "Player profile"
+              },
+              "blocks": {
+                "cb_quiz_option_kKxXbJ": {
+                  "type": "_cb-quiz-option",
+                  "settings": {
+                    "option_title": "Beginner",
+                    "option_text": "New to the game or playing socially once a week.",
+                    "match_tags": "beginner, junior, kid, starter"
+                  },
+                  "blocks": {}
+                },
+                "cb_quiz_option_ninD9h": {
+                  "type": "_cb-quiz-option",
+                  "settings": {
+                    "option_title": "Club Intermediate",
+                    "option_text": "Regular club nights, building consistent technique.",
+                    "match_tags": "intermediate"
+                  },
+                  "blocks": {}
+                },
+                "cb_quiz_option_A6DWrE": {
+                  "type": "_cb-quiz-option",
+                  "settings": {
+                    "option_title": "Advanced & Interclub",
+                    "option_text": "Interclub and tournament play with solid fundamentals.",
+                    "match_tags": "pro, tour"
+                  },
+                  "blocks": {}
+                },
+                "cb_quiz_option_PgqtXJ": {
+                  "type": "_cb-quiz-option",
+                  "settings": {
+                    "option_title": "Competitive & Elite",
+                    "option_text": "National-level training, high swing speed and precision.",
+                    "match_tags": "pro, tour"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "cb_quiz_option_kKxXbJ",
+                "cb_quiz_option_ninD9h",
+                "cb_quiz_option_A6DWrE",
+                "cb_quiz_option_PgqtXJ"
+              ]
+            },
+            "cb_quiz_question_pVcEp7": {
+              "type": "_cb-quiz-question",
+              "settings": {
+                "question_text": "How do you typically win points in rallies?",
+                "tag_label": "Primary tactical style"
+              },
+              "blocks": {
+                "cb_quiz_option_Laaqzc": {
+                  "type": "_cb-quiz-option",
+                  "settings": {
+                    "option_title": "Rear-Court Attack",
+                    "option_text": "Aggressive smashes, steep angle clears, heavy baseline offense.",
+                    "match_tags": "Astrox, Thruster, TK, Axforce"
+                  },
+                  "blocks": {}
+                },
+                "cb_quiz_option_WGcrLK": {
+                  "type": "_cb-quiz-option",
+                  "settings": {
+                    "option_title": "Midcourt Drive & Speed",
+                    "option_text": "Fast flat exchanges, rapid doubles counter-attacks.",
+                    "match_tags": "Nanoflare, Jetspeed, Auraspeed, ARS, BladeX, Blade X"
+                  },
+                  "blocks": {}
+                },
+                "cb_quiz_option_BzhX9F": {
+                  "type": "_cb-quiz-option",
+                  "settings": {
+                    "option_title": "Net Dominance & Touch",
+                    "option_text": "Tight spinning net shots, deceptive lifts, high touch control.",
+                    "match_tags": "Arcsaber, DriveX, DX, Halbertec"
+                  },
+                  "blocks": {}
+                },
+                "cb_quiz_option_JAHw7w": {
+                  "type": "_cb-quiz-option",
+                  "settings": {
+                    "option_title": "Defensive Consistency",
+                    "option_text": "Returning hard smashes, prolonged patient counter rallies.",
+                    "match_tags": "Arcsaber, Halbertec, Nanoflare"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "cb_quiz_option_Laaqzc",
+                "cb_quiz_option_WGcrLK",
+                "cb_quiz_option_BzhX9F",
+                "cb_quiz_option_JAHw7w"
+              ]
+            },
+            "cb_quiz_question_8gixWx": {
+              "type": "_cb-quiz-question",
+              "settings": {
+                "question_text": "How should the racket feel in your hand?",
+                "tag_label": "Frame weight & balance"
+              },
+              "blocks": {
+                "cb_quiz_option_gYMAxw": {
+                  "type": "_cb-quiz-option",
+                  "settings": {
+                    "option_title": "Head-Heavy Power",
+                    "option_text": "Extra mass in the head for heavier smashes and clears.",
+                    "match_tags": "Astrox, Thruster, TK, Axforce"
+                  },
+                  "blocks": {}
+                },
+                "cb_quiz_option_8yzVi3": {
+                  "type": "_cb-quiz-option",
+                  "settings": {
+                    "option_title": "Even Balance",
+                    "option_text": "All-round feel that switches easily between attack and defence.",
+                    "match_tags": "Arcsaber, DriveX, DX, Halbertec"
+                  },
+                  "blocks": {}
+                },
+                "cb_quiz_option_7N6jML": {
+                  "type": "_cb-quiz-option",
+                  "settings": {
+                    "option_title": "Head-Light Speed",
+                    "option_text": "Quick swings, fast reactions and easy defence at the net.",
+                    "match_tags": "Nanoflare, Jetspeed, Auraspeed, ARS, BladeX, Blade X"
+                  },
+                  "blocks": {}
+                },
+                "cb_quiz_option_aYj6JR": {
+                  "type": "_cb-quiz-option",
+                  "settings": {
+                    "option_title": "Not Sure Yet",
+                    "option_text": "We'll balance it against your level and playing style.",
+                    "match_tags": ""
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "cb_quiz_option_gYMAxw",
+                "cb_quiz_option_8yzVi3",
+                "cb_quiz_option_7N6jML",
+                "cb_quiz_option_aYj6JR"
+              ]
+            },
+            "cb_quiz_question_Vh9yWd": {
+              "type": "_cb-quiz-question",
+              "settings": {
+                "question_text": "What string tension suits your game?",
+                "tag_label": "String pairing"
+              },
+              "blocks": {
+                "cb_quiz_option_4RBVAf": {
+                  "type": "_cb-quiz-option",
+                  "settings": {
+                    "option_title": "Under 22 lbs",
+                    "option_text": "Softer feel, bigger sweet spot and easy power.",
+                    "match_tags": ""
+                  },
+                  "blocks": {}
+                },
+                "cb_quiz_option_qzfAgP": {
+                  "type": "_cb-quiz-option",
+                  "settings": {
+                    "option_title": "22–25 lbs",
+                    "option_text": "Balanced repulsion and control for most club players.",
+                    "match_tags": ""
+                  },
+                  "blocks": {}
+                },
+                "cb_quiz_option_ihmNeB": {
+                  "type": "_cb-quiz-option",
+                  "settings": {
+                    "option_title": "26 lbs and Above",
+                    "option_text": "Crisp feedback and precision for fast, clean strikers.",
+                    "match_tags": ""
+                  },
+                  "blocks": {}
+                },
+                "cb_quiz_option_MtfQdN": {
+                  "type": "_cb-quiz-option",
+                  "settings": {
+                    "option_title": "Not Sure",
+                    "option_text": "Our Papakura stringers will match tension to your swing.",
+                    "match_tags": ""
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "cb_quiz_option_4RBVAf",
+                "cb_quiz_option_qzfAgP",
+                "cb_quiz_option_ihmNeB",
+                "cb_quiz_option_MtfQdN"
+              ]
+            }
+          },
+          "block_order": [
+            "cb_quiz_question_cFyEFA",
+            "cb_quiz_question_pVcEp7",
+            "cb_quiz_question_8gixWx",
+            "cb_quiz_question_Vh9yWd"
+          ]
+        }
+      },
+      "block_order": [
+        "cb_quiz_content_KARx4b",
+        "cb_quiz_card_Ym9kTD"
+      ],
+      "name": "[CB] Racket finder quiz",
+      "settings": {
+        "content_width": 46,
+        "column_gap": 64,
+        "max_width": 1400,
+        "card_radius": 4,
+        "show_glow": true,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "#0e0e0e",
+        "card_background_color": "#131313",
+        "option_background_color": "#171717",
+        "border_color": "#ffffff14",
+        "text_color": "#ffffff",
+        "accent_color": "#d71f27",
+        "padding_top": 100,
+        "padding_bottom": 100
+      }
+    },
+    "cb_brands_RAWzhM": {
+      "type": "cb-brands",
+      "blocks": {
+        "cb_brands_header_iFVT9T": {
+          "type": "_cb-brands-header",
+          "settings": {
+            "show_divider": true
+          },
+          "blocks": {
+            "cb_brands_eyebrow_rebwjC": {
+              "type": "cb-subheader",
+              "settings": {
+                "subheader_text": "Official brand stockists",
+                "secondary": "",
+                "show_dot": true,
+                "size": 10,
+                "weight": "strong",
+                "color": "accent",
+                "custom_color": "#ffffff",
+                "letter_spacing": 12,
+                "uppercase": true,
+                "space_below": 0,
+                "width": "auto",
+                "width_px": 400,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_brands_heading_tGbwH7": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "Looking for a specific brand?",
+                "tag": "h2",
+                "size": 28,
+                "mobile_sizing": "scale",
+                "mobile_scale": 80,
+                "fluid_min": 28,
+                "fluid_vw": 6,
+                "weight": "font",
+                "color": "text",
+                "custom_color": "#ffffff",
+                "line_height": 110,
+                "letter_spacing": -1,
+                "uppercase": true,
+                "wrap": "wrap",
+                "width": "auto",
+                "width_px": 400,
+                "max_width": 0,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_brands_intro_AbBRD3": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>While we recommend choosing by play style first, we carry certified genuine stock from all four premier manufacturers.</p>",
+                "size": 12,
+                "mobile_sizing": "same",
+                "mobile_size": 12,
+                "fluid_vw": 2,
+                "weight": "regular",
+                "color": "muted",
+                "custom_color": "#ffffff",
+                "line_height": 160,
+                "letter_spacing": 0,
+                "wrap": "wrap",
+                "width": "auto",
+                "width_px": 400,
+                "max_width_unit": "px",
+                "max_width_px": 360,
+                "max_width_ch": 60,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "cb_brands_eyebrow_rebwjC",
+            "cb_brands_heading_tGbwH7",
+            "cb_brands_intro_AbBRD3"
+          ]
+        },
+        "cb_brands_cards_jzQRCn": {
+          "type": "_cb-brands-cards",
+          "settings": {
+            "columns": 4,
+            "gap": 12
+          },
+          "blocks": {
+            "cb_brands_card_qMVDmJ": {
+              "type": "_cb-brands-card",
+              "settings": {
+                "brand_name": "Yonex",
+                "origin": "Japan",
+                "description": "Astrox, Nanoflare & Arcsaber series. World tour benchmark in carbon engineering.",
+                "highlight": false,
+                "collection": "",
+                "custom_count": "",
+                "link": ""
+              },
+              "blocks": {}
+            },
+            "cb_brands_card_WntFf7": {
+              "type": "_cb-brands-card",
+              "settings": {
+                "brand_name": "Victor",
+                "origin": "Taiwan",
+                "description": "Thruster Ryuga & Auraspeed series. Explosive swing speeds & Free Core synthetic handles.",
+                "highlight": false,
+                "collection": "",
+                "custom_count": "",
+                "link": ""
+              },
+              "blocks": {}
+            },
+            "cb_brands_card_VNEyfc": {
+              "type": "_cb-brands-card",
+              "settings": {
+                "brand_name": "Ashaway",
+                "origin": "USA",
+                "description": "Phantom carbon graphite series. Famous for string tension retention and touch.",
+                "highlight": false,
+                "collection": "",
+                "custom_count": "",
+                "link": ""
+              },
+              "blocks": {}
+            },
+            "cb_brands_card_eQq7VY": {
+              "type": "_cb-brands-card",
+              "settings": {
+                "brand_name": "Babolat",
+                "origin": "France",
+                "description": "Satelite Gravity series. Ultra-light specs engineered for high-cadence doubles reactions.",
+                "highlight": false,
+                "collection": "",
+                "custom_count": "",
+                "link": ""
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "cb_brands_card_qMVDmJ",
+            "cb_brands_card_WntFf7",
+            "cb_brands_card_VNEyfc",
+            "cb_brands_card_eQq7VY"
+          ]
+        }
+      },
+      "block_order": [
+        "cb_brands_header_iFVT9T",
+        "cb_brands_cards_jzQRCn"
+      ],
+      "name": "[CB] Brand stockists",
+      "settings": {
+        "max_width": 1400,
+        "stack_gap": 20,
+        "card_radius": 4,
+        "count_collection": "",
+        "count_label": "[count] Rackets in Stock",
+        "count_label_one": "[count] Racket in Stock",
+        "explore_label": "Explore",
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "#121212",
+        "card_background_color": "#181818",
+        "border_color": "#ffffff14",
+        "text_color": "#ffffff",
+        "accent_color": "#d71f27",
+        "padding_top": 100,
+        "padding_bottom": 100
+      }
+    },
+    "cb_string_lab_KPtrV7": {
+      "type": "cb-string-lab",
+      "blocks": {
+        "cb_lab_content_UmYrea": {
+          "type": "_cb-lab-content",
+          "settings": {
+            "gap": 18
+          },
+          "blocks": {
+            "cb_lab_eyebrow_9XWJwH": {
+              "type": "cb-subheader",
+              "settings": {
+                "subheader_text": "Electronic stringing lab",
+                "secondary": "",
+                "show_dot": true,
+                "size": 10,
+                "weight": "strong",
+                "color": "accent",
+                "custom_color": "#ffffff",
+                "letter_spacing": 12,
+                "uppercase": true,
+                "space_below": 0,
+                "width": "auto",
+                "width_px": 400,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_lab_heading_wznMeK": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "Your racket is only half the setup.",
+                "tag": "h2",
+                "size": 30,
+                "mobile_sizing": "scale",
+                "mobile_scale": 80,
+                "fluid_min": 28,
+                "fluid_vw": 6,
+                "weight": "font",
+                "color": "text",
+                "custom_color": "#ffffff",
+                "line_height": 108,
+                "letter_spacing": -1,
+                "uppercase": true,
+                "wrap": "wrap",
+                "width": "auto",
+                "width_px": 400,
+                "max_width": 0,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_lab_text_8UYGdB": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>Need help choosing string or tension? Our team strings rackets seven days a week on electronic constant-pull machines and calibrates every frame to your specific arm conditioning and shuttle response.</p>",
+                "size": 13,
+                "mobile_sizing": "same",
+                "mobile_size": 13,
+                "fluid_vw": 2,
+                "weight": "regular",
+                "color": "muted",
+                "custom_color": "#ffffff",
+                "line_height": 165,
+                "letter_spacing": 0,
+                "wrap": "wrap",
+                "width": "auto",
+                "width_px": 400,
+                "max_width_unit": "ch",
+                "max_width_px": 640,
+                "max_width_ch": 60,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_lab_boxes_qjd3nb": {
+              "type": "_cb-lab-boxes",
+              "settings": {
+                "columns": 2
+              },
+              "blocks": {
+                "cb_lab_box_AdBBkH": {
+                  "type": "_cb-lab-box",
+                  "settings": {
+                    "box_title": "Comprehensive string stock",
+                    "box_text": "Yonex BG80, BG66 Ultimax, Exbolt 65, Victor VBS-66 Nano & Ashaway Zymax in full stock."
+                  },
+                  "blocks": {}
+                },
+                "cb_lab_box_TJFipN": {
+                  "type": "_cb-lab-box",
+                  "settings": {
+                    "box_title": "Exact tension calibration",
+                    "box_text": "Calibrated down to 0.5 lbs increments from 20 to 32 lbs tension with pre-stretch options."
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "cb_lab_box_AdBBkH",
+                "cb_lab_box_TJFipN"
+              ]
+            },
+            "cb_lab_actions_MCWYTf": {
+              "type": "_cb-lab-actions",
+              "settings": {},
+              "blocks": {
+                "cb_lab_button_RxQzdt": {
+                  "type": "_cb-lab-button",
+                  "settings": {
+                    "label": "Explore stringing workshop",
+                    "link": "",
+                    "style": "primary",
+                    "show_arrow": true
+                  },
+                  "blocks": {}
+                },
+                "cb_lab_note_VrTwPQ": {
+                  "type": "_cb-lab-note",
+                  "settings": {
+                    "note_text": "Same-day / 24-hr turnaround in Papakura"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "cb_lab_button_RxQzdt",
+                "cb_lab_note_VrTwPQ"
+              ]
+            }
+          },
+          "block_order": [
+            "cb_lab_eyebrow_9XWJwH",
+            "cb_lab_heading_wznMeK",
+            "cb_lab_text_8UYGdB",
+            "cb_lab_boxes_qjd3nb",
+            "cb_lab_actions_MCWYTf"
+          ]
+        },
+        "cb_lab_media_g3h6xH": {
+          "type": "_cb-lab-media",
+          "settings": {
+            "image": "shopify://shop_images/20261021_140348_1.jpg",
+            "image_ratio_mobile": "4 / 3",
+            "label_highlight": "Daily Workshop:",
+            "label_text": "Mon–Sun 9:00am – 8:00pm",
+            "label_position": "bottom-left"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "cb_lab_content_UmYrea",
+        "cb_lab_media_g3h6xH"
+      ],
+      "name": "[CB] Stringing lab",
+      "settings": {
+        "content_width": 50,
+        "column_gap": 40,
+        "show_panel": true,
+        "panel_radius": 4,
+        "media_first_mobile": false,
+        "max_width": 1400,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "#121212",
+        "panel_background_color": "#151515",
+        "box_background_color": "#1a1a1a",
+        "border_color": "#ffffff14",
+        "text_color": "#ffffff",
+        "accent_color": "#d71f27",
+        "padding_top": 100,
+        "padding_bottom": 100
+      }
+    },
+    "cb_visit_DWtDk4": {
+      "type": "cb-visit",
+      "blocks": {
+        "cb_visit_logo_c9Jk8A": {
+          "type": "_cb-visit-logo",
+          "settings": {
+            "size": 52,
+            "inner_padding": 6,
+            "background": "#ffffff"
+          },
+          "blocks": {}
+        },
+        "cb_visit_content_L8CGer": {
+          "type": "_cb-visit-content",
+          "settings": {
+            "gap": 8
+          },
+          "blocks": {
+            "cb_visit_eyebrow_ttzgtD": {
+              "type": "cb-subheader",
+              "settings": {
+                "subheader_text": "Papakura community hub",
+                "secondary": "41R Elliot Street",
+                "show_dot": false,
+                "size": 10,
+                "weight": "strong",
+                "color": "accent",
+                "custom_color": "#ffffff",
+                "letter_spacing": 8,
+                "uppercase": true,
+                "space_below": 0,
+                "width": "auto",
+                "width_px": 400,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_visit_heading_4i3HxR": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "See it. Hold it. Test it on court.",
+                "tag": "h2",
+                "size": 20,
+                "mobile_sizing": "scale",
+                "mobile_scale": 90,
+                "fluid_min": 28,
+                "fluid_vw": 6,
+                "weight": "font",
+                "color": "text",
+                "custom_color": "#ffffff",
+                "line_height": 115,
+                "letter_spacing": -1,
+                "uppercase": true,
+                "wrap": "wrap",
+                "width": "auto",
+                "width_px": 400,
+                "max_width": 0,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_visit_text_TUQTJp": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>Visit the CMBA Pro Shop inside the Papakura Badminton Hall to test swing weights, compare grip sizes, and collect online orders instantly.</p>",
+                "size": 13,
+                "mobile_sizing": "same",
+                "mobile_size": 13,
+                "fluid_vw": 2,
+                "weight": "regular",
+                "color": "muted",
+                "custom_color": "#ffffff",
+                "line_height": 160,
+                "letter_spacing": 0,
+                "wrap": "wrap",
+                "width": "auto",
+                "width_px": 400,
+                "max_width_unit": "ch",
+                "max_width_px": 640,
+                "max_width_ch": 120,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "cb_visit_eyebrow_ttzgtD",
+            "cb_visit_heading_4i3HxR",
+            "cb_visit_text_TUQTJp"
+          ]
+        },
+        "cb_visit_button_aLwy4c": {
+          "type": "_cb-visit-button",
+          "settings": {
+            "label": "Visit pro shop",
+            "link": "",
+            "directions_address": "41R Elliot Street, Papakura, Auckland",
+            "style": "light",
+            "icon": "store",
+            "custom_icon_tint": true
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "cb_visit_logo_c9Jk8A",
+        "cb_visit_content_L8CGer",
+        "cb_visit_button_aLwy4c"
+      ],
+      "name": "[CB] Visit banner",
+      "settings": {
+        "max_width": 1400,
+        "show_panel": true,
+        "panel_radius": 2,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "#0b0b0b",
+        "panel_background_color": "#181818",
+        "border_color": "#ffffff14",
+        "text_color": "#ffffff",
+        "accent_color": "#d71f27",
+        "button_background_color": "#ffffff",
+        "button_text_color": "#111111",
+        "padding_top": 100,
+        "padding_bottom": 100
+      }
     }
   },
   "order": [
-    "main"
+    "cb_hero_Lzei93",
+    "cb_tactics_fHRWw3",
+    "main",
+    "cb_finder_quiz_63GJEM",
+    "cb_brands_RAWzhM",
+    "cb_string_lab_KPtrV7",
+    "cb_visit_DWtDk4"
   ]
 }

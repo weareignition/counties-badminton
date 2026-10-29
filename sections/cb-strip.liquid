@@ -1,0 +1,257 @@
+{%- liquid
+  assign s = section.settings
+  assign font_scope = '#cb-strip-' | append: section.id
+-%}
+
+{% render 'cb-font-styles',
+  selector: font_scope,
+  prefix: 'cbw',
+  heading_font: s.heading_font,
+  body_font: s.body_font
+%}
+
+<section
+  id="cb-strip-{{ section.id }}"
+  class="cb-strip{% if s.show_dividers %} cb-strip--dividers{% endif %}"
+  style="
+    --cbw-bg: {{ s.background_color }};
+    --cbw-text: {{ s.text_color }};
+    --cbw-muted: {{ s.text_color | color_modify: 'alpha', 0.58 }};
+    --cbw-accent: {{ s.accent_color }};
+    --cbw-divider: {{ s.divider_color }};
+    --cbw-columns: {{ s.columns }};
+    --cbw-gutter: {{ s.gutter }}px;
+    --cbw-max-width: {{ s.max_width }}px;
+    --cbw-pt: {{ s.padding_top }}px;
+    --cbw-pb: {{ s.padding_bottom }}px;
+  "
+>
+  <div class="cb-strip__inner">
+    <div class="cb-strip__grid">
+      {% content_for 'blocks' %}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .cb-strip {
+    color: var(--cbw-text);
+    background: var(--cbw-bg);
+    padding: calc(var(--cbw-pt) * 0.75) 16px calc(var(--cbw-pb) * 0.75);
+  }
+
+  /* The grid overhangs by one gutter and the overflow is clipped, so outer columns line up with the page
+     edge and only the dividers between features show. */
+  .cb-strip__inner {
+    max-width: var(--cbw-max-width);
+    margin-inline: auto;
+    overflow: hidden;
+  }
+
+  .cb-strip__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    margin-inline: calc(var(--cbw-gutter) * -1);
+  }
+
+  .cb-strip__grid > .cb-strip__item {
+    padding: 14px var(--cbw-gutter);
+  }
+
+  .cb-strip--dividers .cb-strip__grid > .cb-strip__item {
+    box-shadow: -1px 0 0 0 var(--cbw-divider), 0 -1px 0 0 var(--cbw-divider);
+  }
+
+  .cb-strip .cb-strip__item--link:has(a:focus-visible) {
+    outline-offset: -2px;
+  }
+
+  @media screen and (min-width: 600px) {
+    .cb-strip__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-strip {
+      padding: var(--cbw-pt) 32px var(--cbw-pb);
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .cb-strip {
+      padding-inline: 48px;
+    }
+
+    .cb-strip__grid {
+      grid-template-columns: repeat(var(--cbw-columns, 4), minmax(0, 1fr));
+    }
+
+    .cb-strip__grid > .cb-strip__item {
+      padding-block: 6px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Feature strip",
+  "tag": "div",
+  "class": "section-wrapper",
+  "blocks": [{ "type": "_cb-strip-item" }],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Features per row on desktop",
+      "info": "Tablets show 2 per row, phones 1.",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dividers",
+      "label": "Lines between features",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "gutter",
+      "label": "Space beside each line",
+      "min": 12,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width",
+      "min": 960,
+      "max": 1800,
+      "step": 20,
+      "unit": "px",
+      "default": 1400
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Title font",
+      "default": "space_grotesk_n7"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Text font",
+      "default": "inter_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#0f0f0f"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Icons",
+      "default": "#d71f27"
+    },
+    {
+      "type": "color",
+      "id": "divider_color",
+      "label": "Lines",
+      "default": "#ffffff14"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Feature strip",
+      "category": "t:categories.banners",
+      "blocks": {
+        "people": {
+          "type": "_cb-strip-item",
+          "settings": {
+            "icon": "racket",
+            "item_title": "Badminton people",
+            "item_text": "Advice from players, coaches and stringers who know the game."
+          }
+        },
+        "collect": {
+          "type": "_cb-strip-item",
+          "settings": {
+            "icon": "store",
+            "item_title": "Click & collect",
+            "item_text": "Pick up from the Papakura pro shop seven days a week."
+          }
+        },
+        "support": {
+          "type": "_cb-strip-item",
+          "settings": {
+            "icon": "heart_hand",
+            "item_title": "Support the sport",
+            "item_text": "Every purchase helps support Counties Manukau Badminton."
+          }
+        },
+        "help": {
+          "type": "_cb-strip-item",
+          "settings": {
+            "icon": "help",
+            "item_title": "Need help?",
+            "item_text": "Ask us before you buy and we'll help you choose the right shuttle."
+          }
+        }
+      },
+      "block_order": ["people", "collect", "support", "help"]
+    }
+  ]
+}
+{% endschema %}

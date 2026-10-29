@@ -1,0 +1,215 @@
+{%- liquid
+  # Link order: the set link, then Google Maps directions to the address, then the contact page.
+  assign link = block.settings.link
+  assign external = false
+  if link == blank and block.settings.directions_address != blank
+    assign destination = block.settings.directions_address | url_encode
+    assign link = 'https://www.google.com/maps/dir/?api=1&destination=' | append: destination
+    assign external = true
+  endif
+  if link == blank
+    assign link = routes.root_url | append: 'pages/contact'
+  endif
+
+  assign new_tab = external
+  if block.settings.new_tab
+    assign new_tab = true
+  endif
+-%}
+
+{%- if block.settings.label != blank -%}
+  <a
+    href="{{ link }}"
+    class="cb-advice__button cb-advice__button--{{ block.settings.style }}"
+    {% if new_tab %}
+      target="_blank" rel="noopener"
+    {% endif %}
+    style="--cb-advice-button-text-size: {{ block.settings.text_size }}px; --cb-advice-button-text-weight: {{ block.settings.text_weight }};"
+    {{ block.shopify_attributes }}
+  >
+    {{- block.settings.label | escape -}}
+    {%- if block.settings.custom_icon != blank or block.settings.icon != 'none' -%}
+      {%- if block.settings.custom_icon != blank -%}
+        {%- render 'cb-icon-upload', image: block.settings.custom_icon, size: 14, tint: block.settings.custom_icon_tint -%}
+      {%- else -%}
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          {%- case block.settings.icon -%}
+            {%- when 'arrow' -%}
+              <path d="M5 12h14M13 6l6 6-6 6"/>
+            {%- when 'pin' -%}
+              <path d="M12 21s-7-6.1-7-11.5a7 7 0 0 1 14 0C19 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>
+            {%- when 'chat' -%}
+              <path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/>
+          {%- endcase -%}
+        </svg>
+      {%- endif -%}
+    {%- endif -%}
+    {%- if external -%}
+      <span class="visually-hidden"> (opens Google Maps)</span>
+    {%- elsif new_tab -%}
+      <span class="visually-hidden"> (opens in a new tab)</span>
+    {%- endif -%}
+  </a>
+{%- endif -%}
+
+{% stylesheet %}
+  .cb-advice__button {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 41px;
+    padding: 12px 28px;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    font-family: var(--cbn-font-body);
+    font-weight: var(--cb-advice-button-text-weight, var(--cbn-font-body-strong));
+    font-size: var(--cb-advice-button-text-size, 10px);
+    line-height: 1.2;
+    letter-spacing: 0;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  }
+
+  .cb-advice__button svg {
+    flex: none;
+  }
+
+  .cb-advice__button--primary {
+    background: var(--cbn-accent);
+    color: #fff;
+  }
+
+  .cb-advice__button--primary:hover {
+    background: color-mix(in srgb, var(--cbn-accent) 85%, #000);
+  }
+
+  .cb-advice__button--secondary {
+    background: var(--cbn-secondary);
+    color: var(--cbn-text);
+  }
+
+  .cb-advice__button--secondary:hover {
+    background: color-mix(in srgb, var(--cbn-secondary) 82%, var(--cbn-text));
+  }
+
+  .cb-advice__button--outline {
+    border-color: color-mix(in srgb, var(--cbn-text) 55%, transparent);
+    background: transparent;
+    color: var(--cbn-text);
+  }
+
+  .cb-advice__button--outline:hover {
+    border-color: var(--cbn-text);
+  }
+
+  .cb-advice__button:focus-visible {
+    outline: 2px solid var(--cbn-text);
+    outline-offset: 3px;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Button",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "Ask the Pro Shop"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link",
+      "info": "Leave empty for Google Maps directions to the address below, or the Contact page when there's no address."
+    },
+    {
+      "type": "text",
+      "id": "directions_address",
+      "label": "Directions address"
+    },
+    {
+      "type": "select",
+      "id": "style",
+      "label": "Style",
+      "options": [
+        { "value": "primary", "label": "Accent" },
+        { "value": "secondary", "label": "Grey" },
+        { "value": "outline", "label": "Outline" }
+      ],
+      "default": "primary"
+    },
+    {
+      "type": "select",
+      "id": "icon",
+      "label": "Icon",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "arrow", "label": "Arrow" },
+        { "value": "pin", "label": "Map pin" },
+        { "value": "chat", "label": "Chat" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "image_picker",
+      "id": "custom_icon",
+      "label": "Custom icon",
+      "info": "Upload your own SVG (or PNG). It replaces the built-in icon above."
+    },
+    {
+      "type": "checkbox",
+      "id": "custom_icon_tint",
+      "label": "Colour it like the built-in icons",
+      "info": "For one-colour SVGs: uses this section's icon colour. Turn off to keep the file's own colours.",
+      "default": true,
+      "visible_if": "{{ block.settings.custom_icon != blank }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "new_tab",
+      "label": "Open link in a new tab",
+      "info": "Directions always open in a new tab.",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Button text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "text_weight",
+      "label": "Button text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    }
+  ],
+  "presets": [{ "name": "[CB] Button" }]
+}
+{% endschema %}

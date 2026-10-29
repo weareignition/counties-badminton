@@ -1,0 +1,535 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "blocks": {
+        "page-content": {
+          "type": "page-content",
+          "settings": {
+            "text_color": ""
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "page-content"
+      ],
+      "disabled": true,
+      "settings": {
+        "content_direction": "column",
+        "gap": 32,
+        "background_color": "",
+        "padding-block-start": 40,
+        "padding-block-end": 80
+      }
+    },
+    "cb_finder_intro_MdiTgt": {
+      "type": "cb-finder-intro",
+      "blocks": {
+        "cb_fintro_content_MLYnkm": {
+          "type": "_cb-fintro-content",
+          "settings": {
+            "alignment": "center"
+          },
+          "blocks": {
+            "cb_fintro_badge_GEQ8Rt": {
+              "type": "_cb-fintro-badge",
+              "settings": {
+                "badge_text": "Racket finder",
+                "show_dot": true
+              },
+              "blocks": {}
+            },
+            "cb_fintro_heading_MjmB8r": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "Find the racket that fits your game.",
+                "tag": "h2",
+                "size": 48,
+                "mobile_sizing": "scale",
+                "mobile_scale": 70,
+                "fluid_min": 28,
+                "fluid_vw": 6,
+                "weight": "font",
+                "color": "text",
+                "line_height": 118,
+                "letter_spacing": -1,
+                "uppercase": false,
+                "wrap": "wrap",
+                "max_width": 720
+              },
+              "blocks": {}
+            },
+            "cb_fintro_text_nTkyJi": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>Answer a few quick questions and we’ll narrow down the frames we’d put in your hand at the Pro Shop.</p>",
+                "size": 16,
+                "mobile_sizing": "custom",
+                "mobile_size": 15,
+                "fluid_vw": 2,
+                "weight": "regular",
+                "color": "muted",
+                "line_height": 160,
+                "letter_spacing": 0,
+                "wrap": "pretty",
+                "max_width_unit": "px",
+                "max_width_px": 580,
+                "max_width_ch": 60
+              },
+              "blocks": {}
+            },
+            "cb_fintro_meta_zjjYkA": {
+              "type": "_cb-fintro-meta",
+              "settings": {
+                "meta_text": "[count] quick questions · Around 30–60 seconds"
+              },
+              "blocks": {}
+            },
+            "cb_fintro_buttons_eRLcxt": {
+              "type": "_cb-fintro-buttons",
+              "settings": {
+                "gap": 16
+              },
+              "blocks": {
+                "cb_fintro_button_4cB6QC": {
+                  "type": "_cb-fintro-button",
+                  "settings": {
+                    "label": "Start racket finder",
+                    "link": "shopify://collections/rackets",
+                    "start_quiz": true,
+                    "style": "primary",
+                    "show_arrow": true
+                  },
+                  "blocks": {}
+                },
+                "cb_fintro_button_ERB3w7": {
+                  "type": "_cb-fintro-button",
+                  "settings": {
+                    "label": "Shop all rackets",
+                    "link": "shopify://collections/rackets",
+                    "start_quiz": false,
+                    "style": "secondary",
+                    "show_arrow": false
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "cb_fintro_button_4cB6QC",
+                "cb_fintro_button_ERB3w7"
+              ]
+            }
+          },
+          "block_order": [
+            "cb_fintro_badge_GEQ8Rt",
+            "cb_fintro_heading_MjmB8r",
+            "cb_fintro_text_nTkyJi",
+            "cb_fintro_meta_zjjYkA",
+            "cb_fintro_buttons_eRLcxt"
+          ]
+        },
+        "cb_fintro_features_wWPtHe": {
+          "type": "_cb-fintro-features",
+          "settings": {
+            "columns": 3,
+            "gap": 30,
+            "max_width": 796
+          },
+          "blocks": {
+            "cb_fintro_feature_DXTaha": {
+              "type": "_cb-fintro-feature",
+              "settings": {
+                "icon": "racket",
+                "custom_icon_tint": true,
+                "feature_title": "Built around your play",
+                "feature_text": "Style-first matching prioritizing power angles, whip, and net touch."
+              },
+              "blocks": {}
+            },
+            "cb_fintro_feature_6bRpNk": {
+              "type": "_cb-fintro-feature",
+              "settings": {
+                "icon": "sliders",
+                "custom_icon_tint": true,
+                "feature_title": "Unbiased multi-brand stock",
+                "feature_text": "Direct authorized stock from Yonex, Victor, Ashaway, and Babolat."
+              },
+              "blocks": {}
+            },
+            "cb_fintro_feature_LJNywn": {
+              "type": "_cb-fintro-feature",
+              "settings": {
+                "icon": "badge_check",
+                "custom_icon_tint": true,
+                "feature_title": "Specialist Pro Shop guidance",
+                "feature_text": "Backed by certified stringers and on-court coaches in Papakura."
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "cb_fintro_feature_DXTaha",
+            "cb_fintro_feature_6bRpNk",
+            "cb_fintro_feature_LJNywn"
+          ]
+        }
+      },
+      "block_order": [
+        "cb_fintro_content_MLYnkm",
+        "cb_fintro_features_wWPtHe"
+      ],
+      "name": "[CB] Racket finder intro",
+      "settings": {
+        "max_width": 1400,
+        "stack_gap": 80,
+        "corner_radius": 4,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "#0b0b0b",
+        "panel_color": "#181818",
+        "text_color": "#ffffff",
+        "muted_text_color": "#a1a1aa",
+        "note_text_color": "#d4d4d8",
+        "accent_color": "#d71f27",
+        "padding_top": 64,
+        "padding_bottom": 64
+      }
+    },
+    "cb_racket_matcher_T3JVWV": {
+      "type": "cb-racket-matcher",
+      "blocks": {
+        "cb_rmatch_quiz_8naUxb": {
+          "type": "_cb-rmatch-quiz",
+          "settings": {
+            "progress_label": "Question [current] of [total]",
+            "step_label": "Step: [step]",
+            "back_label": "Back",
+            "skip_label": "Skip this question",
+            "continue_label": "Continue to Next Question",
+            "finish_label": "See My Matches",
+            "done_title": "Your matches are ready.",
+            "restart_label": "Start again",
+            "pill_pending": "MATCHING COMPLETE · [total] CURATED FRAMES IDENTIFIED",
+            "pill_done": "Matching complete · [count] curated frames identified"
+          },
+          "blocks": {
+            "cb_rmatch_question_h9zLBY": {
+              "type": "_cb-rmatch-question",
+              "settings": {
+                "step_name": "Player Level",
+                "question_title": "Where are you at with your game?",
+                "question_text": "This sets how forgiving the frame should be and how much power it should give back."
+              },
+              "blocks": {
+                "cb_rmatch_option_hjBnAt": {
+                  "type": "_cb-rmatch-option",
+                  "settings": {
+                    "option_title": "Getting started",
+                    "option_text": "New to badminton or coming back after a long break.",
+                    "tag": "",
+                    "match_terms": "level-beginner, flex-flexible"
+                  },
+                  "blocks": {}
+                },
+                "cb_rmatch_option_cDDma3": {
+                  "type": "_cb-rmatch-option",
+                  "settings": {
+                    "option_title": "Club player",
+                    "option_text": "Regular social or club nights, building consistency.",
+                    "tag": "",
+                    "match_terms": "level-intermediate, flex-medium"
+                  },
+                  "blocks": {}
+                },
+                "cb_rmatch_option_eBAgMD": {
+                  "type": "_cb-rmatch-option",
+                  "settings": {
+                    "option_title": "Competitive",
+                    "option_text": "Interclub, tournaments and regular coached training.",
+                    "tag": "",
+                    "match_terms": "level-advanced, flex-stiff"
+                  },
+                  "blocks": {}
+                },
+                "cb_rmatch_option_FpmEeD": {
+                  "type": "_cb-rmatch-option",
+                  "settings": {
+                    "option_title": "Not sure yet",
+                    "option_text": "Our Pro Shop team can help you work it out in store.",
+                    "tag": "",
+                    "match_terms": ""
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "cb_rmatch_option_hjBnAt",
+                "cb_rmatch_option_cDDma3",
+                "cb_rmatch_option_eBAgMD",
+                "cb_rmatch_option_FpmEeD"
+              ]
+            },
+            "cb_rmatch_question_WjaMKA": {
+              "type": "_cb-rmatch-question",
+              "settings": {
+                "step_name": "Playing Style Identification",
+                "question_title": "How do you like to win points?",
+                "question_text": "Pick the style that feels closest to your game on court. This guides whether you need whip speed, smash power, or placement consistency."
+              },
+              "blocks": {
+                "cb_rmatch_option_m7zXB8": {
+                  "type": "_cb-rmatch-option",
+                  "settings": {
+                    "option_title": "Attack",
+                    "option_text": "Pressure, steep overhead angles, and heavier rear-court smash power.",
+                    "tag": "Popular for offensive singles & doubles",
+                    "match_terms": "style-attack, balance-head-heavy"
+                  },
+                  "blocks": {}
+                },
+                "cb_rmatch_option_rTyRVP": {
+                  "type": "_cb-rmatch-option",
+                  "settings": {
+                    "option_title": "Speed",
+                    "option_text": "Fast defensive reactions, rapid net intercepts, and quick flat exchanges.",
+                    "tag": "",
+                    "match_terms": "style-speed, balance-head-light"
+                  },
+                  "blocks": {}
+                },
+                "cb_rmatch_option_3THLcm": {
+                  "type": "_cb-rmatch-option",
+                  "settings": {
+                    "option_title": "Control / Balanced",
+                    "option_text": "Pinpoint placement, defensive consistency, and versatile touch.",
+                    "tag": "",
+                    "match_terms": "style-control, balance-even"
+                  },
+                  "blocks": {}
+                },
+                "cb_rmatch_option_mABeVV": {
+                  "type": "_cb-rmatch-option",
+                  "settings": {
+                    "option_title": "Not sure yet",
+                    "option_text": "Let our Pro Shop team recommend based on your player level.",
+                    "tag": "",
+                    "match_terms": ""
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "cb_rmatch_option_m7zXB8",
+                "cb_rmatch_option_rTyRVP",
+                "cb_rmatch_option_3THLcm",
+                "cb_rmatch_option_mABeVV"
+              ]
+            },
+            "cb_rmatch_question_gt9f8G": {
+              "type": "_cb-rmatch-question",
+              "settings": {
+                "step_name": "Game Format",
+                "question_title": "What do you play most?",
+                "question_text": "Doubles rewards fast hands at the net; singles rewards reach, power and placement."
+              },
+              "blocks": {
+                "cb_rmatch_option_jQP9ac": {
+                  "type": "_cb-rmatch-option",
+                  "settings": {
+                    "option_title": "Singles",
+                    "option_text": "Full-court rallies with clears, drops and smashes.",
+                    "tag": "",
+                    "match_terms": "style-attack, style-control"
+                  },
+                  "blocks": {}
+                },
+                "cb_rmatch_option_VffFRi": {
+                  "type": "_cb-rmatch-option",
+                  "settings": {
+                    "option_title": "Doubles",
+                    "option_text": "Fast drives, net kills and quick defence.",
+                    "tag": "",
+                    "match_terms": "style-speed, balance-head-light"
+                  },
+                  "blocks": {}
+                },
+                "cb_rmatch_option_MEQ4JA": {
+                  "type": "_cb-rmatch-option",
+                  "settings": {
+                    "option_title": "A mix of both",
+                    "option_text": "Social nights with singles and doubles.",
+                    "tag": "",
+                    "match_terms": "balance-even, style-control"
+                  },
+                  "blocks": {}
+                },
+                "cb_rmatch_option_LEYHWD": {
+                  "type": "_cb-rmatch-option",
+                  "settings": {
+                    "option_title": "Not sure yet",
+                    "option_text": "We’ll keep the recommendation all-round.",
+                    "tag": "",
+                    "match_terms": ""
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "cb_rmatch_option_jQP9ac",
+                "cb_rmatch_option_VffFRi",
+                "cb_rmatch_option_MEQ4JA",
+                "cb_rmatch_option_LEYHWD"
+              ]
+            }
+          },
+          "block_order": [
+            "cb_rmatch_question_h9zLBY",
+            "cb_rmatch_question_WjaMKA",
+            "cb_rmatch_question_gt9f8G"
+          ]
+        },
+        "cb_rmatch_results_naw8Gm": {
+          "type": "_cb-rmatch-results",
+          "settings": {
+            "collection": "",
+            "in_stock_only": true,
+            "results_count": 3,
+            "brand_names": "Yonex, Victor, Li-Ning, Li Ning, Babolat, Ashaway, Hundred, Code Alpha, Apacs, Felet, Kawasaki, Carlton, Wilson",
+            "exclude_words": "2nd hand, junior, kid",
+            "eyebrow": "Your racket matches",
+            "results_heading": "Here’s what we’d put in your hand.",
+            "results_text": "Based on your answers, these are the [count] frames from our Papakura wall that best match your game.",
+            "best_label": "Best overall match",
+            "other_labels": "Strong match|Also worth a look|Worth a try",
+            "stock_badge": "In stock",
+            "why_label": "Why it matches you",
+            "why_prefix": "Matches your answers: [answers].",
+            "why_fallback": "Our closest all-round pick for your answers. Ask the Pro Shop team to try it in store.",
+            "view_label": "View racket",
+            "compare_label": "Compare",
+            "show_compare": true,
+            "compare_heading": "Compare your matches",
+            "compare_text": "Side-by-side specifications across your [count] recommended frames.",
+            "compare_first": "Specification",
+            "best_suffix": "(Best match)",
+            "row_style": "Playing style",
+            "row_level": "Player level",
+            "row_weight": "Weight",
+            "row_balance": "Balance",
+            "row_flex": "Flex",
+            "row_price": "Price"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "cb_rmatch_quiz_8naUxb",
+        "cb_rmatch_results_naw8Gm"
+      ],
+      "name": "[CB] Racket matcher",
+      "settings": {
+        "card_width": 814,
+        "results_width": 1208,
+        "stack_gap": 96,
+        "radius": 8,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "#0b0b0b",
+        "card_color": "#181818",
+        "option_color": "#201f1f",
+        "option_selected_color": "#2b2b2b",
+        "radio_color": "#353534",
+        "results_card_color": "#191919",
+        "panel_color": "#2a2a2a",
+        "image_background_color": "#ffffff",
+        "table_line_color": "#1c1b1b",
+        "text_color": "#ffffff",
+        "muted_text_color": "#a1a1aa",
+        "accent_color": "#d71f27",
+        "padding_top": 64,
+        "padding_bottom": 80
+      }
+    },
+    "cb_finder_next_eKUXKc": {
+      "type": "cb-finder-next",
+      "blocks": {
+        "cb_fnext_card_jxWM6K": {
+          "type": "_cb-fnext-card",
+          "settings": {
+            "icon": "store",
+            "custom_icon_tint": true,
+            "card_heading": "Not sure between two frames?",
+            "card_text": "Visit our Papakura Pro Shop at 41R Elliot Street to test court demo frames or speak with our coaches.",
+            "button_label": "Ask the Pro Shop",
+            "button_link": "shopify://pages/contact",
+            "button_style": "light",
+            "show_arrow": false,
+            "note_text": "Visit us (open 7 days)",
+            "show_note_dot": true
+          },
+          "blocks": {}
+        },
+        "cb_fnext_card_rbLxUD": {
+          "type": "_cb-fnext-card",
+          "settings": {
+            "icon": "racket",
+            "custom_icon_tint": true,
+            "card_heading": "Get it set up properly.",
+            "card_text": "Tournament-calibrated electronic restringing for your recommended frame on our Victor C-7032 stringing machine.",
+            "button_label": "Explore stringing setup",
+            "button_link": "shopify://collections/stringing",
+            "button_style": "accent",
+            "show_arrow": true,
+            "note_text": "",
+            "show_note_dot": true
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "cb_fnext_card_jxWM6K",
+        "cb_fnext_card_rbLxUD"
+      ],
+      "name": "[CB] Finder next steps",
+      "settings": {
+        "max_width": 1060,
+        "card_gap": 24,
+        "card_radius": 6,
+        "stack_gap": 72,
+        "retake_label": "Retake finder",
+        "retake_link": "",
+        "shop_label": "Shop all rackets",
+        "shop_link": "shopify://collections/rackets",
+        "heading_font": "space_grotesk_n6",
+        "body_font": "inter_n4",
+        "background_color": "#0b0b0b",
+        "card_color": "#191919",
+        "icon_box_color": "#202020",
+        "text_color": "#ffffff",
+        "muted_text_color": "#a1a1aa",
+        "accent_color": "#d71f27",
+        "light_button_color": "#ffffff",
+        "light_button_text_color": "#0b0b0b",
+        "dot_color": "#10b981",
+        "padding_top": 40,
+        "padding_bottom": 64
+      }
+    }
+  },
+  "order": [
+    "main",
+    "cb_finder_intro_MdiTgt",
+    "cb_racket_matcher_T3JVWV",
+    "cb_finder_next_eKUXKc"
+  ]
+}

@@ -12,6 +12,18 @@
 <a
   href="{{ url }}"
   class="cb-tactic{% if block.settings.highlight %} is-active{% endif %}"
+  style="
+    --cb-tactics-card-label-size: {{ block.settings.label_size }}px;
+    --cb-tactics-card-label-weight: {{ block.settings.label_weight }};
+    --cb-tactics-card-title-size: {{ block.settings.title_size }}px;
+    --cb-tactics-card-title-weight: {{ block.settings.title_weight }};
+    --cb-tactics-card-description-size: {{ block.settings.description_size }}px;
+    --cb-tactics-card-description-weight: {{ block.settings.description_weight }};
+    --cb-tactics-card-count-size: {{ block.settings.count_size }}px;
+    --cb-tactics-card-count-weight: {{ block.settings.count_weight }};
+    --cb-tactics-card-cta-size: {{ block.settings.cta_size }}px;
+    --cb-tactics-card-cta-weight: {{ block.settings.cta_weight }};
+  "
   {% if block.settings.filter_value != blank %}
     data-cb-tactic="{{ block.settings.filter_value | handleize }}"
   {% endif %}
@@ -22,28 +34,34 @@
 >
   <div class="cb-tactic__top">
     <p class="cb-tactic__label">{{ block.settings.tactic_label | escape }}</p>
-    <span class="cb-tactic__icon" aria-hidden="true">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        {%- case block.settings.icon -%}
-          {%- when 'zap' -%}
-            <path d="M13 2 4 14h7l-1 8 9-12h-7z"/>
-          {%- when 'arrows' -%}
-            <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
-          {%- when 'crosshair' -%}
-            <circle cx="12" cy="12" r="9"/><path d="M22 12h-4M6 12H2M12 6V2M12 22v-4"/>
-          {%- when 'shield' -%}
-            <path d="M12 3 4.5 6v5.5c0 4.6 3.2 8.1 7.5 9.5 4.3-1.4 7.5-4.9 7.5-9.5V6z"/>
-          {%- when 'feather' -%}
-            <path d="M20.2 12.2a6 6 0 0 0-8.5-8.5L5 10.5V19h8.5z"/><path d="M16 8 2 22M17.5 15H9"/>
-          {%- when 'target' -%}
-            <circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>
-          {%- when 'racket' -%}
-            <ellipse cx="9" cy="9" rx="5" ry="6.2" transform="rotate(-45 9 9)"/><path d="m12.6 12.6 7.4 7.4"/>
-          {%- when 'star' -%}
-            <path d="m12 3.5 2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/>
-        {%- endcase -%}
-      </svg>
-    </span>
+    {%- if block.settings.custom_icon != blank or block.settings.icon != 'none' -%}
+      <span class="cb-tactic__icon" aria-hidden="true">
+        {%- if block.settings.custom_icon != blank -%}
+          {%- render 'cb-icon-upload', image: block.settings.custom_icon, size: 18, tint: block.settings.custom_icon_tint -%}
+        {%- else -%}
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            {%- case block.settings.icon -%}
+              {%- when 'zap' -%}
+                <path d="M13 2 4 14h7l-1 8 9-12h-7z"/>
+              {%- when 'arrows' -%}
+                <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+              {%- when 'crosshair' -%}
+                <circle cx="12" cy="12" r="9"/><path d="M22 12h-4M6 12H2M12 6V2M12 22v-4"/>
+              {%- when 'shield' -%}
+                <path d="M12 3 4.5 6v5.5c0 4.6 3.2 8.1 7.5 9.5 4.3-1.4 7.5-4.9 7.5-9.5V6z"/>
+              {%- when 'feather' -%}
+                <path d="M20.2 12.2a6 6 0 0 0-8.5-8.5L5 10.5V19h8.5z"/><path d="M16 8 2 22M17.5 15H9"/>
+              {%- when 'target' -%}
+                <circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>
+              {%- when 'racket' -%}
+                <ellipse cx="9" cy="9" rx="5" ry="6.2" transform="rotate(-45 9 9)"/><path d="m12.6 12.6 7.4 7.4"/>
+              {%- when 'star' -%}
+                <path d="m12 3.5 2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/>
+            {%- endcase -%}
+          </svg>
+        {%- endif -%}
+      </span>
+    {%- endif -%}
   </div>
 
   {%- if block.settings.tactic_title != blank -%}
@@ -123,8 +141,8 @@
   .cb-tactic__label {
     margin: 0;
     font-family: var(--cbt-font-body);
-    font-weight: var(--cbt-font-body-strong);
-    font-size: 10px;
+    font-weight: var(--cb-tactics-card-label-weight, var(--cbt-font-body-strong));
+    font-size: var(--cb-tactics-card-label-size, 10px);
     line-height: 1.4;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -152,8 +170,8 @@
     position: relative;
     margin: 6px 0 0;
     font-family: var(--cbt-font-heading);
-    font-weight: var(--cbt-font-heading-weight);
-    font-size: 17px;
+    font-weight: var(--cb-tactics-card-title-weight, var(--cbt-font-heading-weight));
+    font-size: var(--cb-tactics-card-title-size, 17px);
     line-height: 1.25;
     letter-spacing: 0.01em;
     text-transform: uppercase;
@@ -164,8 +182,8 @@
     position: relative;
     margin: 0;
     font-family: var(--cbt-font-body);
-    font-weight: var(--cbt-font-body-weight);
-    font-size: 13px;
+    font-weight: var(--cb-tactics-card-description-weight, var(--cbt-font-body-weight));
+    font-size: var(--cb-tactics-card-description-size, 13px);
     line-height: 1.6;
     color: var(--cbt-muted);
   }
@@ -183,8 +201,8 @@
 
   .cb-tactic__count {
     font-family: var(--cbt-font-body);
-    font-weight: var(--cbt-font-body-weight);
-    font-size: 12px;
+    font-weight: var(--cb-tactics-card-count-weight, var(--cbt-font-body-weight));
+    font-size: var(--cb-tactics-card-count-size, 12px);
     color: var(--cbt-muted);
   }
 
@@ -193,8 +211,8 @@
     align-items: center;
     gap: 6px;
     font-family: var(--cbt-font-body);
-    font-weight: var(--cbt-font-body-strong);
-    font-size: 12px;
+    font-weight: var(--cb-tactics-card-cta-weight, var(--cbt-font-body-strong));
+    font-size: var(--cb-tactics-card-cta-size, 12px);
     white-space: nowrap;
     color: var(--cbt-text);
     transition: color 0.2s ease;
@@ -231,9 +249,24 @@
         { "value": "feather", "label": "Feather" },
         { "value": "target", "label": "Target" },
         { "value": "racket", "label": "Racket" },
-        { "value": "star", "label": "Star" }
+        { "value": "star", "label": "Star" },
+        { "value": "none", "label": "None" }
       ],
       "default": "zap"
+    },
+    {
+      "type": "image_picker",
+      "id": "custom_icon",
+      "label": "Custom icon",
+      "info": "Upload your own SVG (or PNG). It replaces the built-in icon above."
+    },
+    {
+      "type": "checkbox",
+      "id": "custom_icon_tint",
+      "label": "Colour it like the built-in icons",
+      "info": "For one-colour SVGs: uses this section's icon colour. Turn off to keep the file's own colours.",
+      "default": true,
+      "visible_if": "{{ block.settings.custom_icon != blank }}"
     },
     {
       "type": "text",
@@ -304,6 +337,150 @@
       "id": "filter_value",
       "label": "Filter value",
       "info": "If a [CB] Featured frames section is further down the page, clicking the card filters it by this value (its filter buttons, card categories or product tags) instead of opening the link."
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "label_size",
+      "label": "Label size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "label_weight",
+      "label": "Label weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Title size",
+      "min": 10,
+      "max": 56,
+      "step": 0.5,
+      "unit": "px",
+      "default": 17
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Title weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "description_size",
+      "label": "Description size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "select",
+      "id": "description_weight",
+      "label": "Description weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "count_size",
+      "label": "Count size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "count_weight",
+      "label": "Count weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "cta_size",
+      "label": "Link text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "cta_weight",
+      "label": "Link text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
     }
   ],
   "presets": [{ "name": "[CB] Style card" }]

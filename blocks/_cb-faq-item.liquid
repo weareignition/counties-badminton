@@ -1,0 +1,235 @@
+{%- comment -%}
+  One question. Native <details>, so it works without JavaScript; items sharing a `name` close each other
+  (the section's "One answer open at a time" setting).
+{%- endcomment -%}
+{%- if block.settings.question != blank -%}
+  <details
+    class="cb-faq__item"
+    {% if section.settings.one_at_a_time %}
+      name="cb-faq-{{ section.id }}"
+    {% endif %}
+    {% if block.settings.open %}
+      open
+    {% endif %}
+    style="
+      --cb-faq-item-question-size: {{ block.settings.question_size }}px;
+      --cb-faq-item-question-weight: {{ block.settings.question_weight }};
+      --cb-faq-item-answer-size: {{ block.settings.answer_size }}px;
+      --cb-faq-item-answer-weight: {{ block.settings.answer_weight }};
+    "
+    {{ block.shopify_attributes }}
+  >
+    <summary class="cb-faq__question">
+      <span class="cb-faq__question-text">{{ block.settings.question | escape }}</span>
+      <svg class="cb-faq__icon" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+        <path d="M0 7h14"/>
+        <path class="cb-faq__icon-bar" d="M7 0v14"/>
+      </svg>
+    </summary>
+    {%- if block.settings.answer != blank -%}
+      <div class="cb-faq__answer">{{ block.settings.answer }}</div>
+    {%- endif -%}
+  </details>
+{%- endif -%}
+
+{% stylesheet %}
+  .cb-faq__item {
+    padding-inline: 16px;
+    border-radius: var(--cbfq-radius);
+    background: var(--cbfq-item);
+  }
+
+  /* Two classes beat Horizon's global summary padding and hover colour. */
+  .cb-faq__item .cb-faq__question {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 0 18px;
+    list-style: none;
+    cursor: pointer;
+    font-family: var(--cbfq-font-heading);
+    font-weight: var(--cb-faq-item-question-weight, var(--cbfq-font-heading-regular-weight));
+    font-size: calc(var(--cb-faq-item-question-size, 18px) * 16 / 18);
+    line-height: 1.5;
+    color: var(--cbfq-text);
+  }
+
+  .cb-faq__item .cb-faq__question:hover {
+    color: var(--cbfq-text);
+  }
+
+  .cb-faq__item .cb-faq__question::-webkit-details-marker {
+    display: none;
+  }
+
+  .cb-faq__item .cb-faq__question:focus-visible {
+    outline: 2px solid var(--cbfq-accent);
+    outline-offset: 4px;
+    border-radius: 2px;
+  }
+
+  .cb-faq__item[open] .cb-faq__question {
+    padding-bottom: 11px;
+    border-bottom: 2px solid var(--cbfq-divider);
+  }
+
+  .cb-faq__icon {
+    flex: none;
+    color: var(--cbfq-muted);
+  }
+
+  .cb-faq__icon-bar {
+    transform-box: fill-box;
+    transform-origin: center;
+    transition: transform 0.2s ease;
+  }
+
+  /* Open: the plus becomes an accent minus. */
+  .cb-faq__item[open] .cb-faq__icon {
+    color: var(--cbfq-accent);
+  }
+
+  .cb-faq__item[open] .cb-faq__icon-bar {
+    transform: scaleY(0);
+  }
+
+  .cb-faq__answer {
+    padding: 12px 0 20px;
+    font-family: var(--cbfq-font-body);
+    font-weight: var(--cb-faq-item-answer-weight, var(--cbfq-font-body-weight));
+    font-size: var(--cb-faq-item-answer-size, 14px);
+    line-height: 1.54;
+    letter-spacing: -0.01em;
+    color: var(--cbfq-muted);
+  }
+
+  .cb-faq__answer > * {
+    margin: 0;
+  }
+
+  .cb-faq__answer > * + * {
+    margin-top: 0.75em;
+  }
+
+  .cb-faq__answer a {
+    color: var(--cbfq-text);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-faq__item {
+      padding-inline: 20px;
+    }
+
+    /* Question sits slightly above centre, as in the design. */
+    .cb-faq__item .cb-faq__question {
+      padding-block: 17px 23px;
+      font-size: var(--cb-faq-item-question-size, 18px);
+    }
+
+    .cb-faq__item[open] .cb-faq__question {
+      padding-bottom: 14px;
+    }
+
+    .cb-faq__answer {
+      padding-block: 15px 25px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cb-faq__icon-bar {
+      transition: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Question",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "question",
+      "label": "Question",
+      "default": "How do I know what tension to use?"
+    },
+    {
+      "type": "richtext",
+      "id": "answer",
+      "label": "Answer",
+      "default": "<p>The pro shop team can recommend an accurate starting point based on your racket's frame tolerance, current playing level, and whether you need more power or fine-tuned control.</p>"
+    },
+    {
+      "type": "checkbox",
+      "id": "open",
+      "label": "Open when the page loads",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "question_size",
+      "label": "Question size",
+      "info": "Scaled down on phones.",
+      "min": 10,
+      "max": 56,
+      "step": 0.5,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "select",
+      "id": "question_weight",
+      "label": "Question weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "answer_size",
+      "label": "Answer size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "answer_weight",
+      "label": "Answer weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    }
+  ],
+  "presets": [{ "name": "[CB] Question" }]
+}
+{% endschema %}

@@ -1,0 +1,82 @@
+<div
+  class="cb-shoplinks__header cb-shoplinks__header--{{ block.settings.alignment }}"
+  style="--cbsl-header-gap: {{ block.settings.gap }}px;"
+  {{ block.shopify_attributes }}
+>
+  {% content_for 'blocks' %}
+</div>
+
+{% stylesheet %}
+  .cb-shoplinks__header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--cbsl-header-gap, 6px);
+    min-width: 0;
+  }
+
+  .cb-shoplinks__header--center {
+    align-items: center;
+    text-align: center;
+  }
+
+  .cb-shoplinks__header > * + .cb-paragraph {
+    margin-top: 2px;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Header",
+  "tag": null,
+  "blocks": [
+    { "type": "cb-subheader" },
+    { "type": "cb-heading" },
+    { "type": "cb-paragraph" },
+    { "type": "cb-button" }
+  ],
+  "settings": [
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Space between lines",
+      "min": 0,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 6
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Header",
+      "blocks": {
+        "eyebrow": {
+          "type": "cb-subheader",
+          "settings": { "subheader_text": "Complete your court setup", "letter_spacing": 0 }
+        },
+        "heading": { "type": "cb-heading", "settings": { "heading_text": "Ready from first step to first serve." } },
+        "text": {
+          "type": "cb-paragraph",
+          "settings": {
+            "body_text": "<p>Pair your verified footwear with tournament shuttlecocks, match rackets, and tour bags.</p>",
+            "letter_spacing": -1,
+            "max_width_unit": "px"
+          }
+        }
+      },
+      "block_order": ["eyebrow", "heading", "text"]
+    }
+  ]
+}
+{% endschema %}

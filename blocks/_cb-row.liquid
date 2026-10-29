@@ -1,0 +1,330 @@
+{%- comment -%}
+  A row of columns. The layout sets the column widths on computers; tablets and phones use their own setting.
+  Extra columns wrap onto a new line. Width and box styling come from snippets/cb-text-box.
+{%- endcomment -%}
+{%- liquid
+  assign s = block.settings
+  assign count = 2
+  case s.layout
+    when '100'
+      assign desktop = 'minmax(0, 1fr)'
+      assign count = 1
+    when '50-50'
+      assign desktop = 'repeat(2, minmax(0, 1fr))'
+    when '40-60'
+      assign desktop = 'minmax(0, 2fr) minmax(0, 3fr)'
+    when '60-40'
+      assign desktop = 'minmax(0, 3fr) minmax(0, 2fr)'
+    when '33-67'
+      assign desktop = 'minmax(0, 1fr) minmax(0, 2fr)'
+    when '67-33'
+      assign desktop = 'minmax(0, 2fr) minmax(0, 1fr)'
+    when '25-75'
+      assign desktop = 'minmax(0, 1fr) minmax(0, 3fr)'
+    when '75-25'
+      assign desktop = 'minmax(0, 3fr) minmax(0, 1fr)'
+    when '33-33-33'
+      assign desktop = 'repeat(3, minmax(0, 1fr))'
+      assign count = 3
+    when '25-50-25'
+      assign desktop = 'minmax(0, 1fr) minmax(0, 2fr) minmax(0, 1fr)'
+      assign count = 3
+    when '25x4'
+      assign desktop = 'repeat(4, minmax(0, 1fr))'
+      assign count = 4
+    when '20x5'
+      assign desktop = 'repeat(5, minmax(0, 1fr))'
+      assign count = 5
+    when '16x6'
+      assign desktop = 'repeat(6, minmax(0, 1fr))'
+      assign count = 6
+    else
+      assign desktop = s.custom_layout | default: '1fr 1fr' | escape
+      assign words = s.custom_layout | strip | split: ' '
+      assign count = words.size
+  endcase
+
+  case s.tablet
+    when 'same'
+      assign tablet = desktop
+    when '2'
+      assign tablet = 'repeat(2, minmax(0, 1fr))'
+    when '1'
+      assign tablet = 'minmax(0, 1fr)'
+    else
+      if count >= 3
+        assign tablet = 'repeat(2, minmax(0, 1fr))'
+      else
+        assign tablet = desktop
+      endif
+  endcase
+
+  if s.mobile == '2'
+    assign mobile = 'repeat(2, minmax(0, 1fr))'
+  else
+    assign mobile = 'minmax(0, 1fr)'
+  endif
+-%}
+
+<div
+  class="cb-row cb-row--{{ s.align }}{% if s.reverse_mobile %} cb-row--reverse{% endif %}{% render 'cb-text-box', settings: s, part: 'class' %}"
+  style="
+    --cb-row-cols: {{ desktop }};
+    --cb-row-cols-tablet: {{ tablet }};
+    --cb-row-cols-mobile: {{ mobile }};
+    --cb-row-gap-x: {{ s.column_gap }}px;
+    --cb-row-gap-y: {{ s.row_gap }}px;
+    {% render 'cb-text-box', settings: s, part: 'style' %}
+  "
+  {{ block.shopify_attributes }}
+>
+  {% content_for 'blocks' %}
+</div>
+
+{% stylesheet %}
+  .cb-row {
+    display: grid;
+    grid-template-columns: var(--cb-row-cols-mobile, minmax(0, 1fr));
+    gap: var(--cb-row-gap-y, 24px) var(--cb-row-gap-x, 24px);
+    align-items: stretch;
+    min-width: 0;
+  }
+
+  .cb-row--top {
+    align-items: start;
+  }
+
+  .cb-row--center {
+    align-items: center;
+  }
+
+  .cb-row--bottom {
+    align-items: end;
+  }
+
+  /* Phones: "Reverse order" puts the last column first (e.g. an image above its text). */
+  @media screen and (max-width: 749px) {
+    .cb-row--reverse {
+      display: flex;
+      flex-direction: column-reverse;
+    }
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-row {
+      grid-template-columns: var(--cb-row-cols-tablet, var(--cb-row-cols));
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .cb-row {
+      grid-template-columns: var(--cb-row-cols, repeat(2, minmax(0, 1fr)));
+    }
+  }
+
+  .cb-blank--editing .cb-row:not(:has(> *)) {
+    min-height: 80px;
+    border: 1px dashed rgb(255 255 255 / 0.2);
+    border-radius: 8px;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Row",
+  "tag": null,
+  "blocks": [
+    {
+      "type": "_cb-column"
+    }
+  ],
+  "settings": [
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout on computers",
+      "info": "Extra columns wrap onto a new line.",
+      "options": [
+        { "value": "100", "label": "1 column" },
+        { "value": "50-50", "label": "2 columns: 50 / 50" },
+        { "value": "40-60", "label": "2 columns: 40 / 60" },
+        { "value": "60-40", "label": "2 columns: 60 / 40" },
+        { "value": "33-67", "label": "2 columns: 33 / 67" },
+        { "value": "67-33", "label": "2 columns: 67 / 33" },
+        { "value": "25-75", "label": "2 columns: 25 / 75" },
+        { "value": "75-25", "label": "2 columns: 75 / 25" },
+        { "value": "33-33-33", "label": "3 columns" },
+        { "value": "25-50-25", "label": "3 columns: 25 / 50 / 25" },
+        { "value": "25x4", "label": "4 columns" },
+        { "value": "20x5", "label": "5 columns" },
+        { "value": "16x6", "label": "6 columns" },
+        { "value": "custom", "label": "Custom" }
+      ],
+      "default": "50-50"
+    },
+    {
+      "type": "text",
+      "id": "custom_layout",
+      "label": "Custom column widths",
+      "info": "Relative widths separated by spaces, e.g. 1fr 2fr 1fr.",
+      "default": "1fr 2fr",
+      "visible_if": "{{ block.settings.layout == 'custom' }}"
+    },
+    {
+      "type": "select",
+      "id": "tablet",
+      "label": "On tablets",
+      "options": [
+        { "value": "auto", "label": "Automatic (2 per row for 3+ columns)" },
+        { "value": "same", "label": "Same as computers" },
+        { "value": "2", "label": "2 per row" },
+        { "value": "1", "label": "Stacked" }
+      ],
+      "default": "auto"
+    },
+    {
+      "type": "select",
+      "id": "mobile",
+      "label": "On phones",
+      "options": [
+        { "value": "1", "label": "Stacked" },
+        { "value": "2", "label": "2 per row" }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "checkbox",
+      "id": "reverse_mobile",
+      "label": "Reverse the order on phones",
+      "info": "E.g. to show an image column above its text.",
+      "default": false,
+      "visible_if": "{{ block.settings.mobile == '1' }}"
+    },
+    {
+      "type": "select",
+      "id": "align",
+      "label": "Column height",
+      "options": [
+        { "value": "stretch", "label": "Same height" },
+        { "value": "top", "label": "Fit content, aligned top" },
+        { "value": "center", "label": "Fit content, centred" },
+        { "value": "bottom", "label": "Fit content, aligned bottom" }
+      ],
+      "default": "stretch"
+    },
+    {
+      "type": "range",
+      "id": "column_gap",
+      "label": "Space between columns",
+      "min": 0,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "row_gap",
+      "label": "Space between lines",
+      "info": "When columns wrap or stack.",
+      "min": 0,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Width"
+    },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "Width",
+      "options": [
+        { "value": "auto", "label": "Auto (follows the section)" },
+        { "value": "fit", "label": "Fit the text" },
+        { "value": "full", "label": "Full width" },
+        { "value": "custom", "label": "Custom" }
+      ],
+      "default": "full"
+    },
+    {
+      "type": "range",
+      "id": "width_px",
+      "label": "Custom width",
+      "min": 100,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "default": 400,
+      "visible_if": "{{ block.settings.width == 'custom' }}"
+    },
+    {
+      "type": "header",
+      "content": "Box"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "info": "Leave empty for no background."
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Padding top and bottom",
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_x",
+      "label": "Padding left and right",
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "label": "Border",
+      "info": "0 = no border.",
+      "min": 0,
+      "max": 8,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "info": "Leave empty for a faint version of the text colour.",
+      "visible_if": "{{ block.settings.border_width > 0 }}"
+    },
+    {
+      "type": "range",
+      "id": "radius",
+      "label": "Corner radius",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Row",
+      "blocks": { "column_1": { "type": "_cb-column" }, "column_2": { "type": "_cb-column" } },
+      "block_order": ["column_1", "column_2"]
+    }
+  ]
+}
+{% endschema %}

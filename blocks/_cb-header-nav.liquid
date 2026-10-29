@@ -3,7 +3,18 @@
   assign caret = '<svg class="cb-header__caret" width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="m3 4.5 3 3 3-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'
 -%}
 
-<div class="cb-header__nav-block" {{ block.shopify_attributes }}>
+<div
+  class="cb-header__nav-block"
+  style="
+    --cb-header-nav-link-size: {{ block.settings.link_size }}px;
+    --cb-header-nav-link-weight: {{ block.settings.link_weight }};
+    --cb-header-nav-sublink-size: {{ block.settings.sublink_size }}px;
+    --cb-header-nav-sublink-weight: {{ block.settings.sublink_weight }};
+    --cb-header-nav-button-size: {{ block.settings.button_size }}px;
+    --cb-header-nav-button-weight: {{ block.settings.button_weight }};
+  "
+  {{ block.shopify_attributes }}
+>
   {%- comment -%} Phones, tablets and any width where the menu doesn't fit: menu button + drawer {%- endcomment -%}
   <details class="cb-header__drawer">
     <summary class="cb-header__burger" aria-label="{{ 'accessibility.menu' | t }}">
@@ -135,8 +146,8 @@
     gap: 6px;
     padding: 10px 0;
     font-family: var(--cbhd-font-body);
-    font-weight: var(--cbhd-font-body-weight);
-    font-size: 14px;
+    font-weight: var(--cb-header-nav-link-weight, var(--cbhd-font-body-weight));
+    font-size: var(--cb-header-nav-link-size, 14px);
     line-height: 1.2;
     white-space: nowrap;
     color: var(--cbhd-soft);
@@ -151,8 +162,9 @@
     color: var(--cbhd-text);
   }
 
+  /* At least as bold as the other links when their weight is set. */
   .cb-header__menu-link.is-active {
-    font-weight: var(--cbhd-font-body-strong);
+    font-weight: max(var(--cb-header-nav-link-weight, 0), var(--cbhd-font-body-strong));
   }
 
   .cb-header__menu-link.is-active::after {
@@ -214,8 +226,8 @@
     padding: 9px 12px;
     border-radius: 6px;
     font-family: var(--cbhd-font-body);
-    font-weight: var(--cbhd-font-body-weight);
-    font-size: 14px;
+    font-weight: var(--cb-header-nav-sublink-weight, var(--cbhd-font-body-weight));
+    font-size: var(--cb-header-nav-sublink-size, 14px);
     color: var(--cbhd-soft);
     text-decoration: none;
   }
@@ -288,8 +300,8 @@
     justify-content: space-between;
     padding: 14px 4px;
     font-family: var(--cbhd-font-body);
-    font-weight: var(--cbhd-font-body-weight);
-    font-size: 16px;
+    font-weight: var(--cb-header-nav-link-weight, var(--cbhd-font-body-weight));
+    font-size: calc(var(--cb-header-nav-link-size, 14px) * 16 / 14);
     color: var(--cbhd-text);
     text-decoration: none;
     list-style: none;
@@ -310,7 +322,7 @@
     display: block;
     padding: 9px 4px;
     font-family: var(--cbhd-font-body);
-    font-size: 14px;
+    font-size: var(--cb-header-nav-sublink-size, 14px);
     color: var(--cbhd-soft);
     text-decoration: none;
   }
@@ -324,8 +336,8 @@
     border-radius: 999px;
     background: var(--cbhd-accent);
     font-family: var(--cbhd-font-body);
-    font-weight: var(--cbhd-font-body-strong);
-    font-size: 14px;
+    font-weight: var(--cb-header-nav-button-weight, var(--cbhd-font-body-strong));
+    font-size: var(--cb-header-nav-button-size, 14px);
     color: var(--cbhd-accent-text);
     text-decoration: none;
   }
@@ -358,6 +370,96 @@
       "type": "url",
       "id": "drawer_button_link",
       "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "link_size",
+      "label": "Menu link size",
+      "info": "Shown slightly larger in the mobile menu.",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "link_weight",
+      "label": "Menu link weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "sublink_size",
+      "label": "Dropdown link size",
+      "info": "Child links, in the dropdowns and the mobile menu.",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "sublink_weight",
+      "label": "Dropdown link weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "button_size",
+      "label": "Mobile menu button text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "button_weight",
+      "label": "Mobile menu button text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
     }
   ],
   "presets": [{ "name": "[CB] Navigation" }]

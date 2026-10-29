@@ -1,0 +1,444 @@
+{%- comment -%}
+  A product-type card. Products come from the chosen collection (this page's collection by default):
+  those whose product type matches, otherwise those whose title contains one of the card's words, otherwise all of them.
+  The photo is the first in-stock match unless a custom image is set. The link filters this page by the product type
+  when the Search & Discovery "Product type" filter offers it; otherwise it searches the store for the card's words,
+  or opens the collection. Cards always show, with or without a collection, so the section works on any page.
+{%- endcomment -%}
+{%- liquid
+  assign pool = block.settings.collection
+  if pool == blank
+    assign pool = collection
+  endif
+
+  assign type_name = block.settings.product_type | strip
+  assign type_key = type_name | handleize
+
+  assign raw_terms = block.settings.match_keywords | split: ','
+  assign terms = ''
+  assign search_terms = ''
+  for raw in raw_terms
+    assign word = raw | strip
+    assign term = word | handleize
+    if term != blank
+      assign terms = terms | append: term | append: ','
+      if search_terms != blank
+        assign search_terms = search_terms | append: ' OR '
+      endif
+      assign search_terms = search_terms | append: word
+    endif
+  endfor
+  assign term_list = terms | split: ','
+
+  # One pass over the collection's first 50 products: counts and a photo for type matches, word matches and all.
+  assign type_count = 0
+  assign type_image = nil
+  assign word_count = 0
+  assign word_image = nil
+  assign all_count = 0
+  assign all_image = nil
+  if pool != blank
+    for product in pool.products
+      assign has_photo = false
+      if product.available and product.featured_image
+        assign has_photo = true
+      endif
+
+      assign all_count = all_count | plus: 1
+      if all_image == nil and has_photo
+        assign all_image = product.featured_image
+      endif
+
+      if type_key != blank
+        assign product_type_key = product.type | handleize
+        if product_type_key == type_key
+          assign type_count = type_count | plus: 1
+          if type_image == nil and has_photo
+            assign type_image = product.featured_image
+          endif
+        endif
+      endif
+
+      if term_list.size > 0
+        assign title_key = product.title | handleize | prepend: '-' | append: '-'
+        for term in term_list
+          assign term_key = '-' | append: term | append: '-'
+          if title_key contains term_key
+            assign word_count = word_count | plus: 1
+            if word_image == nil and has_photo
+              assign word_image = product.featured_image
+            endif
+            break
+          endif
+        endfor
+      endif
+    endfor
+  endif
+
+  if type_count > 0
+    assign match_image = type_image
+  elsif term_list.size > 0
+    assign match_image = word_image
+  else
+    assign match_image = all_image
+  endif
+
+  assign image = block.settings.image | default: match_image
+  assign card_title = block.settings.card_title | default: type_name | default: pool.title
+
+  # Link: custom, then this page filtered by the product type, then a search for the words, then the collection.
+  assign url = block.settings.link
+  if url == blank and type_key != blank and collection
+    for page_filter in collection.filters
+      if page_filter.param_name == 'filter.p.product_type'
+        for value in page_filter.values
+          assign value_key = value.label | handleize
+          if value_key == type_key and value.count > 0
+            assign url = value.url_to_add
+            break
+          endif
+        endfor
+      endif
+    endfor
+  endif
+  if url == blank and search_terms != blank
+    assign encoded_terms = search_terms | url_encode
+    assign url = routes.search_url | append: '?type=product&q=' | append: encoded_terms
+  endif
+  if url == blank and pool != blank
+    assign url = pool.url
+  endif
+
+
+  assign tag = 'div'
+  if url != blank
+    assign tag = 'a'
+  endif
+-%}
+
+<{{ tag }}
+  {% if url != blank %}
+    href="{{ url }}"
+  {% endif %}
+  class="cb-type-card"
+  style="
+    --cb-type-card-title-size: {{ block.settings.title_size }}px;
+    --cb-type-card-title-weight: {{ block.settings.title_weight }};
+    --cb-type-card-subtitle-size: {{ block.settings.subtitle_size }}px;
+    --cb-type-card-subtitle-weight: {{ block.settings.subtitle_weight }};
+    --cb-type-card-link-size: {{ block.settings.link_size }}px;
+    --cb-type-card-link-weight: {{ block.settings.link_weight }};
+  "
+  {{ block.shopify_attributes }}
+>
+  <div class="cb-type-card__media">
+    {%- if image != blank -%}
+      {{
+        image
+        | image_url: width: 600
+        | image_tag:
+          widths: '200, 300, 400, 600',
+          sizes: '(min-width: 990px) 220px, (min-width: 750px) 30vw, 45vw',
+          loading: 'lazy',
+          alt: '',
+          class: 'cb-type-card__image'
+      }}
+    {%- else -%}
+      {{ 'product-1' | placeholder_svg_tag: 'cb-type-card__image cb-type-card__image--placeholder' }}
+    {%- endif -%}
+  </div>
+
+  <div class="cb-type-card__body">
+    {%- if card_title != blank -%}
+      <h3 class="cb-type-card__title">{{ card_title | escape }}</h3>
+    {%- endif -%}
+
+    {%- if block.settings.subtitle != blank -%}
+      <p class="cb-type-card__subtitle">{{ block.settings.subtitle | escape }}</p>
+    {%- endif -%}
+
+    {%- if block.settings.link_label != blank -%}
+      <div class="cb-type-card__footer">
+        <span class="cb-type-card__link">
+          {{- block.settings.link_label | escape -}}
+          <svg width="7" height="7" viewBox="0 0 8 8" fill="none" aria-hidden="true">
+            <path d="m2.5 1 3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+      </div>
+    {%- endif -%}
+
+  </div>
+</{{ tag }}>
+
+{% stylesheet %}
+  .cb-type-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    padding: 12px 12px 18px;
+    border: 1px solid var(--cbty-border);
+    border-radius: var(--cbty-radius);
+    background: var(--cbty-card);
+    color: inherit;
+    text-decoration: none;
+    transition: border-color 0.2s ease;
+  }
+
+  a.cb-type-card:hover {
+    border-color: color-mix(in srgb, var(--cbty-text) 24%, transparent);
+  }
+
+  a.cb-type-card:focus-visible {
+    outline: 2px solid var(--cbty-text);
+    outline-offset: 2px;
+  }
+
+  .cb-type-card__media {
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    border-radius: calc(var(--cbty-radius) * 0.5);
+    background: var(--cbty-image-bg);
+  }
+
+  .cb-type-card__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .cb-type-card__image--placeholder {
+    background: var(--cbty-image-bg);
+    fill: color-mix(in srgb, var(--cbty-card) 30%, transparent);
+  }
+
+  .cb-type-card__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 0;
+  }
+
+  .cb-type-card .cb-type-card__title {
+    margin: 14px 0 0;
+    font-family: var(--cbty-font-heading);
+    font-weight: var(--cb-type-card-title-weight, var(--cbty-font-heading-medium-weight));
+    font-size: var(--cb-type-card-title-size, 15px);
+    line-height: 1.3;
+    letter-spacing: 0;
+    color: var(--cbty-text);
+  }
+
+  .cb-type-card__subtitle {
+    margin: 6px 0 0;
+    font-family: var(--cbty-font-body);
+    font-weight: var(--cb-type-card-subtitle-weight, var(--cbty-font-body-weight));
+    font-size: var(--cb-type-card-subtitle-size, 12px);
+    line-height: 1.4;
+    color: var(--cbty-muted);
+  }
+
+  /* Pushed to the bottom so links line up across cards with longer text. */
+  .cb-type-card__footer {
+    align-self: stretch;
+    margin-top: auto;
+    padding-top: 10px;
+  }
+
+  .cb-type-card__link {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding-top: 12px;
+    border-top: 1px solid var(--cbty-border);
+    font-family: var(--cbty-font-body);
+    font-weight: var(--cb-type-card-link-weight, var(--cbty-font-body-strong));
+    font-size: var(--cb-type-card-link-size, 9px);
+    line-height: 1.3;
+    letter-spacing: 0;
+    text-transform: uppercase;
+    color: var(--cbty-accent);
+  }
+
+  .cb-type-card__link svg {
+    flex: none;
+    transition: transform 0.2s ease;
+  }
+
+  a.cb-type-card:hover .cb-type-card__link svg {
+    transform: translateX(2px);
+  }
+
+  .cb-type-card__note {
+    margin: 10px 0 0;
+    padding: 8px;
+    border: 1px dashed var(--cbty-border);
+    border-radius: 4px;
+    font-family: var(--cbty-font-body);
+    font-size: 11px;
+    line-height: 1.4;
+    color: var(--cbty-muted);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cb-type-card,
+    .cb-type-card__link svg {
+      transition: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Type card",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "card_title",
+      "label": "Title",
+      "info": "Leave empty to use the product type."
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Custom photo",
+      "info": "Leave empty to use the first in-stock matching product's photo."
+    },
+    {
+      "type": "header",
+      "content": "Which products"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection",
+      "info": "Optional. Defaults to the collection of the page the section is on. Cards show even without one; set a title, photo and link."
+    },
+    {
+      "type": "text",
+      "id": "product_type",
+      "label": "Product type",
+      "info": "Products with this type match. When the Search & Discovery Product type filter is on, the card filters this page by it."
+    },
+    {
+      "type": "text",
+      "id": "match_keywords",
+      "label": "Words in product titles",
+      "info": "Comma separated, e.g. grip, overgrip. Used until products have a type; the card then links to a store search for these words."
+    },
+    {
+      "type": "header",
+      "content": "Link"
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Link text",
+      "default": "View all"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Custom link",
+      "info": "Leave empty to link automatically."
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Title size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Title weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size",
+      "label": "Subtitle size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "subtitle_weight",
+      "label": "Subtitle weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "link_size",
+      "label": "Link text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 9
+    },
+    {
+      "type": "select",
+      "id": "link_weight",
+      "label": "Link text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    }
+  ],
+  "presets": [{ "name": "[CB] Type card" }]
+}
+{% endschema %}

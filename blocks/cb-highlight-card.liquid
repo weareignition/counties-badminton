@@ -1,0 +1,591 @@
+{%- comment -%}
+  A highlight card for any section: small label, a title whose italic words show in the accent colour, and a short
+  text, with an optional link (whole card) and button. Inside a [CB] section it uses that section's fonts and colours
+  (through the --cb-* variables from snippets/cb-font-styles). Width and box styling come from snippets/cb-text-box.
+{%- endcomment -%}
+{%- liquid
+  assign s = block.settings
+  assign tag = 'div'
+  if s.link != blank
+    assign tag = 'a'
+  endif
+
+  if s.title_font == 'heading'
+    assign title_family = 'var(--cb-font-heading, var(--font-heading--family))'
+    assign title_weight = 'var(--cb-font-heading-medium-weight, 500)'
+  elsif s.title_font == 'heading_bold'
+    assign title_family = 'var(--cb-font-heading, var(--font-heading--family))'
+    assign title_weight = 'var(--cb-font-heading-weight, 700)'
+  else
+    assign title_family = 'var(--cb-font-body, var(--font-body--family))'
+    assign title_weight = 'var(--cb-font-body-strong, 600)'
+  endif
+  if s.title_weight != blank and s.title_weight != 'initial'
+    assign title_weight = s.title_weight
+  endif
+-%}
+
+<{{ tag }}
+  {% if s.link != blank %}href="{{ s.link }}"{% endif %}
+  class="cb-hcard{% render 'cb-text-box', settings: s, part: 'class' %}"
+  style="
+    --cb-hcard-label-size: {{ s.label_size }}px;
+    --cb-hcard-label-weight: {{ s.label_weight }};
+    --cb-hcard-title-size: {{ s.title_size }}px;
+    --cb-hcard-text-size: {{ s.text_size }}px;
+    --cb-hcard-text-weight: {{ s.text_weight }};
+    --cb-hcard-button-size: {{ s.button_size }}px;
+    --cb-hcard-button-weight: {{ s.button_weight }};
+    --cb-hcard-label-gap: {{ s.label_gap }}px;
+    --cb-hcard-text-gap: {{ s.text_gap }}px;
+    --cb-hcard-icon-size: {{ s.icon_size }}px;
+    {%- if s.icon_box_color != blank %} --cb-hcard-icon-box: {{ s.icon_box_color }};{% endif %}
+    {%- if s.icon_color != blank %} --cb-hcard-icon-color: {{ s.icon_color }};{% endif %}
+    --cb-hcard-title-family: {{ title_family }};
+    --cb-hcard-title-weight: {{ title_weight }};
+    {%- if s.label_color != blank %} --cb-hcard-label-color: {{ s.label_color }};{% endif %}
+    {%- if s.title_color != blank %} --cb-hcard-title-color: {{ s.title_color }};{% endif %}
+    {%- if s.text_color != blank %} --cb-hcard-text-color: {{ s.text_color }};{% endif %}
+    {% render 'cb-text-box', settings: s, part: 'style' %}
+  "
+  {{ block.shopify_attributes }}
+>
+  {%- if s.custom_icon != blank -%}
+    <span class="cb-hcard__icon{% if s.icon_box %} cb-hcard__icon--box{% endif %}" aria-hidden="true">
+      {%- render 'cb-icon-upload', image: s.custom_icon, size: s.icon_size, tint: s.custom_icon_tint -%}
+    </span>
+  {%- elsif s.icon != 'none' -%}
+    <span class="cb-hcard__icon{% if s.icon_box %} cb-hcard__icon--box{% endif %}" aria-hidden="true">
+      <svg width="{{ s.icon_size }}" height="{{ s.icon_size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        {%- case s.icon -%}
+          {%- when 'weight' -%}
+            <path d="M3.5 3h17M3.5 21h17"/><path d="M5.5 3c0 6 13 7 13 18M18.5 3c0 6-13 7-13 18"/>
+          {%- when 'balance' -%}
+            <path d="M12 4v16M8 20h8M5 7h14M12 4v3"/><path d="M5 7l-3 6a3 3 0 0 0 6 0zM19 7l-3 6a3 3 0 0 0 6 0z"/>
+          {%- when 'tension' -%}
+            <path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/>
+          {%- when 'racket' -%}
+            <ellipse cx="10" cy="9" rx="6" ry="7"/><path d="M14.2 14l6 6.5M7 6l6 6M13 6l-6 6"/>
+          {%- when 'info' -%}
+            <circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5h.01"/>
+          {%- when 'book' -%}
+            <path d="M3 5.5A2.5 2.5 0 0 1 5.5 3H11v17H5.5A2.5 2.5 0 0 0 3 22.5zM21 5.5A2.5 2.5 0 0 0 18.5 3H13v17h5.5a2.5 2.5 0 0 1 2.5 2.5z"/>
+          {%- when 'check' -%}
+            <circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.7 2.7L16 9.5"/>
+          {%- when 'court' -%}
+            <rect x="3" y="5" width="18" height="14" rx="1.5"/><path d="M12 5v14M3 12h18M7 9h10v6H7z"/>
+          {%- when 'footprints' -%}
+            <path d="M7 3c-2 0-3 2-3 5s1 5 3 5 2-2 2-5-1-5-2-5zM5 16h4M5.5 16c0 2 .7 3.5 1.5 3.5S8.5 18 8.5 16"/><path d="M17 7c-2 0-3 2-3 5s1 5 3 5 2-2 2-5-1-5-2-5zM15 20h4"/>
+          {%- when 'trophy' -%}
+            <path d="M8 4h8v5a4 4 0 0 1-8 0zM8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4M12 13v4M8 21h8M9.5 17h5v4h-5z"/>
+          {%- when 'shoe' -%}
+            <path d="M3 17V8h5l2 3 6 1.5c2.5.6 5 1.6 5 4.5v1H3zM3 17h18M8 8l1.5 3M11.5 11.5l1-2"/>
+          {%- when 'star' -%}
+            <path d="M12 3l2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 17.3 6.4 20.2l1.1-6.2L3 9.6l6.2-.9z"/>
+        {%- endcase -%}
+      </svg>
+    </span>
+  {%- endif -%}
+  {%- if s.label != blank -%}
+    <p class="cb-hcard__label">{{ s.label | escape }}</p>
+  {%- endif -%}
+  {%- if s.title_text != blank -%}
+    <{{ s.title_tag }} class="cb-hcard__title">{{ s.title_text }}</{{ s.title_tag }}>
+  {%- endif -%}
+  {%- if s.body_text != blank -%}
+    <p class="cb-hcard__text">{{ s.body_text | escape | newline_to_br }}</p>
+  {%- endif -%}
+  {%- if s.button_label != blank and s.link != blank -%}
+    <span class="cb-hcard__button">{{ s.button_label | escape }}</span>
+  {%- endif -%}
+</{{ tag }}>
+
+{% stylesheet %}
+  .cb-hcard {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 0;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  a.cb-hcard {
+    transition: filter 0.2s ease;
+  }
+
+  a.cb-hcard:hover {
+    filter: brightness(1.12);
+  }
+
+  /* Spacing sits on the following element, so any part can be left empty. */
+  .cb-hcard > * {
+    margin: 0;
+  }
+
+  .cb-hcard .cb-hcard__label {
+    margin: 0;
+    font-family: var(--cb-font-body, var(--font-body--family));
+    font-weight: var(--cb-hcard-label-weight, var(--cb-font-body-strong, 600));
+    font-size: var(--cb-hcard-label-size, 10px);
+    line-height: 1.3;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--cb-hcard-label-color, var(--cb-color-accent, #d71f27));
+  }
+
+  .cb-hcard .cb-hcard__title {
+    margin: 0;
+    font-family: var(--cb-hcard-title-family);
+    font-weight: var(--cb-hcard-title-weight);
+    font-size: var(--cb-hcard-title-size, 21px);
+    line-height: 1.25;
+    letter-spacing: 0;
+    color: var(--cb-hcard-title-color, var(--cb-color-text, #ffffff));
+  }
+
+  .cb-hcard__title em {
+    font-style: normal;
+    color: var(--cb-color-accent, #d71f27);
+  }
+
+  .cb-hcard .cb-hcard__text {
+    margin: 0;
+    font-family: var(--cb-font-body, var(--font-body--family));
+    font-weight: var(--cb-hcard-text-weight, var(--cb-font-body-weight, var(--font-body--weight)));
+    font-size: var(--cb-hcard-text-size, 13px);
+    line-height: 1.6;
+    color: var(--cb-hcard-text-color, var(--cb-color-muted, #d0d0d4));
+  }
+
+  .cb-hcard .cb-hcard__icon {
+    display: inline-flex;
+    width: var(--cb-hcard-icon-size, 16px);
+    height: var(--cb-hcard-icon-size, 16px);
+    color: var(--cb-hcard-icon-color, var(--cb-color-muted, #a1a1aa));
+  }
+
+  .cb-hcard .cb-hcard__icon--box {
+    box-sizing: content-box;
+    padding: 9px;
+    border-radius: 3px;
+    background: var(--cb-hcard-icon-box, rgb(255 255 255 / 0.06));
+  }
+
+  .cb-hcard .cb-hcard__icon + * {
+    margin-top: var(--cb-hcard-label-gap, 20px);
+  }
+
+  .cb-hcard .cb-hcard__label + .cb-hcard__title {
+    margin-top: var(--cb-hcard-label-gap, 20px);
+  }
+
+  .cb-hcard .cb-hcard__title + .cb-hcard__text,
+  .cb-hcard .cb-hcard__label + .cb-hcard__text {
+    margin-top: var(--cb-hcard-text-gap, 14px);
+  }
+
+  /* In a stretched (same-height) card the button sits at the bottom. */
+  .cb-hcard .cb-hcard__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 45px;
+    margin-top: auto;
+    padding: 0 19px;
+    border: 1px solid rgb(255 255 255 / 0.08);
+    border-radius: 8px;
+    background: rgb(255 255 255 / 0.02);
+    font-family: var(--cb-font-body, var(--font-body--family));
+    font-weight: var(--cb-hcard-button-weight, var(--cb-font-body-strong, 600));
+    font-size: var(--cb-hcard-button-size, 12px);
+    line-height: 1.2;
+    color: var(--cb-color-accent, #d71f27);
+  }
+
+  .cb-hcard > :has(+ .cb-hcard__button) {
+    margin-bottom: 14px;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Highlight card",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "info": "Small text in capitals above the title.",
+      "default": "Coaching"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "title_text",
+      "label": "Title",
+      "info": "Italic words show in the accent colour.",
+      "default": "<em>3</em> internationally experienced coaches"
+    },
+    {
+      "type": "select",
+      "id": "title_tag",
+      "label": "Title HTML tag",
+      "info": "For search engines and screen readers; it doesn't change the look.",
+      "options": [
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" },
+        { "value": "h4", "label": "H4" },
+        { "value": "p", "label": "Paragraph" }
+      ],
+      "default": "h3"
+    },
+    {
+      "type": "textarea",
+      "id": "body_text",
+      "label": "Text",
+      "default": "Playing insight and practical guidance for players at every stage."
+    },
+    {
+      "type": "header",
+      "content": "Link"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link",
+      "info": "Makes the whole card clickable."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button",
+      "info": "Shown when the card has a link, e.g. \"Read more →\"."
+    },
+    {
+      "type": "header",
+      "content": "Icon"
+    },
+    {
+      "type": "select",
+      "id": "icon",
+      "label": "Icon",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "weight", "label": "Weight" },
+        { "value": "balance", "label": "Balance" },
+        { "value": "tension", "label": "Tension" },
+        { "value": "racket", "label": "Racket" },
+        { "value": "info", "label": "Info" },
+        { "value": "book", "label": "Book" },
+        { "value": "check", "label": "Check" },
+        { "value": "court", "label": "Court" },
+        { "value": "footprints", "label": "Footprints" },
+        { "value": "shoe", "label": "Shoe" },
+        { "value": "trophy", "label": "Trophy" },
+        { "value": "star", "label": "Star" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "image_picker",
+      "id": "custom_icon",
+      "label": "Custom icon",
+      "info": "Upload your own SVG (or PNG). It replaces the built-in icon above."
+    },
+    {
+      "type": "checkbox",
+      "id": "custom_icon_tint",
+      "label": "Colour it like the built-in icons",
+      "info": "For one-colour SVGs: uses the icon colour. Turn off to keep the file's own colours.",
+      "default": true,
+      "visible_if": "{{ block.settings.custom_icon != blank }}"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "label": "Icon size",
+      "min": 12,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon color",
+      "info": "Leave empty to use the section's muted text colour."
+    },
+    {
+      "type": "checkbox",
+      "id": "icon_box",
+      "label": "Icon on a square",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "icon_box_color",
+      "label": "Square color",
+      "visible_if": "{{ block.settings.icon_box }}"
+    },
+    {
+      "type": "header",
+      "content": "Text style"
+    },
+    {
+      "type": "range",
+      "id": "label_size",
+      "label": "Label size",
+      "min": 8,
+      "max": 14,
+      "step": 1,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "label_weight",
+      "label": "Label weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Title size",
+      "min": 10,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 21
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Title weight",
+      "info": "Default uses the weight of the title font below.",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Text size",
+      "min": 10,
+      "max": 18,
+      "step": 0.5,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "select",
+      "id": "text_weight",
+      "label": "Text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "button_size",
+      "label": "Button text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "button_weight",
+      "label": "Button text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "select",
+      "id": "title_font",
+      "label": "Title font",
+      "options": [
+        { "value": "body", "label": "Body font, semibold" },
+        { "value": "heading", "label": "Heading font, medium" },
+        { "value": "heading_bold", "label": "Heading font, bold" }
+      ],
+      "default": "body"
+    },
+    {
+      "type": "range",
+      "id": "label_gap",
+      "label": "Space below icon and label",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "text_gap",
+      "label": "Space above text",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "label_color",
+      "label": "Label color",
+      "info": "Leave empty to use the section's accent colour."
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title color",
+      "info": "Leave empty to use the section's text colour."
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "info": "Leave empty to use the section's muted text colour."
+    },
+    {
+      "type": "header",
+      "content": "Width"
+    },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "Width",
+      "options": [
+        { "value": "auto", "label": "Auto (follows the section)" },
+        { "value": "fit", "label": "Fit the text" },
+        { "value": "full", "label": "Full width" },
+        { "value": "custom", "label": "Custom" }
+      ],
+      "default": "full"
+    },
+    {
+      "type": "range",
+      "id": "width_px",
+      "label": "Custom width",
+      "min": 100,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "default": 400,
+      "visible_if": "{{ block.settings.width == 'custom' }}"
+    },
+    {
+      "type": "header",
+      "content": "Box"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "info": "Leave empty for no background.",
+      "default": "#1b1b1b"
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Padding top and bottom",
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "default": 26
+    },
+    {
+      "type": "range",
+      "id": "padding_x",
+      "label": "Padding left and right",
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "default": 26
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "label": "Border",
+      "info": "0 = no border.",
+      "min": 0,
+      "max": 8,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "info": "Leave empty for a faint version of the text colour.",
+      "visible_if": "{{ block.settings.border_width > 0 }}"
+    },
+    {
+      "type": "range",
+      "id": "radius",
+      "label": "Corner radius",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "default": 15
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Highlight card"
+    }
+  ]
+}
+{% endschema %}

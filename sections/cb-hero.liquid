@@ -108,7 +108,7 @@
     padding: 0;
     border: 0;
     background: none;
-    font-size: 11px;
+    font-size: calc(var(--cb-hero-badge-text-size, 12px) * 11 / 12);
     letter-spacing: 0.1em;
     text-transform: uppercase;
   }
@@ -121,21 +121,21 @@
     min-height: 46px;
     padding: 12px 20px;
     border-radius: 3px;
-    font-size: 12px;
+    font-size: calc(var(--cb-hero-button-label-size, 14px) * 12 / 14);
     letter-spacing: 0.08em;
     text-transform: uppercase;
   }
 
   .cb-hero--design-2 .cb-hero__feature {
-    font-size: 12px;
-    font-weight: var(--cbh-font-body-weight);
+    font-size: calc(var(--cb-hero-feature-text-size, 14px) * 12 / 14);
+    font-weight: var(--cb-hero-feature-text-weight, var(--cbh-font-body-weight));
   }
 
   /* Design 2 labels: smaller, near-square corners, solid dark background without a border. */
   .cb-hero--design-2 .cb-hero__label {
     padding: 4px 8px;
     border-radius: 2px;
-    font-size: 10px;
+    font-size: calc(var(--cb-hero-label-text-size, 12px) * 10 / 12);
   }
 
   .cb-hero--design-2 .cb-hero__label--dark {
@@ -145,7 +145,7 @@
   }
 
   .cb-hero--design-2 .cb-hero__label--caps {
-    font-size: 9px;
+    font-size: calc(var(--cb-hero-label-text-size, 12px) * 9 / 12);
     letter-spacing: 0.05em;
   }
 
@@ -163,11 +163,11 @@
 
     .cb-hero--design-2 .cb-hero__label {
       padding: 6px 10px;
-      font-size: 11px;
+      font-size: calc(var(--cb-hero-label-text-size, 12px) * 11 / 12);
     }
 
     .cb-hero--design-2 .cb-hero__label--caps {
-      font-size: 10px;
+      font-size: calc(var(--cb-hero-label-text-size, 12px) * 10 / 12);
     }
   }
 
@@ -366,13 +366,29 @@
               "settings": { "badge_text": "Counties Manukau Badminton Association Official Store" }
             },
             "heading": {
-              "type": "_cb-hero-heading",
-              "settings": { "heading_text": "Built for badminton." }
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "Built for badminton.",
+                "tag": "h1",
+                "size": 64,
+                "mobile_sizing": "fluid",
+                "fluid_min": 36,
+                "fluid_vw": 8,
+                "line_height": 105,
+                "letter_spacing": -2
+              }
             },
             "text": {
-              "type": "_cb-hero-text",
+              "type": "cb-paragraph",
               "settings": {
-                "body_text": "<p>Expert-selected rackets, gear and professional stringing from people who actually play, coach and string.</p>"
+                "body_text": "<p>Expert-selected rackets, gear and professional stringing from people who actually play, coach and string.</p>",
+                "size": 18,
+                "mobile_sizing": "fluid",
+                "mobile_size": 15,
+                "fluid_vw": 2.2,
+                "line_height": 155,
+                "max_width_unit": "ch",
+                "max_width_ch": 52
               }
             },
             "buttons": {
@@ -446,14 +462,29 @@
               "settings": { "badge_text": "Specialist racket fitting", "badge_secondary": "Papakura HQ" }
             },
             "heading": {
-              "type": "_cb-hero-heading",
-              "settings": { "heading_text": "Find the frame that fits your game.", "size": 46 }
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "Find the frame that fits your game.",
+                "tag": "h1",
+                "size": 46,
+                "mobile_sizing": "fluid",
+                "fluid_min": 36,
+                "fluid_vw": 8,
+                "line_height": 105,
+                "letter_spacing": -2
+              }
             },
             "text": {
-              "type": "_cb-hero-text",
+              "type": "cb-paragraph",
               "settings": {
                 "body_text": "<p>We don’t sell rackets by logo alone. Choose by your swing speed, tactical play style and court needs — calibrated by CMBA certified stringers and competitive coaches.</p>",
-                "size": 16
+                "size": 16,
+                "mobile_sizing": "fluid",
+                "mobile_size": 15,
+                "fluid_vw": 2.2,
+                "line_height": 155,
+                "max_width_unit": "ch",
+                "max_width_ch": 52
               }
             },
             "buttons": {

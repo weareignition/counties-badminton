@@ -1,0 +1,70 @@
+<div
+  class="cb-speed__cards"
+  style="--cbd-columns: {{ block.settings.columns }}; --cbd-card-gap: {{ block.settings.gap }}px;"
+  {{ block.shopify_attributes }}
+>
+  {% content_for 'blocks' %}
+</div>
+
+{% stylesheet %}
+  /* Top padding leaves room for a highlighted card's tab. */
+  .cb-speed__cards {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: calc(var(--cbd-card-gap, 16px) + 8px) var(--cbd-card-gap, 16px);
+    padding-top: 10px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-speed__cards {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .cb-speed__cards {
+      grid-template-columns: repeat(var(--cbd-columns, 3), minmax(0, 1fr));
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Speed cards",
+  "tag": null,
+  "blocks": [{ "type": "_cb-speed-card" }, { "type": "_cb-speed-tcard" }],
+  "settings": [
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Cards per row on desktop",
+      "info": "Tablets show 2 per row, phones 1.",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Gap",
+      "min": 8,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Speed cards",
+      "blocks": {
+        "card_1": { "type": "_cb-speed-card" },
+        "card_2": { "type": "_cb-speed-card" },
+        "card_3": { "type": "_cb-speed-card" }
+      },
+      "block_order": ["card_1", "card_2", "card_3"]
+    }
+  ]
+}
+{% endschema %}

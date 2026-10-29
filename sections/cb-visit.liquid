@@ -1,0 +1,272 @@
+{%- liquid
+  assign s = section.settings
+  assign font_scope = '#cb-visit-' | append: section.id
+-%}
+
+{% render 'cb-font-styles',
+  selector: font_scope,
+  prefix: 'cbv',
+  heading_font: s.heading_font,
+  body_font: s.body_font
+%}
+
+<section
+  id="cb-visit-{{ section.id }}"
+  class="cb-visit{% if s.show_panel %} cb-visit--panel{% endif %}"
+  style="
+    --cbv-bg: {{ s.background_color }};
+    --cbv-panel: {{ s.panel_background_color }};
+    --cbv-border: {{ s.border_color }};
+    --cbv-border-strong: {{ s.text_color | color_modify: 'alpha', 0.3 }};
+    --cbv-text: {{ s.text_color }};
+    --cbv-muted: {{ s.text_color | color_modify: 'alpha', 0.58 }};
+    --cbv-accent: {{ s.accent_color }};
+    --cbv-button-bg: {{ s.button_background_color }};
+    --cbv-button-text: {{ s.button_text_color }};
+    --cbv-radius: {{ s.panel_radius }}px;
+    --cbv-max-width: {{ s.max_width }}px;
+    --cbv-pt: {{ s.padding_top }}px;
+    --cbv-pb: {{ s.padding_bottom }}px;
+  "
+>
+  <div class="cb-visit__inner">
+    {% content_for 'blocks' %}
+  </div>
+</section>
+
+{% stylesheet %}
+  .cb-visit {
+    color: var(--cbv-text);
+    background: var(--cbv-bg);
+    padding: calc(var(--cbv-pt) * 0.75) 16px calc(var(--cbv-pb) * 0.75);
+  }
+
+  /* Logo + text share the first line on phones; the button drops below at full width. */
+  .cb-visit__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 18px;
+    max-width: var(--cbv-max-width);
+    margin-inline: auto;
+  }
+
+  .cb-visit--panel .cb-visit__inner {
+    padding: 20px;
+    border: 1px solid var(--cbv-border);
+    border-radius: var(--cbv-radius);
+    background: var(--cbv-panel);
+  }
+
+  .cb-visit .cb-visit__inner > .cb-visit__button {
+    flex: 1 1 100%;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-visit {
+      padding: var(--cbv-pt) 32px var(--cbv-pb);
+    }
+
+    .cb-visit__inner {
+      flex-wrap: nowrap;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .cb-visit--panel .cb-visit__inner {
+      padding: 26px 30px;
+    }
+
+    .cb-visit .cb-visit__inner > .cb-visit__button {
+      flex: none;
+      margin-left: auto;
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .cb-visit {
+      padding-inline: 48px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Visit banner",
+  "tag": "div",
+  "class": "section-wrapper",
+  "blocks": [
+    { "type": "_cb-visit-logo" },
+    { "type": "_cb-visit-content" },
+    { "type": "_cb-visit-button" }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width",
+      "min": 960,
+      "max": 1800,
+      "step": 20,
+      "unit": "px",
+      "default": 1400
+    },
+    {
+      "type": "checkbox",
+      "id": "show_panel",
+      "label": "Boxed panel",
+      "info": "Border and background around the banner.",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "panel_radius",
+      "label": "Panel corner radius",
+      "min": 0,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 2
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "space_grotesk_n7"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "info": "Used for the eyebrow, text and button.",
+      "default": "inter_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#0b0b0b"
+    },
+    {
+      "type": "color",
+      "id": "panel_background_color",
+      "label": "Panel",
+      "default": "#181818"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border",
+      "default": "#ffffff14"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "default": "#d71f27"
+    },
+    {
+      "type": "color",
+      "id": "button_background_color",
+      "label": "Light button background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Light button text",
+      "default": "#111111"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Visit banner",
+      "category": "t:categories.banners",
+      "blocks": {
+        "logo": { "type": "_cb-visit-logo" },
+        "content": {
+          "type": "_cb-visit-content",
+          "blocks": {
+            "eyebrow": {
+              "type": "cb-subheader",
+              "settings": {
+                "subheader_text": "Papakura community hub",
+                "secondary": "41R Elliot Street",
+                "letter_spacing": 8
+              }
+            },
+            "heading": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "See it. Hold it. Test it on court.",
+                "size": 20,
+                "mobile_scale": 90,
+                "uppercase": true,
+                "wrap": "wrap"
+              }
+            },
+            "text": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>Visit the CMBA Pro Shop inside the Papakura Badminton Hall to test swing weights, compare grip sizes, and collect online orders instantly.</p>",
+                "size": 13,
+                "mobile_size": 13,
+                "max_width_unit": "ch",
+                "max_width_ch": 120
+              }
+            }
+          },
+          "block_order": ["eyebrow", "heading", "text"]
+        },
+        "button": { "type": "_cb-visit-button", "settings": { "label": "Visit pro shop" } }
+      },
+      "block_order": ["logo", "content", "button"]
+    }
+  ]
+}
+{% endschema %}

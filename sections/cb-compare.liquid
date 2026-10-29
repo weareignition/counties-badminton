@@ -1,0 +1,588 @@
+{%- comment -%}
+  Compare rackets: the shared [CB] Subheader and [CB] Heading (static blocks), then a table of this product against
+  alternatives. Alternatives are the chosen products; without any, in-stock products from the chosen collection (or
+  this product's first collection) whose playing style differs from this one and from each other, then any others.
+  Each row shows a detail from snippets/cb-racket-trait (metafield first, else found in the description) or the price.
+{%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign font_scope = '#cb-compare-' | append: section.id
+
+  # Alternatives as a comma list of handles (leading comma so ",handle," never matches part of another handle).
+  assign alt_handles = ','
+  assign alt_count = 0
+  if s.alternatives != blank
+    for p in s.alternatives
+      if p.id == product.id
+        continue
+      endif
+      assign alt_handles = alt_handles | append: p.handle | append: ','
+      assign alt_count = alt_count | plus: 1
+      if alt_count >= s.max_alternatives
+        break
+      endif
+    endfor
+  elsif product != blank
+    assign pool = s.collection | default: product.collections.first
+    assign excluded = s.exclude_words | downcase | split: ','
+    capture current_style
+      render 'cb-racket-trait', product: product, trait: 'style'
+    endcapture
+    assign current_style = current_style | strip
+    assign used_styles = '|' | append: current_style | append: '|'
+    for pass in (1..2)
+      for p in pool.products limit: 50
+        if alt_count >= s.max_alternatives
+          break
+        endif
+        assign key = ',' | append: p.handle | append: ','
+        if p.id == product.id or p.available == false or alt_handles contains key
+          continue
+        endif
+        assign title_down = p.title | downcase
+        assign skip = false
+        for word in excluded
+          assign w = word | strip
+          if w != blank and title_down contains w
+            assign skip = true
+            break
+          endif
+        endfor
+        if skip
+          continue
+        endif
+        if pass == 1
+          capture p_style
+            render 'cb-racket-trait', product: p, trait: 'style'
+          endcapture
+          assign p_style = p_style | strip
+          assign style_key = '|' | append: p_style | append: '|'
+          if p_style == blank or used_styles contains style_key
+            continue
+          endif
+          assign used_styles = used_styles | append: p_style | append: '|'
+        endif
+        assign alt_handles = alt_handles | append: p.handle | append: ','
+        assign alt_count = alt_count | plus: 1
+      endfor
+    endfor
+  endif
+  assign alt_list = alt_handles | remove_first: ',' | split: ','
+
+  assign rows = s.rows | newline_to_br | split: '<br />'
+-%}
+
+{% render 'cb-font-styles',
+  selector: font_scope,
+  prefix: 'cbcmp',
+  heading_font: s.heading_font,
+  body_font: s.body_font
+%}
+
+<section
+  id="cb-compare-{{ section.id }}"
+  class="cb-compare"
+  style="
+    --cbcmp-bg: {{ s.background_color }};
+    --cbcmp-head: {{ s.header_row_color }};
+    --cbcmp-row: {{ s.row_color }};
+    --cbcmp-row-alt: {{ s.row_alt_color }};
+    --cbcmp-text: {{ s.text_color }};
+    --cbcmp-muted: {{ s.muted_text_color }};
+    --cbcmp-current-text: {{ s.current_heading_color }};
+    --cbcmp-accent: {{ s.accent_color }};
+    --cbcmp-tint: {{ s.current_tint }}%;
+    --cbcmp-max-width: {{ s.max_width }}px;
+    --cbcmp-side: {{ s.side_padding }}px;
+    --cbcmp-header-gap: {{ s.header_gap }}px;
+    --cbcmp-pt: {{ s.padding_top }}px;
+    --cbcmp-pb: {{ s.padding_bottom }}px;
+    --cb-compare-heading-row-size: {{ s.heading_row_size }}px;
+    --cb-compare-heading-row-weight: {{ s.heading_row_weight }};
+    --cb-compare-row-size: {{ s.row_size }}px;
+    --cb-compare-row-weight: {{ s.row_weight }};
+  "
+>
+  <div class="cb-compare__inner">
+    <div class="cb-compare__header">
+      {%- content_for 'block', type: 'cb-subheader', id: 'subheader' -%}
+      {%- content_for 'block', type: 'cb-heading', id: 'heading' -%}
+    </div>
+
+    {%- if product != blank -%}
+      <div class="cb-compare__scroll">
+        <table class="cb-compare__table">
+          <thead>
+            <tr>
+              <th scope="col" class="cb-compare__th">{{ s.first_heading | escape }}</th>
+              <th scope="col" class="cb-compare__th cb-compare__cell--current">
+                {{- s.current_prefix | escape }} {{ product.title | escape -}}
+              </th>
+              {%- for handle in alt_list -%}
+                {%- assign p = all_products[handle] -%}
+                <th scope="col" class="cb-compare__th">
+                  <a href="{{ p.url }}">{{ p.title | escape }}</a>
+                </th>
+              {%- endfor -%}
+            </tr>
+          </thead>
+          <tbody>
+            {%- for line in rows -%}
+              {%- liquid
+                assign parts = line | split: '|'
+                assign label = parts[0] | strip
+                assign detail = parts[1] | strip | downcase
+                if label == blank
+                  continue
+                endif
+              -%}
+              <tr class="cb-compare__row">
+                <th scope="row" class="cb-compare__label">{{ label | escape }}</th>
+                {%- for column in (0..alt_count) -%}
+                  {%- liquid
+                    if column == 0
+                      assign p = product
+                    else
+                      assign index = column | minus: 1
+                      assign p = all_products[alt_list[index]]
+                    endif
+                    if detail == 'price'
+                      assign value = p.price | money
+                      if p.price_varies
+                        assign value = 'From ' | append: value
+                      endif
+                    else
+                      capture value
+                        render 'cb-racket-trait', product: p, trait: detail
+                      endcapture
+                      assign value = value | strip
+                    endif
+                  -%}
+                  <td class="cb-compare__cell{% if column == 0 %} cb-compare__cell--current{% endif %}">
+                    {{- value | default: s.missing_text | escape -}}
+                  </td>
+                {%- endfor -%}
+              </tr>
+            {%- endfor -%}
+          </tbody>
+        </table>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% stylesheet %}
+  .cb-compare {
+    color: var(--cbcmp-text);
+    background: var(--cbcmp-bg);
+    padding: var(--cbcmp-pt) 16px var(--cbcmp-pb);
+  }
+
+  .cb-compare__inner {
+    max-width: var(--cbcmp-max-width);
+    margin-inline: auto;
+  }
+
+  .cb-compare__header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+    margin-bottom: var(--cbcmp-header-gap);
+  }
+
+  .cb-compare__scroll {
+    overflow-x: auto;
+    border-radius: 3px;
+    scrollbar-width: thin;
+  }
+
+  /* Two classes on table parts: Horizon styles tables globally. */
+  .cb-compare .cb-compare__table {
+    width: 100%;
+    min-width: 600px;
+    margin: 0;
+    border: 0;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+
+  .cb-compare .cb-compare__th,
+  .cb-compare .cb-compare__label,
+  .cb-compare .cb-compare__cell {
+    height: 41px;
+    padding: 6px 13px;
+    border: 0;
+    text-align: left;
+    vertical-align: middle;
+  }
+
+  .cb-compare .cb-compare__th {
+    --cbcmp-cell-bg: var(--cbcmp-head);
+    height: 37px;
+    background: var(--cbcmp-cell-bg);
+    font-family: var(--cbcmp-font-body);
+    font-weight: var(--cb-compare-heading-row-weight, var(--cbcmp-font-body-strong));
+    font-size: var(--cb-compare-heading-row-size, 8px);
+    line-height: 1.3;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--cbcmp-text);
+  }
+
+  .cb-compare .cb-compare__th:first-child {
+    color: var(--cbcmp-muted);
+  }
+
+  .cb-compare .cb-compare__th a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .cb-compare .cb-compare__th a:hover {
+    text-decoration: underline;
+  }
+
+  .cb-compare__row {
+    --cbcmp-cell-bg: var(--cbcmp-row);
+  }
+
+  .cb-compare__row:nth-child(odd) {
+    --cbcmp-cell-bg: var(--cbcmp-row-alt);
+  }
+
+  .cb-compare .cb-compare__label,
+  .cb-compare .cb-compare__cell {
+    background: var(--cbcmp-cell-bg);
+    font-family: var(--cbcmp-font-body);
+    font-weight: var(--cb-compare-row-weight, var(--cbcmp-font-body-weight));
+    font-size: var(--cb-compare-row-size, 10.5px);
+    line-height: 1.35;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--cbcmp-muted);
+  }
+
+  /* The product on this page: tinted column, bold values. */
+  .cb-compare .cb-compare__cell--current {
+    background: color-mix(in srgb, var(--cbcmp-accent) var(--cbcmp-tint), var(--cbcmp-cell-bg));
+  }
+
+  .cb-compare .cb-compare__th.cb-compare__cell--current {
+    color: var(--cbcmp-current-text);
+  }
+
+  /* At least as bold as the other rows when their weight is set. */
+  .cb-compare .cb-compare__cell.cb-compare__cell--current {
+    font-weight: max(var(--cb-compare-row-weight, 0), var(--cbcmp-font-body-strong));
+    color: var(--cbcmp-text);
+  }
+
+  /* Phones: the table scrolls sideways with the labels pinned. */
+  @media screen and (max-width: 749px) {
+    .cb-compare .cb-compare__table tr > :first-child {
+      position: sticky;
+      left: 0;
+      z-index: 1;
+    }
+  }
+
+  .cb-compare__hint {
+    margin: 0;
+    padding: 10px 12px;
+    border: 1px dashed rgb(255 255 255 / 0.2);
+    border-radius: 4px;
+    font-size: 11px;
+    color: rgb(255 255 255 / 0.6);
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-compare {
+      padding-inline: var(--cbcmp-side);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Compare rackets",
+  "tag": "section",
+  "class": "section-wrapper",
+  "enabled_on": {
+    "templates": ["product"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Rackets to compare"
+    },
+    {
+      "type": "product_list",
+      "id": "alternatives",
+      "label": "Alternatives",
+      "info": "Leave empty to pick them automatically: in-stock products from the collection below with a different playing style.",
+      "limit": 4
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Pick alternatives from",
+      "info": "Defaults to the product's first collection."
+    },
+    {
+      "type": "range",
+      "id": "max_alternatives",
+      "label": "Number of alternatives",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "text",
+      "id": "exclude_words",
+      "label": "Skip products whose title contains",
+      "info": "Comma-separated. Only for automatic picks.",
+      "default": "2nd hand, junior, kid, set"
+    },
+    {
+      "type": "header",
+      "content": "Table"
+    },
+    {
+      "type": "textarea",
+      "id": "rows",
+      "label": "Rows",
+      "info": "One per line: label | detail. Details: style, level, weight, grip, balance, flex, tension, price.",
+      "default": "Style | style\nLevel | level\nWeight | weight\nBalance | balance\nFlex | flex\nPrice | price"
+    },
+    {
+      "type": "text",
+      "id": "first_heading",
+      "label": "First column heading",
+      "default": "Specification"
+    },
+    {
+      "type": "text",
+      "id": "current_prefix",
+      "label": "Before this product's name",
+      "default": "Current:"
+    },
+    {
+      "type": "text",
+      "id": "missing_text",
+      "label": "When a detail isn't found",
+      "default": "—"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Maximum width",
+      "min": 800,
+      "max": 1800,
+      "step": 20,
+      "unit": "px",
+      "default": 1520
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Side space",
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "header_gap",
+      "label": "Space below heading",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "header",
+      "content": "Fonts"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "space_grotesk_n7"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "inter_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#0b0b0b"
+    },
+    {
+      "type": "color",
+      "id": "header_row_color",
+      "label": "Heading row",
+      "default": "#222222"
+    },
+    {
+      "type": "color",
+      "id": "row_color",
+      "label": "Rows",
+      "default": "#161616"
+    },
+    {
+      "type": "color",
+      "id": "row_alt_color",
+      "label": "Alternate rows",
+      "default": "#1b1b1b"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "muted_text_color",
+      "label": "Muted text",
+      "default": "#a1a1aa"
+    },
+    {
+      "type": "color",
+      "id": "current_heading_color",
+      "label": "This product's heading",
+      "default": "#f2aaa0"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "default": "#d71f27"
+    },
+    {
+      "type": "range",
+      "id": "current_tint",
+      "label": "This product's column tint",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "%",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "heading_row_size",
+      "label": "Heading row size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "select",
+      "id": "heading_row_weight",
+      "label": "Heading row weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "row_size",
+      "label": "Row text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 10.5
+    },
+    {
+      "type": "select",
+      "id": "row_weight",
+      "label": "Row text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Compare rackets",
+      "blocks": {
+        "subheader": {
+          "type": "cb-subheader",
+          "static": true,
+          "settings": { "subheader_text": "Compare rackets", "size": 8, "letter_spacing": 10 }
+        },
+        "heading": {
+          "type": "cb-heading",
+          "static": true,
+          "settings": { "heading_text": "See how it stacks up.", "size": 19, "line_height": 120 }
+        }
+      }
+    }
+  ]
+}
+{% endschema %}

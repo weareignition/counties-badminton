@@ -1,0 +1,434 @@
+{%- comment -%}
+  Stringing builder, guidance column: an optional "let the shop recommend" tick card and the add button, which adds
+  the racket (with its option picks) and the chosen string with its tension. The section's script does the adding.
+{%- endcomment -%}
+{%- assign s = block.settings -%}
+
+<div
+  class="cb-sb-col cb-sb-guide"
+  style="
+    --cb-sb-col-label-size: {{ s.label_size }}px;
+    --cb-sb-col-label-weight: {{ s.label_weight }};
+    --cb-sb-col-title-size: {{ s.title_size }}px;
+    --cb-sb-col-title-weight: {{ s.title_weight }};
+    --cb-sb-guide-option-title-size: {{ s.option_title_size }}px;
+    --cb-sb-guide-option-title-weight: {{ s.option_title_weight }};
+    --cb-sb-guide-option-text-size: {{ s.option_text_size }}px;
+    --cb-sb-guide-option-text-weight: {{ s.option_text_weight }};
+    --cb-sb-guide-button-size: {{ s.button_size }}px;
+    --cb-sb-guide-button-weight: {{ s.button_weight }};
+    --cb-sb-guide-message-size: {{ s.message_size }}px;
+    --cb-sb-guide-message-weight: {{ s.message_weight }};
+  "
+  {{ block.shopify_attributes }}
+>
+  {%- if s.label != blank -%}<p class="cb-sb-col__label">{{ s.label | escape }}</p>{%- endif -%}
+  {%- if s.title != blank -%}<h3 class="cb-sb-col__title">{{ s.title | escape }}</h3>{%- endif -%}
+
+  {%- if s.option_title != blank -%}
+    <label class="cb-sb-guide__option">
+      <input class="cb-sb-guide__input" type="checkbox" data-cb-sb-recommend value="{{ s.recommend_value | escape }}">
+      <span class="cb-sb-guide__card">
+        <span class="cb-sb-guide__icon" aria-hidden="true">
+          {%- if s.custom_icon != blank -%}
+            {%- render 'cb-icon-upload', image: s.custom_icon, size: 13, tint: s.tint_icon -%}
+          {%- else -%}
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+          {%- endif -%}
+        </span>
+        <span class="cb-sb-guide__title">{{ s.option_title | escape }}</span>
+        {%- if s.option_text != blank -%}<span class="cb-sb-guide__text">{{ s.option_text | escape }}</span>{%- endif -%}
+      </span>
+    </label>
+  {%- endif -%}
+
+  <button
+    type="button"
+    class="cb-sb-guide__button{% if s.uppercase %} cb-sb-guide__button--upper{% endif %}"
+    data-cb-sb-add
+    data-added="{{ s.added_label | escape }}"
+  >
+    {%- if s.button_icon != blank -%}
+      {%- render 'cb-icon-upload', image: s.button_icon, size: 14, tint: true -%}
+    {%- else -%}
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12.5l4.5 4.5L15 8.5"/><path d="M10 15l2 2 9.5-9.5"/></svg>
+    {%- endif -%}
+    <span data-cb-sb-add-text>{{ s.button_label | escape }}</span>
+  </button>
+  <p class="cb-sb-guide__message" data-cb-sb-message role="status" hidden></p>
+</div>
+
+{% stylesheet %}
+  .cb-sb-guide__option {
+    position: relative;
+    display: block;
+    cursor: pointer;
+  }
+
+  .cb-sb-guide .cb-sb-guide__input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  .cb-sb-guide__card {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 2px 9px;
+    box-sizing: border-box;
+    padding: 10px 16px 10px 10px;
+    border: 1px solid transparent;
+    border-radius: 2px;
+    background: var(--cbsb-option, #1f1f1f);
+    transition: border-color 0.2s ease;
+  }
+
+  .cb-sb-guide__icon {
+    grid-row: span 2;
+    display: inline-flex;
+    color: var(--cb-color-accent, #d71f27);
+  }
+
+  .cb-sb-guide__title {
+    font-family: var(--cb-font-heading, var(--font-heading--family));
+    font-weight: var(--cb-sb-guide-option-title-weight, var(--cb-font-heading-weight, 700));
+    font-size: var(--cb-sb-guide-option-title-size, 9.5px);
+    line-height: 1.4;
+    color: var(--cb-color-text, #ffffff);
+  }
+
+  .cb-sb-guide__text {
+    grid-column: 2;
+    font-family: var(--cb-font-body, var(--font-body--family));
+    font-weight: var(--cb-sb-guide-option-text-weight, inherit);
+    font-size: var(--cb-sb-guide-option-text-size, 9px);
+    line-height: 1.65;
+    color: var(--cbsb-grey, #a1a1aa);
+  }
+
+  .cb-sb-guide__input:checked + .cb-sb-guide__card {
+    border-color: var(--cb-color-accent, #d71f27);
+  }
+
+  .cb-sb-guide__option:hover .cb-sb-guide__input:not(:checked) + .cb-sb-guide__card {
+    border-color: rgb(255 255 255 / 0.2);
+  }
+
+  .cb-sb-guide__input:focus-visible + .cb-sb-guide__card {
+    outline: 2px solid var(--cb-color-text, #ffffff);
+    outline-offset: 2px;
+  }
+
+  /* Two classes: Horizon styles buttons globally. */
+  .cb-sb-guide .cb-sb-guide__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    min-height: 41px;
+    box-sizing: border-box;
+    margin: 15px 0 0;
+    padding: 0 16px;
+    border: 0;
+    border-radius: 2px;
+    background: var(--cb-color-accent, #d71f27);
+    font-family: var(--cb-font-body, var(--font-body--family));
+    font-weight: var(--cb-sb-guide-button-weight, var(--cb-font-body-strong, 600));
+    font-size: var(--cb-sb-guide-button-size, 11px);
+    line-height: 1.2;
+    color: #ffffff;
+    cursor: pointer;
+    transition: background-color 0.2s ease, opacity 0.2s ease;
+  }
+
+  .cb-sb-guide .cb-sb-guide__button--upper {
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .cb-sb-guide .cb-sb-guide__button:hover {
+    background: color-mix(in srgb, var(--cb-color-accent, #d71f27) 88%, #000);
+  }
+
+  .cb-sb-guide .cb-sb-guide__button[aria-busy='true'] {
+    opacity: 0.7;
+    cursor: progress;
+  }
+
+  .cb-sb-guide .cb-sb-guide__button:focus-visible {
+    outline: 2px solid var(--cb-color-text, #ffffff);
+    outline-offset: 3px;
+  }
+
+  .cb-sb-guide .cb-sb-guide__message {
+    margin: 8px 0 0;
+    font-family: var(--cb-font-body, var(--font-body--family));
+    font-weight: var(--cb-sb-guide-message-weight, inherit);
+    font-size: var(--cb-sb-guide-message-size, 11px);
+    line-height: 1.5;
+    color: #f2aaa0;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Stringing add button",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "Column 3 • Guidance"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Setup Pathway"
+    },
+    {
+      "type": "header",
+      "content": "Let the shop decide"
+    },
+    {
+      "type": "text",
+      "id": "option_title",
+      "label": "Option title",
+      "info": "Leave empty to hide this option.",
+      "default": "Let the Pro Shop recommend my setup"
+    },
+    {
+      "type": "textarea",
+      "id": "option_text",
+      "label": "Option text",
+      "default": "Uncertain on tension or gauge? Select this option and our master stringer will assess your game when you collect."
+    },
+    {
+      "type": "text",
+      "id": "recommend_value",
+      "label": "Saved on the order as the tension",
+      "default": "Pro Shop to recommend"
+    },
+    {
+      "type": "image_picker",
+      "id": "custom_icon",
+      "label": "Icon",
+      "info": "Optional. Upload your own SVG to replace the question mark."
+    },
+    {
+      "type": "checkbox",
+      "id": "tint_icon",
+      "label": "Colour the icon with the accent",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Add racket + stringing"
+    },
+    {
+      "type": "text",
+      "id": "added_label",
+      "label": "After adding",
+      "default": "Added to cart"
+    },
+    {
+      "type": "image_picker",
+      "id": "button_icon",
+      "label": "Button icon",
+      "info": "Optional. Upload your own SVG to replace the ticks."
+    },
+    {
+      "type": "checkbox",
+      "id": "uppercase",
+      "label": "Uppercase label",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "label_size",
+      "label": "Column label size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "select",
+      "id": "label_weight",
+      "label": "Column label weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Column title size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Column title weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "option_title_size",
+      "label": "Option title size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 9.5
+    },
+    {
+      "type": "select",
+      "id": "option_title_weight",
+      "label": "Option title weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "option_text_size",
+      "label": "Option text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 9
+    },
+    {
+      "type": "select",
+      "id": "option_text_weight",
+      "label": "Option text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "button_size",
+      "label": "Button text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "select",
+      "id": "button_weight",
+      "label": "Button text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "message_size",
+      "label": "Message size",
+      "info": "The \"choose a string\" or error message under the button.",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "select",
+      "id": "message_weight",
+      "label": "Message weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    }
+  ],
+  "presets": [{ "name": "[CB] Stringing add button" }]
+}
+{% endschema %}

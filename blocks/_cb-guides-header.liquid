@@ -27,9 +27,10 @@
   "name": "[CB] Header",
   "tag": null,
   "blocks": [
-    { "type": "_cb-guides-eyebrow" },
-    { "type": "_cb-guides-heading" },
-    { "type": "_cb-guides-text" }
+    { "type": "cb-subheader" },
+    { "type": "cb-heading" },
+    { "type": "cb-paragraph" },
+    { "type": "cb-button" }
   ],
   "settings": [
     {
@@ -57,9 +58,26 @@
     {
       "name": "[CB] Header",
       "blocks": {
-        "eyebrow": { "type": "_cb-guides-eyebrow" },
-        "heading": { "type": "_cb-guides-heading" },
-        "text": { "type": "_cb-guides-text" }
+        "eyebrow": {
+          "type": "cb-subheader",
+          "settings": { "subheader_text": "Technical guidance", "size": 11, "letter_spacing": 12, "space_below": -4 }
+        },
+        "heading": {
+          "type": "cb-heading",
+          "settings": {
+            "heading_text": "We don’t expect you to know what 4U, head-heavy or 26 lbs means. That’s our job.",
+            "size": 48,
+            "mobile_sizing": "fluid",
+            "fluid_min": 30,
+            "fluid_vw": 6.5,
+            "line_height": 106,
+            "letter_spacing": -2
+          }
+        },
+        "text": {
+          "type": "cb-paragraph",
+          "settings": { "body_text": "<p>Tell customers what these guides cover.</p>", "max_width_unit": "ch" }
+        }
       },
       "block_order": ["eyebrow", "heading", "text"]
     }

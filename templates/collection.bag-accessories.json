@@ -1,0 +1,1025 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "cb_hero_NTwN7b": {
+      "type": "cb-hero",
+      "blocks": {
+        "cb_hero_content_a4fnty": {
+          "type": "_cb-hero-content",
+          "settings": {
+            "gap": 24,
+            "alignment": "start"
+          },
+          "blocks": {
+            "cb_hero_badge_iRtUdN": {
+              "type": "_cb-hero-badge",
+              "settings": {
+                "badge_text": "BAGS & ACCESSORIES • SPECIALIST BADMINTON CARE",
+                "badge_secondary": "",
+                "show_dot": true
+              },
+              "blocks": {}
+            },
+            "cb_hero_heading_7tyBnb": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "&nbsp;Everything around your racketmatters.&nbsp;",
+                "tag": "h1",
+                "size": 64,
+                "mobile_sizing": "fluid",
+                "mobile_scale": 82,
+                "fluid_min": 36,
+                "fluid_vw": 8,
+                "weight": "font",
+                "color": "text",
+                "line_height": 105,
+                "letter_spacing": -2,
+                "uppercase": false,
+                "wrap": "balance",
+                "max_width": 0
+              },
+              "blocks": {}
+            },
+            "cb_hero_text_m7EytJ": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>Shop racket bags, grips, and essential court sundries selected for everyday training, club nights, and tournament play.</p>",
+                "size": 18,
+                "mobile_sizing": "fluid",
+                "mobile_size": 15,
+                "fluid_vw": 2.2,
+                "weight": "regular",
+                "color": "muted",
+                "line_height": 155,
+                "letter_spacing": 0,
+                "wrap": "wrap",
+                "max_width_unit": "ch",
+                "max_width_px": 640,
+                "max_width_ch": 52
+              },
+              "blocks": {}
+            },
+            "cb_hero_buttons_8hqVxC": {
+              "type": "_cb-hero-buttons",
+              "settings": {
+                "stack_mobile": true
+              },
+              "blocks": {
+                "cb_hero_button_9jy9nm": {
+                  "type": "_cb-hero-button",
+                  "settings": {
+                    "label": "SHOP ALL ACCESSORIES",
+                    "link": "",
+                    "open_in_new_tab": false,
+                    "style": "primary",
+                    "show_arrow": true
+                  },
+                  "blocks": {}
+                },
+                "cb_hero_button_P9xLVj": {
+                  "type": "_cb-hero-button",
+                  "settings": {
+                    "label": "SHOP BAGS",
+                    "link": "",
+                    "open_in_new_tab": false,
+                    "style": "secondary",
+                    "show_arrow": false
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "cb_hero_button_9jy9nm",
+                "cb_hero_button_P9xLVj"
+              ]
+            },
+            "cb_hero_features_9Qh8it": {
+              "type": "_cb-hero-features",
+              "settings": {
+                "show_divider": true
+              },
+              "blocks": {
+                "cb_hero_feature_zLgRQV": {
+                  "type": "_cb-hero-feature",
+                  "settings": {
+                    "icon": "check",
+                    "custom_icon": "shopify://shop_images/check.svg",
+                    "custom_icon_tint": true,
+                    "feature_text": "Expert Advice"
+                  },
+                  "blocks": {}
+                },
+                "cb_hero_feature_3NRjUi": {
+                  "type": "_cb-hero-feature",
+                  "settings": {
+                    "icon": "sliders",
+                    "custom_icon": "shopify://shop_images/store.svg",
+                    "custom_icon_tint": true,
+                    "feature_text": "Professional Stringing"
+                  },
+                  "blocks": {}
+                },
+                "cb_hero_feature_dneA9d": {
+                  "type": "_cb-hero-feature",
+                  "settings": {
+                    "icon": "calendar",
+                    "custom_icon": "shopify://shop_images/calendar.svg",
+                    "custom_icon_tint": true,
+                    "feature_text": "Open 7 Days"
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "cb_hero_feature_zLgRQV",
+                "cb_hero_feature_3NRjUi",
+                "cb_hero_feature_dneA9d"
+              ]
+            }
+          },
+          "block_order": [
+            "cb_hero_badge_iRtUdN",
+            "cb_hero_heading_7tyBnb",
+            "cb_hero_text_m7EytJ",
+            "cb_hero_buttons_8hqVxC",
+            "cb_hero_features_9Qh8it"
+          ]
+        },
+        "cb_hero_media_zbxQU6": {
+          "type": "_cb-hero-media",
+          "settings": {
+            "image": "shopify://shop_images/Physical_Pro_Shop_Gear_Wall_Image.png",
+            "aspect_ratio": "4 / 3",
+            "aspect_ratio_mobile": "4 / 3",
+            "radius": 12
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "cb_hero_content_a4fnty",
+        "cb_hero_media_zbxQU6"
+      ],
+      "name": "[CB] Hero",
+      "settings": {
+        "design": "1",
+        "content_width": 55,
+        "column_gap": 40,
+        "max_width": 1400,
+        "media_first_mobile": false,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "#121212",
+        "glow_color": "#3a0c10",
+        "text_color": "#ffffff",
+        "accent_color": "#d71f27",
+        "accent_text_color": "#ffffff",
+        "padding_top": 32,
+        "padding_bottom": 32
+      }
+    },
+    "type": {
+      "type": "cb-type",
+      "blocks": {
+        "header": {
+          "type": "_cb-type-header",
+          "settings": {
+            "alignment": "left",
+            "gap": 6
+          },
+          "blocks": {
+            "eyebrow": {
+              "type": "cb-subheader",
+              "settings": {
+                "subheader_text": "Shop by type",
+                "secondary": "",
+                "show_dot": false,
+                "size": 10,
+                "weight": "strong",
+                "color": "accent",
+                "letter_spacing": 0,
+                "uppercase": true,
+                "space_below": 0
+              },
+              "blocks": {}
+            },
+            "heading": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "Find the extras you need.",
+                "tag": "h2",
+                "size": 32,
+                "mobile_sizing": "scale",
+                "mobile_scale": 82,
+                "fluid_min": 28,
+                "fluid_vw": 6,
+                "weight": "font",
+                "color": "text",
+                "line_height": 115,
+                "letter_spacing": -1,
+                "uppercase": false,
+                "wrap": "wrap",
+                "max_width": 0
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "eyebrow",
+            "heading"
+          ]
+        },
+        "cards": {
+          "type": "_cb-type-cards",
+          "settings": {
+            "columns": 6,
+            "gap": 18
+          },
+          "blocks": {
+            "bags": {
+              "type": "_cb-type-card",
+              "settings": {
+                "card_title": "",
+                "subtitle": "6-pack, 9-pack & backpacks",
+                "collection": "racket-bags",
+                "product_type": "Racket Bags",
+                "match_keywords": "",
+                "link_label": "Explore bags",
+                "link": ""
+              },
+              "blocks": {}
+            },
+            "grips": {
+              "type": "_cb-type-card",
+              "settings": {
+                "card_title": "",
+                "subtitle": "Overgrips, replacement & towel",
+                "collection": "accessories",
+                "product_type": "Grips",
+                "match_keywords": "grip",
+                "link_label": "View grips",
+                "link": ""
+              },
+              "blocks": {}
+            },
+            "grommets": {
+              "type": "_cb-type-card",
+              "settings": {
+                "card_title": "Grommets",
+                "subtitle": "Single eyelets & shared strips",
+                "image": "shopify://shop_images/grommets.png",
+                "collection": "accessories",
+                "product_type": "Grommets",
+                "match_keywords": "grommet, grommets, eyelet, eyelets",
+                "link_label": "Shop grommets",
+                "link": ""
+              },
+              "blocks": {}
+            },
+            "wristbands": {
+              "type": "_cb-type-card",
+              "settings": {
+                "card_title": "",
+                "subtitle": "High-absorbency cotton terry",
+                "collection": "accessories",
+                "product_type": "Wristbands",
+                "match_keywords": "wristband, wristbands",
+                "link_label": "Browse bands",
+                "link": ""
+              },
+              "blocks": {}
+            },
+            "tubes": {
+              "type": "_cb-type-card",
+              "settings": {
+                "card_title": "",
+                "subtitle": "Thermal tube covers & caddies",
+                "image": "shopify://shop_images/shuttle-tubes.png",
+                "collection": "accessories",
+                "product_type": "Shuttle Tubes",
+                "match_keywords": "tube, tubes, caddy",
+                "link_label": "View tubes",
+                "link": ""
+              },
+              "blocks": {}
+            },
+            "sundries": {
+              "type": "_cb-type-card",
+              "settings": {
+                "card_title": "",
+                "subtitle": "Tape, stencil ink & tools",
+                "collection": "accessories",
+                "product_type": "Accessories & Sundries",
+                "match_keywords": "support, sleeve, strap, tape, ink",
+                "link_label": "See sundries",
+                "link": ""
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "bags",
+            "grips",
+            "grommets",
+            "wristbands",
+            "tubes",
+            "sundries"
+          ]
+        }
+      },
+      "block_order": [
+        "header",
+        "cards"
+      ],
+      "settings": {
+        "max_width": 1400,
+        "stack_gap": 24,
+        "card_radius": 6,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "#0b0b0b",
+        "card_background_color": "#181818",
+        "border_color": "#ffffff0f",
+        "image_background_color": "#ffffff",
+        "text_color": "#ffffff",
+        "muted_text_color": "#a1a1aa",
+        "accent_color": "#d71f27",
+        "padding_top": 40,
+        "padding_bottom": 24
+      }
+    },
+    "main": {
+      "type": "cb-catalogue",
+      "blocks": {
+        "product_type": {
+          "type": "_cb-cat-filter",
+          "settings": {
+            "filter_label": "Product type",
+            "title_text": "Product Type",
+            "always_values": "Racket Bags, Grips, Grommets, Wristbands, Shuttle Tubes, Accessories & Sundries",
+            "panel_style": "card",
+            "reset_label": "Reset",
+            "display": "list",
+            "button_columns": "2",
+            "button_style": "filled",
+            "show_counts": false,
+            "count_style": "plain",
+            "check_shape": "square",
+            "numbered": false,
+            "collapsible": false,
+            "collapsed": false,
+            "note": "",
+            "title_link_label": "",
+            "title_link": "",
+            "guide_text": "",
+            "price_display": "slider",
+            "price_prefix": "Up to",
+            "price_buckets": "Under $30 | 0-30\n$30 – $60 | 30-60\nOver $60 | 60+",
+            "price_multi": false
+          },
+          "blocks": {}
+        },
+        "brand": {
+          "type": "_cb-cat-filter",
+          "settings": {
+            "filter_label": "Brand",
+            "title_text": "",
+            "always_values": "Yonex, Victor, Ashaway, Babolat",
+            "panel_style": "card",
+            "reset_label": "Reset",
+            "display": "list",
+            "button_columns": "2",
+            "button_style": "filled",
+            "show_counts": false,
+            "count_style": "plain",
+            "check_shape": "square",
+            "numbered": false,
+            "collapsible": false,
+            "collapsed": false,
+            "note": "",
+            "title_link_label": "",
+            "title_link": "",
+            "guide_text": "",
+            "price_display": "slider",
+            "price_prefix": "Up to",
+            "price_buckets": "Under $30 | 0-30\n$30 – $60 | 30-60\nOver $60 | 60+",
+            "price_multi": false
+          },
+          "blocks": {}
+        },
+        "price": {
+          "type": "_cb-cat-filter",
+          "settings": {
+            "filter_label": "Price",
+            "title_text": "Price Range (NZD)",
+            "panel_style": "card",
+            "reset_label": "Reset",
+            "display": "list",
+            "button_columns": "2",
+            "button_style": "filled",
+            "show_counts": false,
+            "count_style": "plain",
+            "check_shape": "round",
+            "numbered": false,
+            "collapsible": false,
+            "collapsed": false,
+            "note": "",
+            "title_link_label": "",
+            "title_link": "",
+            "guide_text": "",
+            "price_display": "buckets",
+            "price_prefix": "Up to",
+            "price_buckets": "Under $20.00 | 0-20\n$20.00 - $50.00 | 20-50\n$50.00 - $120.00 | 50-120\n$120.00 + | 120+",
+            "price_multi": false
+          },
+          "blocks": {}
+        },
+        "pickup": {
+          "type": "_cb-cat-promo",
+          "settings": {
+            "icon": "bag",
+            "custom_icon_tint": true,
+            "look": "card",
+            "accent_border": true,
+            "icon_layout": "side",
+            "title_color": "text",
+            "show_dot": false,
+            "promo_title": "Free Papakura Pickup",
+            "promo_text": "Collect your order from our workshop counter at 41R Elliot Street.",
+            "footer_label": "",
+            "footer_value": "",
+            "link": ""
+          },
+          "blocks": {}
+        },
+        "intro": {
+          "type": "cb-paragraph",
+          "static": true,
+          "settings": {
+            "body_text": "<p>Filter by product type, brand and price to find the right bag or accessory.</p>",
+            "size": 13,
+            "mobile_sizing": "same",
+            "mobile_size": 13,
+            "fluid_vw": 2,
+            "weight": "regular",
+            "color": "muted",
+            "line_height": 160,
+            "letter_spacing": 0,
+            "wrap": "wrap",
+            "max_width_unit": "ch",
+            "max_width_px": 640,
+            "max_width_ch": 70
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "product_type",
+        "brand",
+        "price",
+        "pickup"
+      ],
+      "settings": {
+        "title_text": "",
+        "heading_tag": "h1",
+        "show_count": true,
+        "count_label": "products",
+        "quick_filter": "",
+        "all_label": "All products",
+        "show_sort": true,
+        "sort_label": "Sort by:",
+        "show_view_toggle": true,
+        "filter_heading": "Filters",
+        "clear_label": "Clear all",
+        "collection": "",
+        "products_per_page": 16,
+        "columns": "4",
+        "image_ratio": "1 / 1",
+        "image_fit": "contain",
+        "show_wishlist": true,
+        "button_label": "View details",
+        "quick_add_mode": "all",
+        "quick_collect_tag": "quick-collect",
+        "quick_label": "Add to cart",
+        "stock_label": "In Stock Papakura",
+        "low_stock_threshold": 2,
+        "low_stock_label": "[count] In Stock Papakura",
+        "brand_names": "Yonex, Victor, Ashaway, McDavid, Li-Ning, Babolat, Carlton, RSL",
+        "showing_text": "Showing [from]–[to] of [total] products",
+        "empty_text": "No products match these filters.",
+        "sidebar_width": 300,
+        "max_width": 1400,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "#0b0b0b",
+        "card_background_color": "#141414",
+        "border_color": "#ffffff1a",
+        "text_color": "#ffffff",
+        "accent_color": "#d71f27",
+        "image_background_color": "#ffffff",
+        "success_color": "#22c55e",
+        "padding_top": 32,
+        "padding_bottom": 64
+      }
+    },
+    "cb_guides_qXU39L": {
+      "type": "cb-guides",
+      "blocks": {
+        "cb_guides_header_7APFwk": {
+          "type": "_cb-guides-header",
+          "settings": {
+            "alignment": "left",
+            "max_width": 660
+          },
+          "blocks": {
+            "cb_guides_eyebrow_T6ntHh": {
+              "type": "cb-subheader",
+              "settings": {
+                "subheader_text": "Setup guidance",
+                "secondary": "",
+                "show_dot": false,
+                "size": 10,
+                "weight": "strong",
+                "color": "accent",
+                "letter_spacing": 0,
+                "uppercase": true,
+                "space_below": 0
+              },
+              "blocks": {}
+            },
+            "cb_guides_heading_M7CjDy": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "Small details make a big difference.",
+                "tag": "h2",
+                "size": 32,
+                "mobile_sizing": "fluid",
+                "mobile_scale": 82,
+                "fluid_min": 30,
+                "fluid_vw": 6.5,
+                "weight": "font",
+                "color": "text",
+                "line_height": 115,
+                "letter_spacing": -1,
+                "uppercase": false,
+                "wrap": "balance",
+                "max_width": 0
+              },
+              "blocks": {}
+            },
+            "cb_guides_text_R4WpP9": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>From the right grip feel to keeping your rackets protected between games, the right accessories help keep your setup comfortable and court-ready.</p>",
+                "size": 16,
+                "mobile_sizing": "same",
+                "mobile_size": 16,
+                "fluid_vw": 2,
+                "weight": "regular",
+                "color": "muted",
+                "line_height": 156,
+                "letter_spacing": 0,
+                "wrap": "wrap",
+                "max_width_unit": "none",
+                "max_width_px": 640,
+                "max_width_ch": 60
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "cb_guides_eyebrow_T6ntHh",
+            "cb_guides_heading_M7CjDy",
+            "cb_guides_text_R4WpP9"
+          ]
+        },
+        "cb_guides_grid_M4t4pF": {
+          "type": "_cb-guides-grid",
+          "settings": {
+            "columns": 3,
+            "mobile_layout": "stack",
+            "gap": 22
+          },
+          "blocks": {
+            "cb_guides_card_kkLYxC": {
+              "type": "_cb-guides-card",
+              "settings": {
+                "article": "",
+                "use_custom_text": false,
+                "card_title": "Replacement grip or overgrip?",
+                "summary": "Replacement grips adhere straight to the handle to provide base cushioning, while overgrips wrap on top for thin, tacky traction and rapid sweat absorption. Different grip types directly affect racket feel and playing comfort.",
+                "icon": "athlete",
+                "custom_icon": "shopify://shop_images/athlete.svg",
+                "custom_icon_tint": true,
+                "label": "Choosing a grip",
+                "point_text": "Different grips affect feel and control",
+                "link_label": "",
+                "link": ""
+              },
+              "blocks": {}
+            },
+            "cb_guides_card_9z66iJ": {
+              "type": "_cb-guides-card",
+              "settings": {
+                "article": "",
+                "use_custom_text": false,
+                "card_title": "How much space do you actually need?",
+                "summary": "Match your bag size to the number of rackets, shoes, and clothing you carry for training sessions or tournaments. Dedicated compartments keep shoes, shuttles, and damp kit cleanly separated.",
+                "icon": "bag",
+                "custom_icon": "shopify://shop_images/bag.svg",
+                "custom_icon_tint": true,
+                "label": "Choosing a bag",
+                "point_text": "Match bag capacity to your equipment",
+                "link_label": "",
+                "link": ""
+              },
+              "blocks": {}
+            },
+            "cb_guides_card_geeAMP": {
+              "type": "_cb-guides-card",
+              "settings": {
+                "article": "",
+                "use_custom_text": false,
+                "card_title": "Looking after your racket",
+                "summary": "Grommets protect both frame and strings. Regularly checking for split or damaged eyelets between restrings helps safeguard your racket frame and preserve overall string life.",
+                "icon": "wrench",
+                "custom_icon": "shopify://shop_images/wrench.svg",
+                "custom_icon_tint": true,
+                "label": "Racket care",
+                "point_text": "Simple care between restringing sessions",
+                "link_label": "",
+                "link": ""
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "cb_guides_card_kkLYxC",
+            "cb_guides_card_9z66iJ",
+            "cb_guides_card_geeAMP"
+          ]
+        }
+      },
+      "block_order": [
+        "cb_guides_header_7APFwk",
+        "cb_guides_grid_M4t4pF"
+      ],
+      "name": "[CB] Setup guidance",
+      "settings": {
+        "design": "2",
+        "max_width": 1400,
+        "stack_gap": 40,
+        "card_radius": 4,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "#111112",
+        "card_background_color": "#181818",
+        "border_color": "#ffffff0d",
+        "text_color": "#ffffff",
+        "accent_color": "#d71f27",
+        "padding_top": 52,
+        "padding_bottom": 44
+      }
+    },
+    "cb_advice_ziAGxM": {
+      "type": "cb-advice",
+      "blocks": {
+        "cb_advice_content_bDMVD3": {
+          "type": "_cb-advice-content",
+          "settings": {
+            "alignment": "left",
+            "gap": 12
+          },
+          "blocks": {
+            "cb_advice_eyebrow_fq3eHa": {
+              "type": "cb-subheader",
+              "settings": {
+                "subheader_text": "COMPLETE YOUR SETUP",
+                "secondary": "",
+                "show_dot": false,
+                "size": 10,
+                "weight": "strong",
+                "color": "accent",
+                "letter_spacing": 0,
+                "uppercase": true,
+                "space_below": 0
+              },
+              "blocks": {}
+            },
+            "cb_advice_heading_hgnrFR": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "Your racket is only part of the setup.",
+                "tag": "h2",
+                "size": 32,
+                "mobile_sizing": "scale",
+                "mobile_scale": 82,
+                "fluid_min": 28,
+                "fluid_vw": 6,
+                "weight": "font",
+                "color": "text",
+                "line_height": 115,
+                "letter_spacing": -1,
+                "uppercase": false,
+                "wrap": "wrap",
+                "max_width": 0
+              },
+              "blocks": {}
+            },
+            "cb_advice_text_mneKtw": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>Pair your freshly gripped frame with professional electronic stringing and<br>tournament-grade shuttles from Counties Manukau specialists.</p>",
+                "size": 14,
+                "mobile_sizing": "same",
+                "mobile_size": 14,
+                "fluid_vw": 2,
+                "weight": "regular",
+                "color": "muted",
+                "line_height": 160,
+                "letter_spacing": -1,
+                "wrap": "wrap",
+                "max_width_unit": "px",
+                "max_width_px": 600,
+                "max_width_ch": 60
+              },
+              "blocks": {}
+            },
+            "cb_advice_buttons_Mn6CFJ": {
+              "type": "_cb-advice-buttons",
+              "settings": {
+                "gap": 12,
+                "space_above": 16
+              },
+              "blocks": {
+                "cb_advice_button_AYT38G": {
+                  "type": "_cb-advice-button",
+                  "settings": {
+                    "label": "SHOP RACKETS",
+                    "link": "shopify://pages/contact",
+                    "directions_address": "",
+                    "style": "primary",
+                    "icon": "none",
+                    "custom_icon_tint": true,
+                    "new_tab": false
+                  },
+                  "blocks": {}
+                },
+                "cb_advice_button_dgD8jp": {
+                  "type": "_cb-advice-button",
+                  "settings": {
+                    "label": "EXPLORE STRINGING",
+                    "link": "",
+                    "directions_address": "41R Elliot Street, Papakura, Auckland",
+                    "style": "secondary",
+                    "icon": "none",
+                    "custom_icon_tint": true,
+                    "new_tab": false
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "cb_advice_button_AYT38G",
+                "cb_advice_button_dgD8jp"
+              ]
+            }
+          },
+          "block_order": [
+            "cb_advice_eyebrow_fq3eHa",
+            "cb_advice_heading_hgnrFR",
+            "cb_advice_text_mneKtw",
+            "cb_advice_buttons_Mn6CFJ"
+          ]
+        },
+        "cb_advice_icon_BL67Dh": {
+          "type": "_cb-advice-icon",
+          "settings": {
+            "icon": "racket_shuttle",
+            "custom_icon": "shopify://shop_images/Icon.svg",
+            "custom_icon_tint": true,
+            "color": "text",
+            "size": 200,
+            "opacity": 12,
+            "show_on_mobile": false
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "cb_advice_content_bDMVD3",
+        "cb_advice_icon_BL67Dh"
+      ],
+      "name": "[CB] Advice banner",
+      "settings": {
+        "max_width": 1400,
+        "panel_padding": 44,
+        "panel_radius": 10,
+        "show_border": false,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "#0b0b0b",
+        "panel_background_color": "#181818",
+        "border_color": "#ffffff14",
+        "text_color": "#ffffff",
+        "muted_text_color": "#a1a1aa",
+        "accent_color": "#d71f27",
+        "secondary_button_color": "#2a2a2a",
+        "padding_top": 32,
+        "padding_bottom": 32
+      }
+    },
+    "cb_stats_8gENgk": {
+      "type": "cb-stats",
+      "blocks": {
+        "cb_stats_item_cyKmDK": {
+          "type": "_cb-stats-item",
+          "settings": {
+            "icon": "calendar",
+            "custom_icon": "shopify://shop_images/check.svg",
+            "custom_icon_tint": true,
+            "stat_title": "Badminton specialists",
+            "stat_text": "Dedicated badminton equipment",
+            "link": ""
+          },
+          "blocks": {}
+        },
+        "cb_stats_item_JDgPBJ": {
+          "type": "_cb-stats-item",
+          "settings": {
+            "icon": "store",
+            "custom_icon_tint": true,
+            "stat_title": "Click & collect Papakura",
+            "stat_text": "Pick up at our pro shop",
+            "link": ""
+          },
+          "blocks": {}
+        },
+        "cb_stats_item_wYLPi4": {
+          "type": "_cb-stats-item",
+          "settings": {
+            "icon": "clock",
+            "custom_icon_tint": true,
+            "stat_title": "Open 7 days",
+            "stat_text": "41R Elliot Street Hall",
+            "link": ""
+          },
+          "blocks": {}
+        },
+        "cb_stats_item_8j7XkQ": {
+          "type": "_cb-stats-item",
+          "settings": {
+            "icon": "racket",
+            "custom_icon": "shopify://shop_images/Icon_73f4eef2-3bc8-4004-9c5b-c81e56f052f3.svg",
+            "custom_icon_tint": true,
+            "stat_title": "Supporting Counties Manukau Badminton",
+            "stat_text": "Official CMBA association shop",
+            "link": ""
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "cb_stats_item_cyKmDK",
+        "cb_stats_item_JDgPBJ",
+        "cb_stats_item_wYLPi4",
+        "cb_stats_item_8j7XkQ"
+      ],
+      "name": "[CB] Stats bar",
+      "settings": {
+        "columns": 4,
+        "max_width": 1400,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "#161616",
+        "text_color": "#ffffff",
+        "accent_color": "#d71f27",
+        "box_border_color": "#ffffff26",
+        "padding_top": 16,
+        "padding_bottom": 16
+      }
+    },
+    "cb_visit_EpWWm9": {
+      "type": "cb-visit",
+      "blocks": {
+        "cb_visit_content_KpKmdP": {
+          "type": "_cb-visit-content",
+          "settings": {
+            "gap": 8
+          },
+          "blocks": {
+            "cb_visit_eyebrow_Kzpfpg": {
+              "type": "cb-subheader",
+              "settings": {
+                "subheader_text": "",
+                "secondary": "",
+                "show_dot": false,
+                "size": 10,
+                "weight": "strong",
+                "color": "accent",
+                "letter_spacing": 8,
+                "uppercase": true,
+                "space_below": 0
+              },
+              "blocks": {}
+            },
+            "cb_visit_heading_VXLh6c": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "Not sure which grip or bag suits you?",
+                "tag": "h2",
+                "size": 20,
+                "mobile_sizing": "scale",
+                "mobile_scale": 90,
+                "fluid_min": 28,
+                "fluid_vw": 6,
+                "weight": "font",
+                "color": "text",
+                "line_height": 115,
+                "letter_spacing": -1,
+                "uppercase": false,
+                "wrap": "wrap",
+                "max_width": 0
+              },
+              "blocks": {}
+            },
+            "cb_visit_text_R6E4iL": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>Visit the Pro Shop at 41R Elliot Street or ask our stringers and coaches for personalized setup<br>advice.</p>",
+                "size": 13,
+                "mobile_sizing": "same",
+                "mobile_size": 13,
+                "fluid_vw": 2,
+                "weight": "regular",
+                "color": "muted",
+                "line_height": 160,
+                "letter_spacing": 0,
+                "wrap": "wrap",
+                "max_width_unit": "ch",
+                "max_width_px": 640,
+                "max_width_ch": 120
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "cb_visit_eyebrow_Kzpfpg",
+            "cb_visit_heading_VXLh6c",
+            "cb_visit_text_R6E4iL"
+          ]
+        },
+        "cb_visit_button_JheaK4": {
+          "type": "_cb-visit-button",
+          "settings": {
+            "label": "ASK THE PRO SHOP",
+            "link": "",
+            "directions_address": "41R Elliot Street, Papakura, Auckland",
+            "style": "light",
+            "icon": "none",
+            "custom_icon_tint": true
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "cb_visit_content_KpKmdP",
+        "cb_visit_button_JheaK4"
+      ],
+      "name": "[CB] Visit banner",
+      "settings": {
+        "max_width": 1400,
+        "show_panel": true,
+        "panel_radius": 2,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "#0b0b0b",
+        "panel_background_color": "#181818",
+        "border_color": "#ffffff14",
+        "text_color": "{{ settings.color_palette.background }}",
+        "accent_color": "#d71f27",
+        "button_background_color": "#b8262f",
+        "button_text_color": "{{ settings.color_palette.background }}",
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
+    }
+  },
+  "order": [
+    "cb_hero_NTwN7b",
+    "type",
+    "main",
+    "cb_guides_qXU39L",
+    "cb_advice_ziAGxM",
+    "cb_stats_8gENgk",
+    "cb_visit_EpWWm9"
+  ]
+}

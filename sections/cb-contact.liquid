@@ -1,0 +1,294 @@
+{%- comment -%}
+  Contact section: a header (subheader, heading, paragraph) and a [CB] Contact form panel. Fonts and colours reach the
+  shared blocks through --cb-* (snippets/cb-font-styles); the form's input colours come from --cbct-*.
+{%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign font_scope = '#cb-contact-' | append: section.id
+-%}
+
+{% render 'cb-font-styles',
+  selector: font_scope,
+  prefix: 'cbct',
+  heading_font: s.heading_font,
+  body_font: s.body_font
+%}
+
+<section
+  id="cb-contact-{{ section.id }}"
+  class="cb-contact"
+  style="
+    --cbct-bg: {{ s.background_color }};
+    --cbct-text: {{ s.text_color }};
+    --cbct-muted: {{ s.muted_text_color }};
+    --cbct-accent: {{ s.accent_color }};
+    --cbct-input-bg: {{ s.input_color }};
+    --cbct-input-border: {{ s.input_border_color }};
+    --cbct-placeholder: {{ s.placeholder_color }};
+    --cbct-max-width: {{ s.max_width }}px;
+    --cbct-header-gap: {{ s.header_gap }}px;
+    --cbct-pt: {{ s.padding_top }}px;
+    --cbct-pb: {{ s.padding_bottom }}px;
+    --color-foreground: {{ s.text_color }};
+    --color-foreground-rgb: {{ s.text_color.rgb }};
+  "
+>
+  <div class="cb-contact__inner">
+    {% content_for 'blocks' %}
+  </div>
+</section>
+
+{% stylesheet %}
+  .cb-contact {
+    color: var(--cbct-text);
+    background: var(--cbct-bg);
+    padding: calc(var(--cbct-pt) * 0.6) 16px calc(var(--cbct-pb) * 0.6);
+  }
+
+  .cb-contact__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+    max-width: var(--cbct-max-width);
+    margin-inline: auto;
+  }
+
+  .cb-contact__inner > .cb-cform {
+    align-self: stretch;
+  }
+
+  /* The form sits further below the header (halved on phones). */
+  .cb-contact__inner > * + .cb-cform {
+    margin-top: calc(var(--cbct-header-gap, 80px) * 0.5 - 24px);
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-contact {
+      padding: var(--cbct-pt) 32px var(--cbct-pb);
+    }
+
+    .cb-contact__inner > * + .cb-cform {
+      margin-top: calc(var(--cbct-header-gap, 80px) - 24px);
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .cb-contact {
+      padding-inline: 48px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Contact",
+  "tag": "div",
+  "class": "section-wrapper",
+  "blocks": [
+    {
+      "type": "_cb-pguide-header"
+    },
+    {
+      "type": "_cb-cform"
+    },
+    {
+      "type": "cb-subheader"
+    },
+    {
+      "type": "cb-heading"
+    },
+    {
+      "type": "cb-paragraph"
+    },
+    {
+      "type": "cb-button"
+    }
+  ],
+  "disabled_on": { "groups": ["header", "footer"] },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width",
+      "min": 600,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "default": 1120
+    },
+    {
+      "type": "range",
+      "id": "header_gap",
+      "label": "Space above the form",
+      "info": "Halved on phones.",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "header",
+      "content": "Fonts"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "space_grotesk_n7"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "inter_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "info": "Headings, field labels and typed text.",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "muted_text_color",
+      "label": "Muted text",
+      "info": "The intro paragraph.",
+      "default": "#d0d0d4"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "info": "Subheader, focused fields and the button.",
+      "default": "#d71f27"
+    },
+    {
+      "type": "color",
+      "id": "input_color",
+      "label": "Field background",
+      "default": "#171717"
+    },
+    {
+      "type": "color",
+      "id": "input_border_color",
+      "label": "Field border",
+      "default": "#ffffff14"
+    },
+    {
+      "type": "color",
+      "id": "placeholder_color",
+      "label": "Placeholder text",
+      "default": "#8a8a8a"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Contact",
+      "category": "t:categories.forms",
+      "blocks": {
+        "header": {
+          "type": "_cb-pguide-header",
+          "blocks": {
+            "eyebrow": {
+              "type": "cb-subheader",
+              "settings": { "subheader_text": "Contact", "size": 11, "space_below": 3 }
+            },
+            "heading": {
+              "type": "cb-heading",
+              "settings": { "heading_text": "How can we help?", "size": 40, "mobile_scale": 70, "line_height": 120 }
+            },
+            "text": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>Questions about products, click &amp; collect, stringing or visiting the pro shop? Send us a message and we'll get back to you.</p>",
+                "size": 15
+              }
+            }
+          },
+          "block_order": ["eyebrow", "heading", "text"]
+        },
+        "form": {
+          "type": "_cb-cform",
+          "blocks": {
+            "name": {
+              "type": "_cb-cform-field",
+              "settings": {
+                "kind": "name",
+                "label": "Name",
+                "placeholder": "Your name",
+                "required": true,
+                "width": "half"
+              }
+            },
+            "email": {
+              "type": "_cb-cform-field",
+              "settings": { "kind": "email", "label": "Email", "placeholder": "you@example.com", "width": "half" }
+            },
+            "topic": {
+              "type": "_cb-cform-field",
+              "settings": {
+                "kind": "dropdown",
+                "label": "What do you need help with?",
+                "placeholder": "Choose a topic",
+                "options": "Product question\nClick & collect\nStringing support\nPlanning a visit\nSomething else"
+              }
+            },
+            "message": {
+              "type": "_cb-cform-field",
+              "settings": {
+                "kind": "message",
+                "label": "Message",
+                "placeholder": "Tell us how we can help",
+                "required": true
+              }
+            }
+          },
+          "block_order": ["name", "email", "topic", "message"]
+        }
+      },
+      "block_order": ["header", "form"]
+    }
+  ]
+}
+{% endschema %}

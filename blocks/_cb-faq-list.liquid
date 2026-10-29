@@ -1,0 +1,49 @@
+<div
+  class="cb-faq__list"
+  style="--cbfq-item-gap: {{ block.settings.gap }}px;"
+  {{ block.shopify_attributes }}
+>
+  {% content_for 'blocks' %}
+</div>
+
+{% stylesheet %}
+  .cb-faq__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--cbfq-item-gap, 14px);
+    min-width: 0;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Questions",
+  "tag": null,
+  "blocks": [{ "type": "_cb-faq-item" }],
+  "settings": [
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Space between questions",
+      "min": 0,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 15
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Questions",
+      "blocks": {
+        "question_1": { "type": "_cb-faq-item", "settings": { "open": true } },
+        "question_2": {
+          "type": "_cb-faq-item",
+          "settings": { "question": "Add another question", "answer": "<p>Write the answer here.</p>" }
+        }
+      },
+      "block_order": ["question_1", "question_2"]
+    }
+  ]
+}
+{% endschema %}

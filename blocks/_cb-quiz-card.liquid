@@ -1,0 +1,799 @@
+{%- comment -%}
+  The quiz: one question at a time, a progress bar, then the rackets that match the most answers.
+  Candidate rackets come from the chosen collection (the Rackets collection by default).
+{%- endcomment -%}
+{%- liquid
+  assign pool = block.settings.collection
+  if pool == blank
+    assign pool = collections['rackets']
+  endif
+
+  assign view_all = block.settings.view_all_link
+  if view_all == blank
+    assign view_all = pool.url | default: routes.all_products_collection_url
+  endif
+
+  assign results_title = block.settings.results_heading | replace: '[count]', block.settings.results_count
+-%}
+
+<div
+  id="cb-quiz-card-{{ section.id }}"
+  class="cb-quiz-card"
+  data-cb-quiz
+  data-step-label="{{ block.settings.step_label | escape }}"
+  data-progress-label="{{ block.settings.progress_label | escape }}"
+  data-results-count="{{ block.settings.results_count }}"
+  style="
+    --cb-quiz-card-label-size: {{ block.settings.label_size }}px;
+    --cb-quiz-card-label-weight: {{ block.settings.label_weight }};
+    --cb-quiz-card-heading-size: {{ block.settings.heading_size }}px;
+    --cb-quiz-card-heading-weight: {{ block.settings.heading_weight }};
+    --cb-quiz-card-summary-size: {{ block.settings.summary_size }}px;
+    --cb-quiz-card-summary-weight: {{ block.settings.summary_weight }};
+    --cb-quiz-card-number-size: {{ block.settings.number_size }}px;
+    --cb-quiz-card-number-weight: {{ block.settings.number_weight }};
+    --cb-quiz-card-name-size: {{ block.settings.name_size }}px;
+    --cb-quiz-card-name-weight: {{ block.settings.name_weight }};
+    --cb-quiz-card-price-size: {{ block.settings.price_size }}px;
+    --cb-quiz-card-price-weight: {{ block.settings.price_weight }};
+    --cb-quiz-card-button-size: {{ block.settings.button_size }}px;
+    --cb-quiz-card-button-weight: {{ block.settings.button_weight }};
+    --cb-quiz-card-link-size: {{ block.settings.link_size }}px;
+    --cb-quiz-card-link-weight: {{ block.settings.link_weight }};
+    --cb-quiz-card-progress-size: {{ block.settings.progress_size }}px;
+    --cb-quiz-card-progress-weight: {{ block.settings.progress_weight }};
+  "
+  {{ block.shopify_attributes }}
+>
+  <div class="cb-quiz-card__questions" data-cb-quiz-questions>
+    {% content_for 'blocks' %}
+  </div>
+
+  <div class="cb-quiz-card__results" data-cb-quiz-results hidden>
+    <div class="cb-quiz-card__head">
+      <span class="cb-quiz-card__step">{{ block.settings.results_label | escape }}</span>
+      {%- if block.settings.results_tag != blank -%}
+        <span class="cb-quiz-card__tag">{{ block.settings.results_tag | escape }}</span>
+      {%- endif -%}
+    </div>
+    <h3
+      class="cb-quiz-card__title"
+      tabindex="-1"
+      data-cb-quiz-results-title
+      data-match-title="{{ block.settings.results_heading | escape }}"
+      data-fallback-title="{{ block.settings.fallback_heading | escape }}"
+    >
+      {{- results_title | escape -}}
+    </h3>
+    <p class="cb-quiz-card__summary" data-cb-quiz-summary></p>
+    <ol class="cb-quiz-matches" role="list" data-cb-quiz-matches></ol>
+    <div class="cb-quiz-card__actions">
+      <button type="button" class="cb-quiz-card__restart" data-cb-quiz-restart>
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2.5 8a5.5 5.5 0 1 0 1.6-3.9M2.5 2.5v3h3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        {{- block.settings.restart_label | escape -}}
+      </button>
+      {%- if block.settings.view_all_label != blank -%}
+        <a class="cb-quiz-card__all" href="{{ view_all }}">
+          {{- block.settings.view_all_label | escape -}}
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+
+  <div class="cb-quiz-card__progress">
+    <button type="button" class="cb-quiz-card__back" data-cb-quiz-back hidden>
+      <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M13 8H3M7 4 3 8l4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      {{- block.settings.back_label | escape -}}
+    </button>
+    <div class="cb-quiz-card__bar" aria-hidden="true"><span class="cb-quiz-card__fill"></span></div>
+    <p class="cb-quiz-card__progress-label" data-cb-quiz-progress></p>
+  </div>
+
+  {%- if pool != blank -%}
+    <template data-cb-quiz-pool>
+      {%- for product in pool.products limit: 48 -%}
+        {%- liquid
+          assign keys = '|'
+          for tag in product.tags
+            assign tag_key = tag | handleize
+            assign keys = keys | append: tag_key | append: '|'
+          endfor
+          assign title_key = product.title | handleize | prepend: '-' | append: '-'
+        -%}
+        <li class="cb-quiz-match" data-cb-quiz-product data-keys="{{ keys }}" data-title="{{ title_key }}">
+          <a class="cb-quiz-match__link" href="{{ product.url }}">
+            <span class="cb-quiz-match__media">
+              {%- if product.featured_image -%}
+                {{ product.featured_image | image_url: width: 160 | image_tag: loading: 'lazy', alt: '' }}
+              {%- endif -%}
+            </span>
+            <span class="cb-quiz-match__info">
+              <span class="cb-quiz-match__title">{{ product.title | escape }}</span>
+              <span class="cb-quiz-match__price">{{ product.price | money }}</span>
+            </span>
+            <svg class="cb-quiz-match__arrow" width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </li>
+      {%- endfor -%}
+    </template>
+  {%- endif -%}
+</div>
+
+{% stylesheet %}
+  .cb-quiz-card {
+    --cbq-progress: 0%;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    padding: 18px;
+    border: 1px solid var(--cbq-border);
+    border-radius: var(--cbq-radius);
+    background: var(--cbq-card);
+    scroll-margin-top: calc(var(--header-height, 0px) + 16px);
+  }
+
+  /* Before the script runs only the first question shows; afterwards only the current one. */
+  .cb-quiz-card__questions:not(.is-ready) > .cb-quiz-q ~ .cb-quiz-q,
+  .cb-quiz-card__questions.is-ready > .cb-quiz-q:not(.is-active),
+  .cb-quiz-card.is-complete .cb-quiz-card__questions,
+  .cb-quiz-card__results[hidden] {
+    display: none;
+  }
+
+  .cb-quiz-q.is-active,
+  .cb-quiz-card.is-complete .cb-quiz-card__results {
+    animation: cb-quiz-in 0.3s ease;
+  }
+
+  @keyframes cb-quiz-in {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+  }
+
+  .cb-quiz-card__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 22px;
+    margin-bottom: 18px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--cbq-border);
+    font-family: var(--cbq-font-body);
+    font-weight: var(--cb-quiz-card-label-weight, var(--cbq-font-body-strong));
+    font-size: var(--cb-quiz-card-label-size, 10px);
+    line-height: 1.3;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .cb-quiz-card__step {
+    color: var(--cbq-muted);
+  }
+
+  .cb-quiz-card__tag {
+    padding: 3px 8px;
+    border: 1px solid color-mix(in srgb, var(--cbq-accent) 45%, transparent);
+    border-radius: 2px;
+    background: color-mix(in srgb, var(--cbq-accent) 12%, transparent);
+    color: var(--cbq-accent);
+    white-space: nowrap;
+  }
+
+  .cb-quiz-card__title {
+    margin: 0 0 16px;
+    font-family: var(--cbq-font-heading);
+    font-weight: var(--cb-quiz-card-heading-weight, var(--cbq-font-heading-weight));
+    font-size: calc(var(--cb-quiz-card-heading-size, 17px) * 16 / 17);
+    line-height: 1.3;
+    color: var(--cbq-text);
+  }
+
+  .cb-quiz-card__title:focus {
+    outline: none;
+  }
+
+  /* Progress */
+  .cb-quiz-card__progress {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 14px;
+    margin-top: 22px;
+    padding-top: 16px;
+    border-top: 1px solid var(--cbq-border);
+  }
+
+  .cb-quiz-card__back,
+  .cb-quiz-card__restart {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+    padding: 4px 0;
+    border: 0;
+    background: none;
+    font-family: var(--cbq-font-body);
+    font-weight: var(--cb-quiz-card-button-weight, var(--cbq-font-body-strong));
+    font-size: var(--cb-quiz-card-button-size, 11px);
+    color: var(--cbq-muted);
+    cursor: pointer;
+  }
+
+  .cb-quiz-card__back[hidden] {
+    display: none;
+  }
+
+  .cb-quiz-card__back:hover,
+  .cb-quiz-card__restart:hover {
+    color: var(--cbq-text);
+  }
+
+  .cb-quiz-card__bar {
+    flex: 1 1 140px;
+    height: 4px;
+    overflow: hidden;
+    border-radius: 2px;
+    background: var(--cbq-track);
+  }
+
+  .cb-quiz-card__fill {
+    display: block;
+    width: var(--cbq-progress);
+    height: 100%;
+    border-radius: inherit;
+    background: var(--cbq-accent);
+    transition: width 0.35s ease;
+  }
+
+  .cb-quiz-card__progress-label {
+    margin: 0;
+    font-family: var(--cbq-font-body);
+    font-weight: var(--cb-quiz-card-progress-weight, inherit);
+    font-size: var(--cb-quiz-card-progress-size, 10px);
+    white-space: nowrap;
+    color: var(--cbq-muted);
+  }
+
+  /* Results */
+  .cb-quiz-card__summary {
+    margin: -6px 0 14px;
+    font-family: var(--cbq-font-body);
+    font-weight: var(--cb-quiz-card-summary-weight, inherit);
+    font-size: var(--cb-quiz-card-summary-size, 11px);
+    line-height: 1.5;
+    color: var(--cbq-muted);
+  }
+
+  .cb-quiz-card__summary:empty {
+    display: none;
+  }
+
+  .cb-quiz-matches {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: cb-quiz-match;
+  }
+
+  .cb-quiz-matches[hidden] {
+    display: none;
+  }
+
+  .cb-quiz-match {
+    counter-increment: cb-quiz-match;
+  }
+
+  .cb-quiz-match__link {
+    display: grid;
+    grid-template-columns: auto 52px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 12px;
+    border: 1px solid var(--cbq-border);
+    border-radius: 3px;
+    background: var(--cbq-option);
+    color: inherit;
+    text-decoration: none;
+    transition: border-color 0.2s ease;
+  }
+
+  .cb-quiz-match__link::before {
+    content: counter(cb-quiz-match, decimal-leading-zero);
+    font-family: var(--cbq-font-heading);
+    font-weight: var(--cb-quiz-card-number-weight, var(--cbq-font-heading-regular-weight));
+    font-size: var(--cb-quiz-card-number-size, 12px);
+    color: var(--cbq-accent);
+  }
+
+  .cb-quiz-match__link:hover {
+    border-color: var(--cbq-border-strong);
+  }
+
+  .cb-quiz-match__link:focus-visible,
+  .cb-quiz-card__all:focus-visible,
+  .cb-quiz-card__back:focus-visible,
+  .cb-quiz-card__restart:focus-visible {
+    outline: 2px solid var(--cbq-text);
+    outline-offset: 2px;
+  }
+
+  .cb-quiz-match__media {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    overflow: hidden;
+    border-radius: 2px;
+    background: #fff;
+  }
+
+  .cb-quiz-match__media img {
+    width: 100%;
+    height: 100%;
+    padding: 4px;
+    object-fit: contain;
+  }
+
+  .cb-quiz-match__info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+  }
+
+  .cb-quiz-match__title {
+    display: -webkit-box;
+    overflow: hidden;
+    font-family: var(--cbq-font-heading);
+    font-weight: var(--cb-quiz-card-name-weight, var(--cbq-font-heading-weight));
+    font-size: var(--cb-quiz-card-name-size, 13px);
+    line-height: 1.3;
+    color: var(--cbq-text);
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  .cb-quiz-match__price {
+    font-family: var(--cbq-font-body);
+    font-weight: var(--cb-quiz-card-price-weight, inherit);
+    font-size: var(--cb-quiz-card-price-size, 11px);
+    color: var(--cbq-muted);
+  }
+
+  .cb-quiz-match__arrow {
+    color: var(--cbq-muted);
+  }
+
+  .cb-quiz-card__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px 16px;
+    margin-top: 16px;
+  }
+
+  .cb-quiz-card__all {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--cbq-font-body);
+    font-weight: var(--cb-quiz-card-link-weight, var(--cbq-font-body-strong));
+    font-size: var(--cb-quiz-card-link-size, 11px);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--cbq-accent);
+    text-decoration: none;
+  }
+
+  .cb-quiz-card__all:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .cb-quiz-card__hint {
+    margin: 14px 0 0;
+    font-family: var(--cbq-font-body);
+    font-size: 11px;
+    color: var(--cbq-muted);
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-quiz-card {
+      padding: 22px 24px;
+    }
+
+    .cb-quiz-card__title {
+      font-size: var(--cb-quiz-card-heading-size, 17px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cb-quiz-q.is-active,
+    .cb-quiz-card.is-complete .cb-quiz-card__results {
+      animation: none;
+    }
+
+    .cb-quiz-card__fill {
+      transition: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Quiz card",
+  "tag": null,
+  "blocks": [{ "type": "_cb-quiz-question" }],
+  "settings": [
+    {
+      "type": "text",
+      "id": "step_label",
+      "label": "Question label",
+      "info": "[current] and [total] become 01, 02…",
+      "default": "Question [current] of [total]"
+    },
+    {
+      "type": "text",
+      "id": "progress_label",
+      "label": "Progress label",
+      "info": "[percent], [current] and [total] are replaced.",
+      "default": "[percent]% Completed (Step [current]/[total])"
+    },
+    {
+      "type": "text",
+      "id": "back_label",
+      "label": "Back button",
+      "default": "Back"
+    },
+    {
+      "type": "header",
+      "content": "Results"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Rackets to match",
+      "info": "Leave empty to use the Rackets collection. The first 48 products are compared."
+    },
+    {
+      "type": "range",
+      "id": "results_count",
+      "label": "Rackets to show",
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "text",
+      "id": "results_label",
+      "label": "Results label",
+      "default": "Finder complete"
+    },
+    {
+      "type": "text",
+      "id": "results_tag",
+      "label": "Results tag",
+      "default": "Calibrated picks"
+    },
+    {
+      "type": "text",
+      "id": "results_heading",
+      "label": "Results heading",
+      "info": "[count] is replaced with the number of rackets shown.",
+      "default": "Your top [count] matches"
+    },
+    {
+      "type": "text",
+      "id": "fallback_heading",
+      "label": "Heading when nothing matches",
+      "info": "Used when no racket matches the chosen answers; the collection's first rackets are shown instead.",
+      "default": "Popular picks to start with"
+    },
+    {
+      "type": "text",
+      "id": "restart_label",
+      "label": "Start again button",
+      "default": "Start again"
+    },
+    {
+      "type": "text",
+      "id": "view_all_label",
+      "label": "See all link",
+      "default": "See all rackets"
+    },
+    {
+      "type": "url",
+      "id": "view_all_link",
+      "label": "See all link target",
+      "info": "Leave empty to link to the collection above."
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "label_size",
+      "label": "Label size",
+      "info": "The question and results labels and their tags.",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "label_weight",
+      "label": "Label weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading size",
+      "info": "The questions and the results heading. Scaled down on phones.",
+      "min": 10,
+      "max": 56,
+      "step": 0.5,
+      "unit": "px",
+      "default": 17
+    },
+    {
+      "type": "select",
+      "id": "heading_weight",
+      "label": "Heading weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "summary_size",
+      "label": "Answer summary size",
+      "info": "The chosen answers under the results heading.",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "select",
+      "id": "summary_weight",
+      "label": "Answer summary weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "number_size",
+      "label": "Racket number size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "number_weight",
+      "label": "Racket number weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "name_size",
+      "label": "Racket name size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "select",
+      "id": "name_weight",
+      "label": "Racket name weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "price_size",
+      "label": "Racket price size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "select",
+      "id": "price_weight",
+      "label": "Racket price weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "button_size",
+      "label": "Back and Start again text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "select",
+      "id": "button_weight",
+      "label": "Back and Start again text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "link_size",
+      "label": "See all link size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "select",
+      "id": "link_weight",
+      "label": "See all link weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "progress_size",
+      "label": "Progress label size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "progress_weight",
+      "label": "Progress label weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Quiz card",
+      "blocks": {
+        "question_1": {
+          "type": "_cb-quiz-question",
+          "blocks": {
+            "answer_1": { "type": "_cb-quiz-option", "settings": { "option_title": "Answer one", "option_text": "Short description." } },
+            "answer_2": { "type": "_cb-quiz-option", "settings": { "option_title": "Answer two", "option_text": "Short description." } },
+            "answer_3": { "type": "_cb-quiz-option", "settings": { "option_title": "Answer three", "option_text": "Short description." } },
+            "answer_4": { "type": "_cb-quiz-option", "settings": { "option_title": "Answer four", "option_text": "Short description." } }
+          },
+          "block_order": ["answer_1", "answer_2", "answer_3", "answer_4"]
+        }
+      },
+      "block_order": ["question_1"]
+    }
+  ]
+}
+{% endschema %}

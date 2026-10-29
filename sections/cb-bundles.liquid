@@ -1,0 +1,457 @@
+{%- liquid
+  assign s = section.settings
+  assign tablet_columns = s.columns | at_most: 2
+-%}
+{%- comment -%} Fonts for the optional heading come from the first card's font settings via the same variables. {%- endcomment -%}
+{%- if s.heading != blank or s.eyebrow != blank or s.text != blank -%}
+  {%- assign font_scope = '#cb-bundles-' | append: section.id | append: ' .cb-bundles__head' -%}
+  {% render 'cb-font-styles',
+    selector: font_scope,
+    prefix: 'cbbu',
+    heading_font: s.heading_font,
+    body_font: s.body_font
+  %}
+{%- endif -%}
+
+<section
+  id="cb-bundles-{{ section.id }}"
+  class="cb-bundles{% if s.equal_height %} cb-bundles--equal{% endif %}"
+  style="
+    --cbbu-bg: {{ s.background_color }};
+    --cbbu-card: {{ s.card_color }};
+    --cbbu-frame: {{ s.frame_color }};
+    --cbbu-photo: {{ s.photo_color }};
+    --cbbu-text: {{ s.text_color }};
+    --cbbu-soft: {{ s.item_text_color }};
+    --cbbu-muted: {{ s.muted_text_color }};
+    --cbbu-accent: {{ s.accent_color }};
+    --cbbu-radius: {{ s.card_radius }}px;
+    --cbbu-columns: {{ s.columns }};
+    --cbbu-columns-tablet: {{ tablet_columns }};
+    --cbbu-gap: {{ s.card_gap }}px;
+    --cbbu-max-width: {{ s.max_width }}px;
+    --cbbu-pt: {{ s.padding_top }}px;
+    --cbbu-pb: {{ s.padding_bottom }}px;
+    --cb-bundles-eyebrow-size: {{ s.eyebrow_size }}px;
+    --cb-bundles-eyebrow-weight: {{ s.eyebrow_weight }};
+    --cb-bundles-heading-size: {{ s.heading_size }}px;
+    --cb-bundles-heading-weight: {{ s.heading_weight }};
+    --cb-bundles-text-size: {{ s.text_size }}px;
+    --cb-bundles-text-weight: {{ s.text_weight }};
+  "
+>
+  <div class="cb-bundles__inner">
+    {%- if s.heading != blank or s.eyebrow != blank or s.text != blank -%}
+      <div class="cb-bundles__head">
+        {%- if s.eyebrow != blank -%}
+          <p class="cb-bundles__eyebrow">{{ s.eyebrow | escape }}</p>
+        {%- endif -%}
+        {%- if s.heading != blank -%}
+          <h2 class="cb-bundles__heading">{{ s.heading | escape }}</h2>
+        {%- endif -%}
+        {%- if s.text != blank -%}
+          <p class="cb-bundles__text">{{ s.text | escape }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+    <div class="cb-bundles__grid">
+      {% content_for 'blocks' %}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .cb-bundles {
+    color: var(--cbbu-text);
+    background: var(--cbbu-bg);
+    padding: calc(var(--cbbu-pt) * 0.7) 16px calc(var(--cbbu-pb) * 0.7);
+  }
+
+  .cb-bundles__inner {
+    max-width: var(--cbbu-max-width);
+    margin-inline: auto;
+  }
+
+  .cb-bundles__head {
+    margin-bottom: 32px;
+  }
+
+  .cb-bundles .cb-bundles__eyebrow {
+    margin: 0;
+    font-family: var(--cbbu-font-body);
+    font-weight: var(--cb-bundles-eyebrow-weight, var(--cbbu-font-body-strong));
+    font-size: var(--cb-bundles-eyebrow-size, 10px);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--cbbu-accent);
+  }
+
+  .cb-bundles .cb-bundles__heading {
+    margin: 10px 0 0;
+    font-family: var(--cbbu-font-heading);
+    font-weight: var(--cb-bundles-heading-weight, var(--cbbu-font-heading-medium-weight));
+    font-size: calc(var(--cb-bundles-heading-size, 32px) * 26 / 32);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    color: var(--cbbu-text);
+  }
+
+  .cb-bundles .cb-bundles__text {
+    max-width: 640px;
+    margin: 12px 0 0;
+    font-family: var(--cbbu-font-body);
+    font-weight: var(--cb-bundles-text-weight, inherit);
+    font-size: var(--cb-bundles-text-size, 15px);
+    line-height: 1.55;
+    color: var(--cbbu-muted);
+  }
+
+  /* Cards keep their own height (like the design) unless "Same height cards" is on. */
+  .cb-bundles__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    gap: 16px;
+  }
+
+  .cb-bundles--equal .cb-bundles__grid {
+    align-items: stretch;
+  }
+
+  .cb-bundles--equal .cb-bundle__button {
+    margin-top: auto;
+  }
+
+  .cb-bundles--equal .cb-bundle__items {
+    margin-bottom: 18px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-bundles {
+      padding: var(--cbbu-pt) 32px var(--cbbu-pb);
+    }
+
+    .cb-bundles .cb-bundles__heading {
+      font-size: var(--cb-bundles-heading-size, 32px);
+    }
+
+    .cb-bundles__grid {
+      grid-template-columns: repeat(var(--cbbu-columns-tablet, 2), minmax(0, 1fr));
+      gap: var(--cbbu-gap);
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .cb-bundles {
+      padding-inline: 48px;
+    }
+
+    .cb-bundles__grid {
+      grid-template-columns: repeat(var(--cbbu-columns), minmax(0, 1fr));
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Bundles",
+  "tag": "div",
+  "class": "section-wrapper",
+  "blocks": [{ "type": "cb-bundle-card" }, { "type": "cb-highlight-card" }, { "type": "cb-card" }],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Heading (optional)"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Cards per row on desktop",
+      "info": "Tablets show up to 2, phones 1.",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width",
+      "min": 600,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "default": 1080
+    },
+    {
+      "type": "range",
+      "id": "card_gap",
+      "label": "Gap",
+      "min": 8,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Card corner radius",
+      "min": 0,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "checkbox",
+      "id": "equal_height",
+      "label": "Same height cards",
+      "info": "All cards in a row match the tallest one and their buttons line up. Off: each card fits its own content.",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Heading fonts"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "info": "Only for the optional heading. Each card has its own font settings.",
+      "default": "space_grotesk_n7"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "inter_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "card_color",
+      "label": "Cards",
+      "default": "#1b1b1b"
+    },
+    {
+      "type": "color",
+      "id": "frame_color",
+      "label": "Photo frame",
+      "default": "#ffffff14"
+    },
+    {
+      "type": "color",
+      "id": "photo_color",
+      "label": "Photo tile",
+      "info": "Behind each photo, inside the dark frame.",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "item_text_color",
+      "label": "Item list",
+      "default": "#eaeae8"
+    },
+    {
+      "type": "color",
+      "id": "muted_text_color",
+      "label": "Heading text",
+      "default": "#a1a1aa"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "info": "Level label, price and button.",
+      "default": "#d71f27"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_size",
+      "label": "Eyebrow size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "eyebrow_weight",
+      "label": "Eyebrow weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading size",
+      "info": "Scaled down on phones.",
+      "min": 16,
+      "max": 112,
+      "step": 1,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "select",
+      "id": "heading_weight",
+      "label": "Heading weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "select",
+      "id": "text_weight",
+      "label": "Text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Bundles",
+      "category": "t:categories.products",
+      "blocks": {
+        "starter": {
+          "type": "cb-bundle-card",
+          "settings": {
+            "products": ["hundred-nitrix-thunder-badminton-rcket", "hundred-2-compartment-utilitarian-racket-bag-blue", "victor-ncs-caron-sonic-shuttlecock-tube-of-6"],
+            "label": "Starter",
+            "bundle_title": "Starter Bundle",
+            "button_label": "Shop Starter Bundle"
+          }
+        },
+        "intermediate": {
+          "type": "cb-bundle-card",
+          "settings": {
+            "products": ["hundred-flareon-700badminton-racket", "hundred-2-compartment-utilitarian-racket-bag-blue"],
+            "label": "Intermediate",
+            "bundle_title": "Intermediate Bundle",
+            "button_label": "Shop Intermediate Bundle"
+          }
+        },
+        "expert": {
+          "type": "cb-bundle-card",
+          "settings": {
+            "products": ["li-ning-halbertec-9000-power-badminton-racket"],
+            "label": "Expert",
+            "bundle_title": "Expert Bundle",
+            "button_label": "Shop Expert Bundle"
+          }
+        }
+      },
+      "block_order": ["starter", "intermediate", "expert"]
+    }
+  ]
+}
+{% endschema %}

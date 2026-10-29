@@ -1,0 +1,63 @@
+<div
+  class="cb-shoplinks__cards"
+  style="--cbsl-columns: {{ block.settings.columns }}; --cbsl-card-gap: {{ block.settings.gap }}px;"
+  {{ block.shopify_attributes }}
+>
+  {% content_for 'blocks' %}
+</div>
+
+{% stylesheet %}
+  /* Phones and tablets: one card per row. Desktop: the chosen number. */
+  .cb-shoplinks__cards {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  @media screen and (min-width: 990px) {
+    .cb-shoplinks__cards {
+      grid-template-columns: repeat(var(--cbsl-columns, 3), minmax(0, 1fr));
+      gap: var(--cbsl-card-gap, 16px);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Link cards",
+  "tag": null,
+  "blocks": [{ "type": "_cb-shoplink-card" }],
+  "settings": [
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Cards per row on desktop",
+      "info": "Phones and tablets show 1 per row.",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Gap",
+      "min": 8,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Link cards",
+      "blocks": {
+        "card_1": { "type": "_cb-shoplink-card" },
+        "card_2": { "type": "_cb-shoplink-card", "settings": { "label": "Consumables", "card_title": "Shop shuttles" } }
+      },
+      "block_order": ["card_1", "card_2"]
+    }
+  ]
+}
+{% endschema %}

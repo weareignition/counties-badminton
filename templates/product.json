@@ -270,7 +270,8 @@
         "gap": 48,
         "padding-block-start": 0,
         "padding-block-end": 0
-      }
+      },
+      "disabled": true
     },
     "product_recommendations_qggXJq": {
       "type": "product-recommendations",
@@ -406,9 +407,517 @@
         "padding-block-start": 48,
         "padding-block-end": 48
       }
+    },
+    "cb_main": {
+      "type": "cb-product",
+      "blocks": {
+        "title": {
+          "type": "_cb-pd-title",
+          "settings": {
+            "top_left": "[collection]",
+            "top_right": "[brand] authorized",
+            "title_size": 32,
+            "show_style": false,
+            "show_brand": false
+          }
+        },
+        "description": {
+          "type": "_cb-pd-callout",
+          "settings": {
+            "style": "plain",
+            "text_size": 13.5,
+            "fallback": "excerpt",
+            "excerpt_words": 30
+          }
+        },
+        "price": {
+          "type": "_cb-pd-price",
+          "settings": {
+            "style": "box",
+            "price_size": 29,
+            "stock_style": "dot",
+            "note_text": ""
+          }
+        },
+        "options": {
+          "type": "_cb-pd-option",
+          "settings": {
+            "mode": "all",
+            "swatch_label": "[name]:",
+            "button_label": "Select [name]:",
+            "guide_label": "Badminton sizing guide",
+            "show_selected": false
+          }
+        },
+        "buy": {
+          "type": "_cb-pd-buy",
+          "settings": {
+            "layout": "row",
+            "button_height": 53,
+            "cart_font": "heading",
+            "cart_text_size": 15.5,
+            "addon_label": "Try in Papakura",
+            "addon_mode": "link",
+            "addon_link": "/pages/contact",
+            "addon_icon_type": "store"
+          }
+        },
+        "features": {
+          "type": "_cb-pd-features",
+          "settings": {
+            "style": "cards"
+          },
+          "blocks": {
+            "collect": {
+              "type": "_cb-pd-feature",
+              "settings": {
+                "icon": "bag",
+                "feature_text": "Click & Collect Papakura"
+              }
+            },
+            "open": {
+              "type": "_cb-pd-feature",
+              "settings": {
+                "icon": "clock",
+                "feature_text": "Open 7 Days Court-Side"
+              }
+            },
+            "advice": {
+              "type": "_cb-pd-feature",
+              "settings": {
+                "icon": "chat",
+                "feature_text": "Specialist Advice"
+              }
+            },
+            "authentic": {
+              "type": "_cb-pd-feature",
+              "settings": {
+                "icon": "check",
+                "feature_text": "100% Authentic Stock"
+              }
+            }
+          },
+          "block_order": [
+            "collect",
+            "open",
+            "advice",
+            "authentic"
+          ]
+        }
+      },
+      "block_order": [
+        "title",
+        "description",
+        "price",
+        "options",
+        "buy",
+        "features"
+      ],
+      "settings": {
+        "design": "open",
+        "max_width": 1320,
+        "info_width": 520,
+        "column_gap": 51,
+        "badge_source": "tags",
+        "bar_color": "#121212",
+        "thumb_captions": false
+      }
+    },
+    "why": {
+      "type": "cb-suits",
+      "blocks": {
+        "subheader": {
+          "type": "cb-subheader",
+          "settings": {
+            "subheader_text": "Pro shop verdict",
+            "size": 9,
+            "letter_spacing": 10,
+            "space_below": -2
+          }
+        },
+        "heading": {
+          "type": "cb-heading",
+          "settings": {
+            "heading_text": "Why choose the {{ product.title }}?",
+            "size": 22,
+            "line_height": 120
+          }
+        },
+        "paragraph": {
+          "type": "cb-paragraph",
+          "settings": {
+            "body_text": "<p>Unlike standard running sneakers or generic gym trainers, badminton places unmatched rotational pressure and friction on court footwear. The Victor A970Ace combines a microfibre upper with an internal carbon plate to anchor lateral recovery moves without midfoot blowout.</p>",
+            "size": 13.5,
+            "line_height": 164,
+            "max_width_unit": "px",
+            "max_width_px": 700
+          }
+        },
+        "best": {
+          "type": "cb-highlight-card",
+          "settings": {
+            "icon": "balance",
+            "icon_size": 17,
+            "icon_color": "#d71f27",
+            "icon_box": true,
+            "icon_box_color": "#262626",
+            "label": "Best for",
+            "title_text": "Lateral Stability & Fast Footwork",
+            "body_text": "Eliminates side rollover during extreme lunges at the net and wide defensive retrievals.",
+            "label_size": 9,
+            "title_size": 18,
+            "text_size": 12.5,
+            "title_font": "heading_bold",
+            "label_gap": 15,
+            "text_gap": 10,
+            "label_color": "#a1a1aa",
+            "background_color": "#1c1c1c",
+            "padding_y": 20,
+            "padding_x": 21,
+            "radius": 5
+          }
+        },
+        "surface": {
+          "type": "cb-highlight-card",
+          "settings": {
+            "icon": "court",
+            "icon_size": 17,
+            "icon_color": "#d71f27",
+            "icon_box": true,
+            "icon_box_color": "#262626",
+            "label": "Court surface",
+            "title_text": "Indoor Parquet & Synthetic Mats",
+            "body_text": "100% non-marking vulcanized gum rubber formula tested rigorously on CMBA arena surfaces.",
+            "label_size": 9,
+            "title_size": 18,
+            "text_size": 12.5,
+            "title_font": "heading_bold",
+            "label_gap": 15,
+            "text_gap": 10,
+            "label_color": "#a1a1aa",
+            "background_color": "#1c1c1c",
+            "padding_y": 20,
+            "padding_x": 21,
+            "radius": 5
+          }
+        },
+        "fit": {
+          "type": "cb-highlight-card",
+          "settings": {
+            "icon": "footprints",
+            "icon_size": 17,
+            "icon_color": "#d71f27",
+            "icon_box": true,
+            "icon_box_color": "#262626",
+            "label": "Fit & feel",
+            "title_text": "Locked Heel + High-Rebound Foam",
+            "body_text": "Contoured heel cup prevents internal foot slide, paired with dual-density HyperEVA cushioning.",
+            "label_size": 9,
+            "title_size": 18,
+            "text_size": 12.5,
+            "title_font": "heading_bold",
+            "label_gap": 15,
+            "text_gap": 10,
+            "label_color": "#a1a1aa",
+            "background_color": "#1c1c1c",
+            "padding_y": 20,
+            "padding_x": 21,
+            "radius": 5
+          }
+        },
+        "use": {
+          "type": "cb-highlight-card",
+          "settings": {
+            "icon": "trophy",
+            "icon_size": 17,
+            "icon_color": "#d71f27",
+            "icon_box": true,
+            "icon_box_color": "#262626",
+            "label": "Use case",
+            "title_text": "Tournament & Club Performance",
+            "body_text": "Built for multi-session weekly competitors requiring maximum shoe longevity and joint protection.",
+            "label_size": 9,
+            "title_size": 18,
+            "text_size": 12.5,
+            "title_font": "heading_bold",
+            "label_gap": 15,
+            "text_gap": 10,
+            "label_color": "#a1a1aa",
+            "background_color": "#1c1c1c",
+            "padding_y": 20,
+            "padding_x": 21,
+            "radius": 5
+          }
+        }
+      },
+      "block_order": [
+        "subheader",
+        "heading",
+        "paragraph",
+        "best",
+        "surface",
+        "fit",
+        "use"
+      ],
+      "settings": {
+        "columns": 4,
+        "tablet_columns": 2,
+        "card_gap": 15,
+        "text_gap": 8,
+        "cards_gap": 26,
+        "max_width": 1320,
+        "side_padding": 12,
+        "panel_padding": 0,
+        "panel_radius": 0,
+        "panel_color": "#0b0b0b",
+        "padding_top": 40,
+        "padding_bottom": 24
+      }
+    },
+    "tech": {
+      "type": "cb-specs",
+      "blocks": {
+        "subheader": {
+          "type": "cb-subheader",
+          "static": true,
+          "settings": {
+            "subheader_text": "Specification benchmark",
+            "size": 9,
+            "letter_spacing": 10,
+            "color": "muted"
+          }
+        },
+        "heading": {
+          "type": "cb-heading",
+          "static": true,
+          "settings": {
+            "heading_text": "Technical Specifications",
+            "size": 21,
+            "line_height": 120
+          }
+        },
+        "brand": {
+          "type": "_cb-spec-row",
+          "settings": {
+            "label": "Brand / Manufacturer",
+            "source": "product",
+            "trait": "brand",
+            "format": "[value] Badminton"
+          }
+        },
+        "category": {
+          "type": "_cb-spec-row",
+          "settings": {
+            "label": "Category / Discipline",
+            "source": "product",
+            "trait": "collection"
+          }
+        },
+        "upper": {
+          "type": "_cb-spec-row",
+          "settings": {
+            "label": "Upper construction",
+            "source": "metafield",
+            "metafield": "custom.upper_construction"
+          }
+        },
+        "midsole": {
+          "type": "_cb-spec-row",
+          "settings": {
+            "label": "Midsole system",
+            "source": "metafield",
+            "metafield": "custom.midsole"
+          }
+        },
+        "outsole": {
+          "type": "_cb-spec-row",
+          "settings": {
+            "label": "Outsole composition",
+            "source": "metafield",
+            "metafield": "custom.outsole"
+          }
+        },
+        "width": {
+          "type": "_cb-spec-row",
+          "settings": {
+            "label": "Width fit",
+            "source": "metafield",
+            "metafield": "custom.width_fit"
+          }
+        },
+        "court": {
+          "type": "_cb-spec-row",
+          "settings": {
+            "label": "Court suitability",
+            "source": "metafield",
+            "metafield": "custom.court_suitability"
+          }
+        },
+        "warranty": {
+          "type": "_cb-spec-row",
+          "settings": {
+            "label": "Warranty & authenticity",
+            "source": "metafield",
+            "metafield": "custom.warranty"
+          }
+        }
+      },
+      "block_order": [
+        "brand",
+        "category",
+        "upper",
+        "midsole",
+        "outsole",
+        "width",
+        "court",
+        "warranty"
+      ],
+      "settings": {
+        "columns": "1",
+        "max_width": 1320,
+        "side_padding": 12,
+        "header_gap": 22,
+        "row_height": 53,
+        "row_padding": 22,
+        "radius": 6,
+        "label_size": 13.5,
+        "value_size": 18.5,
+        "value_font": "heading",
+        "sku_text": "SKU: [sku]",
+        "padding_top": 32,
+        "padding_bottom": 32
+      }
+    },
+    "cta": {
+      "type": "cb-blank",
+      "blocks": {
+        "row": {
+          "type": "_cb-row",
+          "settings": {
+            "layout": "custom",
+            "custom_layout": "1fr auto",
+            "align": "center",
+            "column_gap": 24,
+            "background_color": "#181818",
+            "padding_y": 38,
+            "padding_x": 37,
+            "radius": 8
+          },
+          "blocks": {
+            "text": {
+              "type": "_cb-column",
+              "settings": {
+                "gap": 16,
+                "text_gap": 8
+              },
+              "blocks": {
+                "subheader": {
+                  "type": "cb-subheader",
+                  "settings": {
+                    "subheader_text": "Expert consultation",
+                    "size": 9,
+                    "letter_spacing": 10
+                  }
+                },
+                "heading": {
+                  "type": "cb-heading",
+                  "settings": {
+                    "heading_text": "Need help finding the right setup?",
+                    "size": 21,
+                    "line_height": 120
+                  }
+                },
+                "paragraph": {
+                  "type": "cb-paragraph",
+                  "settings": {
+                    "body_text": "<p>The CMBA Pro Shop team has decades of tournament experience and equipment knowledge. Ask our team for personalized advice on footwear sizing, string tensions, or court gear.</p>",
+                    "size": 13.5,
+                    "line_height": 170,
+                    "max_width_unit": "px",
+                    "max_width_px": 620
+                  }
+                }
+              },
+              "block_order": [
+                "subheader",
+                "heading",
+                "paragraph"
+              ]
+            },
+            "buttons": {
+              "type": "_cb-column",
+              "settings": {
+                "direction": "row",
+                "horizontal": "right",
+                "vertical": "center",
+                "gap": 12,
+                "width": "fit"
+              },
+              "blocks": {
+                "ask": {
+                  "type": "cb-button",
+                  "settings": {
+                    "label": "Ask the Pro Shop",
+                    "link": "/pages/contact",
+                    "style": "solid",
+                    "size": 18,
+                    "height": 48,
+                    "radius": 2,
+                    "font": "heading",
+                    "uppercase": true,
+                    "icon": "chat",
+                    "icon_position": "before",
+                    "padding_x": 19
+                  }
+                },
+                "visit": {
+                  "type": "cb-button",
+                  "settings": {
+                    "label": "Visit the shop",
+                    "link": "/pages/contact",
+                    "style": "solid",
+                    "size": 10,
+                    "height": 48,
+                    "radius": 2,
+                    "font": "heading",
+                    "uppercase": true,
+                    "button_color": "#222222",
+                    "border_color": "#222222",
+                    "icon": "store",
+                    "icon_position": "before",
+                    "padding_x": 19
+                  }
+                }
+              },
+              "block_order": [
+                "ask",
+                "visit"
+              ]
+            }
+          },
+          "block_order": [
+            "text",
+            "buttons"
+          ]
+        }
+      },
+      "block_order": [
+        "row"
+      ],
+      "settings": {
+        "max_width": 1320,
+        "background_color": "#0b0b0b",
+        "muted_text_color": "#a1a1aa",
+        "padding_top": 16,
+        "padding_bottom": 48
+      }
     }
   },
   "order": [
+    "cb_main",
+    "why",
+    "tech",
+    "cta",
     "main",
     "product_recommendations_qggXJq"
   ]

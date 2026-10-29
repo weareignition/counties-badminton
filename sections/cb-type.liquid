@@ -1,0 +1,290 @@
+{%- liquid
+  assign s = section.settings
+  assign font_scope = '#cb-type-' | append: section.id
+-%}
+
+{% render 'cb-font-styles',
+  selector: font_scope,
+  prefix: 'cbty',
+  heading_font: s.heading_font,
+  body_font: s.body_font
+%}
+
+<section
+  id="cb-type-{{ section.id }}"
+  class="cb-type"
+  style="
+    --cbty-bg: {{ s.background_color }};
+    --cbty-card: {{ s.card_background_color }};
+    --cbty-border: {{ s.border_color }};
+    --cbty-image-bg: {{ s.image_background_color }};
+    --cbty-text: {{ s.text_color }};
+    --cbty-muted: {{ s.muted_text_color }};
+    --cbty-accent: {{ s.accent_color }};
+    --cbty-radius: {{ s.card_radius }}px;
+    --cbty-max-width: {{ s.max_width }}px;
+    --cbty-stack-gap: {{ s.stack_gap }}px;
+    --cbty-pt: {{ s.padding_top }}px;
+    --cbty-pb: {{ s.padding_bottom }}px;
+  "
+>
+  <div class="cb-type__inner">
+    {% content_for 'blocks' %}
+  </div>
+</section>
+
+{% stylesheet %}
+  .cb-type {
+    color: var(--cbty-text);
+    background: var(--cbty-bg);
+    padding: calc(var(--cbty-pt) * 0.75) 16px calc(var(--cbty-pb) * 0.75);
+  }
+
+  .cb-type__inner {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--cbty-stack-gap) * 0.8);
+    max-width: var(--cbty-max-width);
+    margin-inline: auto;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-type {
+      padding: var(--cbty-pt) 32px var(--cbty-pb);
+    }
+
+    .cb-type__inner {
+      gap: var(--cbty-stack-gap);
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .cb-type {
+      padding-inline: 48px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Shop by type",
+  "tag": "div",
+  "class": "section-wrapper",
+  "blocks": [
+    { "type": "_cb-type-header" },
+    { "type": "_cb-type-cards" }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width",
+      "min": 960,
+      "max": 1800,
+      "step": 20,
+      "unit": "px",
+      "default": 1400
+    },
+    {
+      "type": "range",
+      "id": "stack_gap",
+      "label": "Space between header and cards",
+      "min": 8,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Card corner radius",
+      "min": 0,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 6
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "info": "Used for the heading (bold) and card titles (medium).",
+      "default": "space_grotesk_n7"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "inter_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#0b0b0b"
+    },
+    {
+      "type": "color",
+      "id": "card_background_color",
+      "label": "Cards",
+      "default": "#181818"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Card borders and dividers",
+      "default": "#ffffff0f"
+    },
+    {
+      "type": "color",
+      "id": "image_background_color",
+      "label": "Photo background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "muted_text_color",
+      "label": "Subtitles",
+      "default": "#a1a1aa"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "info": "Eyebrow and card links.",
+      "default": "#d71f27"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Shop by type",
+      "category": "t:categories.collections",
+      "blocks": {
+        "header": {
+          "type": "_cb-type-header",
+          "blocks": {
+            "eyebrow": { "type": "cb-subheader", "settings": { "subheader_text": "Shop by type", "letter_spacing": 0 } },
+            "heading": {
+              "type": "cb-heading",
+              "settings": { "heading_text": "Find the extras you need.", "wrap": "wrap" }
+            }
+          },
+          "block_order": ["eyebrow", "heading"]
+        },
+        "cards": {
+          "type": "_cb-type-cards",
+          "blocks": {
+            "bags": {
+              "type": "_cb-type-card",
+              "settings": {
+                "collection": "racket-bags",
+                "product_type": "Racket Bags",
+                "subtitle": "6-pack, 9-pack & backpacks",
+                "link_label": "Explore bags"
+              }
+            },
+            "grips": {
+              "type": "_cb-type-card",
+              "settings": {
+                "collection": "accessories",
+                "product_type": "Grips",
+                "match_keywords": "grip",
+                "subtitle": "Overgrips, replacement & towel",
+                "link_label": "View grips"
+              }
+            },
+            "grommets": {
+              "type": "_cb-type-card",
+              "settings": {
+                "collection": "accessories",
+                "product_type": "Grommets",
+                "match_keywords": "grommet, grommets, eyelet, eyelets",
+                "subtitle": "Single eyelets & shared strips",
+                "link_label": "Shop grommets"
+              }
+            },
+            "wristbands": {
+              "type": "_cb-type-card",
+              "settings": {
+                "collection": "accessories",
+                "product_type": "Wristbands",
+                "match_keywords": "wristband, wristbands",
+                "subtitle": "High-absorbency cotton terry",
+                "link_label": "Browse bands"
+              }
+            },
+            "tubes": {
+              "type": "_cb-type-card",
+              "settings": {
+                "collection": "accessories",
+                "product_type": "Shuttle Tubes",
+                "match_keywords": "tube, tubes, caddy",
+                "subtitle": "Thermal tube covers & caddies",
+                "link_label": "View tubes"
+              }
+            },
+            "sundries": {
+              "type": "_cb-type-card",
+              "settings": {
+                "collection": "accessories",
+                "product_type": "Accessories & Sundries",
+                "match_keywords": "support, sleeve, strap, tape, ink",
+                "subtitle": "Tape, stencil ink & tools",
+                "link_label": "See sundries"
+              }
+            }
+          },
+          "block_order": ["bags", "grips", "grommets", "wristbands", "tubes", "sundries"]
+        }
+      },
+      "block_order": ["header", "cards"]
+    }
+  ]
+}
+{% endschema %}

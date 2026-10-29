@@ -1,0 +1,1063 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "blocks": {
+        "heading": {
+          "type": "text",
+          "name": "t:names.title",
+          "settings": {
+            "text": "<h1>{{ closest.page.title }}</h1>",
+            "width": "100%",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "h2",
+            "font": "var(--font-body--family)",
+            "font_size": "",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "text_color": "",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "page-content": {
+          "type": "page-content",
+          "settings": {
+            "text_color": ""
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "heading",
+        "page-content"
+      ],
+      "disabled": true,
+      "settings": {
+        "content_direction": "column",
+        "gap": 32,
+        "background_color": "",
+        "padding-block-start": 40,
+        "padding-block-end": 80
+      }
+    },
+    "cb_blank_dehrE8": {
+      "type": "cb-blank",
+      "blocks": {
+        "cb_subheader_F8UEwp": {
+          "type": "cb-subheader",
+          "name": "[CB] Subheader",
+          "settings": {
+            "subheader_text": "VISIT US",
+            "secondary": "",
+            "show_dot": false,
+            "size": 10,
+            "weight": "strong",
+            "color": "accent",
+            "custom_color": "#ffffff",
+            "letter_spacing": 10,
+            "uppercase": true,
+            "space_below": 0,
+            "width": "auto",
+            "width_px": 400,
+            "background_color": "",
+            "padding_y": 0,
+            "padding_x": 0,
+            "border_width": 0,
+            "border_color": "",
+            "radius": 0
+          },
+          "blocks": {}
+        },
+        "cb_heading_t3rgdx": {
+          "type": "cb-heading",
+          "name": "[CB] Heading",
+          "settings": {
+            "heading_text": "Your local badminton specialists.&nbsp;",
+            "tag": "h2",
+            "size": 32,
+            "mobile_sizing": "scale",
+            "mobile_scale": 82,
+            "fluid_min": 28,
+            "fluid_vw": 6,
+            "weight": "font",
+            "color": "text",
+            "custom_color": "#ffffff",
+            "line_height": 115,
+            "letter_spacing": -1,
+            "uppercase": false,
+            "wrap": "balance",
+            "width": "auto",
+            "width_px": 400,
+            "max_width": 0,
+            "background_color": "",
+            "padding_y": 0,
+            "padding_x": 0,
+            "border_width": 0,
+            "border_color": "",
+            "radius": 0
+          },
+          "blocks": {}
+        },
+        "cb_paragraph_YPFpdq": {
+          "type": "cb-paragraph",
+          "name": "[CB] Paragraph",
+          "settings": {
+            "body_text": "<p>Shop, collect, arrange racket drop-off, or talk through your equipment in person at 41R Elliot Street, Papakura.</p>",
+            "size": 16,
+            "mobile_sizing": "same",
+            "mobile_size": 14,
+            "fluid_vw": 2,
+            "weight": "regular",
+            "color": "muted",
+            "custom_color": "#ffffff",
+            "line_height": 160,
+            "letter_spacing": 0,
+            "wrap": "wrap",
+            "width": "auto",
+            "width_px": 400,
+            "max_width_unit": "none",
+            "max_width_px": 640,
+            "max_width_ch": 60,
+            "background_color": "",
+            "padding_y": 0,
+            "padding_x": 0,
+            "border_width": 0,
+            "border_color": "",
+            "radius": 0
+          },
+          "blocks": {}
+        },
+        "cb_button_4dppcQ": {
+          "type": "cb-button",
+          "name": "[CB] Button",
+          "settings": {
+            "label": "Get directions →",
+            "link": "https://www.google.com/maps/dir/?api=1&destination=41R%20Elliot%20Street%2C%20Papakura%2C%20Auckland",
+            "new_tab": true,
+            "style": "solid",
+            "size": 14,
+            "radius": 8,
+            "uppercase": false,
+            "button_color": "#b8262f",
+            "text_color": "{{ settings.color_palette.background }}",
+            "border_color": "",
+            "custom_icon_tint": true,
+            "icon_position": "after",
+            "alignment": "auto",
+            "full_width": false,
+            "space_above": 0
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "cb_subheader_F8UEwp",
+        "cb_heading_t3rgdx",
+        "cb_paragraph_YPFpdq",
+        "cb_button_4dppcQ"
+      ],
+      "custom_css": [],
+      "name": "[CB] Blank section",
+      "settings": {
+        "alignment": "left",
+        "max_width": 1600,
+        "gap": 12,
+        "text_gap": 12,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "#111111",
+        "text_color": "#ffffff",
+        "soft_text_color": "#dcdcde",
+        "muted_text_color": "#d0d0d4",
+        "accent_color": "#d71f27",
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
+    },
+    "cb_blank_8NKnCi": {
+      "type": "cb-blank",
+      "blocks": {
+        "cb_row_gtTry6": {
+          "type": "_cb-row",
+          "settings": {
+            "layout": "100",
+            "custom_layout": "1fr 2fr",
+            "tablet": "auto",
+            "mobile": "1",
+            "reverse_mobile": false,
+            "align": "stretch",
+            "column_gap": 24,
+            "row_gap": 24,
+            "width": "full",
+            "width_px": 400,
+            "background_color": "",
+            "padding_y": 0,
+            "padding_x": 0,
+            "border_width": 0,
+            "border_color": "",
+            "radius": 0
+          },
+          "blocks": {
+            "cb_column_hkF379": {
+              "type": "_cb-column",
+              "settings": {
+                "vertical": "top",
+                "horizontal": "left",
+                "gap": 16,
+                "text_gap": 12,
+                "width": "full",
+                "width_px": 400,
+                "background_color": "#1B1B1B",
+                "padding_y": 30,
+                "padding_x": 30,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 8
+              },
+              "blocks": {
+                "cb_heading_yM99gP": {
+                  "type": "cb-heading",
+                  "name": "[CB] Heading",
+                  "settings": {
+                    "heading_text": "&nbsp;Can I collect my order in Papakura?&nbsp;",
+                    "tag": "h3",
+                    "size": 18,
+                    "mobile_sizing": "scale",
+                    "mobile_scale": 82,
+                    "fluid_min": 28,
+                    "fluid_vw": 6,
+                    "weight": "font",
+                    "color": "text",
+                    "custom_color": "#ffffff",
+                    "line_height": 115,
+                    "letter_spacing": -1,
+                    "uppercase": false,
+                    "wrap": "balance",
+                    "width": "auto",
+                    "width_px": 400,
+                    "max_width": 0,
+                    "background_color": "",
+                    "padding_y": 0,
+                    "padding_x": 0,
+                    "border_width": 0,
+                    "border_color": "",
+                    "radius": 0
+                  },
+                  "blocks": {}
+                },
+                "cb_paragraph_tCzAnp": {
+                  "type": "cb-paragraph",
+                  "name": "[CB] Paragraph",
+                  "settings": {
+                    "body_text": "<p>Click & collect is available from 41R Elliot Street, Papakura. Wait for confirmation that your order is ready, then collect during shop hours.</p>",
+                    "size": 14,
+                    "mobile_sizing": "same",
+                    "mobile_size": 14,
+                    "fluid_vw": 2,
+                    "weight": "regular",
+                    "color": "muted",
+                    "custom_color": "#ffffff",
+                    "line_height": 160,
+                    "letter_spacing": 0,
+                    "wrap": "wrap",
+                    "width": "auto",
+                    "width_px": 400,
+                    "max_width_unit": "none",
+                    "max_width_px": 640,
+                    "max_width_ch": 60,
+                    "background_color": "",
+                    "padding_y": 0,
+                    "padding_x": 0,
+                    "border_width": 0,
+                    "border_color": "",
+                    "radius": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "cb_heading_yM99gP",
+                "cb_paragraph_tCzAnp"
+              ]
+            },
+            "cb_column_9mBGXt": {
+              "type": "_cb-column",
+              "settings": {
+                "vertical": "top",
+                "horizontal": "left",
+                "gap": 16,
+                "text_gap": 12,
+                "width": "full",
+                "width_px": 400,
+                "background_color": "#1B1B1B",
+                "padding_y": 30,
+                "padding_x": 30,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 8
+              },
+              "blocks": {
+                "cb_heading_HRYFUt": {
+                  "type": "cb-heading",
+                  "name": "[CB] Heading",
+                  "settings": {
+                    "heading_text": "&nbsp;Can I drop off a racket for stringing?&nbsp;",
+                    "tag": "h3",
+                    "size": 18,
+                    "mobile_sizing": "scale",
+                    "mobile_scale": 82,
+                    "fluid_min": 28,
+                    "fluid_vw": 6,
+                    "weight": "font",
+                    "color": "text",
+                    "custom_color": "#ffffff",
+                    "line_height": 115,
+                    "letter_spacing": -1,
+                    "uppercase": false,
+                    "wrap": "balance",
+                    "width": "auto",
+                    "width_px": 400,
+                    "max_width": 0,
+                    "background_color": "",
+                    "padding_y": 0,
+                    "padding_x": 0,
+                    "border_width": 0,
+                    "border_color": "",
+                    "radius": 0
+                  },
+                  "blocks": {}
+                },
+                "cb_paragraph_9PgKEU": {
+                  "type": "cb-paragraph",
+                  "name": "[CB] Paragraph",
+                  "settings": {
+                    "body_text": "<p>Yes. Racket drop-off can be arranged during office hours, weekdays 9:30 am–5:00 pm, at 41R Elliot Street, Papakura.</p>",
+                    "size": 14,
+                    "mobile_sizing": "same",
+                    "mobile_size": 14,
+                    "fluid_vw": 2,
+                    "weight": "regular",
+                    "color": "muted",
+                    "custom_color": "#ffffff",
+                    "line_height": 160,
+                    "letter_spacing": 0,
+                    "wrap": "wrap",
+                    "width": "auto",
+                    "width_px": 400,
+                    "max_width_unit": "none",
+                    "max_width_px": 640,
+                    "max_width_ch": 60,
+                    "background_color": "",
+                    "padding_y": 0,
+                    "padding_x": 0,
+                    "border_width": 0,
+                    "border_color": "",
+                    "radius": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "cb_heading_HRYFUt",
+                "cb_paragraph_9PgKEU"
+              ]
+            },
+            "cb_column_AkEGzf": {
+              "type": "_cb-column",
+              "settings": {
+                "vertical": "top",
+                "horizontal": "left",
+                "gap": 16,
+                "text_gap": 12,
+                "width": "full",
+                "width_px": 400,
+                "background_color": "#1B1B1B",
+                "padding_y": 30,
+                "padding_x": 30,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 8
+              },
+              "blocks": {
+                "cb_heading_C33UEq": {
+                  "type": "cb-heading",
+                  "name": "[CB] Heading",
+                  "settings": {
+                    "heading_text": "&nbsp;What are the Pro Shop opening hours?&nbsp;",
+                    "tag": "h3",
+                    "size": 18,
+                    "mobile_sizing": "scale",
+                    "mobile_scale": 82,
+                    "fluid_min": 28,
+                    "fluid_vw": 6,
+                    "weight": "font",
+                    "color": "text",
+                    "custom_color": "#ffffff",
+                    "line_height": 115,
+                    "letter_spacing": -1,
+                    "uppercase": false,
+                    "wrap": "balance",
+                    "width": "auto",
+                    "width_px": 400,
+                    "max_width": 0,
+                    "background_color": "",
+                    "padding_y": 0,
+                    "padding_x": 0,
+                    "border_width": 0,
+                    "border_color": "",
+                    "radius": 0
+                  },
+                  "blocks": {}
+                },
+                "cb_paragraph_PBr3fp": {
+                  "type": "cb-paragraph",
+                  "name": "[CB] Paragraph",
+                  "settings": {
+                    "body_text": "<p>The shop is open Monday–Friday, 3:30 pm–8:00 pm, and weekends, 10:00 am–6:00 pm.</p>",
+                    "size": 14,
+                    "mobile_sizing": "same",
+                    "mobile_size": 14,
+                    "fluid_vw": 2,
+                    "weight": "regular",
+                    "color": "muted",
+                    "custom_color": "#ffffff",
+                    "line_height": 160,
+                    "letter_spacing": 0,
+                    "wrap": "wrap",
+                    "width": "auto",
+                    "width_px": 400,
+                    "max_width_unit": "none",
+                    "max_width_px": 640,
+                    "max_width_ch": 60,
+                    "background_color": "",
+                    "padding_y": 0,
+                    "padding_x": 0,
+                    "border_width": 0,
+                    "border_color": "",
+                    "radius": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "cb_heading_C33UEq",
+                "cb_paragraph_PBr3fp"
+              ]
+            },
+            "cb_column_CUfnQc": {
+              "type": "_cb-column",
+              "settings": {
+                "vertical": "top",
+                "horizontal": "left",
+                "gap": 16,
+                "text_gap": 12,
+                "width": "full",
+                "width_px": 400,
+                "background_color": "#1B1B1B",
+                "padding_y": 30,
+                "padding_x": 30,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 8
+              },
+              "blocks": {
+                "cb_heading_qLcmmf": {
+                  "type": "cb-heading",
+                  "name": "[CB] Heading",
+                  "settings": {
+                    "heading_text": "&nbsp;How do I choose the right racket?&nbsp;",
+                    "tag": "h3",
+                    "size": 18,
+                    "mobile_sizing": "scale",
+                    "mobile_scale": 82,
+                    "fluid_min": 28,
+                    "fluid_vw": 6,
+                    "weight": "font",
+                    "color": "text",
+                    "custom_color": "#ffffff",
+                    "line_height": 115,
+                    "letter_spacing": -1,
+                    "uppercase": false,
+                    "wrap": "balance",
+                    "width": "auto",
+                    "width_px": 400,
+                    "max_width": 0,
+                    "background_color": "",
+                    "padding_y": 0,
+                    "padding_x": 0,
+                    "border_width": 0,
+                    "border_color": "",
+                    "radius": 0
+                  },
+                  "blocks": {}
+                },
+                "cb_paragraph_F7BeEx": {
+                  "type": "cb-paragraph",
+                  "name": "[CB] Paragraph",
+                  "settings": {
+                    "body_text": "<p>Start with our first-racket guide, then talk with the team if you want help comparing weight, balance, flex and frame shape.<br/></p>",
+                    "size": 14,
+                    "mobile_sizing": "same",
+                    "mobile_size": 14,
+                    "fluid_vw": 2,
+                    "weight": "regular",
+                    "color": "muted",
+                    "custom_color": "#ffffff",
+                    "line_height": 160,
+                    "letter_spacing": 0,
+                    "wrap": "wrap",
+                    "width": "auto",
+                    "width_px": 400,
+                    "max_width_unit": "none",
+                    "max_width_px": 640,
+                    "max_width_ch": 60,
+                    "background_color": "",
+                    "padding_y": 0,
+                    "padding_x": 0,
+                    "border_width": 0,
+                    "border_color": "",
+                    "radius": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "cb_heading_qLcmmf",
+                "cb_paragraph_F7BeEx"
+              ]
+            },
+            "cb_column_ytkLwD": {
+              "type": "_cb-column",
+              "settings": {
+                "vertical": "top",
+                "horizontal": "left",
+                "gap": 16,
+                "text_gap": 12,
+                "width": "full",
+                "width_px": 400,
+                "background_color": "#1B1B1B",
+                "padding_y": 30,
+                "padding_x": 30,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 8
+              },
+              "blocks": {
+                "cb_heading_8ch63R": {
+                  "type": "cb-heading",
+                  "name": "[CB] Heading",
+                  "settings": {
+                    "heading_text": "&nbsp;What string tension should I choose?&nbsp;",
+                    "tag": "h3",
+                    "size": 18,
+                    "mobile_sizing": "scale",
+                    "mobile_scale": 82,
+                    "fluid_min": 28,
+                    "fluid_vw": 6,
+                    "weight": "font",
+                    "color": "text",
+                    "custom_color": "#ffffff",
+                    "line_height": 115,
+                    "letter_spacing": -1,
+                    "uppercase": false,
+                    "wrap": "balance",
+                    "width": "auto",
+                    "width_px": 400,
+                    "max_width": 0,
+                    "background_color": "",
+                    "padding_y": 0,
+                    "padding_x": 0,
+                    "border_width": 0,
+                    "border_color": "",
+                    "radius": 0
+                  },
+                  "blocks": {}
+                },
+                "cb_paragraph_YGF9tH": {
+                  "type": "cb-paragraph",
+                  "name": "[CB] Paragraph",
+                  "settings": {
+                    "body_text": "<p>The right tension depends on your technique, playing frequency and preferred feel. Our tension guide explains the basics, and our stringers can help you choose.</p>",
+                    "size": 14,
+                    "mobile_sizing": "same",
+                    "mobile_size": 14,
+                    "fluid_vw": 2,
+                    "weight": "regular",
+                    "color": "muted",
+                    "custom_color": "#ffffff",
+                    "line_height": 160,
+                    "letter_spacing": 0,
+                    "wrap": "wrap",
+                    "width": "auto",
+                    "width_px": 400,
+                    "max_width_unit": "none",
+                    "max_width_px": 640,
+                    "max_width_ch": 60,
+                    "background_color": "",
+                    "padding_y": 0,
+                    "padding_x": 0,
+                    "border_width": 0,
+                    "border_color": "",
+                    "radius": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "cb_heading_8ch63R",
+                "cb_paragraph_YGF9tH"
+              ]
+            },
+            "cb_column_4dQjya": {
+              "type": "_cb-column",
+              "settings": {
+                "vertical": "top",
+                "horizontal": "left",
+                "gap": 16,
+                "text_gap": 12,
+                "width": "full",
+                "width_px": 400,
+                "background_color": "#1B1B1B",
+                "padding_y": 30,
+                "padding_x": 30,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 8
+              },
+              "blocks": {
+                "cb_heading_Rrhxfa": {
+                  "type": "cb-heading",
+                  "name": "[CB] Heading",
+                  "settings": {
+                    "heading_text": "&nbsp;Which shuttle speed should I use?&nbsp;",
+                    "tag": "h3",
+                    "size": 18,
+                    "mobile_sizing": "scale",
+                    "mobile_scale": 82,
+                    "fluid_min": 28,
+                    "fluid_vw": 6,
+                    "weight": "font",
+                    "color": "text",
+                    "custom_color": "#ffffff",
+                    "line_height": 115,
+                    "letter_spacing": -1,
+                    "uppercase": false,
+                    "wrap": "balance",
+                    "width": "auto",
+                    "width_px": 400,
+                    "max_width": 0,
+                    "background_color": "",
+                    "padding_y": 0,
+                    "padding_x": 0,
+                    "border_width": 0,
+                    "border_color": "",
+                    "radius": 0
+                  },
+                  "blocks": {}
+                },
+                "cb_paragraph_KiREQ8": {
+                  "type": "cb-paragraph",
+                  "name": "[CB] Paragraph",
+                  "settings": {
+                    "body_text": "<p>It depends on the temperature and conditions in your hall: warmer halls suit a slower shuttle and colder halls a faster one. Our shuttle speed guide explains the ratings, and the team can help you choose.</p>",
+                    "size": 14,
+                    "mobile_sizing": "same",
+                    "mobile_size": 14,
+                    "fluid_vw": 2,
+                    "weight": "regular",
+                    "color": "muted",
+                    "custom_color": "#ffffff",
+                    "line_height": 160,
+                    "letter_spacing": 0,
+                    "wrap": "wrap",
+                    "width": "auto",
+                    "width_px": 400,
+                    "max_width_unit": "none",
+                    "max_width_px": 640,
+                    "max_width_ch": 60,
+                    "background_color": "",
+                    "padding_y": 0,
+                    "padding_x": 0,
+                    "border_width": 0,
+                    "border_color": "",
+                    "radius": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "cb_heading_Rrhxfa",
+                "cb_paragraph_KiREQ8"
+              ]
+            },
+            "cb_column_JKeyMW": {
+              "type": "_cb-column",
+              "settings": {
+                "vertical": "top",
+                "horizontal": "left",
+                "gap": 16,
+                "text_gap": 12,
+                "width": "full",
+                "width_px": 400,
+                "background_color": "#1B1B1B",
+                "padding_y": 30,
+                "padding_x": 30,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 8
+              },
+              "blocks": {
+                "cb_heading_tUjXyc": {
+                  "type": "cb-heading",
+                  "name": "[CB] Heading",
+                  "settings": {
+                    "heading_text": "&nbsp;How do I choose a comfortable grip?&nbsp;",
+                    "tag": "h3",
+                    "size": 18,
+                    "mobile_sizing": "scale",
+                    "mobile_scale": 82,
+                    "fluid_min": 28,
+                    "fluid_vw": 6,
+                    "weight": "font",
+                    "color": "text",
+                    "custom_color": "#ffffff",
+                    "line_height": 115,
+                    "letter_spacing": -1,
+                    "uppercase": false,
+                    "wrap": "balance",
+                    "width": "auto",
+                    "width_px": 400,
+                    "max_width": 0,
+                    "background_color": "",
+                    "padding_y": 0,
+                    "padding_x": 0,
+                    "border_width": 0,
+                    "border_color": "",
+                    "radius": 0
+                  },
+                  "blocks": {}
+                },
+                "cb_paragraph_NXTqwT": {
+                  "type": "cb-paragraph",
+                  "name": "[CB] Paragraph",
+                  "settings": {
+                    "body_text": "<p>Grip thickness, texture and absorbency all affect control and comfort. Our grip guide covers simple adjustments for hand size, sweat and playing intensity.</p>",
+                    "size": 14,
+                    "mobile_sizing": "same",
+                    "mobile_size": 14,
+                    "fluid_vw": 2,
+                    "weight": "regular",
+                    "color": "muted",
+                    "custom_color": "#ffffff",
+                    "line_height": 160,
+                    "letter_spacing": 0,
+                    "wrap": "wrap",
+                    "width": "auto",
+                    "width_px": 400,
+                    "max_width_unit": "none",
+                    "max_width_px": 640,
+                    "max_width_ch": 60,
+                    "background_color": "",
+                    "padding_y": 0,
+                    "padding_x": 0,
+                    "border_width": 0,
+                    "border_color": "",
+                    "radius": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "cb_heading_tUjXyc",
+                "cb_paragraph_NXTqwT"
+              ]
+            },
+            "cb_column_Y8eMh7": {
+              "type": "_cb-column",
+              "settings": {
+                "vertical": "top",
+                "horizontal": "left",
+                "gap": 16,
+                "text_gap": 12,
+                "width": "full",
+                "width_px": 400,
+                "background_color": "#1B1B1B",
+                "padding_y": 30,
+                "padding_x": 30,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 8
+              },
+              "blocks": {
+                "cb_heading_WTCLU4": {
+                  "type": "cb-heading",
+                  "name": "[CB] Heading",
+                  "settings": {
+                    "heading_text": "&nbsp;Do you ship orders, and can I return an item?&nbsp;",
+                    "tag": "h3",
+                    "size": 18,
+                    "mobile_sizing": "scale",
+                    "mobile_scale": 82,
+                    "fluid_min": 28,
+                    "fluid_vw": 6,
+                    "weight": "font",
+                    "color": "text",
+                    "custom_color": "#ffffff",
+                    "line_height": 115,
+                    "letter_spacing": -1,
+                    "uppercase": false,
+                    "wrap": "balance",
+                    "width": "auto",
+                    "width_px": 400,
+                    "max_width": 0,
+                    "background_color": "",
+                    "padding_y": 0,
+                    "padding_x": 0,
+                    "border_width": 0,
+                    "border_color": "",
+                    "radius": 0
+                  },
+                  "blocks": {}
+                },
+                "cb_paragraph_AeV36C": {
+                  "type": "cb-paragraph",
+                  "name": "[CB] Paragraph",
+                  "settings": {
+                    "body_text": "<p>We ship throughout New Zealand. Orders are dispatched within 2 working days, and delivery usually takes 2–3 business days in urban areas or 3–5 in rural areas. If an item is faulty or damaged, we’ll help with a repair, replacement or refund under the manufacturer’s warranty; we can’t accept change-of-mind returns. See our <a href=\"/policies/shipping-policy\" title=\"Shipping policy\">shipping policy</a> and <a href=\"/policies/refund-policy\" title=\"Refund policy\">refund policy</a> for full details.</p>",
+                    "size": 14,
+                    "mobile_sizing": "same",
+                    "mobile_size": 14,
+                    "fluid_vw": 2,
+                    "weight": "regular",
+                    "color": "muted",
+                    "custom_color": "#ffffff",
+                    "line_height": 160,
+                    "letter_spacing": 0,
+                    "wrap": "wrap",
+                    "width": "auto",
+                    "width_px": 400,
+                    "max_width_unit": "none",
+                    "max_width_px": 640,
+                    "max_width_ch": 60,
+                    "background_color": "",
+                    "padding_y": 0,
+                    "padding_x": 0,
+                    "border_width": 0,
+                    "border_color": "",
+                    "radius": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "cb_heading_WTCLU4",
+                "cb_paragraph_AeV36C"
+              ]
+            }
+          },
+          "block_order": [
+            "cb_column_hkF379",
+            "cb_column_9mBGXt",
+            "cb_column_AkEGzf",
+            "cb_column_CUfnQc",
+            "cb_column_ytkLwD",
+            "cb_column_4dQjya",
+            "cb_column_JKeyMW",
+            "cb_column_Y8eMh7"
+          ]
+        }
+      },
+      "block_order": [
+        "cb_row_gtTry6"
+      ],
+      "name": "[CB] Blank section",
+      "settings": {
+        "alignment": "left",
+        "max_width": 1600,
+        "gap": 32,
+        "text_gap": 12,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "#111111",
+        "text_color": "#ffffff",
+        "soft_text_color": "#dcdcde",
+        "muted_text_color": "#d0d0d4",
+        "accent_color": "#d71f27",
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
+    },
+    "cb_advice_4CwMmz": {
+      "type": "cb-advice",
+      "blocks": {
+        "cb_advice_content_mNYTm6": {
+          "type": "_cb-advice-content",
+          "settings": {
+            "alignment": "left",
+            "gap": 12
+          },
+          "blocks": {
+            "cb_subheader_mWqxKb": {
+              "type": "cb-subheader",
+              "settings": {
+                "subheader_text": "STILL NEED HELP?",
+                "secondary": "",
+                "show_dot": false,
+                "size": 10,
+                "weight": "strong",
+                "color": "accent",
+                "custom_color": "#ffffff",
+                "letter_spacing": 0,
+                "uppercase": true,
+                "space_below": 0,
+                "width": "auto",
+                "width_px": 400,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_heading_RWL3tW": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "&nbsp;Talk to a badminton specialist.&nbsp;",
+                "tag": "h2",
+                "size": 32,
+                "mobile_sizing": "scale",
+                "mobile_scale": 82,
+                "fluid_min": 28,
+                "fluid_vw": 6,
+                "weight": "font",
+                "color": "text",
+                "custom_color": "#ffffff",
+                "line_height": 115,
+                "letter_spacing": -1,
+                "uppercase": false,
+                "wrap": "wrap",
+                "width": "auto",
+                "width_px": 400,
+                "max_width": 0,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_paragraph_xNwLLe": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>Visit the Pro Shop in Papakura or send an enquiry and the team will help you find the right next step.<br/></p>",
+                "size": 14,
+                "mobile_sizing": "same",
+                "mobile_size": 14,
+                "fluid_vw": 2,
+                "weight": "regular",
+                "color": "muted",
+                "custom_color": "#ffffff",
+                "line_height": 160,
+                "letter_spacing": -1,
+                "wrap": "wrap",
+                "width": "auto",
+                "width_px": 400,
+                "max_width_unit": "px",
+                "max_width_px": 960,
+                "max_width_ch": 60,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_advice_buttons_zPkCq6": {
+              "type": "_cb-advice-buttons",
+              "settings": {
+                "gap": 12,
+                "space_above": 16
+              },
+              "blocks": {
+                "cb_advice_button_XFVPGF": {
+                  "type": "_cb-advice-button",
+                  "settings": {
+                    "label": "Contact the Pro Shop",
+                    "link": "shopify://pages/contact",
+                    "directions_address": "",
+                    "style": "primary",
+                    "icon": "arrow",
+                    "custom_icon_tint": true,
+                    "new_tab": false
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "cb_advice_button_XFVPGF"
+              ]
+            }
+          },
+          "block_order": [
+            "cb_subheader_mWqxKb",
+            "cb_heading_RWL3tW",
+            "cb_paragraph_xNwLLe",
+            "cb_advice_buttons_zPkCq6"
+          ]
+        }
+      },
+      "block_order": [
+        "cb_advice_content_mNYTm6"
+      ],
+      "name": "[CB] Advice banner",
+      "settings": {
+        "max_width": 1400,
+        "panel_padding": 44,
+        "panel_radius": 10,
+        "show_border": false,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "{{ settings.color_palette.foreground }}",
+        "panel_background_color": "#181818",
+        "border_color": "#ffffff14",
+        "text_color": "#b8262f",
+        "muted_text_color": "#a1a1aa",
+        "accent_color": "#d71f27",
+        "secondary_button_color": "#2a2a2a",
+        "padding_top": 32,
+        "padding_bottom": 32
+      }
+    }
+  },
+  "order": [
+    "main",
+    "cb_blank_dehrE8",
+    "cb_blank_8NKnCi",
+    "cb_advice_4CwMmz"
+  ]
+}

@@ -13,6 +13,10 @@
     align-items: end;
   }
 
+  .cb-category__header > .cb-paragraph {
+    margin-top: 12px;
+  }
+
   .cb-category__header--divider {
     padding-bottom: 24px;
     border-bottom: 1px solid var(--cbc-border);
@@ -30,7 +34,7 @@
       grid-column: 1;
     }
 
-    .cb-category__header--split > .cb-category__text {
+    .cb-category__header--split > .cb-paragraph {
       grid-column: 2;
       grid-row: span 2;
       align-self: end;
@@ -44,9 +48,10 @@
   "name": "[CB] Header",
   "tag": null,
   "blocks": [
-    { "type": "_cb-category-eyebrow" },
-    { "type": "_cb-category-heading" },
-    { "type": "_cb-category-text" }
+    { "type": "cb-subheader" },
+    { "type": "cb-heading" },
+    { "type": "cb-paragraph" },
+    { "type": "cb-button" }
   ],
   "settings": [
     {
@@ -82,9 +87,30 @@
     {
       "name": "[CB] Header",
       "blocks": {
-        "eyebrow": { "type": "_cb-category-eyebrow" },
-        "heading": { "type": "_cb-category-heading" },
-        "text": { "type": "_cb-category-text" }
+        "eyebrow": {
+          "type": "cb-subheader",
+          "settings": { "subheader_text": "Shop by category", "size": 11, "letter_spacing": 12, "space_below": 10 }
+        },
+        "heading": {
+          "type": "cb-heading",
+          "settings": {
+            "heading_text": "Shop badminton gear",
+            "size": 40,
+            "mobile_sizing": "fluid",
+            "line_height": 110,
+            "letter_spacing": -2
+          }
+        },
+        "text": {
+          "type": "cb-paragraph",
+          "settings": {
+            "body_text": "<p>Tell customers what makes these categories special.</p>",
+            "size": 13,
+            "mobile_size": 13,
+            "line_height": 155,
+            "max_width_unit": "ch"
+          }
+        }
       },
       "block_order": ["eyebrow", "heading", "text"]
     }

@@ -1,0 +1,62 @@
+{%- if block.settings.note_text != blank -%}
+  <p class="cb-lab__note" style="--cb-lab-note-text-size: {{ block.settings.text_size }}px; --cb-lab-note-text-weight: {{ block.settings.text_weight }};" {{ block.shopify_attributes }}>{{ block.settings.note_text | escape }}</p>
+{%- endif -%}
+
+{% stylesheet %}
+  .cb-lab__note {
+    margin: 0;
+    font-family: var(--cbl-font-body);
+    font-weight: var(--cb-lab-note-text-weight, var(--cbl-font-body-weight));
+    font-size: var(--cb-lab-note-text-size, 10px);
+    line-height: 1.5;
+    color: var(--cbl-muted);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Note",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "note_text",
+      "label": "Text",
+      "default": "Same-day / 24-hr turnaround in Papakura"
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "text_weight",
+      "label": "Text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    }
+  ],
+  "presets": [{ "name": "[CB] Note" }]
+}
+{% endschema %}

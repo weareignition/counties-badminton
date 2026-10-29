@@ -1,0 +1,323 @@
+{%- comment -%}
+  An icon card: icon, title, text and a link. Always shown. With no link set it links to the collection of the page
+  the section is on (when there is one).
+{%- endcomment -%}
+{%- liquid
+  assign url = block.settings.link
+  if url == blank and collection
+    assign url = collection.url
+  endif
+
+  assign tag = 'div'
+  if url != blank
+    assign tag = 'a'
+  endif
+-%}
+
+<{{ tag }}
+  {% if url != blank %}
+    href="{{ url }}"
+  {% endif %}
+  class="cb-ticon-card"
+  style="
+    --cb-ticon-card-title-size: {{ block.settings.title_size }}px;
+    --cb-ticon-card-title-weight: {{ block.settings.title_weight }};
+    --cb-ticon-card-text-size: {{ block.settings.text_size }}px;
+    --cb-ticon-card-text-weight: {{ block.settings.text_weight }};
+    --cb-ticon-card-link-size: {{ block.settings.link_size }}px;
+    --cb-ticon-card-link-weight: {{ block.settings.link_weight }};
+  "
+  {{ block.shopify_attributes }}
+>
+  {%- if block.settings.custom_icon != blank or block.settings.icon != 'none' -%}
+    <span class="cb-ticon-card__icon" aria-hidden="true">
+      {%- if block.settings.custom_icon != blank -%}
+        {%- render 'cb-icon-upload', image: block.settings.custom_icon, tint: block.settings.custom_icon_tint -%}
+      {%- else -%}
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          {%- case block.settings.icon -%}
+            {%- when 'hanger' -%}
+              <path d="M14 6a2 2 0 1 0-4 0c0 1.7.7 3 2 4"/><path d="m12 10 8 4.4a2 2 0 0 1 1 1.8v.8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-.8a2 2 0 0 1 1-1.8z"/>
+            {%- when 'compress' -%}
+              <path d="M19 13v6h-6"/><path d="M5 11V5h6"/><path d="m5 5 14 14"/>
+            {%- when 'shield' -%}
+              <path d="M20 13c0 5-3.5 7.5-7.7 9a1 1 0 0 1-.6 0C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.2-2.7a1.2 1.2 0 0 1 1.6 0C14.5 3.8 17 5 19 5a1 1 0 0 1 1 1z"/><path d="M9 12h6M12 9v6"/>
+            {%- when 'shapes' -%}
+              <path d="M8.3 10a.7.7 0 0 1-.6-1.1L11.4 3a.7.7 0 0 1 1.2 0l3.7 5.9a.7.7 0 0 1-.6 1.1z"/><rect x="3" y="14" width="7" height="7" rx="1"/><circle cx="17.5" cy="17.5" r="3.5"/>
+            {%- when 'shirt' -%}
+              <path d="M20.4 3.5 16 2a4 4 0 0 1-8 0L3.6 3.5a2 2 0 0 0-1.3 2.2l.6 3.5a1 1 0 0 0 1 .8H6v10a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V10h2.1a1 1 0 0 0 1-.8l.6-3.5a2 2 0 0 0-1.3-2.2z"/>
+            {%- when 'shoe' -%}
+              <path d="M3 18h17a1 1 0 0 0 .4-1.9L15 13.5 13 9h-3l-1 2-3-1-3 1z"/><path d="M3 21h18"/>
+            {%- when 'bag' -%}
+              <rect x="5" y="7" width="14" height="14" rx="2.5"/><path d="M9 7V4.5h6V7"/><path d="M9 13h6v2"/>
+            {%- when 'tag' -%}
+              <path d="M12.6 2.6A2 2 0 0 0 11.2 2H4a2 2 0 0 0-2 2v7.2a2 2 0 0 0 .6 1.4l8.7 8.7a2.4 2.4 0 0 0 3.4 0l6.6-6.6a2.4 2.4 0 0 0 0-3.4z"/><circle cx="7.5" cy="7.5" r="1"/>
+          {%- endcase -%}
+        </svg>
+      {%- endif -%}
+    </span>
+  {%- endif -%}
+
+  {%- if block.settings.card_title != blank -%}
+    <h3 class="cb-ticon-card__title">{{ block.settings.card_title | escape }}</h3>
+  {%- endif -%}
+
+  {%- if block.settings.card_text != blank -%}
+    <p class="cb-ticon-card__text">{{ block.settings.card_text | escape }}</p>
+  {%- endif -%}
+
+  {%- if block.settings.link_label != blank -%}
+    <span class="cb-ticon-card__link">
+      {{- block.settings.link_label | escape -}}
+      <svg width="10" height="10" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </span>
+  {%- endif -%}
+</{{ tag }}>
+
+{% stylesheet %}
+  .cb-ticon-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 0;
+    padding: 19px 24px 19px;
+    border-radius: var(--cbtc-radius);
+    background: var(--cbtc-card);
+    color: inherit;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+  }
+
+  a.cb-ticon-card:hover {
+    background: color-mix(in srgb, var(--cbtc-text) 4%, var(--cbtc-card));
+  }
+
+  a.cb-ticon-card:focus-visible {
+    outline: 2px solid var(--cbtc-text);
+    outline-offset: 2px;
+  }
+
+  .cb-ticon-card__icon {
+    display: flex;
+    flex: none;
+    width: 22px;
+    height: 22px;
+    color: var(--cbtc-accent);
+  }
+
+  .cb-ticon-card__icon svg,
+  .cb-ticon-card__icon .cb-icon-upload {
+    width: 100%;
+    height: 100%;
+  }
+
+  .cb-ticon-card .cb-ticon-card__title {
+    margin: 5px 0 0;
+    font-family: var(--cbtc-font-heading);
+    font-weight: var(--cb-ticon-card-title-weight, var(--cbtc-font-heading-regular-weight));
+    font-size: var(--cb-ticon-card-title-size, 18px);
+    line-height: 1.3;
+    letter-spacing: 0;
+    color: var(--cbtc-text);
+  }
+
+  .cb-ticon-card__text {
+    margin: 11px 0 0;
+    font-family: var(--cbtc-font-body);
+    font-weight: var(--cb-ticon-card-text-weight, var(--cbtc-font-body-weight));
+    font-size: var(--cb-ticon-card-text-size, 12px);
+    line-height: 1.55;
+    color: var(--cbtc-muted);
+  }
+
+  /* margin-top: auto lines the links up along the bottom of every card. */
+  .cb-ticon-card__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: auto;
+    padding-top: 24px;
+    font-family: var(--cbtc-font-body);
+    font-weight: var(--cb-ticon-card-link-weight, var(--cbtc-font-body-strong));
+    font-size: var(--cb-ticon-card-link-size, 10px);
+    line-height: 1.3;
+    letter-spacing: 0;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--cbtc-text) 88%, transparent);
+  }
+
+  .cb-ticon-card__link svg {
+    flex: none;
+    transition: transform 0.2s ease;
+  }
+
+  a.cb-ticon-card:hover .cb-ticon-card__link svg {
+    transform: translateX(2px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cb-ticon-card,
+    .cb-ticon-card__link svg {
+      transition: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Icon card",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "icon",
+      "label": "Icon",
+      "options": [
+        { "value": "hanger", "label": "Hanger" },
+        { "value": "compress", "label": "Compression" },
+        { "value": "shield", "label": "Shield" },
+        { "value": "shapes", "label": "Shapes" },
+        { "value": "shirt", "label": "Shirt" },
+        { "value": "shoe", "label": "Shoe" },
+        { "value": "bag", "label": "Bag" },
+        { "value": "tag", "label": "Tag" },
+        { "value": "none", "label": "None" }
+      ],
+      "default": "hanger"
+    },
+    {
+      "type": "image_picker",
+      "id": "custom_icon",
+      "label": "Custom icon",
+      "info": "Upload your own SVG (or PNG). It replaces the built-in icon above."
+    },
+    {
+      "type": "checkbox",
+      "id": "custom_icon_tint",
+      "label": "Colour it like the built-in icons",
+      "info": "For one-colour SVGs: uses this section's icon colour. Turn off to keep the file's own colours.",
+      "default": true,
+      "visible_if": "{{ block.settings.custom_icon != blank }}"
+    },
+    {
+      "type": "text",
+      "id": "card_title",
+      "label": "Title",
+      "default": "Badminton Apparel"
+    },
+    {
+      "type": "textarea",
+      "id": "card_text",
+      "label": "Text",
+      "default": "Shirts, shorts and clothing for training and match play."
+    },
+    {
+      "type": "header",
+      "content": "Link"
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Link text",
+      "default": "Explore"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link",
+      "info": "Leave empty to link to the collection of the page the section is on."
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Title size",
+      "min": 10,
+      "max": 56,
+      "step": 0.5,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Title weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "text_weight",
+      "label": "Text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "link_size",
+      "label": "Link text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "link_weight",
+      "label": "Link text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    }
+  ],
+  "presets": [{ "name": "[CB] Icon card" }]
+}
+{% endschema %}

@@ -1,0 +1,152 @@
+{%- if block.settings.fact_label != blank or block.settings.fact_text != blank -%}
+  <div
+    class="cb-rs__fact"
+    style="--cb-rs-fact-label-size: {{ block.settings.label_size }}px; --cb-rs-fact-label-weight: {{ block.settings.label_weight }}; --cb-rs-fact-text-size: {{ block.settings.text_size }}px; --cb-rs-fact-text-weight: {{ block.settings.text_weight }};"
+    {{ block.shopify_attributes }}
+  >
+    {%- if block.settings.fact_label != blank -%}
+      <p class="cb-rs__fact-label">
+        {%- if block.settings.show_dot -%}
+          <span class="cb-rs__fact-dot" aria-hidden="true"></span>
+        {%- endif -%}
+        {{- block.settings.fact_label | escape -}}
+      </p>
+    {%- endif -%}
+    {%- if block.settings.fact_text != blank -%}
+      <p class="cb-rs__fact-text">{{ block.settings.fact_text | escape }}</p>
+    {%- endif -%}
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  .cb-rs__fact {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+    padding: 12px 14px;
+    border: 1px solid var(--cbr-border);
+    border-radius: var(--cbr-radius);
+    background: var(--cbr-card);
+  }
+
+  .cb-rs__fact-label {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin: 0;
+    font-family: var(--cbr-font-body);
+    font-weight: var(--cb-rs-fact-label-weight, var(--cbr-font-body-strong));
+    font-size: var(--cb-rs-fact-label-size, 9px);
+    line-height: 1.3;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--cbr-accent);
+  }
+
+  .cb-rs__fact-dot {
+    flex: none;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--cbr-accent);
+  }
+
+  .cb-rs__fact-text {
+    margin: 0;
+    font-family: var(--cbr-font-body);
+    font-weight: var(--cb-rs-fact-text-weight, var(--cbr-font-body-weight));
+    font-size: var(--cb-rs-fact-text-size, 11px);
+    line-height: 1.55;
+    color: var(--cbr-soft);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Info box",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "fact_label",
+      "label": "Label",
+      "info": "Shown in capitals, in the accent color.",
+      "default": "String"
+    },
+    {
+      "type": "text",
+      "id": "fact_text",
+      "label": "Text",
+      "default": "Yonex, Victor, Ashaway & Li-Ning in stock"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dot",
+      "label": "Show accent dot",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "label_size",
+      "label": "Label size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 9
+    },
+    {
+      "type": "select",
+      "id": "label_weight",
+      "label": "Label weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "select",
+      "id": "text_weight",
+      "label": "Text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    }
+  ],
+  "presets": [{ "name": "[CB] Info box" }]
+}
+{% endschema %}

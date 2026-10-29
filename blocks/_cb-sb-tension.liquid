@@ -1,0 +1,411 @@
+{%- comment -%}
+  Stringing builder, tension column: tension buttons and a shop note. With "Fit to the racket", the list shifts so its
+  highest tension equals the racket's maximum (custom.racket_tension, else found in the description, e.g. "20–28 lbs").
+{%- endcomment -%}
+{%- liquid
+  assign s = block.settings
+  assign lines = s.tension_lines | newline_to_br | split: '<br />'
+
+  # The racket's maximum tension as a number.
+  assign racket_max = 0
+  if s.fit_to_racket and product != blank
+    capture max_text
+      render 'cb-racket-trait', product: product, trait: 'tension'
+    endcapture
+    assign words = max_text | replace: '-', ' ' | split: ' '
+    for word in words
+      assign n = word | plus: 0
+      if n >= 15 and n <= 40 and n > racket_max
+        assign racket_max = n
+      endif
+    endfor
+  endif
+
+  assign list_max = 0
+  for line in lines
+    assign n = line | split: '|' | first | strip | plus: 0
+    if n > list_max
+      assign list_max = n
+    endif
+  endfor
+  assign shift = 0
+  if racket_max > 0 and list_max > 0
+    assign shift = racket_max | minus: list_max
+  endif
+
+  assign style = ''
+  if s.note_text contains '[style]' and product != blank
+    capture style
+      render 'cb-racket-trait', product: product, trait: 'style'
+    endcapture
+    assign style = style | strip | downcase
+  endif
+-%}
+
+<div
+  class="cb-sb-col cb-sb-tension"
+  style="
+    --cb-sb-col-label-size: {{ s.label_size }}px;
+    --cb-sb-col-label-weight: {{ s.label_weight }};
+    --cb-sb-col-title-size: {{ s.title_size }}px;
+    --cb-sb-col-title-weight: {{ s.title_weight }};
+    --cb-sb-tension-value-size: {{ s.value_size }}px;
+    --cb-sb-tension-value-weight: {{ s.value_weight }};
+    --cb-sb-tension-caption-size: {{ s.caption_size }}px;
+    --cb-sb-tension-caption-weight: {{ s.caption_weight }};
+    --cb-sb-tension-note-size: {{ s.note_size }}px;
+    --cb-sb-tension-note-weight: {{ s.note_weight }};
+  "
+  {{ block.shopify_attributes }}
+>
+  {%- if s.label != blank -%}<p class="cb-sb-col__label">{{ s.label | escape }}</p>{%- endif -%}
+  {%- if s.title != blank -%}<h3 class="cb-sb-col__title">{{ s.title | escape }}</h3>{%- endif -%}
+
+  <div class="cb-sb-tension__options" role="radiogroup" aria-label="{{ s.title | default: s.label | escape }}">
+    {%- assign index = 0 -%}
+    {%- assign default_value = '' -%}
+    {%- for line in lines -%}
+      {%- liquid
+        assign parts = line | split: '|'
+        assign n = parts[0] | strip | plus: 0
+        if n == 0
+          continue
+        endif
+        assign index = index | plus: 1
+        assign value = n | plus: shift | append: ' ' | append: s.unit
+        assign caption = parts[1] | strip
+        if index == s.default_choice
+          assign default_value = value
+        endif
+      -%}
+      <label class="cb-sb-tension__option">
+        <input
+          class="cb-sb-tension__input"
+          type="radio"
+          name="cb-sb-tension-{{ block.id }}"
+          value="{{ value | escape }}"
+          {% if index == s.default_choice %}checked{% endif %}
+        >
+        <span class="cb-sb-tension__card">
+          <span class="cb-sb-tension__value">{{ value | escape }}</span>
+          {%- if caption != blank -%}<span class="cb-sb-tension__caption">{{ caption | escape }}</span>{%- endif -%}
+        </span>
+      </label>
+    {%- endfor -%}
+  </div>
+
+  {%- liquid
+    assign note = s.note_text | replace: '[tension]', default_value
+    if style != blank
+      assign note = note | replace: '[style]', style
+    else
+      assign note = note | replace: '[style] ', '' | replace: '[style]', ''
+    endif
+  -%}
+  {%- if note != blank -%}
+    <p class="cb-sb-tension__note">
+      {%- if s.note_label != blank -%}<strong>{{ s.note_label | escape }}</strong> {% endif -%}
+      {{- note | escape -}}
+    </p>
+  {%- endif -%}
+</div>
+
+{% stylesheet %}
+  .cb-sb-tension__options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    gap: 4px;
+  }
+
+  .cb-sb-tension__option {
+    position: relative;
+    display: block;
+    cursor: pointer;
+  }
+
+  .cb-sb-tension .cb-sb-tension__input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  .cb-sb-tension__card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    min-height: 49px;
+    box-sizing: border-box;
+    padding: 6px;
+    border: 1px solid transparent;
+    border-radius: 2px;
+    background: var(--cbsb-option, #1f1f1f);
+    text-align: center;
+    transition: border-color 0.2s ease, opacity 0.2s ease;
+  }
+
+  .cb-sb-tension__value {
+    font-family: var(--cb-font-heading, var(--font-heading--family));
+    font-weight: var(--cb-sb-tension-value-weight, var(--cb-font-heading-weight, 700));
+    font-size: var(--cb-sb-tension-value-size, 10px);
+    line-height: 1.3;
+    color: var(--cb-color-text, #ffffff);
+  }
+
+  .cb-sb-tension__caption {
+    font-family: var(--cb-font-body, var(--font-body--family));
+    font-weight: var(--cb-sb-tension-caption-weight, inherit);
+    font-size: var(--cb-sb-tension-caption-size, 9px);
+    line-height: 1.3;
+    color: var(--cbsb-grey, #a1a1aa);
+  }
+
+  .cb-sb-tension__input:checked + .cb-sb-tension__card {
+    border-color: var(--cb-color-accent, #d71f27);
+  }
+
+  .cb-sb-tension__option:hover .cb-sb-tension__input:not(:checked) + .cb-sb-tension__card {
+    border-color: rgb(255 255 255 / 0.2);
+  }
+
+  .cb-sb-tension__input:focus-visible + .cb-sb-tension__card {
+    outline: 2px solid var(--cb-color-text, #ffffff);
+    outline-offset: 2px;
+  }
+
+  /* "Let the Pro Shop recommend" is ticked: the tension is left to the shop. */
+  .cb-sb--recommend .cb-sb-tension__options {
+    opacity: 0.4;
+  }
+
+  .cb-sb-tension .cb-sb-tension__note {
+    margin: 9px 0 0;
+    padding: 11px 10px;
+    border-radius: 2px;
+    background: var(--cbsb-note, #242424);
+    font-family: var(--cb-font-body, var(--font-body--family));
+    font-weight: var(--cb-sb-tension-note-weight, inherit);
+    font-size: var(--cb-sb-tension-note-size, 10.5px);
+    line-height: 1.4;
+    color: var(--cbsb-grey, #a1a1aa);
+  }
+
+  .cb-sb-tension__note strong {
+    font-weight: max(var(--cb-sb-tension-note-weight, 0), var(--cb-font-body-strong, 600));
+    color: var(--cb-color-text, #ffffff);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Tension choice",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "Column 2 • Tension"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Choose Tension"
+    },
+    {
+      "type": "textarea",
+      "id": "tension_lines",
+      "label": "Tensions",
+      "info": "One per line: number | caption.",
+      "default": "24 | Forgiving\n26 | Standard\n28 | Precision"
+    },
+    {
+      "type": "text",
+      "id": "unit",
+      "label": "Unit",
+      "default": "lbs"
+    },
+    {
+      "type": "range",
+      "id": "default_choice",
+      "label": "Selected at first",
+      "info": "Its position in the list.",
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "checkbox",
+      "id": "fit_to_racket",
+      "label": "Fit to the racket",
+      "info": "Shifts the list so the highest tension is the racket's maximum, from its custom.racket_tension metafield or description (e.g. \"20–28 lbs\").",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "note_label",
+      "label": "Note label",
+      "default": "Shop note:"
+    },
+    {
+      "type": "text",
+      "id": "note_text",
+      "label": "Note",
+      "info": "[tension] is the tension selected at first; [style] the racket's playing style, e.g. attack.",
+      "default": "[tension] is the ideal club match standard for this [style] frame."
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "label_size",
+      "label": "Column label size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "select",
+      "id": "label_weight",
+      "label": "Column label weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Column title size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Column title weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "value_size",
+      "label": "Tension values size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "value_weight",
+      "label": "Tension values weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "caption_size",
+      "label": "Captions size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 9
+    },
+    {
+      "type": "select",
+      "id": "caption_weight",
+      "label": "Captions weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "note_size",
+      "label": "Note size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 10.5
+    },
+    {
+      "type": "select",
+      "id": "note_weight",
+      "label": "Note weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    }
+  ],
+  "presets": [{ "name": "[CB] Tension choice" }]
+}
+{% endschema %}

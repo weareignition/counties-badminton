@@ -1,0 +1,793 @@
+{%- comment -%}
+  A general card for any section: optional photo (top, left or right), label, title (italic words show in the
+  accent colour), text, price and button. Linked to a product, collection or blog post it shows that item's own
+  title, text, photo and link by default; custom text is opt-in. Width and box styling come from snippets/cb-text-box.
+{%- endcomment -%}
+{%- liquid
+  assign s = block.settings
+
+  case s.source
+    when 'product'
+      assign item = s.product
+      assign item_image = item.featured_image
+      assign item_text = item.description | strip_html | truncatewords: 24
+    when 'collection'
+      assign item = s.collection
+      assign item_image = item.featured_image
+      assign item_text = item.description | strip_html | truncatewords: 24
+    when 'article'
+      assign item = s.article
+      assign item_image = item.image
+      assign item_text = item.excerpt | default: item.content | strip_html | truncatewords: 24
+    else
+      assign item = nil
+  endcase
+
+  # Linked item first; the custom title and text are used when "Use custom text" is on, or nothing is linked.
+  assign use_custom = s.use_custom_text
+  if item == blank
+    assign use_custom = true
+  endif
+  assign title = item.title | escape
+  assign text = item_text
+  if use_custom
+    if s.title_text != blank
+      assign title = s.title_text
+    endif
+    if s.body_text != blank
+      assign text = s.body_text | escape | newline_to_br
+    endif
+  endif
+
+  assign image = s.image | default: item_image
+  assign url = s.link | default: item.url
+
+  assign show_media = false
+  if s.image_position != 'none'
+    if image != blank or request.design_mode
+      assign show_media = true
+    endif
+  endif
+
+  assign ratio = s.image_ratio
+  if ratio == 'original'
+    assign ratio = image.aspect_ratio | default: 1.5
+  endif
+
+  if s.title_font == 'heading'
+    assign title_family = 'var(--cb-font-heading, var(--font-heading--family))'
+    assign title_weight = 'var(--cb-font-heading-medium-weight, 500)'
+  else
+    assign title_family = 'var(--cb-font-body, var(--font-body--family))'
+    assign title_weight = 'var(--cb-font-body-strong, 600)'
+  endif
+  if s.title_weight != blank and s.title_weight != 'initial'
+    assign title_weight = s.title_weight
+  endif
+-%}
+
+<article
+  class="cb-card cb-card--{{ s.image_position }} cb-card--{{ s.image_style }}{% render 'cb-text-box', settings: s, part: 'class' %}"
+  style="
+    --cb-card-ratio: {{ ratio }};
+    --cb-card-media-width: {{ s.image_width }}%;
+    --cb-card-media-radius: {{ s.image_radius }}px;
+    --cb-card-label-size: {{ s.label_size }}px;
+    --cb-card-label-weight: {{ s.label_weight }};
+    --cb-card-title-size: {{ s.title_size }}px;
+    --cb-card-text-size: {{ s.text_size }}px;
+    --cb-card-text-weight: {{ s.text_weight }};
+    --cb-card-price-size: {{ s.price_size }}px;
+    --cb-card-price-weight: {{ s.price_weight }};
+    --cb-card-button-size: {{ s.button_size }}px;
+    --cb-card-button-weight: {{ s.button_weight }};
+    --cb-card-title-family: {{ title_family }};
+    --cb-card-title-weight: {{ title_weight }};
+    {%- if s.label_color != blank %} --cb-card-label-color: {{ s.label_color }};{% endif %}
+    {%- if s.title_color != blank %} --cb-card-title-color: {{ s.title_color }};{% endif %}
+    {%- if s.text_color != blank %} --cb-card-text-color: {{ s.text_color }};{% endif %}
+    {% render 'cb-text-box', settings: s, part: 'style' %}
+  "
+  {{ block.shopify_attributes }}
+>
+  {%- if show_media -%}
+    <{% if url != blank %}a href="{{ url }}" tabindex="-1" aria-hidden="true"{% else %}div{% endif %} class="cb-card__media">
+      {%- if image != blank -%}
+        {{
+          image
+          | image_url: width: 1200
+          | image_tag:
+            widths: '300, 400, 600, 800, 1000, 1200',
+            sizes: '(min-width: 990px) 40vw, (min-width: 750px) 50vw, 100vw',
+            loading: 'lazy',
+            alt: '',
+            class: 'cb-card__img'
+        }}
+      {%- else -%}
+        {{ 'image' | placeholder_svg_tag: 'cb-card__placeholder' }}
+      {%- endif -%}
+    </{% if url != blank %}a{% else %}div{% endif %}>
+  {%- endif -%}
+
+  <div class="cb-card__body">
+    {%- if s.label != blank -%}
+      <p class="cb-card__label">{{ s.label | escape }}</p>
+    {%- endif -%}
+    {%- if title != blank -%}
+      <{{ s.title_tag }} class="cb-card__title">
+        {%- if url != blank -%}<a href="{{ url }}">{{ title }}</a>{%- else -%}{{ title }}{%- endif -%}
+      </{{ s.title_tag }}>
+    {%- endif -%}
+    {%- if s.source == 'product' and s.show_price and item != blank -%}
+      <p class="cb-card__price">
+        {{- item.price | money -}}
+        {%- if item.compare_at_price > item.price -%}
+          <s>{{ item.compare_at_price | money }}</s>
+        {%- endif -%}
+      </p>
+    {%- endif -%}
+    {%- if text != blank -%}
+      <p class="cb-card__text">{{ text }}</p>
+    {%- endif -%}
+    {%- if s.button_label != blank and url != blank -%}
+      <a class="cb-card__button cb-card__button--{{ s.button_style }}" href="{{ url }}">{{ s.button_label | escape }}</a>
+    {%- endif -%}
+  </div>
+</article>
+
+{% stylesheet %}
+  .cb-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--cb-card-media-gap, 15px);
+    min-width: 0;
+    color: inherit;
+  }
+
+  /* Photo */
+  .cb-card__media {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    width: 100%;
+    aspect-ratio: var(--cb-card-ratio, 1.5);
+    overflow: hidden;
+    border-radius: var(--cb-card-media-radius, 8px);
+  }
+
+  .cb-card__img,
+  .cb-card__placeholder {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .cb-card__placeholder {
+    background: rgb(255 255 255 / 0.04);
+    fill: rgb(255 255 255 / 0.15);
+  }
+
+  /* "Framed": the whole photo inside a thin frame (like the guide cards). */
+  .cb-card--framed .cb-card__media {
+    border: 1px solid rgb(255 255 255 / 0.08);
+  }
+
+  .cb-card--framed .cb-card__img {
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+  }
+
+  .cb-card__body {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 0;
+  }
+
+  .cb-card__body > * {
+    margin: 0;
+  }
+
+  .cb-card .cb-card__label {
+    font-family: var(--cb-font-body, var(--font-body--family));
+    font-weight: var(--cb-card-label-weight, var(--cb-font-body-strong, 600));
+    font-size: var(--cb-card-label-size, 10px);
+    line-height: 1.3;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--cb-card-label-color, var(--cb-color-accent, #d71f27));
+  }
+
+  .cb-card .cb-card__title {
+    font-family: var(--cb-card-title-family);
+    font-weight: var(--cb-card-title-weight);
+    font-size: var(--cb-card-title-size, 21px);
+    line-height: 1.25;
+    letter-spacing: 0;
+    color: var(--cb-card-title-color, var(--cb-color-text, #ffffff));
+  }
+
+  .cb-card__title a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .cb-card__title a:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .cb-card__title em {
+    font-style: normal;
+    color: var(--cb-color-accent, #d71f27);
+  }
+
+  .cb-card .cb-card__price {
+    display: flex;
+    gap: 8px;
+    align-items: baseline;
+    font-family: var(--cb-font-body, var(--font-body--family));
+    font-weight: var(--cb-card-price-weight, var(--cb-font-body-strong, 600));
+    font-size: var(--cb-card-price-size, 15px);
+    color: var(--cb-color-accent, #d71f27);
+  }
+
+  .cb-card__price s {
+    font-weight: min(var(--cb-card-price-weight, 1000), var(--cb-font-body-weight, 400));
+    font-size: calc(var(--cb-card-price-size, 15px) * 13 / 15);
+    color: var(--cb-color-muted, #a1a1aa);
+  }
+
+  .cb-card .cb-card__text {
+    font-family: var(--cb-font-body, var(--font-body--family));
+    font-weight: var(--cb-card-text-weight, var(--cb-font-body-weight, var(--font-body--weight)));
+    font-size: var(--cb-card-text-size, 13px);
+    line-height: 1.6;
+    color: var(--cb-card-text-color, var(--cb-color-muted, #d0d0d4));
+  }
+
+  /* Spacing sits on the following element, so any part can be left empty. */
+  .cb-card .cb-card__label + * {
+    margin-top: 20px;
+  }
+
+  .cb-card .cb-card__title + *,
+  .cb-card .cb-card__price + * {
+    margin-top: 14px;
+  }
+
+  .cb-card .cb-card__title + .cb-card__price {
+    margin-top: 10px;
+  }
+
+  /* The button sits at the bottom of a stretched (same-height) card. */
+  .cb-card .cb-card__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 45px;
+    margin-top: auto;
+    padding: 0 19px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    font-family: var(--cb-font-body, var(--font-body--family));
+    font-weight: var(--cb-card-button-weight, var(--cb-font-body-strong, 600));
+    font-size: var(--cb-card-button-size, 12px);
+    line-height: 1.2;
+    text-decoration: none;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+  }
+
+  .cb-card__body > :has(+ .cb-card__button) {
+    margin-bottom: 14px;
+  }
+
+  .cb-card__button--outline {
+    border-color: rgb(255 255 255 / 0.08);
+    background: rgb(255 255 255 / 0.02);
+    color: var(--cb-color-accent, #d71f27);
+  }
+
+  .cb-card__button--outline:hover {
+    border-color: var(--cb-color-accent, #d71f27);
+  }
+
+  .cb-card__button--solid {
+    background: var(--cb-color-accent, #d71f27);
+    color: #ffffff;
+  }
+
+  .cb-card__button--solid:hover {
+    background: color-mix(in srgb, var(--cb-color-accent, #d71f27) 88%, #000);
+  }
+
+  .cb-card__button--text {
+    min-height: 0;
+    padding: 0;
+    color: var(--cb-color-accent, #d71f27);
+  }
+
+  /* Photo beside the text on tablets and up; phones stack it on top. */
+  @media screen and (min-width: 750px) {
+    .cb-card--left,
+    .cb-card--right {
+      flex-direction: row;
+      align-items: stretch;
+      gap: var(--cb-card-side-gap, 24px);
+    }
+
+    .cb-card--right {
+      flex-direction: row-reverse;
+    }
+
+    .cb-card--left .cb-card__media,
+    .cb-card--right .cb-card__media {
+      width: var(--cb-card-media-width, 40%);
+      align-self: flex-start;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Card",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "source",
+      "label": "Link the card to",
+      "info": "A linked item shows its own title, text, photo and page.",
+      "options": [
+        { "value": "none", "label": "Nothing (custom card)" },
+        { "value": "product", "label": "A product" },
+        { "value": "collection", "label": "A collection" },
+        { "value": "article", "label": "A blog post" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product",
+      "info": "Used when \"Link the card to\" is set to a product."
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection",
+      "info": "Used when \"Link the card to\" is set to a collection."
+    },
+    {
+      "type": "article",
+      "id": "article",
+      "label": "Blog post",
+      "info": "Used when \"Link the card to\" is set to a blog post."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_price",
+      "label": "Show price",
+      "default": true,
+      "visible_if": "{{ block.settings.source == 'product' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_custom_text",
+      "label": "Use custom title and text",
+      "info": "Off: the card shows the linked item's own title and text.",
+      "default": false,
+      "visible_if": "{{ block.settings.source != 'none' }}"
+    },
+    {
+      "type": "header",
+      "content": "Text"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "info": "Small text in capitals above the title.",
+      "default": "Featured"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "title_text",
+      "label": "Title",
+      "info": "Italic words show in the accent colour. Also a preview until an item is linked.",
+      "default": "Card title"
+    },
+    {
+      "type": "select",
+      "id": "title_tag",
+      "label": "Title HTML tag",
+      "info": "For search engines and screen readers; it doesn't change the look.",
+      "options": [
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" },
+        { "value": "h4", "label": "H4" },
+        { "value": "p", "label": "Paragraph" }
+      ],
+      "default": "h3"
+    },
+    {
+      "type": "textarea",
+      "id": "body_text",
+      "label": "Text",
+      "default": "Add a short description, or link the card to a product, collection or blog post."
+    },
+    {
+      "type": "header",
+      "content": "Photo"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Photo",
+      "options": [
+        { "value": "top", "label": "On top" },
+        { "value": "left", "label": "On the left" },
+        { "value": "right", "label": "On the right" },
+        { "value": "none", "label": "No photo" }
+      ],
+      "default": "top"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Custom photo",
+      "info": "Leave empty to use the linked item's photo.",
+      "visible_if": "{{ block.settings.image_position != 'none' }}"
+    },
+    {
+      "type": "select",
+      "id": "image_style",
+      "label": "Photo style",
+      "options": [
+        { "value": "fill", "label": "Fill the shape" },
+        { "value": "framed", "label": "Whole photo in a thin frame" }
+      ],
+      "default": "fill",
+      "visible_if": "{{ block.settings.image_position != 'none' }}"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "Photo shape",
+      "options": [
+        { "value": "original", "label": "Photo's own shape" },
+        { "value": "5 / 2", "label": "Wide (5:2)" },
+        { "value": "16 / 9", "label": "16:9" },
+        { "value": "3 / 2", "label": "3:2" },
+        { "value": "4 / 3", "label": "4:3" },
+        { "value": "1 / 1", "label": "Square" },
+        { "value": "4 / 5", "label": "Portrait (4:5)" }
+      ],
+      "default": "3 / 2",
+      "visible_if": "{{ block.settings.image_position != 'none' }}"
+    },
+    {
+      "type": "range",
+      "id": "image_width",
+      "label": "Photo width",
+      "info": "Beside the text, on tablets and computers. Phones show it on top.",
+      "min": 25,
+      "max": 60,
+      "step": 1,
+      "unit": "%",
+      "default": 40,
+      "visible_if": "{{ block.settings.image_position == 'left' or block.settings.image_position == 'right' }}"
+    },
+    {
+      "type": "range",
+      "id": "image_radius",
+      "label": "Photo corner radius",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "default": 8,
+      "visible_if": "{{ block.settings.image_position != 'none' }}"
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button",
+      "info": "Shown when the card has a link.",
+      "default": "Learn more →"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link",
+      "info": "Leave empty to use the linked item's page."
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Button style",
+      "options": [
+        { "value": "outline", "label": "Dark with border" },
+        { "value": "solid", "label": "Accent fill" },
+        { "value": "text", "label": "Text link" }
+      ],
+      "default": "outline"
+    },
+    {
+      "type": "header",
+      "content": "Text style"
+    },
+    {
+      "type": "range",
+      "id": "label_size",
+      "label": "Label size",
+      "min": 8,
+      "max": 14,
+      "step": 1,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "label_weight",
+      "label": "Label weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Title size",
+      "min": 14,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 21
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Title weight",
+      "info": "Default uses the weight of the title font below.",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Text size",
+      "min": 11,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "select",
+      "id": "text_weight",
+      "label": "Text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "price_size",
+      "label": "Price size",
+      "info": "The crossed-out compare-at price stays a little smaller.",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 15,
+      "visible_if": "{{ block.settings.source == 'product' }}"
+    },
+    {
+      "type": "select",
+      "id": "price_weight",
+      "label": "Price weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial",
+      "visible_if": "{{ block.settings.source == 'product' }}"
+    },
+    {
+      "type": "range",
+      "id": "button_size",
+      "label": "Button text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "button_weight",
+      "label": "Button text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "select",
+      "id": "title_font",
+      "label": "Title font",
+      "options": [
+        { "value": "body", "label": "Body font, semibold" },
+        { "value": "heading", "label": "Heading font, medium" }
+      ],
+      "default": "body"
+    },
+    {
+      "type": "color",
+      "id": "label_color",
+      "label": "Label color",
+      "info": "Leave empty to use the section's accent colour."
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title color",
+      "info": "Leave empty to use the section's text colour."
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "info": "Leave empty to use the section's muted text colour."
+    },
+    {
+      "type": "header",
+      "content": "Width"
+    },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "Width",
+      "options": [
+        { "value": "auto", "label": "Auto (follows the section)" },
+        { "value": "fit", "label": "Fit the text" },
+        { "value": "full", "label": "Full width" },
+        { "value": "custom", "label": "Custom" }
+      ],
+      "default": "full"
+    },
+    {
+      "type": "range",
+      "id": "width_px",
+      "label": "Custom width",
+      "min": 100,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "default": 400,
+      "visible_if": "{{ block.settings.width == 'custom' }}"
+    },
+    {
+      "type": "header",
+      "content": "Box"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "info": "Leave empty for no background.",
+      "default": "#1b1b1b"
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Padding top and bottom",
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "default": 26
+    },
+    {
+      "type": "range",
+      "id": "padding_x",
+      "label": "Padding left and right",
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "default": 26
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "label": "Border",
+      "info": "0 = no border.",
+      "min": 0,
+      "max": 8,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "info": "Leave empty for a faint version of the text colour.",
+      "visible_if": "{{ block.settings.border_width > 0 }}"
+    },
+    {
+      "type": "range",
+      "id": "radius",
+      "label": "Corner radius",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "default": 15
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Card"
+    }
+  ]
+}
+{% endschema %}

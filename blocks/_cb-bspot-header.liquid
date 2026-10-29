@@ -1,0 +1,71 @@
+<div
+  class="cb-bspot__header cb-bspot__header--{{ block.settings.alignment }}"
+  style="--cbbs-header-gap: {{ block.settings.gap }}px;"
+  {{ block.shopify_attributes }}
+>
+  {% content_for 'blocks' %}
+</div>
+
+{% stylesheet %}
+  .cb-bspot__header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--cbbs-header-gap, 6px);
+    min-width: 0;
+  }
+
+  .cb-bspot__header--center {
+    align-items: center;
+    text-align: center;
+  }
+
+  .cb-bspot__header > * + .cb-paragraph {
+    margin-top: 4px;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Header",
+  "tag": null,
+  "blocks": [
+    { "type": "cb-subheader" },
+    { "type": "cb-heading" },
+    { "type": "cb-paragraph" },
+    { "type": "cb-button" }
+  ],
+  "settings": [
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Space between lines",
+      "min": 0,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 6
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Header",
+      "blocks": {
+        "eyebrow": { "type": "cb-subheader", "settings": { "subheader_text": "Footwear brands", "letter_spacing": 0 } },
+        "heading": { "type": "cb-heading", "settings": { "heading_text": "Victor and Babolat court footwear." } }
+      },
+      "block_order": ["eyebrow", "heading"]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,83 @@
+{%- assign tablet_columns = block.settings.columns | at_most: 3 -%}
+<div
+  class="cb-fintro__features"
+  style="--cbfi-columns: {{ block.settings.columns }}; --cbfi-columns-tablet: {{ tablet_columns }}; --cbfi-features-gap: {{ block.settings.gap }}px; --cbfi-features-width: {{ block.settings.max_width }}px;"
+  {{ block.shopify_attributes }}
+>
+  {% content_for 'blocks' %}
+</div>
+
+{% stylesheet %}
+  /* Phones: one per row. Tablets: up to three. Desktop: the chosen number. */
+  .cb-fintro__features {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+    width: 100%;
+    max-width: var(--cbfi-features-width, 796px);
+    margin-inline: auto;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-fintro__features {
+      grid-template-columns: repeat(var(--cbfi-columns-tablet, 3), minmax(0, 1fr));
+      gap: 24px 18px;
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .cb-fintro__features {
+      grid-template-columns: repeat(var(--cbfi-columns, 3), minmax(0, 1fr));
+      gap: 28px var(--cbfi-features-gap, 30px);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Features",
+  "tag": null,
+  "blocks": [{ "type": "_cb-fintro-feature" }],
+  "settings": [
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Per row on desktop",
+      "info": "Tablets show up to 3, phones 1.",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Gap",
+      "min": 8,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width",
+      "min": 600,
+      "max": 1000,
+      "step": 4,
+      "unit": "px",
+      "default": 796
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Features",
+      "blocks": {
+        "feature_1": { "type": "_cb-fintro-feature" }
+      },
+      "block_order": ["feature_1"]
+    }
+  ]
+}
+{% endschema %}

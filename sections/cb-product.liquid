@@ -1,0 +1,1109 @@
+{%- comment -%}
+  Product page: breadcrumb, gallery (photo on a light card with badges, thumbnails with the photos' alt text as
+  captions) and an info panel built from blocks inside one product form.
+  Design "Panels" (racket page) puts the gallery and info on dark panels; "Open" (standard page) sets them straight
+  on the page with square thumbnails.
+  The script switches photos, keeps the variant in step with the option cards (price, stock, photo, URL), and adds to
+  the cart the way Horizon's own product form does (CartLinesUpdateEvent), so the cart drawer and cart count update.
+  Without the script the form still posts to /cart/add.
+{%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign font_scope = '#cb-pdp-' | append: section.id
+  assign current = product.selected_or_first_available_variant
+  assign first_media = current.featured_media | default: product.featured_media
+  assign crumb_collection = collection | default: product.collections.first
+
+  # Badges: the two texts, and/or product tags that start with "Badge:" (e.g. "Badge: New 2025 release").
+  assign badge_list = ''
+  if s.badge_source != 'tags'
+    if s.badge_text != blank
+      assign badge_list = badge_list | append: s.badge_text | append: '|accent||'
+    endif
+    if s.badge_2_text != blank
+      assign badge_list = badge_list | append: s.badge_2_text | append: '|dark||'
+    endif
+  endif
+  if s.badge_source != 'text'
+    for tag in product.tags
+      assign tag_start = tag | slice: 0, 6 | downcase
+      if tag_start == 'badge:'
+        assign tag_text = tag | slice: 6, 60 | strip
+        if tag_text != blank
+          assign badge_list = badge_list | append: tag_text | append: '|dark||'
+        endif
+      endif
+    endfor
+  endif
+  assign badges = badge_list | split: '||'
+
+  assign image_count = 0
+  for media in product.media
+    if media.media_type == 'image'
+      assign image_count = image_count | plus: 1
+    endif
+  endfor
+-%}
+
+{% render 'cb-font-styles',
+  selector: font_scope,
+  prefix: 'cbpd',
+  heading_font: s.heading_font,
+  body_font: s.body_font
+%}
+
+<cb-pdp
+  id="cb-pdp-{{ section.id }}"
+  class="cb-pdp cb-pdp--{{ s.design | default: 'panels' }}"
+  data-product-id="{{ product.id }}"
+  style="
+    --cbpd-bg: {{ s.background_color }};
+    --cbpd-panel: {{ s.panel_color }};
+    --cbpd-card: {{ s.card_color }};
+    --cbpd-bar: {{ s.bar_color }};
+    --cbpd-image-bg: {{ s.image_background }};
+    --cbpd-text: {{ s.text_color }};
+    --cbpd-muted: {{ s.muted_text_color }};
+    --cbpd-grey: {{ s.grey_text_color }};
+    --cbpd-label: {{ s.label_color }};
+    --cbpd-accent: {{ s.accent_color }};
+    --cbpd-max-width: {{ s.max_width }}px;
+    --cbpd-side: {{ s.side_padding }}px;
+    --cbpd-info-width: {{ s.info_width }}px;
+    --cbpd-gap: {{ s.column_gap }}px;
+    --cbpd-radius: {{ s.panel_radius }}px;
+    --cbpd-ratio: {{ s.image_ratio }};
+    --cbpd-pt: {{ s.padding_top }}px;
+    --cbpd-pb: {{ s.padding_bottom }}px;
+    --cb-product-breadcrumb-size: {{ s.breadcrumb_size }}px;
+    --cb-product-breadcrumb-weight: {{ s.breadcrumb_weight }};
+    --cb-product-badge-size: {{ s.badge_size }}px;
+    --cb-product-badge-weight: {{ s.badge_weight }};
+    --cb-product-caption-size: {{ s.caption_size }}px;
+    --cb-product-caption-weight: {{ s.caption_weight }};
+  "
+>
+  <div class="cb-pdp__inner">
+    {%- if s.show_breadcrumbs -%}
+      <nav class="cb-pdp__crumbs" aria-label="Breadcrumb">
+        <a href="{{ routes.root_url }}">{{ s.home_label | escape }}</a>
+        <span aria-hidden="true">/</span>
+        {%- if crumb_collection != blank -%}
+          <a href="{{ crumb_collection.url }}">{{ crumb_collection.title | escape }}</a>
+          <span aria-hidden="true">/</span>
+        {%- endif -%}
+        <span aria-current="page">{{ product.title | escape }}</span>
+      </nav>
+    {%- endif -%}
+
+    <div class="cb-pdp__grid">
+      <div class="cb-pdp__gallery">
+        <div class="cb-pdp__stage">
+          {%- if badges.size > 0 -%}
+            <div class="cb-pdp__badges">
+              {%- for badge in badges -%}
+                {%- assign badge_parts = badge | split: '|' -%}
+                <span class="cb-pdp__badge{% if badge_parts[1] == 'dark' %} cb-pdp__badge--dark{% endif %}">{{ badge_parts[0] | escape }}</span>
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
+          <div class="cb-pdp__frame">
+            {%- for media in product.media -%}
+              {%- if media.media_type != 'image' -%}{%- continue -%}{%- endif -%}
+              {%- liquid
+                assign photo_alt = media.alt | default: product.title
+                assign photo_loading = 'lazy'
+                if media.id == first_media.id
+                  assign photo_loading = 'eager'
+                endif
+              -%}
+              <div class="cb-pdp__photo" data-media-id="{{ media.id }}" {% unless media.id == first_media.id %}hidden{% endunless %}>
+                {{
+                  media.preview_image
+                  | image_url: width: 1600
+                  | image_tag:
+                    widths: '400, 600, 800, 1000, 1200, 1600',
+                    sizes: '(min-width: 990px) 55vw, 100vw',
+                    loading: photo_loading,
+                    alt: photo_alt
+                }}
+              </div>
+            {%- else -%}
+              <div class="cb-pdp__photo">{{ 'product-1' | placeholder_svg_tag: 'cb-pdp__placeholder' }}</div>
+            {%- endfor -%}
+          </div>
+        </div>
+
+        {%- if s.show_thumbnails and image_count > 1 -%}
+          <div class="cb-pdp__thumbs">
+            {%- for media in product.media -%}
+              {%- if media.media_type != 'image' -%}{%- continue -%}{%- endif -%}
+              <button
+                type="button"
+                class="cb-pdp__thumb"
+                data-thumb="{{ media.id }}"
+                aria-label="{{ media.alt | default: product.title | escape }} ({{ forloop.index }})"
+                {% if media.id == first_media.id %}aria-current="true"{% endif %}
+              >
+                {{ media.preview_image | image_url: width: 400 | image_tag: loading: 'lazy', alt: '', widths: '200, 400', sizes: '200px' }}
+                {%- comment -%} Shopify fills an empty alt with the product title, which would repeat on every thumbnail. {%- endcomment -%}
+                {%- if s.thumb_captions and media.alt != blank and media.alt != product.title -%}
+                  <span class="cb-pdp__thumb-caption">{{ media.alt | escape }}</span>
+                {%- endif -%}
+              </button>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      </div>
+
+      <div class="cb-pdp__info">
+        <form class="cb-pdp__form" action="{{ routes.cart_add_url }}" method="post" enctype="multipart/form-data">
+          <div class="cb-pdp__blocks">
+            {% content_for 'blocks' %}
+          </div>
+          <input type="hidden" name="id" value="{{ current.id }}" data-cb-pdp-id>
+          <input type="hidden" name="quantity" value="1">
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script type="application/json" data-cb-pdp-variants>
+    [
+      {%- for v in product.variants -%}
+        {"id":{{ v.id }},"available":{{ v.available | json }},"price":{{ v.price | money_with_currency | json }},"priceShort":{{ v.price | money | json }},"compare":{% if v.compare_at_price > v.price %}{{ v.compare_at_price | money_with_currency | json }}{% else %}null{% endif %},"compareShort":{% if v.compare_at_price > v.price %}{{ v.compare_at_price | money | json }}{% else %}null{% endif %},"options":{{ v.options | json }},"media":{% if v.featured_media %}{{ v.featured_media.id }}{% else %}null{% endif %}}{% unless forloop.last %},{% endunless %}
+      {%- endfor -%}
+    ]
+  </script>
+  <script type="application/ld+json">{{ product | structured_data }}</script>
+</cb-pdp>
+
+<script type="module">
+  import { cbAddToCart } from '{{ 'cb-cart-add.js' | asset_url }}';
+
+  if (!customElements.get('cb-pdp')) {
+    customElements.define(
+      'cb-pdp',
+      class extends HTMLElement {
+        connectedCallback() {
+          this.variants = JSON.parse(this.querySelector('[data-cb-pdp-variants]')?.textContent || '[]');
+          this.form = this.querySelector('.cb-pdp__form');
+          this.idInput = this.querySelector('[data-cb-pdp-id]');
+          this.addEventListener('change', this.onChange);
+          this.addEventListener('click', this.onClick);
+          this.form?.addEventListener('submit', this.onSubmit);
+          this.updateSelectedLabels();
+          this.updateAvailability();
+        }
+
+        disconnectedCallback() {
+          this.removeEventListener('change', this.onChange);
+          this.removeEventListener('click', this.onClick);
+          this.form?.removeEventListener('submit', this.onSubmit);
+        }
+
+        onChange = (event) => {
+          const input = event.target;
+          if (!(input instanceof HTMLInputElement) || input.type !== 'radio') return;
+          this.updateSelectedLabels();
+          if (input.dataset.position) this.selectVariant();
+        };
+
+        onClick = (event) => {
+          const thumb = event.target.closest('[data-thumb]');
+          if (thumb) this.showMedia(thumb.dataset.thumb);
+          const addon = event.target.closest('[data-cb-pdp-addon]');
+          if (addon) this.addToCart(addon, addon.dataset.cbPdpAddon);
+        };
+
+        onSubmit = (event) => {
+          event.preventDefault();
+          const button = this.querySelector('[data-cb-pdp-add]');
+          if (button && !button.disabled) this.addToCart(button);
+        };
+
+        get variant() {
+          return this.variants.find((v) => String(v.id) === this.idInput?.value) || this.variants[0];
+        }
+
+        /* "[value] selected ([note])" next to each option label. */
+        updateSelectedLabels() {
+          this.querySelectorAll('[data-cb-pdp-option]').forEach((group) => {
+            const out = group.querySelector('[data-cb-pdp-selected]');
+            const checked = group.querySelector('input:checked');
+            if (!out) return;
+            if (!checked) { out.textContent = ''; return; }
+            const note = checked.dataset.note || '';
+            out.textContent = (out.dataset.template || '[value]')
+              .replace('[value]', checked.dataset.short || checked.value)
+              .replace('[note]', note)
+              .replace(/\s*\(\s*\)/, '')
+              .trim();
+          });
+        }
+
+        selectVariant() {
+          const current = this.variant;
+          if (!current) return;
+          const options = [...current.options];
+          this.querySelectorAll('input[data-position]:checked').forEach((input) => {
+            options[Number(input.dataset.position) - 1] = input.value;
+          });
+          const match = this.variants.find((v) => v.options.every((value, i) => value === options[i]));
+          if (!match) { this.setAvailable(false); return; }
+          this.idInput.value = match.id;
+          const short = (el) => el.dataset.format === 'short';
+          this.querySelectorAll('[data-cb-pdp-price]').forEach((el) => { el.textContent = short(el) ? match.priceShort : match.price; });
+          this.querySelectorAll('[data-cb-pdp-compare]').forEach((el) => {
+            el.textContent = (short(el) ? match.compareShort : match.compare) || '';
+            el.hidden = !match.compare;
+          });
+          this.setAvailable(match.available);
+          this.updateAvailability();
+          if (match.media) this.showMedia(String(match.media));
+          const url = new URL(window.location.href);
+          url.searchParams.set('variant', match.id);
+          window.history.replaceState({}, '', url);
+        }
+
+        /* Dims option values that, with the other current picks, make a sold-out or missing variant. */
+        updateAvailability() {
+          const current = this.variant;
+          if (!current || this.variants.length < 2) return;
+          this.querySelectorAll('input[data-position]').forEach((input) => {
+            const options = [...current.options];
+            options[Number(input.dataset.position) - 1] = input.value;
+            const match = this.variants.find((v) => v.options.every((value, i) => value === options[i]));
+            input.closest('label')?.classList.toggle('is-unavailable', !match || !match.available);
+          });
+        }
+
+        setAvailable(available) {
+          this.querySelectorAll('[data-cb-pdp-stock]').forEach((el) => {
+            el.textContent = available ? el.dataset.in : el.dataset.out;
+            el.classList.toggle('is-out', !available);
+          });
+          const button = this.querySelector('[data-cb-pdp-add]');
+          if (button) {
+            button.disabled = !available;
+            const text = button.querySelector('[data-cb-pdp-add-text]');
+            if (text) text.textContent = available ? button.dataset.label : button.dataset.soldOut;
+          }
+        }
+
+        showMedia(id) {
+          let found = false;
+          this.querySelectorAll('.cb-pdp__photo[data-media-id]').forEach((photo) => {
+            const show = photo.dataset.mediaId === id;
+            photo.hidden = !show;
+            if (show) found = true;
+          });
+          if (!found) return;
+          this.querySelectorAll('[data-thumb]').forEach((thumb) => {
+            if (thumb.dataset.thumb === id) thumb.setAttribute('aria-current', 'true');
+            else thumb.removeAttribute('aria-current');
+          });
+        }
+
+        /* The racket's line: variant id, quantity and any "choice" picks as line item properties. Also used by
+           [CB] Stringing builder to add the racket with its strings. */
+        lineItem() {
+          const data = new FormData(this.form);
+          const properties = {};
+          for (const [key, value] of data.entries()) {
+            if (key.startsWith('properties[')) properties[key.slice(11, -1)] = String(value);
+          }
+          return { id: String(data.get('id')), quantity: Number(data.get('quantity')) || 1, properties };
+        }
+
+        message(text) {
+          const out = this.querySelector('[data-cb-pdp-message]');
+          if (!out) return;
+          out.textContent = text || '';
+          out.hidden = !text;
+        }
+
+        async addToCart(button, addonVariantId) {
+          if (button.getAttribute('aria-busy') === 'true') return;
+          const items = [this.lineItem()];
+          if (addonVariantId) items.push({ id: addonVariantId, quantity: 1 });
+
+          button.setAttribute('aria-busy', 'true');
+          this.message('');
+          const label = button.querySelector('span:last-of-type');
+          const original = label?.textContent;
+          const result = await cbAddToCart(this, items, { productId: this.dataset.productId, sourceName: 'cb-pdp' });
+          button.removeAttribute('aria-busy');
+          if (!result.ok) {
+            this.message(result.message || 'Could not add to cart. Please try again.');
+            return;
+          }
+          if (label && button.dataset.added) {
+            label.textContent = button.dataset.added;
+            setTimeout(() => { label.textContent = original; }, 2000);
+          }
+        }
+      }
+    );
+  }
+</script>
+
+{% stylesheet %}
+  .cb-pdp {
+    display: block;
+    color: var(--cbpd-text);
+    background: var(--cbpd-bg);
+    padding: var(--cbpd-pt) 16px var(--cbpd-pb);
+  }
+
+  .cb-pdp__inner {
+    max-width: var(--cbpd-max-width);
+    margin-inline: auto;
+  }
+
+  .cb-pdp__crumbs {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 8px;
+    margin-bottom: 17px;
+    font-family: var(--cbpd-font-body);
+    font-weight: var(--cb-product-breadcrumb-weight, inherit);
+    font-size: var(--cb-product-breadcrumb-size, 10px);
+    line-height: 1.6;
+    color: var(--cbpd-grey);
+  }
+
+  .cb-pdp__crumbs a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .cb-pdp__crumbs a:hover {
+    color: var(--cbpd-text);
+  }
+
+  .cb-pdp__crumbs [aria-current] {
+    font-weight: max(var(--cb-product-breadcrumb-weight, 0), var(--cbpd-font-body-strong));
+    color: var(--cbpd-text);
+  }
+
+  .cb-pdp__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+    align-items: start;
+  }
+
+  /* Gallery */
+  .cb-pdp__stage {
+    position: relative;
+    padding: 25px;
+    border-radius: var(--cbpd-radius);
+    background: var(--cbpd-panel);
+  }
+
+  .cb-pdp__badges {
+    position: absolute;
+    top: 19px;
+    left: 19px;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 7px;
+  }
+
+  .cb-pdp__badge {
+    display: inline-flex;
+    align-items: center;
+    min-height: 19px;
+    padding: 0 7px;
+    border-radius: 1px;
+    background: var(--cbpd-accent);
+    font-family: var(--cbpd-font-body);
+    font-weight: var(--cb-product-badge-weight, 700);
+    font-size: var(--cb-product-badge-size, 8px);
+    line-height: 1;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: #ffffff;
+  }
+
+  .cb-pdp__badge--dark {
+    min-height: 16px;
+    background: #3a3a3a;
+  }
+
+  .cb-pdp__frame {
+    overflow: hidden;
+    aspect-ratio: var(--cbpd-ratio, 3 / 2);
+    border-radius: 4px;
+    background: var(--cbpd-image-bg);
+  }
+
+  .cb-pdp__photo,
+  .cb-pdp__photo img,
+  .cb-pdp__placeholder {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .cb-pdp__photo[hidden] {
+    display: none;
+  }
+
+  .cb-pdp__photo img {
+    box-sizing: border-box;
+    padding: 4%;
+    object-fit: contain;
+  }
+
+  .cb-pdp__thumbs {
+    display: flex;
+    gap: 8px;
+    margin-top: 14px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .cb-pdp__thumbs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .cb-pdp .cb-pdp__thumb {
+    display: flex;
+    flex: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    margin: 0;
+    padding: 5px;
+    border: 2px solid transparent;
+    border-radius: 3px;
+    background: #191919;
+    color: var(--cbpd-grey);
+    cursor: pointer;
+  }
+
+  .cb-pdp .cb-pdp__thumb[aria-current='true'] {
+    border-color: var(--cbpd-accent);
+    color: var(--cbpd-text);
+  }
+
+  .cb-pdp__thumb img {
+    display: block;
+    width: auto;
+    max-width: 200px;
+    height: 74px;
+    border-radius: 2px;
+    background: var(--cbpd-image-bg);
+    object-fit: contain;
+  }
+
+  .cb-pdp__thumb-caption {
+    font-family: var(--cbpd-font-body);
+    font-weight: var(--cb-product-caption-weight, inherit);
+    font-size: var(--cb-product-caption-size, 9px);
+    line-height: 1.3;
+  }
+
+  /* Info panel; spacing between blocks follows the design. */
+  .cb-pdp__info {
+    min-width: 0;
+    padding: 24px;
+    border-radius: var(--cbpd-radius);
+    background: var(--cbpd-panel);
+  }
+
+  .cb-pdp__form {
+    margin: 0;
+  }
+
+  .cb-pdp__blocks {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .cb-pdp__blocks > * + * {
+    margin-top: 16px;
+  }
+
+  .cb-pdp__blocks > .cb-pd-title + .cb-pd-callout {
+    margin-top: 12px;
+  }
+
+  .cb-pdp__blocks > .cb-pd-callout + .cb-pd-price {
+    margin-top: 19px;
+  }
+
+  .cb-pdp__blocks > .cb-pd-price + .cb-pd-option {
+    margin-top: 18px;
+  }
+
+  .cb-pdp__blocks > .cb-pd-option + .cb-pd-option {
+    margin-top: 11px;
+  }
+
+  .cb-pdp__blocks > .cb-pd-option + .cb-pd-buy {
+    margin-top: 18px;
+  }
+
+  .cb-pdp__blocks > .cb-pd-buy + .cb-pd-features {
+    margin-top: 14px;
+  }
+
+  /* Open design (standard page): no panels, a row of dark badges, square thumbnails. */
+  .cb-pdp--open .cb-pdp__stage,
+  .cb-pdp--open .cb-pdp__info {
+    padding: 0;
+    background: none;
+  }
+
+  .cb-pdp--open .cb-pdp__crumbs {
+    margin-bottom: 20px;
+    font-size: calc(var(--cb-product-breadcrumb-size, 10px) * 11 / 10);
+  }
+
+  .cb-pdp--open .cb-pdp__badges {
+    top: 20px;
+    left: 16px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 9px;
+  }
+
+  .cb-pdp--open .cb-pdp__badge {
+    min-height: 21px;
+    box-sizing: border-box;
+    padding: 0 8px;
+    border: 1px solid #333333;
+    border-radius: 2px;
+    background: #0b0b0b;
+    font-size: calc(var(--cb-product-badge-size, 8px) * 8.5 / 8);
+    letter-spacing: 0.06em;
+  }
+
+  .cb-pdp--open .cb-pdp__thumbs {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 11px;
+    margin-top: 13px;
+    overflow: visible;
+  }
+
+  .cb-pdp--open .cb-pdp__thumb {
+    aspect-ratio: 1;
+    padding: 0;
+    overflow: hidden;
+    border-radius: 3px;
+    background: var(--cbpd-image-bg);
+    opacity: 0.7;
+    transition: opacity 0.2s ease, border-color 0.2s ease;
+  }
+
+  .cb-pdp--open .cb-pdp__thumb:hover,
+  .cb-pdp--open .cb-pdp__thumb[aria-current='true'] {
+    opacity: 1;
+  }
+
+  .cb-pdp--open .cb-pdp__thumb img {
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 8%;
+    border-radius: 0;
+  }
+
+  .cb-pdp--open .cb-pdp__thumb-caption {
+    display: none;
+  }
+
+  .cb-pdp--open .cb-pdp__blocks > .cb-pd-title + .cb-pd-callout {
+    margin-top: 14px;
+  }
+
+  .cb-pdp--open .cb-pdp__blocks > .cb-pd-callout + .cb-pd-price {
+    margin-top: 24px;
+  }
+
+  .cb-pdp--open .cb-pdp__blocks > .cb-pd-price + .cb-pd-option {
+    margin-top: 23px;
+  }
+
+  .cb-pdp--open .cb-pdp__blocks > .cb-pd-option + .cb-pd-option {
+    margin-top: 19px;
+  }
+
+  .cb-pdp--open .cb-pdp__blocks > .cb-pd-option + .cb-pd-buy {
+    margin-top: 26px;
+  }
+
+  .cb-pdp--open .cb-pdp__blocks > .cb-pd-buy + .cb-pd-features {
+    margin-top: 33px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .cb-pdp__stage {
+      padding: 12px;
+    }
+
+    .cb-pdp__badges {
+      top: 6px;
+      left: 6px;
+    }
+
+    .cb-pdp__info {
+      padding: 16px;
+    }
+
+    .cb-pdp--open .cb-pdp__badges {
+      top: 10px;
+      left: 10px;
+    }
+
+    .cb-pdp--open .cb-pdp__thumbs {
+      gap: 8px;
+    }
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-pdp {
+      padding-inline: var(--cbpd-side);
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .cb-pdp__grid {
+      grid-template-columns: minmax(0, 1fr) minmax(0, var(--cbpd-info-width, 590px));
+      gap: var(--cbpd-gap, 33px);
+    }
+
+    .cb-pdp__thumbs {
+      flex-wrap: wrap;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Product",
+  "tag": "section",
+  "class": "section-wrapper",
+  "blocks": [
+    {
+      "type": "_cb-pd-title"
+    },
+    {
+      "type": "_cb-pd-callout"
+    },
+    {
+      "type": "_cb-pd-price"
+    },
+    {
+      "type": "_cb-pd-option"
+    },
+    {
+      "type": "_cb-pd-buy"
+    },
+    {
+      "type": "_cb-pd-features"
+    },
+    {
+      "type": "cb-paragraph"
+    },
+    {
+      "type": "cb-button"
+    }
+  ],
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "design",
+      "label": "Design",
+      "options": [
+        { "value": "panels", "label": "Panels (racket page)" },
+        { "value": "open", "label": "Open (standard page)" }
+      ],
+      "default": "panels",
+      "info": "Open puts the photo and details straight on the page, with square thumbnails and dark badges."
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width",
+      "min": 1000,
+      "max": 1920,
+      "step": 20,
+      "unit": "px",
+      "default": 1520
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Side padding",
+      "min": 0,
+      "max": 64,
+      "step": 2,
+      "unit": "px",
+      "default": 12,
+      "info": "Phones always use 16px."
+    },
+    {
+      "type": "range",
+      "id": "info_width",
+      "label": "Info panel width",
+      "min": 380,
+      "max": 720,
+      "step": 10,
+      "unit": "px",
+      "default": 590
+    },
+    {
+      "type": "range",
+      "id": "column_gap",
+      "label": "Space between photo and info",
+      "min": 12,
+      "max": 64,
+      "step": 1,
+      "unit": "px",
+      "default": 33
+    },
+    {
+      "type": "range",
+      "id": "panel_radius",
+      "label": "Panel corner radius",
+      "min": 0,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "header",
+      "content": "Breadcrumb"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_breadcrumbs",
+      "label": "Show breadcrumb",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "home_label",
+      "label": "Home link",
+      "default": "Home"
+    },
+    {
+      "type": "header",
+      "content": "Photos"
+    },
+    {
+      "type": "select",
+      "id": "badge_source",
+      "label": "Badges",
+      "options": [
+        { "value": "text", "label": "The two texts below" },
+        { "value": "tags", "label": "Product tags starting with \"Badge:\"" },
+        { "value": "both", "label": "Both" }
+      ],
+      "default": "text",
+      "info": "A tag like \"Badge: New 2025 release\" shows that badge on that product only."
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Red badge",
+      "default": "Official CMBA spec"
+    },
+    {
+      "type": "text",
+      "id": "badge_2_text",
+      "label": "Dark badge",
+      "default": "Papakura pro workshop"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "Photo shape",
+      "options": [
+        { "value": "1 / 1", "label": "Square" },
+        { "value": "4 / 3", "label": "4:3" },
+        { "value": "3 / 2", "label": "3:2" },
+        { "value": "16 / 9", "label": "16:9" }
+      ],
+      "default": "3 / 2"
+    },
+    {
+      "type": "color",
+      "id": "image_background",
+      "label": "Photo background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_thumbnails",
+      "label": "Show thumbnails",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "thumb_captions",
+      "label": "Captions under thumbnails",
+      "info": "Uses each photo's alt text (edit it on the product in Shopify admin).",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Brand"
+    },
+    {
+      "type": "text",
+      "id": "brand_names",
+      "label": "Brand names",
+      "info": "Comma-separated. The first one in a product's title is its brand (every product's vendor is the shop name).",
+      "default": "Yonex, Victor, Li-Ning, Babolat, Ashaway, Hundred, Code Alpha, Kiwi, Apacs, Felet, RSL, Carlton"
+    },
+    {
+      "type": "header",
+      "content": "Fonts"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "info": "Title and price.",
+      "default": "space_grotesk_n7"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "inter_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#0b0b0b"
+    },
+    {
+      "type": "color",
+      "id": "panel_color",
+      "label": "Panels",
+      "default": "#181818"
+    },
+    {
+      "type": "color",
+      "id": "card_color",
+      "label": "Option cards",
+      "default": "#212121"
+    },
+    {
+      "type": "color",
+      "id": "bar_color",
+      "label": "Note box and feature bar",
+      "default": "#1c1b1b"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "muted_text_color",
+      "label": "Muted text",
+      "default": "#ffffff",
+      "info": "The \"Best for\" text."
+    },
+    {
+      "type": "color",
+      "id": "grey_text_color",
+      "label": "Grey text",
+      "default": "#a1a1aa",
+      "info": "Notes, option descriptions, unselected options, features, breadcrumb."
+    },
+    {
+      "type": "color",
+      "id": "label_color",
+      "label": "Labels",
+      "default": "#a1a1aa"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "default": "#d71f27"
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "breadcrumb_size",
+      "label": "Breadcrumb size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 10,
+      "info": "Slightly larger in the Open design."
+    },
+    {
+      "type": "select",
+      "id": "breadcrumb_weight",
+      "label": "Breadcrumb weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "badge_size",
+      "label": "Badge size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 8,
+      "info": "Slightly larger in the Open design."
+    },
+    {
+      "type": "select",
+      "id": "badge_weight",
+      "label": "Badge weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "caption_size",
+      "label": "Thumbnail caption size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 9
+    },
+    {
+      "type": "select",
+      "id": "caption_weight",
+      "label": "Thumbnail caption weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Product",
+      "blocks": {
+        "title": { "type": "_cb-pd-title" },
+        "callout": { "type": "_cb-pd-callout" },
+        "price": { "type": "_cb-pd-price" },
+        "weight": {
+          "type": "_cb-pd-option",
+          "settings": {
+            "label": "Weight class",
+            "option_name": "Weight",
+            "choices": "4U (80-84g) | Fast whip & precision control | ~83g\n3U (85-89g) | Maximum offensive smash weight | ~88g"
+          }
+        },
+        "grip": {
+          "type": "_cb-pd-option",
+          "settings": {
+            "label": "Grip sizing",
+            "option_name": "Grip",
+            "choices": "G5 | Standard modern fit (3.25\") | Standard NZ\nG4 | Thicker palm profile (3.50\")"
+          }
+        },
+        "buy": { "type": "_cb-pd-buy" },
+        "features": {
+          "type": "_cb-pd-features",
+          "blocks": {
+            "collect": {
+              "type": "_cb-pd-feature",
+              "settings": { "icon": "bag", "feature_text": "Click & collect Papakura" }
+            },
+            "open": { "type": "_cb-pd-feature", "settings": { "icon": "clock", "feature_text": "Open 7 days" } },
+            "advice": { "type": "_cb-pd-feature", "settings": { "icon": "chat", "feature_text": "Specialist advice" } },
+            "stringing": {
+              "type": "_cb-pd-feature",
+              "settings": { "icon": "wrench", "feature_text": "Professional stringing" }
+            }
+          },
+          "block_order": ["collect", "open", "advice", "stringing"]
+        }
+      },
+      "block_order": ["title", "callout", "price", "weight", "grip", "buy", "features"]
+    }
+  ]
+}
+{% endschema %}

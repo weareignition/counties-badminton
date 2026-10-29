@@ -1,0 +1,751 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "blocks": {
+        "heading": {
+          "type": "text",
+          "name": "t:names.title",
+          "settings": {
+            "text": "<h1>{{ closest.page.title }}</h1>",
+            "width": "100%",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "h2",
+            "font": "var(--font-body--family)",
+            "font_size": "",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "text_color": "",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "page-content": {
+          "type": "page-content",
+          "settings": {
+            "text_color": ""
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "heading",
+        "page-content"
+      ],
+      "disabled": true,
+      "settings": {
+        "content_direction": "column",
+        "gap": 32,
+        "background_color": "",
+        "padding-block-start": 40,
+        "padding-block-end": 80
+      }
+    },
+    "cb_player_guides_hwNpJQ": {
+      "type": "cb-player-guides",
+      "blocks": {
+        "cb_pguide_header_XUGMzJ": {
+          "type": "_cb-pguide-header",
+          "settings": {
+            "alignment": "left",
+            "gap": 12
+          },
+          "blocks": {
+            "cb_subheader_9gigzQ": {
+              "type": "cb-subheader",
+              "settings": {
+                "subheader_text": "ABOUT THE PRO SHOP",
+                "secondary": "",
+                "show_dot": false,
+                "size": 11,
+                "weight": "strong",
+                "color": "accent",
+                "custom_color": "#ffffff",
+                "letter_spacing": 10,
+                "uppercase": true,
+                "space_below": 3,
+                "width": "auto",
+                "width_px": 400,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_heading_wRPV3z": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "&nbsp;Local expertise. Global-level support.&nbsp;",
+                "tag": "h2",
+                "size": 40,
+                "mobile_sizing": "scale",
+                "mobile_scale": 70,
+                "fluid_min": 28,
+                "fluid_vw": 6,
+                "weight": "font",
+                "color": "text",
+                "custom_color": "#ffffff",
+                "line_height": 120,
+                "letter_spacing": -1,
+                "uppercase": false,
+                "wrap": "balance",
+                "width": "auto",
+                "width_px": 400,
+                "max_width": 0,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_paragraph_rmDMyy": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>The Counties Badminton Pro Shop brings coaching, playing and technical knowledge together in one place — so every player can buy and prepare equipment with confidence.</p>",
+                "size": 15,
+                "mobile_sizing": "same",
+                "mobile_size": 14,
+                "fluid_vw": 2,
+                "weight": "regular",
+                "color": "muted",
+                "custom_color": "#ffffff",
+                "line_height": 160,
+                "letter_spacing": 0,
+                "wrap": "wrap",
+                "width": "auto",
+                "width_px": 400,
+                "max_width_unit": "none",
+                "max_width_px": 640,
+                "max_width_ch": 60,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "cb_subheader_9gigzQ",
+            "cb_heading_wRPV3z",
+            "cb_paragraph_rmDMyy"
+          ]
+        }
+      },
+      "block_order": [
+        "cb_pguide_header_XUGMzJ"
+      ],
+      "name": "[CB] Player guides",
+      "settings": {
+        "columns": 2,
+        "max_width": 1120,
+        "column_gap": 22,
+        "row_gap": 80,
+        "header_gap": 80,
+        "equal_height": true,
+        "card_padding": 26,
+        "card_radius": 15,
+        "show_photos": true,
+        "photo_height": 196,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "title_font": "body",
+        "background_color": "{{ settings.color_palette.foreground }}",
+        "card_color": "#1b1b1b",
+        "frame_color": "#ffffff14",
+        "text_color": "#ffffff",
+        "muted_text_color": "#d0d0d4",
+        "accent_color": "#d71f27",
+        "button_color": "#ffffff05",
+        "button_border_color": "#ffffff14",
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
+    },
+    "cb_image_banner_rEdQLp": {
+      "type": "cb-image-banner",
+      "blocks": {
+        "cb_image_BANRjK": {
+          "type": "cb-image",
+          "settings": {
+            "image": "shopify://shop_images/Editable_image_-_Pro_Shop_team_image.png",
+            "alt": "",
+            "link": "",
+            "ratio": "5 / 2",
+            "mobile_ratio": "4 / 3",
+            "eager": false,
+            "width": "full",
+            "width_px": 400,
+            "background_color": "",
+            "padding_y": 0,
+            "padding_x": 0,
+            "border_width": 1,
+            "border_color": "#ffffff14",
+            "radius": 10
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "cb_image_BANRjK"
+      ],
+      "name": "[CB] Image banner",
+      "settings": {
+        "columns": 1,
+        "gap": 22,
+        "max_width": 1120,
+        "background_color": "{{ settings.color_palette.foreground }}",
+        "text_color": "#ffffff",
+        "padding_top": 48,
+        "padding_bottom": 48
+      }
+    },
+    "cb_guides_eJn8LH": {
+      "type": "cb-guides",
+      "blocks": {
+        "cb_guides_header_wFyxgx": {
+          "type": "_cb-guides-header",
+          "settings": {
+            "alignment": "left",
+            "max_width": 1000
+          },
+          "blocks": {
+            "cb_subheader_iTzEr9": {
+              "type": "cb-subheader",
+              "settings": {
+                "subheader_text": "COACHING",
+                "secondary": "",
+                "show_dot": false,
+                "size": 10,
+                "weight": "strong",
+                "color": "accent",
+                "custom_color": "#ffffff",
+                "letter_spacing": 0,
+                "uppercase": true,
+                "space_below": 0,
+                "width": "auto",
+                "width_px": 400,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_heading_MYhQQy": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "Our Coaching & Stringing Expertise&nbsp;",
+                "tag": "h2",
+                "size": 32,
+                "mobile_sizing": "fluid",
+                "mobile_scale": 82,
+                "fluid_min": 30,
+                "fluid_vw": 6.5,
+                "weight": "font",
+                "color": "text",
+                "custom_color": "#ffffff",
+                "line_height": 115,
+                "letter_spacing": -1,
+                "uppercase": false,
+                "wrap": "balance",
+                "width": "auto",
+                "width_px": 400,
+                "max_width": 0,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_paragraph_wXDbbn": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>CMBA is proud to offer coaching and technical support at a genuinely elite level. Our coaching team includes three coaches with international playing experience, supported by multiple BWF-qualified coaches at Level 1 and Level 2, ensuring players receive guidance grounded in global standards. Alongside them, our in-house stringers bring international stringing experience and long playing careers, delivering professional-grade racket preparation you can trust. From coaching to custom stringing, CMBA provides expertise that elevates every player.</p>",
+                "size": 16,
+                "mobile_sizing": "same",
+                "mobile_size": 16,
+                "fluid_vw": 2,
+                "weight": "regular",
+                "color": "muted",
+                "custom_color": "#ffffff",
+                "line_height": 156,
+                "letter_spacing": 0,
+                "wrap": "wrap",
+                "width": "auto",
+                "width_px": 400,
+                "max_width_unit": "none",
+                "max_width_px": 640,
+                "max_width_ch": 60,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "cb_subheader_iTzEr9",
+            "cb_heading_MYhQQy",
+            "cb_paragraph_wXDbbn"
+          ]
+        },
+        "cb_guides_grid_xa3J8r": {
+          "type": "_cb-guides-grid",
+          "settings": {
+            "columns": 3,
+            "mobile_layout": "stack",
+            "gap": 22
+          },
+          "blocks": {
+            "cb_guides_card_HF98YX": {
+              "type": "_cb-guides-card",
+              "settings": {
+                "article": "",
+                "use_custom_text": false,
+                "card_title": "3 internationally experienced coaches",
+                "summary": "Playing insight and practical guidance for players at every stage.",
+                "icon": "none",
+                "custom_icon_tint": true,
+                "label": "COACHING",
+                "point_text": "",
+                "link_label": "",
+                "link": ""
+              },
+              "blocks": {}
+            },
+            "cb_guides_card_aNRCqy": {
+              "type": "_cb-guides-card",
+              "settings": {
+                "article": "",
+                "use_custom_text": false,
+                "card_title": "BWF Level 1 & 2 coaches",
+                "summary": "Coaching support informed by recognised global standards.",
+                "icon": "none",
+                "custom_icon_tint": true,
+                "label": "QUALIFICATIONS",
+                "point_text": "",
+                "link_label": "",
+                "link": ""
+              },
+              "blocks": {}
+            },
+            "cb_guides_card_wJNNei": {
+              "type": "_cb-guides-card",
+              "settings": {
+                "article": "",
+                "use_custom_text": false,
+                "card_title": "International stringing experience",
+                "summary": "Professional-grade racket preparation delivered in house.",
+                "icon": "none",
+                "custom_icon_tint": true,
+                "label": "TECHNICAL SUPPORT",
+                "point_text": "",
+                "link_label": "",
+                "link": ""
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "cb_guides_card_HF98YX",
+            "cb_guides_card_aNRCqy",
+            "cb_guides_card_wJNNei"
+          ]
+        }
+      },
+      "block_order": [
+        "cb_guides_header_wFyxgx",
+        "cb_guides_grid_xa3J8r"
+      ],
+      "name": "[CB] Setup guidance",
+      "settings": {
+        "design": "1",
+        "max_width": 1400,
+        "stack_gap": 40,
+        "card_radius": 4,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "#111112",
+        "card_background_color": "#181818",
+        "border_color": "#ffffff0d",
+        "text_color": "#ffffff",
+        "accent_color": "#d71f27",
+        "padding_top": 52,
+        "padding_bottom": 44
+      }
+    },
+    "cb_advice_nH6qfe": {
+      "type": "cb-advice",
+      "blocks": {
+        "cb_advice_content_Hr4qLX": {
+          "type": "_cb-advice-content",
+          "settings": {
+            "alignment": "left",
+            "gap": 12
+          },
+          "blocks": {
+            "cb_subheader_BMy7CW": {
+              "type": "cb-subheader",
+              "settings": {
+                "subheader_text": "SUPPORTING THE SPORT",
+                "secondary": "",
+                "show_dot": false,
+                "size": 10,
+                "weight": "strong",
+                "color": "accent",
+                "custom_color": "#ffffff",
+                "letter_spacing": 0,
+                "uppercase": true,
+                "space_below": 0,
+                "width": "auto",
+                "width_px": 400,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_heading_Mwz7JJ": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "More than a badminton shop.&nbsp;",
+                "tag": "h2",
+                "size": 32,
+                "mobile_sizing": "scale",
+                "mobile_scale": 82,
+                "fluid_min": 28,
+                "fluid_vw": 6,
+                "weight": "font",
+                "color": "text",
+                "custom_color": "#ffffff",
+                "line_height": 115,
+                "letter_spacing": -1,
+                "uppercase": false,
+                "wrap": "wrap",
+                "width": "auto",
+                "width_px": 400,
+                "max_width": 0,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_paragraph_UgEKM4": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>Counties Manukau Badminton is a not-for-profit organisation serving South Auckland. Purchases through the Pro Shop help support badminton, player development and the wider CMBA community.<br/></p>",
+                "size": 14,
+                "mobile_sizing": "same",
+                "mobile_size": 14,
+                "fluid_vw": 2,
+                "weight": "regular",
+                "color": "muted",
+                "custom_color": "#ffffff",
+                "line_height": 160,
+                "letter_spacing": -1,
+                "wrap": "wrap",
+                "width": "auto",
+                "width_px": 400,
+                "max_width_unit": "px",
+                "max_width_px": 600,
+                "max_width_ch": 60,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_advice_buttons_tPUJU9": {
+              "type": "_cb-advice-buttons",
+              "settings": {
+                "gap": 12,
+                "space_above": 16
+              },
+              "blocks": {
+                "cb_advice_button_Vb7iab": {
+                  "type": "_cb-advice-button",
+                  "settings": {
+                    "label": "Visit us in Papakura",
+                    "link": "shopify://pages/contact",
+                    "directions_address": "",
+                    "style": "primary",
+                    "icon": "arrow",
+                    "custom_icon_tint": true,
+                    "new_tab": false
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "cb_advice_button_Vb7iab"
+              ]
+            }
+          },
+          "block_order": [
+            "cb_subheader_BMy7CW",
+            "cb_heading_Mwz7JJ",
+            "cb_paragraph_UgEKM4",
+            "cb_advice_buttons_tPUJU9"
+          ]
+        }
+      },
+      "block_order": [
+        "cb_advice_content_Hr4qLX"
+      ],
+      "name": "[CB] Advice banner",
+      "settings": {
+        "max_width": 1400,
+        "panel_padding": 44,
+        "panel_radius": 10,
+        "show_border": false,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "#0b0b0b",
+        "panel_background_color": "#181818",
+        "border_color": "#ffffff14",
+        "text_color": "#ffffff",
+        "muted_text_color": "#a1a1aa",
+        "accent_color": "#d71f27",
+        "secondary_button_color": "#2a2a2a",
+        "padding_top": 32,
+        "padding_bottom": 32
+      }
+    },
+    "cb_guides_CkcUKy": {
+      "type": "cb-guides",
+      "blocks": {
+        "cb_guides_header_ckf79M": {
+          "type": "_cb-guides-header",
+          "settings": {
+            "alignment": "left",
+            "max_width": 1000
+          },
+          "blocks": {
+            "cb_subheader_JQKgzy": {
+              "type": "cb-subheader",
+              "settings": {
+                "subheader_text": "MEET THE TEAM",
+                "secondary": "",
+                "show_dot": false,
+                "size": 10,
+                "weight": "strong",
+                "color": "accent",
+                "custom_color": "#ffffff",
+                "letter_spacing": 0,
+                "uppercase": true,
+                "space_below": 0,
+                "width": "auto",
+                "width_px": 400,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_heading_TrTFHj": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "&nbsp;Players, coaches and stringers who understand the game&nbsp;",
+                "tag": "h2",
+                "size": 32,
+                "mobile_sizing": "fluid",
+                "mobile_scale": 82,
+                "fluid_min": 30,
+                "fluid_vw": 6.5,
+                "weight": "font",
+                "color": "text",
+                "custom_color": "#ffffff",
+                "line_height": 115,
+                "letter_spacing": -1,
+                "uppercase": false,
+                "wrap": "balance",
+                "width": "auto",
+                "width_px": 400,
+                "max_width": 0,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            },
+            "cb_paragraph_RUpJLR": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>Meet the coaches, players and stringers behind the Pro Shop, the people who help you choose, set up and look after your equipment.</p>",
+                "size": 16,
+                "mobile_sizing": "same",
+                "mobile_size": 16,
+                "fluid_vw": 2,
+                "weight": "regular",
+                "color": "muted",
+                "custom_color": "#ffffff",
+                "line_height": 156,
+                "letter_spacing": 0,
+                "wrap": "wrap",
+                "width": "auto",
+                "width_px": 400,
+                "max_width_unit": "none",
+                "max_width_px": 640,
+                "max_width_ch": 60,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "cb_subheader_JQKgzy",
+            "cb_heading_TrTFHj",
+            "cb_paragraph_RUpJLR"
+          ]
+        },
+        "cb_guides_grid_mYcRCA": {
+          "type": "_cb-guides-grid",
+          "settings": {
+            "columns": 3,
+            "mobile_layout": "stack",
+            "gap": 22
+          },
+          "blocks": {
+            "cb_guides_card_wE6QYR": {
+              "type": "_cb-guides-card",
+              "settings": {
+                "article": "",
+                "use_custom_text": false,
+                "card_title": "Coaches",
+                "summary": "Playing insight and practical guidance for players at every stage.",
+                "icon": "none",
+                "custom_icon_tint": true,
+                "label": "TEAM PROFILE",
+                "point_text": "",
+                "link_label": "",
+                "link": ""
+              },
+              "blocks": {}
+            },
+            "cb_guides_card_KgE6C9": {
+              "type": "_cb-guides-card",
+              "settings": {
+                "article": "",
+                "use_custom_text": false,
+                "card_title": "Players",
+                "summary": "First-hand product insight grounded in real training and match experience.",
+                "icon": "none",
+                "custom_icon_tint": true,
+                "label": "TEAM PROFILE",
+                "point_text": "",
+                "link_label": "",
+                "link": ""
+              },
+              "blocks": {}
+            },
+            "cb_guides_card_x4zLxc": {
+              "type": "_cb-guides-card",
+              "settings": {
+                "article": "",
+                "use_custom_text": false,
+                "card_title": "Stringers",
+                "summary": "Careful preparation, considered tension advice and dependable workmanship.",
+                "icon": "none",
+                "custom_icon_tint": true,
+                "label": "TEAM PROFILE",
+                "point_text": "",
+                "link_label": "",
+                "link": ""
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "cb_guides_card_wE6QYR",
+            "cb_guides_card_KgE6C9",
+            "cb_guides_card_x4zLxc"
+          ]
+        }
+      },
+      "block_order": [
+        "cb_guides_header_ckf79M",
+        "cb_guides_grid_mYcRCA"
+      ],
+      "name": "[CB] Setup guidance",
+      "settings": {
+        "design": "1",
+        "max_width": 1400,
+        "stack_gap": 40,
+        "card_radius": 4,
+        "heading_font": "space_grotesk_n7",
+        "body_font": "inter_n4",
+        "background_color": "#111112",
+        "card_background_color": "#181818",
+        "border_color": "#ffffff0d",
+        "text_color": "#ffffff",
+        "accent_color": "#d71f27",
+        "padding_top": 52,
+        "padding_bottom": 44
+      }
+    }
+  },
+  "order": [
+    "main",
+    "cb_player_guides_hwNpJQ",
+    "cb_image_banner_rEdQLp",
+    "cb_guides_eJn8LH",
+    "cb_advice_nH6qfe",
+    "cb_guides_CkcUKy"
+  ]
+}

@@ -1,0 +1,474 @@
+{%- comment -%}
+  Racket specifications: the shared [CB] Subheader and [CB] Heading on top (static blocks), then a table of
+  [CB] Spec rows in one or two columns. With two columns the rows fill the left column first.
+{%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign font_scope = '#cb-specs-' | append: section.id
+
+  if s.value_font == 'body'
+    assign value_family = 'var(--cbsp-font-body)'
+    assign value_weight = 'var(--cbsp-font-body-strong)'
+  else
+    assign value_family = 'var(--cbsp-font-heading)'
+    assign value_weight = 'var(--cbsp-font-heading-weight)'
+  endif
+  if s.value_weight != blank and s.value_weight != 'initial'
+    assign value_weight = s.value_weight
+  endif
+-%}
+
+{% render 'cb-font-styles',
+  selector: font_scope,
+  prefix: 'cbsp',
+  heading_font: s.heading_font,
+  body_font: s.body_font
+%}
+
+<section
+  id="cb-specs-{{ section.id }}"
+  class="cb-specs"
+  style="
+    --cbsp-bg: {{ s.background_color }};
+    --cbsp-row: {{ s.row_color }};
+    --cbsp-row-alt: {{ s.row_alt_color }};
+    --cbsp-text: {{ s.text_color }};
+    --cbsp-muted: {{ s.label_color }};
+    --cbsp-label: {{ s.label_color }};
+    --cbsp-highlight: {{ s.highlight_color }};
+    --cbsp-accent: {{ s.accent_color }};
+    --cbsp-max-width: {{ s.max_width }}px;
+    --cbsp-side: {{ s.side_padding }}px;
+    --cbsp-columns: {{ s.columns }};
+    --cbsp-row-height: {{ s.row_height }}px;
+    --cbsp-row-padding: {{ s.row_padding }}px;
+    --cbsp-radius: {{ s.radius }}px;
+    --cbsp-label-size: {{ s.label_size }}px;
+    --cbsp-label-weight: {{ s.label_weight }};
+    --cbsp-value-size: {{ s.value_size }}px;
+    --cb-specs-sku-size: {{ s.sku_size }}px;
+    --cb-specs-sku-weight: {{ s.sku_weight }};
+    --cbsp-value-family: {{ value_family }};
+    --cbsp-value-weight: {{ value_weight }};
+    --cbsp-header-gap: {{ s.header_gap }}px;
+    --cbsp-pt: {{ s.padding_top }}px;
+    --cbsp-pb: {{ s.padding_bottom }}px;
+  "
+>
+  <div class="cb-specs__inner">
+    <div class="cb-specs__header">
+      <div class="cb-specs__intro">
+        {%- content_for 'block', type: 'cb-subheader', id: 'subheader' -%}
+        {%- content_for 'block', type: 'cb-heading', id: 'heading' -%}
+      </div>
+      {%- assign sku = product.selected_or_first_available_variant.sku -%}
+      {%- if s.sku_text != blank and sku != blank -%}
+        <p class="cb-specs__sku">{{ s.sku_text | replace: '[sku]', sku | escape }}</p>
+      {%- endif -%}
+    </div>
+    <div class="cb-specs__table">
+      {%- content_for 'blocks' -%}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .cb-specs {
+    color: var(--cbsp-text);
+    background: var(--cbsp-bg);
+    padding: var(--cbsp-pt) 16px var(--cbsp-pb);
+  }
+
+  .cb-specs__inner {
+    max-width: var(--cbsp-max-width);
+    margin-inline: auto;
+  }
+
+  .cb-specs__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 8px 24px;
+  }
+
+  .cb-specs__intro {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+
+  .cb-specs .cb-specs__sku {
+    margin: 0 0 4px;
+    font-family: var(--cbsp-font-body);
+    font-weight: var(--cb-specs-sku-weight, inherit);
+    font-size: var(--cb-specs-sku-size, 10px);
+    line-height: 1.3;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--cbsp-label);
+  }
+
+  .cb-specs__header:not(:empty) {
+    margin-bottom: var(--cbsp-header-gap);
+  }
+
+  .cb-specs__table {
+    overflow: hidden;
+    border-radius: var(--cbsp-radius);
+    background: var(--cbsp-row);
+  }
+
+  .cb-specs__table:empty {
+    display: none;
+  }
+
+  /* Every other row is lighter; two columns fill the left column first. */
+  .cb-specs__table > .cb-spec:nth-child(odd) {
+    background: var(--cbsp-row-alt);
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-specs {
+      padding-inline: var(--cbsp-side);
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .cb-specs__table {
+      columns: var(--cbsp-columns);
+      column-gap: 0;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Racket specs",
+  "tag": "section",
+  "class": "section-wrapper",
+  "blocks": [{ "type": "_cb-spec-row" }],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "columns",
+      "label": "Columns",
+      "info": "Phones and tablets show one column.",
+      "options": [
+        { "value": "1", "label": "1" },
+        { "value": "2", "label": "2" }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Maximum width",
+      "min": 800,
+      "max": 1800,
+      "step": 20,
+      "unit": "px",
+      "default": 1520
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Side space",
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "header_gap",
+      "label": "Space below heading",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "range",
+      "id": "row_height",
+      "label": "Row height",
+      "min": 28,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "default": 41
+    },
+    {
+      "type": "range",
+      "id": "row_padding",
+      "label": "Row side padding",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "radius",
+      "label": "Corner radius",
+      "min": 0,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "text",
+      "id": "sku_text",
+      "label": "SKU beside the heading",
+      "info": "[sku] is the product's SKU, e.g. \"SKU: [sku]\". Hidden without a SKU."
+    },
+    {
+      "type": "header",
+      "content": "Text"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "space_grotesk_n7"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "inter_n4"
+    },
+    {
+      "type": "range",
+      "id": "label_size",
+      "label": "Label size",
+      "min": 10,
+      "max": 18,
+      "step": 0.5,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "select",
+      "id": "label_weight",
+      "label": "Label weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "value_size",
+      "label": "Value size",
+      "min": 9,
+      "max": 24,
+      "step": 0.5,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "select",
+      "id": "value_weight",
+      "label": "Value weight",
+      "info": "Default uses the weight of the value font below.",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "sku_size",
+      "label": "SKU size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "sku_weight",
+      "label": "SKU weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "select",
+      "id": "value_font",
+      "label": "Value font",
+      "options": [
+        { "value": "heading", "label": "Heading font, bold" },
+        { "value": "body", "label": "Body font, semibold" }
+      ],
+      "default": "heading"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#0b0b0b"
+    },
+    {
+      "type": "color",
+      "id": "row_color",
+      "label": "Rows",
+      "default": "#161616"
+    },
+    {
+      "type": "color",
+      "id": "row_alt_color",
+      "label": "Alternate rows",
+      "default": "#1b1b1b"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Values and heading",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "label_color",
+      "label": "Labels",
+      "default": "#a1a1aa"
+    },
+    {
+      "type": "color",
+      "id": "highlight_color",
+      "label": "Highlighted values",
+      "default": "#f2aaa0"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "info": "Subheader and dots.",
+      "default": "#d71f27"
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Racket specs",
+      "blocks": {
+        "subheader": {
+          "type": "cb-subheader",
+          "static": true,
+          "settings": { "subheader_text": "Equipment data", "size": 8, "letter_spacing": 10 }
+        },
+        "heading": {
+          "type": "cb-heading",
+          "static": true,
+          "settings": { "heading_text": "Racket specifications", "size": 19, "line_height": 120 }
+        },
+        "style": {
+          "type": "_cb-spec-row",
+          "settings": { "label": "Playing style", "source": "product", "trait": "style", "show_dot": true }
+        },
+        "level": {
+          "type": "_cb-spec-row",
+          "settings": { "label": "Player level", "source": "product", "trait": "level" }
+        },
+        "weight": {
+          "type": "_cb-spec-row",
+          "settings": { "label": "Weight", "source": "product", "trait": "weight" }
+        },
+        "balance": {
+          "type": "_cb-spec-row",
+          "settings": { "label": "Balance", "source": "product", "trait": "balance" }
+        },
+        "flex": {
+          "type": "_cb-spec-row",
+          "settings": { "label": "Flex", "source": "product", "trait": "flex" }
+        },
+        "grip": {
+          "type": "_cb-spec-row",
+          "settings": { "label": "Grip size", "source": "product", "trait": "grip", "value_text": "G5 (Standard)" }
+        },
+        "tension": {
+          "type": "_cb-spec-row",
+          "settings": {
+            "label": "Stringing guidance / recommended tension",
+            "source": "product",
+            "trait": "tension",
+            "format": "Ask the Pro Shop ([value])",
+            "value_text": "Ask the Pro Shop",
+            "highlight": true
+          }
+        },
+        "condition": {
+          "type": "_cb-spec-row",
+          "settings": { "label": "Condition", "source": "text", "value_text": "Brand new · Official NZ stock" }
+        }
+      },
+      "block_order": ["style", "level", "weight", "balance", "flex", "grip", "tension", "condition"]
+    }
+  ]
+}
+{% endschema %}

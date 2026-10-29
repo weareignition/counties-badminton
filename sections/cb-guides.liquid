@@ -12,7 +12,7 @@
 
 <section
   id="cb-guides-{{ section.id }}"
-  class="cb-guides"
+  class="cb-guides cb-guides--design-{{ s.design | default: '1' }}"
   style="
     --cbg-bg: {{ s.background_color }};
     --cbg-card: {{ s.card_background_color }};
@@ -63,6 +63,92 @@
       padding: var(--cbg-pt) 48px var(--cbg-pb);
     }
   }
+
+  /* Design 2: numbered tips with a key point (e.g. Setup guidance). Prefixed with the section class so it
+     beats the block styles whatever order the stylesheets load in. */
+  .cb-guides--design-2 {
+    border-block: 1px solid var(--cbg-border);
+  }
+
+  .cb-guides--design-2 .cb-guides__header {
+    gap: 9px;
+  }
+
+  /* Design 2 type sizes live in the Subheader / Heading / Paragraph block settings (set by the design 2 preset). */
+  .cb-guides--design-2 .cb-guides__header > .cb-paragraph {
+    margin-top: 5px;
+  }
+
+  .cb-guides--design-2 .cb-guides__grid {
+    align-items: start;
+    counter-reset: cb-guide;
+  }
+
+  .cb-guides--design-2 .cb-guide-card {
+    position: relative;
+    gap: 0;
+    padding: 18px 20px 18px;
+    counter-increment: cb-guide;
+  }
+
+  .cb-guides--design-2 .cb-guide-card__label {
+    gap: 0;
+    margin: 0;
+    padding-right: 30px;
+    font-size: calc(var(--cb-guides-card-label-size, 10px) * 12 / 10);
+    letter-spacing: 0.04em;
+  }
+
+  .cb-guides--design-2 .cb-guide-card__label::before {
+    content: counter(cb-guide, decimal-leading-zero) ' — ';
+    white-space: pre;
+  }
+
+  /* The label's icon moves to the card's top-right corner. */
+  .cb-guides--design-2 .cb-guide-card__label svg,
+  .cb-guides--design-2 .cb-guide-card__label .cb-icon-upload {
+    position: absolute;
+    top: 17px;
+    right: 20px;
+    width: 18px;
+    height: 18px;
+    color: var(--cbg-muted);
+  }
+
+  .cb-guides--design-2 .cb-guide-card__title {
+    margin-top: 17px;
+    font-weight: var(--cb-guides-card-title-weight, var(--cbg-font-heading-medium-weight));
+    font-size: calc(var(--cb-guides-card-title-size, 17px) * 18 / 17);
+  }
+
+  .cb-guides--design-2 .cb-guide-card__summary {
+    margin-top: 10px;
+    font-size: calc(var(--cb-guides-card-summary-size, 13px) * 12 / 13);
+    line-height: 1.63;
+    letter-spacing: 0.01em;
+  }
+
+  .cb-guides--design-2 .cb-guide-card__point {
+    margin-top: 24px;
+    padding-top: 20px;
+    font-size: calc(var(--cb-guides-card-point-size, 12px) * 11 / 12);
+  }
+
+  .cb-guides--design-2 .cb-guide-card__cta {
+    margin-top: 16px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-guides--design-2 .cb-guide-card {
+      padding: 22px 24px 22px;
+    }
+
+    .cb-guides--design-2 .cb-guide-card__label svg,
+    .cb-guides--design-2 .cb-guide-card__label .cb-icon-upload {
+      top: 21px;
+      right: 24px;
+    }
+  }
 {% endstylesheet %}
 
 {% schema %}
@@ -81,6 +167,16 @@
     {
       "type": "header",
       "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "design",
+      "label": "Design",
+      "options": [
+        { "value": "1", "label": "Guides with links" },
+        { "value": "2", "label": "Numbered tips with a key point" }
+      ],
+      "default": "1"
     },
     {
       "type": "range",
@@ -198,17 +294,31 @@
           "type": "_cb-guides-header",
           "blocks": {
             "eyebrow": {
-              "type": "_cb-guides-eyebrow",
-              "settings": { "eyebrow_text": "Technical guidance" }
+              "type": "cb-subheader",
+              "settings": {
+                "subheader_text": "Technical guidance",
+                "size": 11,
+                "letter_spacing": 12,
+                "space_below": -4
+              }
             },
             "heading": {
-              "type": "_cb-guides-heading",
-              "settings": { "heading_text": "We don’t expect you to know what 4U, head-heavy or 26 lbs means. That’s our job." }
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "We don’t expect you to know what 4U, head-heavy or 26 lbs means. That’s our job.",
+                "size": 48,
+                "mobile_sizing": "fluid",
+                "fluid_min": 30,
+                "fluid_vw": 6.5,
+                "line_height": 106,
+                "letter_spacing": -2
+              }
             },
             "text": {
-              "type": "_cb-guides-text",
+              "type": "cb-paragraph",
               "settings": {
-                "body_text": "<p>Read technical briefings straight from Counties Manukau stringers and coaching staff to demystify badminton gear.</p>"
+                "body_text": "<p>Read technical briefings straight from Counties Manukau stringers and coaching staff to demystify badminton gear.</p>",
+                "max_width_unit": "ch"
               }
             }
           },
@@ -249,6 +359,92 @@
             }
           },
           "block_order": ["card_1", "card_2", "card_3"]
+        }
+      },
+      "block_order": ["header", "grid"]
+    },
+    {
+      "name": "[CB] Setup guidance",
+      "category": "t:categories.storytelling",
+      "settings": {
+        "design": "2",
+        "background_color": "#111112",
+        "card_background_color": "#181818",
+        "border_color": "#ffffff0d",
+        "card_radius": 4,
+        "stack_gap": 40,
+        "padding_top": 52,
+        "padding_bottom": 44
+      },
+      "blocks": {
+        "header": {
+          "type": "_cb-guides-header",
+          "settings": { "alignment": "left", "max_width": 660 },
+          "blocks": {
+            "eyebrow": {
+              "type": "cb-subheader",
+              "settings": { "subheader_text": "Setup guidance", "letter_spacing": 0 }
+            },
+            "heading": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "Small details make a big difference.",
+                "mobile_sizing": "fluid",
+                "fluid_min": 30,
+                "fluid_vw": 6.5
+              }
+            },
+            "text": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>From the right grip feel to keeping your rackets protected between games, the right accessories help keep your setup comfortable and court-ready.</p>",
+                "size": 16,
+                "mobile_size": 16,
+                "line_height": 156
+              }
+            }
+          },
+          "block_order": ["eyebrow", "heading", "text"]
+        },
+        "grid": {
+          "type": "_cb-guides-grid",
+          "settings": { "columns": 3, "gap": 22 },
+          "blocks": {
+            "grip": {
+              "type": "_cb-guides-card",
+              "settings": {
+                "icon": "athlete",
+                "label": "Choosing a grip",
+                "card_title": "Replacement grip or overgrip?",
+                "summary": "Replacement grips adhere straight to the handle to provide base cushioning, while overgrips wrap on top for thin, tacky traction and rapid sweat absorption. Different grip types directly affect racket feel and playing comfort.",
+                "point_text": "Different grips affect feel and control",
+                "link_label": ""
+              }
+            },
+            "bag": {
+              "type": "_cb-guides-card",
+              "settings": {
+                "icon": "bag",
+                "label": "Choosing a bag",
+                "card_title": "How much space do you actually need?",
+                "summary": "Match your bag size to the number of rackets, shoes, and clothing you carry for training sessions or tournaments. Dedicated compartments keep shoes, shuttles, and damp kit cleanly separated.",
+                "point_text": "Match bag capacity to your equipment",
+                "link_label": ""
+              }
+            },
+            "care": {
+              "type": "_cb-guides-card",
+              "settings": {
+                "icon": "wrench",
+                "label": "Racket care",
+                "card_title": "Looking after your racket",
+                "summary": "Grommets protect both frame and strings. Regularly checking for split or damaged eyelets between restrings helps safeguard your racket frame and preserve overall string life.",
+                "point_text": "Simple care between restringing sessions",
+                "link_label": ""
+              }
+            }
+          },
+          "block_order": ["grip", "bag", "care"]
         }
       },
       "block_order": ["header", "grid"]

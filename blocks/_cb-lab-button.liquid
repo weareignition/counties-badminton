@@ -1,0 +1,140 @@
+{%- liquid
+  assign link = block.settings.link
+  if link == blank
+    assign link = collections['stringing'].url | default: routes.all_products_collection_url
+  endif
+-%}
+
+{%- if block.settings.label != blank -%}
+  <a
+    href="{{ link }}"
+    class="cb-lab__button cb-lab__button--{{ block.settings.style }}"
+    style="--cb-lab-button-text-size: {{ block.settings.text_size }}px; --cb-lab-button-text-weight: {{ block.settings.text_weight }};"
+    {{ block.shopify_attributes }}
+  >
+    {{- block.settings.label | escape -}}
+    {%- if block.settings.show_arrow -%}
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    {%- endif -%}
+  </a>
+{%- endif -%}
+
+{% stylesheet %}
+  .cb-lab__button {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    padding: 12px 20px;
+    border: 1px solid transparent;
+    border-radius: 2px;
+    font-family: var(--cbl-font-body);
+    font-weight: var(--cb-lab-button-text-weight, var(--cbl-font-body-strong));
+    font-size: var(--cb-lab-button-text-size, 11px);
+    line-height: 1.2;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .cb-lab__button svg {
+    flex: none;
+  }
+
+  .cb-lab__button--primary {
+    background: var(--cbl-accent);
+    color: #fff;
+  }
+
+  .cb-lab__button--primary:hover {
+    background: color-mix(in srgb, var(--cbl-accent) 85%, #000);
+  }
+
+  .cb-lab__button--secondary {
+    border-color: var(--cbl-border-strong);
+    background: transparent;
+    color: var(--cbl-text);
+  }
+
+  .cb-lab__button--secondary:hover {
+    border-color: var(--cbl-text);
+  }
+
+  .cb-lab__button:focus-visible {
+    outline: 2px solid var(--cbl-text);
+    outline-offset: 3px;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Button",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "Explore stringing workshop"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link",
+      "info": "Leave empty to open the Stringing collection."
+    },
+    {
+      "type": "select",
+      "id": "style",
+      "label": "Style",
+      "options": [
+        { "value": "primary", "label": "Filled" },
+        { "value": "secondary", "label": "Outline" }
+      ],
+      "default": "primary"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrow",
+      "label": "Show arrow",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Button text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "select",
+      "id": "text_weight",
+      "label": "Button text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    }
+  ],
+  "presets": [{ "name": "[CB] Button" }]
+}
+{% endschema %}

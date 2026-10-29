@@ -1,0 +1,252 @@
+<div
+  class="cb-stats__item{% if block.settings.link != blank %} cb-stats__item--link{% endif %}"
+  style="--cb-stats-item-stat-size: {{ block.settings.stat_size }}px; --cb-stats-item-stat-weight: {{ block.settings.stat_weight }}; --cb-stats-item-text-size: {{ block.settings.text_size }}px; --cb-stats-item-text-weight: {{ block.settings.text_weight }};"
+  {{ block.shopify_attributes }}
+>
+  {%- if block.settings.custom_icon != blank or block.settings.icon != 'none' -%}
+    <span class="cb-stats__icon" aria-hidden="true">
+      {%- if block.settings.custom_icon != blank -%}
+        {%- render 'cb-icon-upload', image: block.settings.custom_icon, size: 15, tint: block.settings.custom_icon_tint -%}
+      {%- else -%}
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+          {%- case block.settings.icon -%}
+            {%- when 'calendar' -%}
+              <rect x="4" y="5" width="16" height="15" rx="1.5"/><path d="M4 9.5h16M8.5 3v4M15.5 3v4"/>
+            {%- when 'clock' -%}
+              <circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>
+            {%- when 'tag' -%}
+              <path d="M3.5 12.2V4.5a1 1 0 0 1 1-1h7.7l8.3 8.3a1 1 0 0 1 0 1.4l-7.3 7.3a1 1 0 0 1-1.4 0z"/><circle cx="8" cy="8" r="1.4"/>
+            {%- when 'racket' -%}
+              <ellipse cx="9.5" cy="10" rx="5" ry="6" transform="rotate(-40 9.5 10)"/><path d="m13.3 14.2 6 6"/><path d="M19 3.5v3.5M17.25 5.25h3.5"/>
+            {%- when 'tools' -%}
+              <path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.4-.6-.6-2.4z"/>
+            {%- when 'store' -%}
+              <path d="M4.5 9 6 4h12l1.5 5"/><path d="M4.5 9h15v1.2a2.5 2.5 0 0 1-5 0 2.5 2.5 0 0 1-5 0 2.5 2.5 0 0 1-5 0z"/><path d="M6 12.5V20h12v-7.5M10 20v-4h4v4"/>
+            {%- when 'pin' -%}
+              <path d="M12 21s-7-6.1-7-11.5a7 7 0 0 1 14 0C19 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>
+            {%- when 'truck' -%}
+              <path d="M3 6h11v10H3zM14 9h4l3 3v4h-7"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/>
+            {%- when 'shield' -%}
+              <path d="M12 3 4.5 6v5.5c0 4.6 3.2 8.1 7.5 9.5 4.3-1.4 7.5-4.9 7.5-9.5V6z"/><path d="m9 12 2 2 4-4"/>
+            {%- when 'star' -%}
+              <path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/>
+            {%- when 'help' -%}
+              <circle cx="12" cy="12" r="9"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01"/>
+          {%- endcase -%}
+        </svg>
+      {%- endif -%}
+    </span>
+  {%- endif -%}
+
+  <div class="cb-stats__content">
+    {%- if block.settings.stat_title != blank -%}
+      <p class="cb-stats__title">
+        {%- if block.settings.link != blank -%}
+          <a href="{{ block.settings.link }}">{{ block.settings.stat_title | escape }}</a>
+        {%- else -%}
+          {{- block.settings.stat_title | escape -}}
+        {%- endif -%}
+      </p>
+    {%- endif -%}
+    {%- if block.settings.stat_text != blank -%}
+      <p class="cb-stats__text">{{ block.settings.stat_text | escape }}</p>
+    {%- endif -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .cb-stats__item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+  }
+
+  .cb-stats__icon {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: 1px solid var(--cby-box-border);
+    border-radius: 2px;
+    color: var(--cby-accent);
+  }
+
+  .cb-stats__content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  .cb-stats__title {
+    margin: 0;
+    font-family: var(--cby-font-heading);
+    font-weight: var(--cb-stats-item-stat-weight, var(--cby-font-heading-weight));
+    font-size: var(--cb-stats-item-stat-size, 14px);
+    line-height: 1.25;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--cby-text);
+  }
+
+  .cb-stats__title a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  /* With a link, the whole item is clickable. */
+  .cb-stats__title a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  .cb-stats__item--link:hover .cb-stats__title {
+    color: var(--cby-accent);
+  }
+
+  .cb-stats__item--link:has(a:focus-visible) {
+    outline: 2px solid var(--cby-text);
+    outline-offset: 4px;
+  }
+
+  .cb-stats__title a:focus-visible {
+    outline: none;
+  }
+
+  .cb-stats__text {
+    margin: 0;
+    font-family: var(--cby-font-body);
+    font-weight: var(--cb-stats-item-text-weight, var(--cby-font-body-weight));
+    font-size: var(--cb-stats-item-text-size, 10px);
+    line-height: 1.4;
+    color: var(--cby-muted);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Stat",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "icon",
+      "label": "Icon",
+      "options": [
+        { "value": "calendar", "label": "Calendar" },
+        { "value": "clock", "label": "Clock" },
+        { "value": "tag", "label": "Price tag" },
+        { "value": "racket", "label": "Racket" },
+        { "value": "tools", "label": "Tools" },
+        { "value": "store", "label": "Shop front" },
+        { "value": "pin", "label": "Map pin" },
+        { "value": "truck", "label": "Delivery" },
+        { "value": "shield", "label": "Shield" },
+        { "value": "star", "label": "Star" },
+        { "value": "help", "label": "Question" },
+        { "value": "none", "label": "None" }
+      ],
+      "default": "calendar"
+    },
+    {
+      "type": "image_picker",
+      "id": "custom_icon",
+      "label": "Custom icon",
+      "info": "Upload your own SVG (or PNG). It replaces the built-in icon above."
+    },
+    {
+      "type": "checkbox",
+      "id": "custom_icon_tint",
+      "label": "Colour it like the built-in icons",
+      "info": "For one-colour SVGs: uses this section's icon colour. Turn off to keep the file's own colours.",
+      "default": true,
+      "visible_if": "{{ block.settings.custom_icon != blank }}"
+    },
+    {
+      "type": "text",
+      "id": "stat_title",
+      "label": "Stat",
+      "info": "Shown in capitals, e.g. 7 days.",
+      "default": "7 days"
+    },
+    {
+      "type": "text",
+      "id": "stat_text",
+      "label": "Text",
+      "default": "Restringing available"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link",
+      "info": "Optional. Makes the whole item clickable."
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "stat_size",
+      "label": "Stat size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "stat_weight",
+      "label": "Stat weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "text_weight",
+      "label": "Text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    }
+  ],
+  "presets": [{ "name": "[CB] Stat" }]
+}
+{% endschema %}

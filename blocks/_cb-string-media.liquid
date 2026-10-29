@@ -6,6 +6,12 @@
     --cbs-ratio: {{ block.settings.image_ratio }};
     --cbs-ratio-mobile: {{ block.settings.image_ratio_mobile }};
     --cbs-focal: {{ image.presentation.focal_point | default: 'center' }};
+    --cb-string-media-badge-size: {{ block.settings.badge_size }}px;
+    --cb-string-media-badge-weight: {{ block.settings.badge_weight }};
+    --cb-string-media-caption-size: {{ block.settings.caption_size }}px;
+    --cb-string-media-caption-weight: {{ block.settings.caption_weight }};
+    --cb-string-media-caption-note-size: {{ block.settings.caption_note_size }}px;
+    --cb-string-media-caption-note-weight: {{ block.settings.caption_note_weight }};
   "
   {{ block.shopify_attributes }}
 >
@@ -97,8 +103,8 @@
     background: rgb(10 10 10 / 0.8);
     backdrop-filter: blur(6px);
     font-family: var(--cbs-font-body);
-    font-weight: var(--cbs-font-body-strong);
-    font-size: 10px;
+    font-weight: var(--cb-string-media-badge-weight, var(--cbs-font-body-strong));
+    font-size: var(--cb-string-media-badge-size, 10px);
     line-height: 1.25;
     letter-spacing: 0.06em;
     text-transform: uppercase;
@@ -119,8 +125,8 @@
     align-items: center;
     gap: 8px;
     font-family: var(--cbs-font-body);
-    font-weight: var(--cbs-font-body-weight);
-    font-size: 12px;
+    font-weight: var(--cb-string-media-caption-weight, var(--cbs-font-body-weight));
+    font-size: var(--cb-string-media-caption-size, 12px);
     line-height: 1.4;
     color: var(--cbs-text);
   }
@@ -132,8 +138,8 @@
 
   .cb-string__caption-note {
     font-family: var(--cbs-font-body);
-    font-weight: var(--cbs-font-body-weight);
-    font-size: 11px;
+    font-weight: var(--cb-string-media-caption-note-weight, var(--cbs-font-body-weight));
+    font-size: var(--cb-string-media-caption-note-size, 11px);
     line-height: 1.4;
     color: var(--cbs-muted);
   }
@@ -201,6 +207,94 @@
       "label": "Caption note",
       "info": "Shown on the right of the caption.",
       "default": "Victor Electronic 6-Point Mount"
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "badge_size",
+      "label": "Badge size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "badge_weight",
+      "label": "Badge weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "caption_size",
+      "label": "Caption size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "caption_weight",
+      "label": "Caption weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "caption_note_size",
+      "label": "Caption note size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "select",
+      "id": "caption_note_weight",
+      "label": "Caption note weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
     }
   ],
   "presets": [{ "name": "[CB] Media card" }]

@@ -1,0 +1,221 @@
+{%- assign image = block.settings.image -%}
+
+<figure
+  class="cb-lab__media"
+  style="
+    --cbl-ratio-mobile: {{ block.settings.image_ratio_mobile }};
+    --cbl-focal: {{ image.presentation.focal_point | default: 'center' }};
+    --cb-lab-media-label-size: {{ block.settings.label_size }}px;
+    --cb-lab-media-label-weight: {{ block.settings.label_weight }};
+  "
+  {{ block.shopify_attributes }}
+>
+  {%- if image != blank -%}
+    {{
+      image
+      | image_url: width: 1600
+      | image_tag:
+        widths: '400, 600, 800, 1000, 1200, 1600',
+        sizes: '(min-width: 990px) 50vw, 100vw',
+        loading: 'lazy',
+        class: 'cb-lab__image'
+    }}
+  {%- else -%}
+    {{ 'lifestyle-2' | placeholder_svg_tag: 'cb-lab__image cb-lab__image--placeholder' }}
+  {%- endif -%}
+
+  {%- if block.settings.label_highlight != blank or block.settings.label_text != blank -%}
+    <figcaption class="cb-lab__label cb-lab__label--{{ block.settings.label_position }}">
+      {%- if block.settings.label_highlight != blank -%}
+        <span class="cb-lab__label-highlight">{{ block.settings.label_highlight | escape }}</span>
+      {%- endif -%}
+      {%- if block.settings.label_text != blank -%}
+        <span>{{ block.settings.label_text | escape }}</span>
+      {%- endif -%}
+    </figcaption>
+  {%- endif -%}
+</figure>
+
+{% stylesheet %}
+  .cb-lab__media {
+    position: relative;
+    min-width: 0;
+    margin: 0;
+    overflow: hidden;
+    border-radius: 3px;
+    background: var(--cbl-box);
+    aspect-ratio: var(--cbl-ratio-mobile, 4 / 3);
+  }
+
+  .cb-lab__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: var(--cbl-focal, center);
+  }
+
+  .cb-lab__image--placeholder {
+    fill: var(--cbl-muted);
+  }
+
+  .cb-lab__label {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 5px;
+    max-width: calc(100% - 24px);
+    padding: 6px 10px;
+    border-radius: 2px;
+    background: rgb(10 10 10 / 0.85);
+    font-family: var(--cbl-font-body);
+    font-weight: var(--cb-lab-media-label-weight, var(--cbl-font-body-strong));
+    font-size: calc(var(--cb-lab-media-label-size, 11px) * 10 / 11);
+    line-height: 1.4;
+    color: #fff;
+  }
+
+  .cb-lab__label-highlight {
+    color: var(--cbl-accent);
+  }
+
+  .cb-lab__label--bottom-right {
+    right: 12px;
+    left: auto;
+  }
+
+  .cb-lab__label--top-left {
+    top: 12px;
+    bottom: auto;
+  }
+
+  .cb-lab__label--top-right {
+    top: 12px;
+    right: 12px;
+    bottom: auto;
+    left: auto;
+  }
+
+  /* Side by side, the photo takes the height of the text column (the image itself doesn't size the row). */
+  @media screen and (min-width: 990px) {
+    .cb-lab__media {
+      align-self: stretch;
+      min-height: 300px;
+      aspect-ratio: auto;
+    }
+
+    .cb-lab__media .cb-lab__image {
+      position: absolute;
+      inset: 0;
+    }
+
+    .cb-lab__label {
+      bottom: 16px;
+      left: 16px;
+      font-size: var(--cb-lab-media-label-size, 11px);
+    }
+
+    .cb-lab__label--bottom-right,
+    .cb-lab__label--top-right {
+      right: 16px;
+      left: auto;
+    }
+
+    .cb-lab__label--top-left,
+    .cb-lab__label--top-right {
+      top: 16px;
+      bottom: auto;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Photo",
+  "tag": null,
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio_mobile",
+      "label": "Shape on phones and tablets",
+      "info": "On large screens the photo fills the height of the text.",
+      "options": [
+        { "value": "4 / 3", "label": "Landscape" },
+        { "value": "1 / 1", "label": "Square" },
+        { "value": "3 / 4", "label": "Portrait" }
+      ],
+      "default": "4 / 3"
+    },
+    {
+      "type": "header",
+      "content": "Label"
+    },
+    {
+      "type": "text",
+      "id": "label_highlight",
+      "label": "Highlighted text",
+      "info": "Shown in the accent color.",
+      "default": "Daily Workshop:"
+    },
+    {
+      "type": "text",
+      "id": "label_text",
+      "label": "Text",
+      "default": "Mon–Sun 9:00am – 8:00pm"
+    },
+    {
+      "type": "select",
+      "id": "label_position",
+      "label": "Position",
+      "options": [
+        { "value": "bottom-left", "label": "Bottom left" },
+        { "value": "bottom-right", "label": "Bottom right" },
+        { "value": "top-left", "label": "Top left" },
+        { "value": "top-right", "label": "Top right" }
+      ],
+      "default": "bottom-left"
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "label_size",
+      "label": "Label size",
+      "info": "Scaled down on phones and tablets.",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "select",
+      "id": "label_weight",
+      "label": "Label weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    }
+  ],
+  "presets": [{ "name": "[CB] Photo" }]
+}
+{% endschema %}

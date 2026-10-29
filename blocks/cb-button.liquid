@@ -1,0 +1,388 @@
+{%- comment -%}
+  A button for any section. "Outline" is the dark bordered button with accent text used on the guide cards,
+  "Solid" fills it with the accent colour, "Text" is a plain accent link. Inside a [CB] section it uses that section's
+  body font and accent (through the --cb-* variables from snippets/cb-font-styles). Custom colours, an uploaded icon,
+  position and spacing are optional; left at their defaults the button looks exactly like the chosen style.
+{%- endcomment -%}
+{%- liquid
+  assign s = block.settings
+  assign target = ''
+  if s.new_tab
+    assign target = ' target="_blank" rel="noopener"'
+  endif
+  assign icon_size = s.size | times: 1.25 | round
+
+  # The uploaded icon, else the built-in one.
+  capture icon_html
+    if s.custom_icon != blank
+      render 'cb-icon-upload', image: s.custom_icon, size: icon_size, tint: s.custom_icon_tint
+    elsif s.icon != blank and s.icon != 'none'
+      echo '<svg width="' | append: icon_size | append: '" height="' | append: icon_size | append: '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+      case s.icon
+        when 'arrow'
+          echo '<path d="M5 12h14M13 6l6 6-6 6"/>'
+        when 'chat'
+          echo '<path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/>'
+        when 'store'
+          echo '<path d="M3 9l1.5-5h15L21 9M3 9h18M3 9v11h18V9M9 20v-6h6v6"/>'
+        when 'cart'
+          echo '<circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h3l2.7 12.4a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.6L21 7H6"/>'
+        when 'phone'
+          echo '<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/>'
+        when 'mail'
+          echo '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>'
+        when 'calendar'
+          echo '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>'
+        when 'pin'
+          echo '<path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>'
+      endcase
+      echo '</svg>'
+    endif
+  endcapture
+-%}
+
+{%- if s.label != blank -%}
+  <a
+    {% if s.link != blank %}href="{{ s.link }}"{% else %}role="link" aria-disabled="true"{% endif %}
+    class="cb-button cb-button--{{ s.style }}{% if s.font == 'heading' %} cb-button--heading{% endif %}{% if s.full_width %} cb-button--full{% endif %}{% if s.alignment != 'auto' %} cb-button--align-{{ s.alignment }}{% endif %}{% if s.uppercase %} cb-button--upper{% endif %}{% if s.space_above > 0 %} cb-button--spaced{% endif %}"
+    style="
+      --cb-button-size: {{ s.size }}px;
+      --cb-button-weight: {{ s.weight }};
+      --cb-button-radius: {{ s.radius }}px;
+      {%- if s.height > 0 %} --cb-button-height: {{ s.height }}px;{% endif %}
+      {%- if s.padding_x > 0 %} --cb-button-px: {{ s.padding_x }}px;{% endif %}
+      {%- if s.button_color != blank %} --cb-button-bg: {{ s.button_color }};{% endif %}
+      {%- if s.text_color != blank %} --cb-button-fg: {{ s.text_color }};{% endif %}
+      {%- if s.border_color != blank %} --cb-button-border: {{ s.border_color }};{% endif %}
+      {%- if s.space_above > 0 %} --cb-button-space: {{ s.space_above }}px;{% endif %}
+    "
+    {{- target }}
+    {{ block.shopify_attributes }}
+  >
+    {%- if s.icon_position == 'before' -%}{{ icon_html }}{%- endif -%}
+    <span>{{ s.label | escape }}</span>
+    {%- if s.icon_position == 'after' -%}{{ icon_html }}{%- endif -%}
+  </a>
+{%- endif -%}
+
+{% stylesheet %}
+  .cb-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+    box-sizing: border-box;
+    min-height: var(--cb-button-height, calc(var(--cb-button-size, 12px) * 3.75));
+    padding: 0 var(--cb-button-px, calc(var(--cb-button-size, 12px) * 1.6));
+    border: 1px solid transparent;
+    border-radius: var(--cb-button-radius, 8px);
+    font-family: var(--cb-font-body, var(--font-body--family));
+    font-weight: var(--cb-button-weight, var(--cb-font-body-strong, 600));
+    font-size: var(--cb-button-size, 12px);
+    line-height: 1.2;
+    text-align: center;
+    text-decoration: none;
+    transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+  }
+
+  .cb-button.cb-button--heading {
+    font-family: var(--cb-font-heading, var(--font-heading--family));
+    font-weight: var(--cb-button-weight, var(--cb-font-heading-weight, 700));
+  }
+
+  .cb-button svg,
+  .cb-button .cb-icon-upload {
+    flex: none;
+  }
+
+  .cb-button--outline {
+    border-color: var(--cb-button-border, rgb(255 255 255 / 0.08));
+    background: var(--cb-button-bg, rgb(255 255 255 / 0.02));
+    color: var(--cb-button-fg, var(--cb-color-accent, #d71f27));
+  }
+
+  .cb-button--outline:hover {
+    border-color: var(--cb-button-fg, var(--cb-color-accent, #d71f27));
+  }
+
+  .cb-button--solid {
+    border-color: var(--cb-button-border, var(--cb-button-bg, var(--cb-color-accent, #d71f27)));
+    background: var(--cb-button-bg, var(--cb-color-accent, #d71f27));
+    color: var(--cb-button-fg, #ffffff);
+  }
+
+  .cb-button--solid:hover {
+    background: color-mix(in srgb, var(--cb-button-bg, var(--cb-color-accent, #d71f27)) 88%, #000);
+  }
+
+  .cb-button--text {
+    min-height: 0;
+    padding: 0;
+    color: var(--cb-button-fg, var(--cb-color-accent, #d71f27));
+  }
+
+  .cb-button--text:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .cb-button--upper {
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  /* Position: a block-level box that sits left, centre or right, whatever the parent's alignment. */
+  .cb-button--align-left,
+  .cb-button--align-center,
+  .cb-button--align-right {
+    display: flex;
+    width: fit-content;
+  }
+
+  .cb-button--align-left {
+    margin-right: auto;
+  }
+
+  .cb-button--align-center {
+    margin-inline: auto;
+  }
+
+  .cb-button--align-right {
+    margin-left: auto;
+  }
+
+  .cb-button.cb-button--full {
+    width: 100%;
+  }
+
+  /* "Space above" replaces the section's own spacing (three classes so it wins over section rules). */
+  .cb-button.cb-button--spaced.cb-button--spaced {
+    margin-top: var(--cb-button-space, 0px);
+  }
+
+  .cb-button:focus-visible {
+    outline: 2px solid var(--cb-color-accent, #d71f27);
+    outline-offset: 3px;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Button",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "Ask a specialist →"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link"
+    },
+    {
+      "type": "checkbox",
+      "id": "new_tab",
+      "label": "Open in a new tab",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "select",
+      "id": "style",
+      "label": "Style",
+      "options": [
+        { "value": "outline", "label": "Dark with border" },
+        { "value": "solid", "label": "Accent fill" },
+        { "value": "text", "label": "Text link" }
+      ],
+      "default": "outline"
+    },
+    {
+      "type": "range",
+      "id": "size",
+      "label": "Text size",
+      "info": "The button's height and side padding grow with it.",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "weight",
+      "label": "Text weight",
+      "info": "Default uses the weight of the font below.",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "radius",
+      "label": "Corner radius",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "select",
+      "id": "font",
+      "label": "Font",
+      "options": [
+        { "value": "body", "label": "Body font" },
+        { "value": "heading", "label": "Heading font, bold" }
+      ],
+      "default": "body"
+    },
+    {
+      "type": "range",
+      "id": "height",
+      "label": "Height",
+      "info": "0 = set by the text size.",
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_x",
+      "label": "Side padding",
+      "info": "0 = set by the text size.",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "checkbox",
+      "id": "uppercase",
+      "label": "Uppercase",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "button_color",
+      "label": "Button colour",
+      "info": "Leave empty to use the style's own colour."
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text colour",
+      "info": "Leave empty to use the style's own colour."
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border colour",
+      "info": "Leave empty to use the style's own colour."
+    },
+    {
+      "type": "header",
+      "content": "Icon"
+    },
+    {
+      "type": "select",
+      "id": "icon",
+      "label": "Icon",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "arrow", "label": "Arrow" },
+        { "value": "chat", "label": "Chat" },
+        { "value": "store", "label": "Shop" },
+        { "value": "cart", "label": "Cart" },
+        { "value": "phone", "label": "Phone" },
+        { "value": "mail", "label": "Email" },
+        { "value": "calendar", "label": "Calendar" },
+        { "value": "pin", "label": "Map pin" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "image_picker",
+      "id": "custom_icon",
+      "label": "Icon",
+      "info": "Optional. Upload an SVG (or PNG)."
+    },
+    {
+      "type": "checkbox",
+      "id": "custom_icon_tint",
+      "label": "Colour it like the text",
+      "info": "For one-colour SVGs. Turn off to keep the file's own colours.",
+      "default": true,
+      "visible_if": "{{ block.settings.custom_icon != blank }}"
+    },
+    {
+      "type": "select",
+      "id": "icon_position",
+      "label": "Icon position",
+      "options": [
+        { "value": "before", "label": "Before the text" },
+        { "value": "after", "label": "After the text" }
+      ],
+      "default": "after",
+      "visible_if": "{{ block.settings.custom_icon != blank }}"
+    },
+    {
+      "type": "header",
+      "content": "Position"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Position",
+      "options": [
+        { "value": "auto", "label": "Follow the section" },
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Centre" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "auto"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full width",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "space_above",
+      "label": "Space above",
+      "info": "0 = the section's normal spacing.",
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Button"
+    }
+  ]
+}
+{% endschema %}

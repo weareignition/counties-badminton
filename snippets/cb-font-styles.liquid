@@ -1,9 +1,16 @@
 {%- doc -%}
   Loads a [CB] section's heading and body fonts and exposes them as CSS variables on the section root:
   --{prefix}-font-heading, --{prefix}-font-heading-weight, --{prefix}-font-heading-regular-weight (a regular cut
-  of the heading font for numerals and lighter display text), --{prefix}-font-body, --{prefix}-font-body-weight
+  of the heading font for numerals and lighter display text), --{prefix}-font-heading-medium-weight (a medium cut,
+  or the heading weight when the font has none), --{prefix}-font-body, --{prefix}-font-body-weight
   and --{prefix}-font-body-strong (a semibold cut of the body font for small UI text).
+  Every weight each font has (100 to 900) is loaded, so the blocks' text weight settings can pick any of them.
   Browsers only download a face when text on the page uses it, so unused cuts cost nothing.
+
+  The same fonts are also exposed under shared names (--cb-font-heading, --cb-font-body-strong, ...) together with
+  the section's colours (--cb-color-text, --cb-color-muted, --cb-color-accent, --cb-color-soft, read from
+  --{prefix}-text etc.), so shared blocks such as [CB] Heading, [CB] Subheader and [CB] Paragraph pick up the
+  look of whichever [CB] section they are placed in.
 
   @param {string} selector - CSS selector for the section root, e.g. '#cb-hero-template--123__cb_hero'.
   @param {string} prefix - Variable prefix, e.g. 'cbh' gives --cbh-font-heading.
@@ -13,6 +20,7 @@
 
 {%- liquid
   assign heading_font_regular = heading_font | font_modify: 'weight', 'normal' | default: heading_font
+  assign heading_font_medium = heading_font | font_modify: 'weight', '500' | default: heading_font
 
   assign body_font_strong = body_font | font_modify: 'weight', '600'
   if body_font_strong == blank
@@ -21,17 +29,39 @@
 -%}
 
 <style>
-  {{ heading_font | font_face: font_display: 'swap' }}
-  {{ heading_font_regular | font_face: font_display: 'swap' }}
-  {{ body_font | font_face: font_display: 'swap' }}
-  {{ body_font_strong | font_face: font_display: 'swap' }}
+  {%- for step in (1..9) -%}
+    {%- liquid
+      assign weight = step | times: 100 | append: ''
+      assign heading_face = heading_font | font_modify: 'weight', weight
+      assign body_face = body_font | font_modify: 'weight', weight
+    -%}
+    {%- if heading_face %}
+      {{ heading_face | font_face: font_display: 'swap' }}
+    {%- endif -%}
+    {%- if body_face %}
+      {{ body_face | font_face: font_display: 'swap' }}
+    {%- endif -%}
+  {%- endfor %}
 
   {{ selector }} {
     --{{ prefix }}-font-heading: {{ heading_font.family }}, {{ heading_font.fallback_families }};
     --{{ prefix }}-font-heading-weight: {{ heading_font.weight }};
     --{{ prefix }}-font-heading-regular-weight: {{ heading_font_regular.weight }};
+    --{{ prefix }}-font-heading-medium-weight: {{ heading_font_medium.weight }};
     --{{ prefix }}-font-body: {{ body_font.family }}, {{ body_font.fallback_families }};
     --{{ prefix }}-font-body-weight: {{ body_font.weight }};
     --{{ prefix }}-font-body-strong: {{ body_font_strong.weight }};
+
+    --cb-font-heading: var(--{{ prefix }}-font-heading);
+    --cb-font-heading-weight: var(--{{ prefix }}-font-heading-weight);
+    --cb-font-heading-regular-weight: var(--{{ prefix }}-font-heading-regular-weight);
+    --cb-font-heading-medium-weight: var(--{{ prefix }}-font-heading-medium-weight);
+    --cb-font-body: var(--{{ prefix }}-font-body);
+    --cb-font-body-weight: var(--{{ prefix }}-font-body-weight);
+    --cb-font-body-strong: var(--{{ prefix }}-font-body-strong);
+    --cb-color-text: var(--{{ prefix }}-text);
+    --cb-color-muted: var(--{{ prefix }}-muted);
+    --cb-color-accent: var(--{{ prefix }}-accent);
+    --cb-color-soft: var(--{{ prefix }}-soft, var(--{{ prefix }}-muted));
   }
 </style>

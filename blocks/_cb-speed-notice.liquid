@@ -1,0 +1,429 @@
+{%- liquid
+  assign button_link = block.settings.button_link
+  if button_link == blank
+    assign button_link = routes.root_url | append: 'pages/contact'
+  endif
+  assign link_label = block.settings.link_label | strip
+
+  assign has_icon = false
+  if block.settings.show_icon
+    if block.settings.custom_icon != blank or block.settings.icon_type != 'none'
+      assign has_icon = true
+    endif
+  endif
+-%}
+
+{%- capture icon_path -%}
+  {%- case block.settings.icon_type -%}
+    {%- when 'question' -%}
+      <circle cx="12" cy="12" r="9"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01"/>
+    {%- when 'alert' -%}
+      <circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5h.01"/>
+    {%- else -%}
+      <circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>
+  {%- endcase -%}
+{%- endcapture -%}
+
+<div
+  class="cb-speed-notice"
+  style="
+    --cb-speed-notice-title-size: {{ block.settings.title_size }}px;
+    --cb-speed-notice-title-weight: {{ block.settings.title_weight }};
+    --cb-speed-notice-text-size: {{ block.settings.text_size }}px;
+    --cb-speed-notice-text-weight: {{ block.settings.text_weight }};
+    --cb-speed-notice-button-size: {{ block.settings.button_size }}px;
+    --cb-speed-notice-button-weight: {{ block.settings.button_weight }};
+    --cb-speed-notice-link-size: {{ block.settings.link_size }}px;
+    --cb-speed-notice-link-weight: {{ block.settings.link_weight }};
+  "
+  {{ block.shopify_attributes }}
+>
+  {%- if block.settings.notice_title != blank -%}
+    <div class="cb-speed-notice__intro">
+      {%- if has_icon -%}
+        <span class="cb-speed-notice__badge" aria-hidden="true">
+          {%- if block.settings.custom_icon != blank -%}
+            {%- render 'cb-icon-upload', image: block.settings.custom_icon, size: 16, tint: block.settings.custom_icon_tint -%}
+          {%- else -%}
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">{{ icon_path }}</svg>
+          {%- endif -%}
+        </span>
+      {%- endif -%}
+      <div class="cb-speed-notice__copy">
+        <p class="cb-speed-notice__title">{{ block.settings.notice_title | escape }}</p>
+        {%- if block.settings.notice_text != blank -%}
+          <p class="cb-speed-notice__sub">{{ block.settings.notice_text | escape }}</p>
+        {%- endif -%}
+      </div>
+    </div>
+  {%- elsif block.settings.notice_text != blank -%}
+    <p class="cb-speed-notice__text">
+      {%- if has_icon -%}
+        {%- if block.settings.custom_icon != blank -%}
+          {%- render 'cb-icon-upload', image: block.settings.custom_icon, size: 16, tint: block.settings.custom_icon_tint -%}
+        {%- else -%}
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{{ icon_path }}</svg>
+        {%- endif -%}
+      {%- endif -%}
+      <span>{{ block.settings.notice_text | escape }}</span>
+    </p>
+  {%- endif -%}
+
+  <div class="cb-speed-notice__actions">
+    {%- if block.settings.button_label != blank -%}
+      <a
+        class="cb-speed-notice__button{% if block.settings.button_caps %} cb-speed-notice__button--caps{% endif %}"
+        href="{{ button_link }}"
+      >
+        {{- block.settings.button_label | escape -}}
+      </a>
+    {%- endif -%}
+
+    {%- if link_label != blank -%}
+      {%- if block.settings.link_url != blank -%}
+        <a class="cb-speed-notice__link" href="{{ block.settings.link_url }}">
+          {{- link_label | escape -}}
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      {%- endif -%}
+    {%- endif -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .cb-speed-notice {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px 24px;
+    padding: 16px 18px;
+    border: 1px solid var(--cbd-border);
+    border-radius: var(--cbd-radius);
+    background: var(--cbd-card);
+  }
+
+  .cb-speed-notice__text {
+    display: flex;
+    flex: 1 1 320px;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 0;
+    font-family: var(--cbd-font-body);
+    font-weight: var(--cb-speed-notice-text-weight, var(--cbd-font-body-strong));
+    font-size: var(--cb-speed-notice-text-size, 12px);
+    line-height: 1.5;
+    color: var(--cbd-text);
+  }
+
+  .cb-speed-notice__text svg,
+  .cb-speed-notice__text .cb-icon-upload {
+    flex: none;
+    margin-top: 1px;
+    color: var(--cbd-accent);
+  }
+
+  /* With a title: icon in a tinted square, bold title and a smaller line under it. */
+  .cb-speed-notice__intro {
+    display: flex;
+    flex: 1 1 320px;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .cb-speed-notice__badge {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: 1px solid color-mix(in srgb, var(--cbd-accent) 60%, transparent);
+    border-radius: 6px;
+    background: color-mix(in srgb, var(--cbd-accent) 12%, transparent);
+    color: var(--cbd-accent);
+  }
+
+  .cb-speed-notice__copy {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+  }
+
+  .cb-speed-notice__title {
+    margin: 0;
+    font-family: var(--cbd-font-heading);
+    font-weight: var(--cb-speed-notice-title-weight, var(--cbd-font-heading-weight));
+    font-size: var(--cb-speed-notice-title-size, 15px);
+    line-height: 1.3;
+    color: var(--cbd-text);
+  }
+
+  .cb-speed-notice__sub {
+    margin: 0;
+    font-family: var(--cbd-font-body);
+    font-weight: var(--cb-speed-notice-text-weight, inherit);
+    font-size: calc(var(--cb-speed-notice-text-size, 12px) * 11 / 12);
+    line-height: 1.5;
+    color: var(--cbd-muted);
+  }
+
+  .cb-speed-notice__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 18px;
+  }
+
+  .cb-speed-notice__button {
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 18px;
+    border-radius: 2px;
+    background: var(--cbd-accent);
+    font-family: var(--cbd-font-body);
+    font-weight: var(--cb-speed-notice-button-weight, var(--cbd-font-body-strong));
+    font-size: var(--cb-speed-notice-button-size, 11px);
+    line-height: 1.2;
+    color: #fff;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+  }
+
+  .cb-speed-notice__button--caps {
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .cb-speed-notice__button:hover {
+    background: color-mix(in srgb, var(--cbd-accent) 85%, #000);
+  }
+
+  .cb-speed-notice__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--cbd-font-body);
+    font-weight: var(--cb-speed-notice-link-weight, inherit);
+    font-size: var(--cb-speed-notice-link-size, 11px);
+    color: var(--cbd-muted);
+    text-decoration: none;
+  }
+
+  .cb-speed-notice__link:hover {
+    color: var(--cbd-text);
+  }
+
+  .cb-speed-notice__link--missing {
+    border-bottom: 1px dashed var(--cbd-muted);
+  }
+
+  .cb-speed-notice__button:focus-visible,
+  .cb-speed-notice__link:focus-visible {
+    outline: 2px solid var(--cbd-text);
+    outline-offset: 2px;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Notice bar",
+  "tag": null,
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_icon",
+      "label": "Show icon",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "icon_type",
+      "label": "Icon",
+      "options": [
+        { "value": "info", "label": "Info (i)" },
+        { "value": "question", "label": "Question (?)" },
+        { "value": "alert", "label": "Alert (!)" },
+        { "value": "none", "label": "None" }
+      ],
+      "default": "info",
+      "visible_if": "{{ block.settings.show_icon }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "custom_icon",
+      "label": "Custom icon",
+      "info": "Upload your own SVG (or PNG). It replaces the built-in icon above."
+    },
+    {
+      "type": "checkbox",
+      "id": "custom_icon_tint",
+      "label": "Colour it like the built-in icons",
+      "info": "For one-colour SVGs: uses this section's icon colour. Turn off to keep the file's own colours.",
+      "default": true,
+      "visible_if": "{{ block.settings.custom_icon != blank }}"
+    },
+    {
+      "type": "text",
+      "id": "notice_title",
+      "label": "Title",
+      "info": "Optional. With a title the icon sits in a tinted square and the text below turns smaller."
+    },
+    {
+      "type": "textarea",
+      "id": "notice_text",
+      "label": "Text",
+      "default": "Speed numbers vary by brand. If you're unsure, ask the pro shop and we'll help you choose."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button",
+      "default": "Ask the Pro Shop"
+    },
+    {
+      "type": "checkbox",
+      "id": "button_caps",
+      "label": "Button in capitals",
+      "default": false
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link",
+      "info": "Leave empty to open the Contact page."
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Second link text",
+      "default": "Read the Full Shuttle Guide"
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "Second link",
+      "info": "The second link only shows once it has a link."
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Title size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Title weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Text size",
+      "info": "Shown slightly smaller under a title.",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "text_weight",
+      "label": "Text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "button_size",
+      "label": "Button text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "select",
+      "id": "button_weight",
+      "label": "Button text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "link_size",
+      "label": "Second link size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "select",
+      "id": "link_weight",
+      "label": "Second link weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    }
+  ],
+  "presets": [{ "name": "[CB] Notice bar" }]
+}
+{% endschema %}

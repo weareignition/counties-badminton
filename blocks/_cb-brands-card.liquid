@@ -1,0 +1,422 @@
+{%- comment -%}
+  A brand card. The stock count is live: in-stock products of the chosen collection, or (with no collection)
+  in-stock rackets whose title contains the brand name, from the section's count collection.
+{%- endcomment -%}
+{%- liquid
+  assign brand = block.settings.brand_name | strip
+  assign brand_key = brand | handleize | prepend: '-' | append: '-'
+
+  assign pool = block.settings.collection
+  assign match_name = false
+  if pool == blank
+    assign pool = section.settings.count_collection
+    assign match_name = true
+  endif
+  if pool == blank
+    assign pool = collections['rackets']
+  endif
+
+  assign link = block.settings.link
+  if link == blank and block.settings.collection != blank
+    assign link = block.settings.collection.url
+  endif
+  if link == blank
+    assign encoded_brand = brand | url_encode
+    assign link = routes.search_url | append: '?type=product&q=' | append: encoded_brand
+  endif
+
+  assign count_text = block.settings.custom_count | strip
+-%}
+
+{%- if count_text == blank and pool != blank and brand != blank -%}
+  {%- assign in_stock = 0 -%}
+  {%- paginate pool.products by 250 -%}
+    {%- for product in pool.products -%}
+      {%- liquid
+        if product.available
+          assign hit = true
+          if match_name
+            assign title_key = product.title | handleize | prepend: '-' | append: '-'
+            unless title_key contains brand_key
+              assign hit = false
+            endunless
+          endif
+          if hit
+            assign in_stock = in_stock | plus: 1
+          endif
+        endif
+      -%}
+    {%- endfor -%}
+  {%- endpaginate -%}
+  {%- liquid
+    if in_stock == 1
+      assign count_text = section.settings.count_label_one | replace: '[count]', in_stock
+    elsif in_stock > 1
+      assign count_text = section.settings.count_label | replace: '[count]', in_stock
+    endif
+  -%}
+{%- endif -%}
+
+{%- if brand != blank -%}
+  <article
+    class="cb-brands-card{% if block.settings.highlight %} cb-brands-card--highlight{% endif %}"
+    style="
+      --cb-brands-card-name-size: {{ block.settings.name_size }}px;
+      --cb-brands-card-name-weight: {{ block.settings.name_weight }};
+      --cb-brands-card-origin-size: {{ block.settings.origin_size }}px;
+      --cb-brands-card-origin-weight: {{ block.settings.origin_weight }};
+      --cb-brands-card-description-size: {{ block.settings.description_size }}px;
+      --cb-brands-card-description-weight: {{ block.settings.description_weight }};
+      --cb-brands-card-count-size: {{ block.settings.count_size }}px;
+      --cb-brands-card-count-weight: {{ block.settings.count_weight }};
+      --cb-brands-card-link-size: {{ block.settings.link_size }}px;
+      --cb-brands-card-link-weight: {{ block.settings.link_weight }};
+    "
+    {{ block.shopify_attributes }}
+  >
+    <div class="cb-brands-card__top">
+      <h3 class="cb-brands-card__name">{{ brand | escape }}</h3>
+      {%- if block.settings.origin != blank -%}
+        <span class="cb-brands-card__origin">{{ block.settings.origin | escape }}</span>
+      {%- endif -%}
+    </div>
+
+    {%- if block.settings.description != blank -%}
+      <p class="cb-brands-card__text">{{ block.settings.description | escape }}</p>
+    {%- endif -%}
+
+    <div class="cb-brands-card__footer">
+      {%- if count_text != blank -%}
+        <span class="cb-brands-card__count">{{ count_text | escape }}</span>
+      {%- endif -%}
+      <a class="cb-brands-card__link" href="{{ link }}">
+        {{- section.settings.explore_label | escape -}}
+        <span class="visually-hidden"> {{ brand | escape }}</span>
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  </article>
+{%- endif -%}
+
+{% stylesheet %}
+  .cb-brands-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 0;
+    height: 100%;
+    padding: 18px;
+    border: 1px solid var(--cbb-border);
+    border-radius: var(--cbb-radius);
+    background: var(--cbb-card);
+    transition: border-color 0.2s ease;
+  }
+
+  .cb-brands-card:hover {
+    border-color: var(--cbb-border-strong);
+  }
+
+  .cb-brands-card:has(.cb-brands-card__link:focus-visible) {
+    outline: 2px solid var(--cbb-text);
+    outline-offset: 2px;
+  }
+
+  .cb-brands-card__top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .cb-brands-card__name {
+    margin: 0;
+    font-family: var(--cbb-font-heading);
+    font-weight: var(--cb-brands-card-name-weight, var(--cbb-font-heading-weight));
+    font-size: var(--cb-brands-card-name-size, 16px);
+    line-height: 1.2;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    color: var(--cbb-text);
+    transition: color 0.2s ease;
+  }
+
+  .cb-brands-card--highlight .cb-brands-card__name,
+  .cb-brands-card:hover .cb-brands-card__name {
+    color: var(--cbb-accent);
+  }
+
+  .cb-brands-card__origin {
+    flex: none;
+    padding: 2px 6px;
+    border: 1px solid var(--cbb-border-strong);
+    border-radius: 2px;
+    font-family: var(--cbb-font-body);
+    font-weight: var(--cb-brands-card-origin-weight, var(--cbb-font-body-strong));
+    font-size: var(--cb-brands-card-origin-size, 8px);
+    line-height: 1.4;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--cbb-muted);
+  }
+
+  .cb-brands-card__text {
+    margin: 0;
+    font-family: var(--cbb-font-body);
+    font-weight: var(--cb-brands-card-description-weight, var(--cbb-font-body-weight));
+    font-size: var(--cb-brands-card-description-size, 11px);
+    line-height: 1.6;
+    color: var(--cbb-muted);
+  }
+
+  .cb-brands-card__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: auto;
+    padding-top: 14px;
+    border-top: 1px solid var(--cbb-border);
+  }
+
+  .cb-brands-card__count {
+    font-family: var(--cbb-font-body);
+    font-weight: var(--cb-brands-card-count-weight, inherit);
+    font-size: var(--cb-brands-card-count-size, 10px);
+    color: var(--cbb-muted);
+  }
+
+  .cb-brands-card__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: auto;
+    font-family: var(--cbb-font-body);
+    font-weight: var(--cb-brands-card-link-weight, var(--cbb-font-body-strong));
+    font-size: var(--cb-brands-card-link-size, 10px);
+    color: var(--cbb-text);
+    text-decoration: none;
+  }
+
+  /* The whole card is clickable. */
+  .cb-brands-card__link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+  }
+
+  .cb-brands-card__link:focus-visible {
+    outline: none;
+  }
+
+  .cb-brands-card__link svg {
+    flex: none;
+    transition: transform 0.2s ease;
+  }
+
+  .cb-brands-card:hover .cb-brands-card__link svg {
+    transform: translateX(2px);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Brand card",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "brand_name",
+      "label": "Brand",
+      "info": "Shown in capitals. Also used to count this brand's rackets.",
+      "default": "Yonex"
+    },
+    {
+      "type": "text",
+      "id": "origin",
+      "label": "Country tag",
+      "default": "Japan"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Astrox, Nanoflare & Arcsaber series. World tour benchmark in carbon engineering."
+    },
+    {
+      "type": "checkbox",
+      "id": "highlight",
+      "label": "Brand name in accent color",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Stock count and link"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Brand collection",
+      "info": "Optional. When chosen, the card counts its in-stock products and Explore opens it. Otherwise it counts in-stock rackets with the brand name in their title."
+    },
+    {
+      "type": "text",
+      "id": "custom_count",
+      "label": "Custom count text",
+      "info": "Replaces the live count, e.g. 20+ Rackets in Stock."
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Explore link",
+      "info": "Leave empty to open the brand collection, or a search for the brand."
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "name_size",
+      "label": "Brand name size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "name_weight",
+      "label": "Brand name weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "origin_size",
+      "label": "Country tag size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "select",
+      "id": "origin_weight",
+      "label": "Country tag weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "description_size",
+      "label": "Description size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "select",
+      "id": "description_weight",
+      "label": "Description weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "count_size",
+      "label": "Stock count size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "count_weight",
+      "label": "Stock count weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "link_size",
+      "label": "Link text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "link_weight",
+      "label": "Link text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    }
+  ],
+  "presets": [{ "name": "[CB] Brand card" }]
+}
+{% endschema %}

@@ -2,6 +2,7 @@
   <a
     href="{{ block.settings.link | default: routes.all_products_collection_url }}"
     class="cb-header__button cb-header__button--{{ block.settings.style }}{% unless block.settings.show_on_mobile %} cb-header__button--hide-mobile{% endunless %}"
+    style="--cb-header-button-label-size: {{ block.settings.label_size }}px; --cb-header-button-label-weight: {{ block.settings.label_weight }};"
     {{ block.shopify_attributes }}
   >
     {{- block.settings.label | escape -}}
@@ -19,8 +20,8 @@
     border: 1px solid transparent;
     border-radius: 999px;
     font-family: var(--cbhd-font-body);
-    font-weight: var(--cbhd-font-body-strong);
-    font-size: 13px;
+    font-weight: var(--cb-header-button-label-weight, var(--cbhd-font-body-strong));
+    font-size: var(--cb-header-button-label-size, 13px);
     line-height: 1.2;
     white-space: nowrap;
     text-decoration: none;
@@ -90,6 +91,38 @@
       "label": "Show on phones",
       "info": "Off by default to save space; the mobile menu has its own button.",
       "default": false
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "label_size",
+      "label": "Button text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "select",
+      "id": "label_weight",
+      "label": "Button text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
     }
   ],
   "presets": [{ "name": "[CB] Button" }]

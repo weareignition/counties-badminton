@@ -1,0 +1,382 @@
+{%- comment -%}
+  A small line above a heading (eyebrow), with an optional dot and an optional second part such as an address.
+  Inside a [CB] section it uses that section's body font and colours (through the --cb-* variables from
+  snippets/cb-font-styles); elsewhere it falls back to the theme's body font and the #d71f27 accent.
+{%- endcomment -%}
+{%- liquid
+  assign s = block.settings
+
+  case s.weight
+    when 'regular'
+      assign weight = 'var(--cb-font-body-weight, var(--font-body--weight))'
+    when '100', '200', '300', '500', '700', '800', '900'
+      assign weight = s.weight
+    else
+      assign weight = 'var(--cb-font-body-strong, 600)'
+  endcase
+
+  case s.color
+    when 'soft'
+      assign color = 'var(--cb-color-soft, var(--color-foreground-muted, currentColor))'
+    when 'muted'
+      assign color = 'var(--cb-color-muted, var(--color-foreground-muted, currentColor))'
+    when 'text'
+      assign color = 'var(--cb-color-text, currentColor)'
+    when 'custom'
+      assign color = s.custom_color | default: 'currentColor'
+    else
+      assign color = 'var(--cb-color-accent, #d71f27)'
+  endcase
+
+  assign letter_spacing = s.letter_spacing | divided_by: 100.0
+
+  # Full or custom width: the box can be wider than the text, so the text sits in an inner span that follows the
+  # section's text alignment.
+  assign wide = false
+  if s.width == 'full' or s.width == 'custom'
+    assign wide = true
+  endif
+
+  assign split = false
+  if s.subheader_text != blank and s.secondary != blank
+    assign split = true
+  endif
+-%}
+
+{%- if s.subheader_text != blank or s.secondary != blank -%}
+  {%- capture content -%}
+    {%- if s.secondary == blank -%}
+      {%- if s.show_dot -%}
+        <span class="cb-subheader__dot" aria-hidden="true"></span>
+      {%- endif -%}
+      {{- s.subheader_text | escape -}}
+    {%- else -%}
+      {%- comment -%} The dot stays with the main text when the two parts stack on phones. {%- endcomment -%}
+      {%- if s.subheader_text != blank -%}
+        <span class="cb-subheader__main{% if s.show_dot %} cb-subheader__main--dot{% endif %}">
+          {%- if s.show_dot -%}<span class="cb-subheader__dot" aria-hidden="true"></span>{%- endif -%}
+          {{- s.subheader_text | escape -}}
+        </span>
+        <span class="cb-subheader__sep" aria-hidden="true"></span>
+      {%- elsif s.show_dot -%}
+        <span class="cb-subheader__dot" aria-hidden="true"></span>
+      {%- endif -%}
+      <span class="cb-subheader__secondary">{{ s.secondary | escape }}</span>
+    {%- endif -%}
+  {%- endcapture -%}
+  <p
+    class="cb-subheader{% if split %} cb-subheader--split{% endif %}{% if s.uppercase %} cb-subheader--upper{% endif %}{% if wide %} cb-subheader--wide{% endif %}{% render 'cb-text-box', settings: s, part: 'class' %}"
+    style="
+      --cb-subheader-size: {{ s.size }}px;
+      --cb-subheader-ls: {{ letter_spacing }}em;
+      --cb-subheader-weight: {{ weight }};
+      --cb-subheader-secondary-weight: {{ s.secondary_weight }};
+      --cb-subheader-color: {{ color }};
+      --cb-subheader-space: {{ s.space_below }}px;
+      {% render 'cb-text-box', settings: s, part: 'style' %}
+    "
+    {{ block.shopify_attributes }}
+  >
+    {%- if wide -%}
+      <span class="cb-subheader__inner">{{ content }}</span>
+    {%- else -%}
+      {{- content -}}
+    {%- endif -%}
+  </p>
+{%- endif -%}
+
+{% stylesheet %}
+  .cb-subheader {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 var(--cb-subheader-space, 0px);
+    font-family: var(--cb-font-body, var(--font-body--family));
+    font-weight: var(--cb-subheader-weight);
+    font-size: var(--cb-subheader-size, 10px);
+    line-height: 1.3;
+    letter-spacing: var(--cb-subheader-ls, 0);
+    color: var(--cb-subheader-color);
+  }
+
+  .cb-subheader--upper {
+    text-transform: uppercase;
+  }
+
+  .cb-subheader__dot {
+    flex: none;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--cb-color-accent, #d71f27);
+  }
+
+  /* Text and second part on one line with a small dot between; phones stack them (no dot left at a line end). */
+  .cb-subheader--split {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 10px;
+  }
+
+  .cb-subheader__main--dot {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .cb-subheader__sep {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--cb-color-muted, var(--color-foreground-muted, currentColor));
+  }
+
+  .cb-subheader__secondary {
+    font-weight: var(--cb-subheader-secondary-weight, var(--cb-font-body-weight, var(--font-body--weight)));
+    color: var(--cb-color-muted, var(--color-foreground-muted, currentColor));
+  }
+
+  /* Full or custom width: a plain block box whose inner line follows the section's text alignment. */
+  .cb-subheader.cb-subheader--wide {
+    display: block;
+  }
+
+  .cb-subheader__inner {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    max-width: 100%;
+    vertical-align: top;
+  }
+
+  .cb-subheader--split .cb-subheader__inner {
+    flex-wrap: wrap;
+    gap: 4px 10px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .cb-subheader--split,
+    .cb-subheader--split .cb-subheader__inner {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .cb-subheader__sep {
+      display: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Subheader",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "subheader_text",
+      "label": "Text"
+    },
+    {
+      "type": "text",
+      "id": "secondary",
+      "label": "Second part",
+      "info": "Optional, e.g. an address. Shown after a small dot, in the muted colour; stacks under the text on phones."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dot",
+      "label": "Show dot",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "range",
+      "id": "size",
+      "label": "Size",
+      "min": 8,
+      "max": 16,
+      "step": 0.5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "weight",
+      "label": "Weight",
+      "options": [
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "regular", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "strong", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "strong"
+    },
+    {
+      "type": "select",
+      "id": "secondary_weight",
+      "label": "Second part weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "select",
+      "id": "color",
+      "label": "Color",
+      "options": [
+        { "value": "accent", "label": "Accent" },
+        { "value": "soft", "label": "Soft" },
+        { "value": "muted", "label": "Muted" },
+        { "value": "text", "label": "Text" },
+        { "value": "custom", "label": "Custom" }
+      ],
+      "default": "accent"
+    },
+    {
+      "type": "color",
+      "id": "custom_color",
+      "label": "Custom color",
+      "default": "#ffffff",
+      "visible_if": "{{ block.settings.color == 'custom' }}"
+    },
+    {
+      "type": "range",
+      "id": "letter_spacing",
+      "label": "Letter spacing",
+      "info": "Percent of the text size.",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "%",
+      "default": 10
+    },
+    {
+      "type": "checkbox",
+      "id": "uppercase",
+      "label": "Uppercase",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "space_below",
+      "label": "Extra space below",
+      "info": "Added to the section's spacing. Negative values pull the next line closer.",
+      "min": -10,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Width"
+    },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "Width",
+      "options": [
+        { "value": "auto", "label": "Auto (follows the section)" },
+        { "value": "fit", "label": "Fit the text" },
+        { "value": "full", "label": "Full width" },
+        { "value": "custom", "label": "Custom" }
+      ],
+      "default": "auto"
+    },
+    {
+      "type": "range",
+      "id": "width_px",
+      "label": "Custom width",
+      "min": 100,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "default": 400,
+      "visible_if": "{{ block.settings.width == 'custom' }}"
+    },
+    {
+      "type": "header",
+      "content": "Box"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "info": "Leave empty for no background."
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Padding top and bottom",
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_x",
+      "label": "Padding left and right",
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "label": "Border",
+      "info": "0 = no border.",
+      "min": 0,
+      "max": 8,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "info": "Leave empty for a faint version of the text colour.",
+      "visible_if": "{{ block.settings.border_width > 0 }}"
+    },
+    {
+      "type": "range",
+      "id": "radius",
+      "label": "Corner radius",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Subheader",
+      "settings": { "subheader_text": "Subheader" }
+    }
+  ]
+}
+{% endschema %}

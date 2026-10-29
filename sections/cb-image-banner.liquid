@@ -1,0 +1,149 @@
+<section
+  id="cb-imgbanner-{{ section.id }}"
+  class="cb-imgbanner"
+  style="
+    --cbib-bg: {{ section.settings.background_color }};
+    --cbib-text: {{ section.settings.text_color }};
+    --cbib-columns: {{ section.settings.columns }};
+    --cbib-gap: {{ section.settings.gap }}px;
+    --cbib-max-width: {{ section.settings.max_width }}px;
+    --cbib-pt: {{ section.settings.padding_top }}px;
+    --cbib-pb: {{ section.settings.padding_bottom }}px;
+  "
+>
+  <div class="cb-imgbanner__grid">
+    {% content_for 'blocks' %}
+  </div>
+</section>
+
+{% stylesheet %}
+  .cb-imgbanner {
+    color: var(--cbib-text);
+    background: var(--cbib-bg);
+    padding: calc(var(--cbib-pt) * 0.6) 16px calc(var(--cbib-pb) * 0.6);
+  }
+
+  /* Phones stack the images; wider screens show the chosen number per row. */
+  .cb-imgbanner__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--cbib-gap);
+    max-width: var(--cbib-max-width);
+    margin-inline: auto;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-imgbanner {
+      padding: var(--cbib-pt) 32px var(--cbib-pb);
+    }
+
+    .cb-imgbanner__grid {
+      grid-template-columns: repeat(var(--cbib-columns, 1), minmax(0, 1fr));
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .cb-imgbanner {
+      padding-inline: 48px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Image banner",
+  "tag": "div",
+  "class": "section-wrapper",
+  "blocks": [{ "type": "cb-image" }, { "type": "cb-highlight-card" }, { "type": "cb-card" }],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Images per row",
+      "info": "Phones show one per row.",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Space between images",
+      "min": 0,
+      "max": 64,
+      "step": 1,
+      "unit": "px",
+      "default": 22
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width",
+      "min": 600,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "default": 1120
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "info": "Only used for an image border without its own colour.",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Image banner",
+      "category": "t:categories.banners",
+      "blocks": {
+        "image": { "type": "cb-image" }
+      },
+      "block_order": ["image"]
+    }
+  ]
+}
+{% endschema %}

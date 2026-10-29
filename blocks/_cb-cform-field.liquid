@@ -1,0 +1,316 @@
+{%- comment -%}
+  One field in a [CB] Contact form. Name, email, phone and message map to Shopify's own contact fields; dropdowns and
+  short text are sent as extra fields named after their label, so they show in the enquiry email.
+{%- endcomment -%}
+{%- liquid
+  assign s = block.settings
+  assign id = 'cb-field-' | append: block.id
+  assign label = s.label | default: 'Field'
+
+  case s.kind
+    when 'name'
+      assign field_name = 'contact[name]'
+      assign input_type = 'text'
+      assign autocomplete = 'name'
+    when 'email'
+      assign field_name = 'contact[email]'
+      assign input_type = 'email'
+      assign autocomplete = 'email'
+    when 'phone'
+      assign field_name = 'contact[phone]'
+      assign input_type = 'tel'
+      assign autocomplete = 'tel'
+    when 'message'
+      assign field_name = 'contact[body]'
+    else
+      assign field_name = 'contact[' | append: label | append: ']'
+      assign input_type = 'text'
+      assign autocomplete = 'off'
+  endcase
+
+  assign required = s.required
+  if s.kind == 'email'
+    assign required = true
+  endif
+-%}
+
+<div
+  class="cb-cfield cb-cfield--{{ s.width }}"
+  style="
+    --cb-cfield-label-size: {{ s.label_size }}px;
+    --cb-cfield-label-weight: {{ s.label_weight }};
+    --cb-cfield-input-size: {{ s.input_size }}px;
+    --cb-cfield-input-weight: {{ s.input_weight }};
+  "
+  {{ block.shopify_attributes }}
+>
+  <label class="cb-cfield__label" for="{{ id }}">
+    {{- label | escape -}}
+    {%- if required and s.show_required %}<span class="cb-cfield__required" aria-hidden="true"> *</span>{% endif -%}
+  </label>
+
+  {%- case s.kind -%}
+    {%- when 'message' -%}
+      <textarea
+        id="{{ id }}"
+        class="cb-cfield__control cb-cfield__control--textarea"
+        name="{{ field_name | escape }}"
+        rows="5"
+        placeholder="{{ s.placeholder | escape }}"
+        style="--cb-cfield-height: {{ s.message_height }}px;"
+        {% if required %}required{% endif %}
+      ></textarea>
+    {%- when 'dropdown' -%}
+      {%- assign options = s.options | newline_to_br | split: '<br />' -%}
+      <select
+        id="{{ id }}"
+        class="cb-cfield__control cb-cfield__control--select"
+        name="{{ field_name | escape }}"
+        {% if required %}required{% endif %}
+      >
+        <option value="">{{ s.placeholder | default: 'Choose an option' | escape }}</option>
+        {%- for option in options -%}
+          {%- assign value = option | strip -%}
+          {%- if value != blank -%}
+            <option value="{{ value | escape }}">{{ value | escape }}</option>
+          {%- endif -%}
+        {%- endfor -%}
+      </select>
+    {%- else -%}
+      <input
+        id="{{ id }}"
+        class="cb-cfield__control"
+        type="{{ input_type }}"
+        name="{{ field_name | escape }}"
+        autocomplete="{{ autocomplete }}"
+        placeholder="{{ s.placeholder | escape }}"
+        {%- if s.kind == 'email' %} autocorrect="off" autocapitalize="off" spellcheck="false"{% endif %}
+        {% if required %}required{% endif %}
+      >
+  {%- endcase -%}
+</div>
+
+{% stylesheet %}
+  .cb-cfield {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 0;
+  }
+
+  .cb-cfield--full {
+    grid-column: 1 / -1;
+  }
+
+  .cb-cfield__label {
+    font-family: var(--cb-font-body, var(--font-body--family));
+    font-weight: var(--cb-cfield-label-weight, var(--cb-font-body-strong, 600));
+    font-size: var(--cb-cfield-label-size, 11px);
+    line-height: 1.3;
+    color: var(--cbct-label, var(--cb-color-text, #ffffff));
+  }
+
+  .cb-cfield__required {
+    color: var(--cb-color-accent, #d71f27);
+  }
+
+  /* Two classes: Horizon paints inputs white with a (0,1,1) rule. Phones use 16px text so iOS doesn't zoom in. */
+  .cb-cfield .cb-cfield__control {
+    box-sizing: border-box;
+    width: 100%;
+    height: 50px;
+    margin: 0;
+    padding: 0 16px;
+    border: 1px solid var(--cbct-input-border, rgb(255 255 255 / 0.08));
+    border-radius: var(--cbct-input-radius, 6px);
+    background: var(--cbct-input-bg, #171717);
+    font-family: var(--cb-font-body, var(--font-body--family));
+    font-weight: var(--cb-cfield-input-weight, var(--cb-font-body-weight, 400));
+    font-size: max(16px, calc(var(--cb-cfield-input-size, 12px) * 16 / 12));
+    line-height: 1.4;
+    color: var(--cb-color-text, #ffffff);
+    box-shadow: none;
+    outline: none;
+    transition: border-color 0.2s ease;
+  }
+
+  .cb-cfield .cb-cfield__control::placeholder {
+    color: var(--cbct-placeholder, #8a8a8a);
+    opacity: 1;
+  }
+
+  .cb-cfield .cb-cfield__control:focus-visible,
+  .cb-cfield .cb-cfield__control:focus {
+    border-color: var(--cb-color-accent, #d71f27);
+  }
+
+  .cb-cfield .cb-cfield__control--textarea {
+    height: auto;
+    min-height: var(--cb-cfield-height, 124px);
+    padding-block: 14px;
+    resize: vertical;
+  }
+
+  .cb-cfield .cb-cfield__control--select {
+    padding-right: 44px;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238a8a8a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    cursor: pointer;
+  }
+
+  /* The "Choose…" option looks like a placeholder until something is picked. */
+  .cb-cfield .cb-cfield__control--select:has(option[value='']:checked) {
+    color: var(--cbct-placeholder, #8a8a8a);
+  }
+
+  .cb-cfield__control--select option {
+    color: #111111;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-cfield .cb-cfield__control {
+      font-size: var(--cb-cfield-input-size, 12px);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Form field",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "kind",
+      "label": "Field type",
+      "info": "Email is always required (Shopify needs it to reply). Dropdown and short text answers appear in the enquiry email under the field's label.",
+      "options": [
+        { "value": "name", "label": "Name" },
+        { "value": "email", "label": "Email" },
+        { "value": "phone", "label": "Phone" },
+        { "value": "dropdown", "label": "Dropdown" },
+        { "value": "text", "label": "Short text" },
+        { "value": "message", "label": "Message" }
+      ],
+      "default": "text"
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "Field"
+    },
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "Placeholder",
+      "info": "Grey hint inside the field. For a dropdown, the first 'Choose…' option."
+    },
+    {
+      "type": "textarea",
+      "id": "options",
+      "label": "Dropdown options",
+      "info": "One per line.",
+      "visible_if": "{{ block.settings.kind == 'dropdown' }}"
+    },
+    {
+      "type": "range",
+      "id": "message_height",
+      "label": "Message box height",
+      "min": 80,
+      "max": 280,
+      "step": 2,
+      "unit": "px",
+      "default": 124,
+      "visible_if": "{{ block.settings.kind == 'message' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "required",
+      "label": "Required",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_required",
+      "label": "Show * after required labels",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "Width",
+      "info": "Half-width fields sit side by side on tablets and computers.",
+      "options": [
+        { "value": "half", "label": "Half" },
+        { "value": "full", "label": "Full" }
+      ],
+      "default": "full"
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "label_size",
+      "label": "Label size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "select",
+      "id": "label_weight",
+      "label": "Label weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "input_size",
+      "label": "Field text size",
+      "info": "Larger on phones (16px or more) so iPhones don't zoom in when the field is tapped.",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "input_weight",
+      "label": "Field text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    }
+  ],
+  "presets": [{ "name": "[CB] Form field" }]
+}
+{% endschema %}

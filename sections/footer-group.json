@@ -30,9 +30,21 @@
               "blocks": {}
             },
             "text": {
-              "type": "_cb-footer-text",
+              "type": "cb-paragraph",
               "settings": {
-                "body_text": "<p>Counties Manukau Badminton Association pro shop & certified electronic stringing lab. Run by competitive players, certified coaches, and master stringers at Papakura Badminton Hall.</p>"
+                "body_text": "<p>Counties Manukau Badminton Association pro shop & certified electronic stringing lab. Run by competitive players, certified coaches, and master stringers at Papakura Badminton Hall.</p>",
+                "size": 14,
+                "mobile_sizing": "same",
+                "mobile_size": 14,
+                "fluid_vw": 2,
+                "weight": "regular",
+                "color": "soft",
+                "line_height": 160,
+                "letter_spacing": 0,
+                "wrap": "wrap",
+                "max_width_unit": "ch",
+                "max_width_px": 640,
+                "max_width_ch": 46
               },
               "blocks": {}
             },

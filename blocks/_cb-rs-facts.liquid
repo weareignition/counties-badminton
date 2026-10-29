@@ -1,0 +1,52 @@
+<div
+  class="cb-rs__facts"
+  style="--cbr-fact-columns: {{ block.settings.columns }};"
+  {{ block.shopify_attributes }}
+>
+  {% content_for 'blocks' %}
+</div>
+
+{% stylesheet %}
+  .cb-rs__facts {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+    width: 100%;
+  }
+
+  @media screen and (min-width: 600px) {
+    .cb-rs__facts {
+      grid-template-columns: repeat(var(--cbr-fact-columns, 2), minmax(0, 1fr));
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Info boxes",
+  "tag": null,
+  "blocks": [{ "type": "_cb-rs-fact" }],
+  "settings": [
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Boxes per row",
+      "info": "Phones show 1 per row.",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "default": 2
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Info boxes",
+      "blocks": {
+        "fact_1": { "type": "_cb-rs-fact" },
+        "fact_2": { "type": "_cb-rs-fact", "settings": { "fact_label": "Tension", "fact_text": "±0.5 lbs accuracy on 6-point mount" } }
+      },
+      "block_order": ["fact_1", "fact_2"]
+    }
+  ]
+}
+{% endschema %}

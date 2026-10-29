@@ -1,0 +1,1701 @@
+{%- comment -%}
+  Results + compare table. Every racket in the collection is rendered once into a <template> with traits read from
+  its title and description (weight class, grams, grip, balance, flex, player level, main playing style); the section
+  script ranks them against the answers and shows the best ones. Product metafields custom.racket_weight,
+  racket_balance, racket_flex, racket_level, racket_style, racket_series, racket_badge and racket_why override
+  what is read from the description.
+  Traits answers can favour: style-attack, style-speed, style-control, balance-head-heavy, balance-head-light,
+  balance-even, flex-stiff, flex-medium-stiff, flex-medium, flex-flexible, level-beginner, level-intermediate,
+  level-advanced, weight-3u, weight-4u, weight-5u, brand-<name>, or any product tag.
+{%- endcomment -%}
+{%- liquid
+  assign pool = block.settings.collection
+  if pool == blank
+    assign pool = collections['rackets']
+  endif
+  assign brand_list = block.settings.brand_names | split: ','
+  assign exclude_words = block.settings.exclude_words | split: ','
+  assign results_text = block.settings.results_text | escape | replace: '[count]', '<span data-cb-rmatch-count>3</span>'
+-%}
+<div
+  class="cb-rmatch-results"
+  data-cb-rmatch-results
+  data-count="{{ block.settings.results_count }}"
+  data-best-label="{{ block.settings.best_label | escape }}"
+  data-other-labels="{{ block.settings.other_labels | escape }}"
+  data-why-prefix="{{ block.settings.why_prefix | escape }}"
+  data-why-fallback="{{ block.settings.why_fallback | escape }}"
+  data-best-suffix="{{ block.settings.best_suffix | escape }}"
+  data-rows="{{ block.settings.row_style | escape }}|{{ block.settings.row_level | escape }}|{{ block.settings.row_weight | escape }}|{{ block.settings.row_balance | escape }}|{{ block.settings.row_flex | escape }}|{{ block.settings.row_price | escape }}"
+  data-first-col="{{ block.settings.compare_first | escape }}"
+  style="
+    --cb-rmatch-results-eyebrow-size: {{ block.settings.eyebrow_size }}px;
+    --cb-rmatch-results-eyebrow-weight: {{ block.settings.eyebrow_weight }};
+    --cb-rmatch-results-heading-size: {{ block.settings.heading_size }}px;
+    --cb-rmatch-results-heading-weight: {{ block.settings.heading_weight }};
+    --cb-rmatch-results-text-size: {{ block.settings.text_size }}px;
+    --cb-rmatch-results-text-weight: {{ block.settings.text_weight }};
+    --cb-rmatch-results-match-label-size: {{ block.settings.match_label_size }}px;
+    --cb-rmatch-results-match-label-weight: {{ block.settings.match_label_weight }};
+    --cb-rmatch-results-series-size: {{ block.settings.series_size }}px;
+    --cb-rmatch-results-series-weight: {{ block.settings.series_weight }};
+    --cb-rmatch-results-badge-size: {{ block.settings.badge_size }}px;
+    --cb-rmatch-results-badge-weight: {{ block.settings.badge_weight }};
+    --cb-rmatch-results-brand-size: {{ block.settings.brand_size }}px;
+    --cb-rmatch-results-brand-weight: {{ block.settings.brand_weight }};
+    --cb-rmatch-results-name-size: {{ block.settings.name_size }}px;
+    --cb-rmatch-results-name-weight: {{ block.settings.name_weight }};
+    --cb-rmatch-results-price-size: {{ block.settings.price_size }}px;
+    --cb-rmatch-results-price-weight: {{ block.settings.price_weight }};
+    --cb-rmatch-results-chip-size: {{ block.settings.chip_size }}px;
+    --cb-rmatch-results-chip-weight: {{ block.settings.chip_weight }};
+    --cb-rmatch-results-why-label-size: {{ block.settings.why_label_size }}px;
+    --cb-rmatch-results-why-label-weight: {{ block.settings.why_label_weight }};
+    --cb-rmatch-results-why-text-size: {{ block.settings.why_text_size }}px;
+    --cb-rmatch-results-why-text-weight: {{ block.settings.why_text_weight }};
+    --cb-rmatch-results-view-button-size: {{ block.settings.view_button_size }}px;
+    --cb-rmatch-results-view-button-weight: {{ block.settings.view_button_weight }};
+    --cb-rmatch-results-compare-button-size: {{ block.settings.compare_button_size }}px;
+    --cb-rmatch-results-compare-button-weight: {{ block.settings.compare_button_weight }};
+    --cb-rmatch-results-compare-text-size: {{ block.settings.compare_text_size }}px;
+    --cb-rmatch-results-compare-text-weight: {{ block.settings.compare_text_weight }};
+    --cb-rmatch-results-table-heading-size: {{ block.settings.table_heading_size }}px;
+    --cb-rmatch-results-table-heading-weight: {{ block.settings.table_heading_weight }};
+    --cb-rmatch-results-table-first-heading-size: {{ block.settings.table_first_heading_size }}px;
+    --cb-rmatch-results-table-first-heading-weight: {{ block.settings.table_first_heading_weight }};
+    --cb-rmatch-results-table-size: {{ block.settings.table_size }}px;
+    --cb-rmatch-results-table-weight: {{ block.settings.table_weight }};
+    --cb-rmatch-results-table-price-size: {{ block.settings.table_price_size }}px;
+    --cb-rmatch-results-table-price-weight: {{ block.settings.table_price_weight }};
+  "
+  {% unless request.design_mode %}
+    hidden
+  {% endunless %}
+  {{ block.shopify_attributes }}
+>
+  <div class="cb-rmatch-results__head">
+    {%- if block.settings.eyebrow != blank -%}
+      <p class="cb-rmatch-results__eyebrow">{{ block.settings.eyebrow | escape }}</p>
+    {%- endif -%}
+    <h2 class="cb-rmatch-results__heading" tabindex="-1" data-cb-rmatch-results-heading>{{ block.settings.results_heading | escape }}</h2>
+    {%- if block.settings.results_text != blank -%}
+      <p class="cb-rmatch-results__text">{{ results_text }}</p>
+    {%- endif -%}
+  </div>
+
+  <ol class="cb-rmatch-results__grid" role="list" data-cb-rmatch-grid></ol>
+
+  {%- if block.settings.show_compare -%}
+    <div class="cb-rmatch-compare" data-cb-rmatch-compare>
+      <h2 class="cb-rmatch-compare__heading">{{ block.settings.compare_heading | escape }}</h2>
+      {%- if block.settings.compare_text != blank -%}
+        <p class="cb-rmatch-compare__text">{{ block.settings.compare_text | escape | replace: '[count]', '<span data-cb-rmatch-count>3</span>' }}</p>
+      {%- endif -%}
+      <div class="cb-rmatch-compare__scroll" tabindex="0">
+        <table class="cb-rmatch-compare__table" data-cb-rmatch-table></table>
+      </div>
+    </div>
+  {%- endif -%}
+
+  {%- if pool != blank -%}
+    <template data-cb-rmatch-pool>
+      {%- paginate pool.products by 250 -%}
+        {%- for product in pool.products -%}
+          {%- if block.settings.in_stock_only and product.available == false -%}
+            {%- continue -%}
+          {%- endif -%}
+          {%- liquid
+            assign leave_out = false
+            assign title_check = product.title | downcase
+            for word in exclude_words
+              assign w_key = word | strip | downcase
+              if w_key != blank and title_check contains w_key
+                assign leave_out = true
+                break
+              endif
+            endfor
+          -%}
+          {%- if leave_out -%}
+            {%- continue -%}
+          {%- endif -%}
+          {%- liquid
+            assign t = product.title | append: ' ' | append: product.description | strip_html | downcase
+            assign t = t | replace: '‑', '-' | replace: '–', '-' | replace: '—', '-' | replace: '(', ' ' | replace: ')', ' ' | replace: '/', ' ' | replace: ',', ' ' | replace: '.', ' ' | replace: ':', ' ' | replace: ';', ' ' | replace: '~', ' ' | replace: '!', ' ' | replace: '&nbsp;', ' ' | strip_newlines
+            assign t = ' ' | append: t | append: ' '
+            assign title_l = product.title | downcase
+            assign mf = product.metafields.custom
+
+            # Brand (first listed name found in the title, else the title's first word) and model line.
+            assign brand = ''
+            for b in brand_list
+              assign b_name = b | strip
+              assign b_key = b_name | downcase
+              if b_key != blank and title_l contains b_key
+                assign brand = b_name
+                break
+              endif
+            endfor
+            if brand == blank
+              assign brand = product.title | split: ' ' | first
+            endif
+            assign brand_last = brand | split: ' ' | last | downcase
+            assign series = ''
+            assign take_next = false
+            assign words = product.title | split: ' '
+            for w in words
+              assign wl = w | downcase
+              if take_next
+                unless wl == 'badminton' or wl == 'racket' or wl == 'racquet'
+                  assign series = w
+                endunless
+                break
+              endif
+              if wl == brand_last
+                assign take_next = true
+              endif
+            endfor
+            assign series_label = brand
+            if series != blank
+              assign series_label = brand | append: ' ' | append: series
+            endif
+            if mf.racket_series.value != blank
+              assign series_label = mf.racket_series.value
+            endif
+
+            # Weight: class (2U-6U, title first, e.g. "4U", "4UG5", "4U6"), grams and grip size.
+            assign tt = product.title | downcase | replace: '(', ' ' | replace: ')', ' ' | replace: '/', ' ' | replace: ',', ' ' | replace: '-', ' '
+            assign tt = ' ' | append: tt | append: ' '
+            assign weight_class = ''
+            for source in (1..2)
+              assign hay = tt
+              if source == 2
+                assign hay = t
+              endif
+              for u in (2..6)
+                assign k1 = ' ' | append: u | append: 'u '
+                assign k2 = ' ' | append: u | append: 'ug'
+                assign k3 = ' ' | append: u | append: 'u4'
+                assign k4 = ' ' | append: u | append: 'u5'
+                assign k5 = ' ' | append: u | append: 'u6'
+                if hay contains k1 or hay contains k2 or hay contains k3 or hay contains k4 or hay contains k5
+                  assign weight_class = u | append: 'U'
+                  break
+                endif
+              endfor
+              if weight_class != blank
+                break
+              endif
+            endfor
+            assign grams = ''
+            for n in (50..99)
+              assign k1 = ' ' | append: n | append: ' g '
+              assign k2 = ' ' | append: n | append: 'g '
+              if t contains k1 or t contains k2
+                assign grams = n
+                break
+              endif
+            endfor
+            if weight_class == blank and grams != blank
+              if grams >= 90
+                assign weight_class = '2U'
+              elsif grams >= 85
+                assign weight_class = '3U'
+              elsif grams >= 80
+                assign weight_class = '4U'
+              elsif grams >= 75
+                assign weight_class = '5U'
+              elsif grams >= 70
+                assign weight_class = '6U'
+              endif
+            endif
+            assign grip = ''
+            for source in (1..2)
+              assign hay = tt
+              if source == 2
+                assign hay = t
+              endif
+              for g in (4..6)
+                assign k1 = ' g' | append: g | append: ' '
+                assign k2 = 'ug' | append: g
+                assign k3 = 'u' | append: g | append: ' '
+                if hay contains k1 or hay contains k2 or hay contains k3
+                  assign grip = 'G' | append: g
+                  break
+                endif
+              endfor
+              if grip != blank
+                break
+              endif
+            endfor
+            assign weight_short = ''
+            if weight_class != blank
+              assign weight_short = weight_class
+              if grams != blank
+                assign weight_short = weight_short | append: ' (' | append: grams | append: ' g)'
+              else
+                case weight_class
+                  when '2U'
+                    assign weight_short = weight_short | append: ' (90–94 g)'
+                  when '3U'
+                    assign weight_short = weight_short | append: ' (85–89 g)'
+                  when '4U'
+                    assign weight_short = weight_short | append: ' (80–84 g)'
+                  when '5U'
+                    assign weight_short = weight_short | append: ' (75–79 g)'
+                  when '6U'
+                    assign weight_short = weight_short | append: ' (70–74 g)'
+                endcase
+              endif
+            elsif grams != blank
+              assign weight_short = grams | append: ' g'
+            endif
+            assign weight_full = weight_short
+            if grip != blank and weight_full != blank
+              assign weight_full = weight_full | append: ' ' | append: grip
+            endif
+            if mf.racket_weight.value != blank
+              assign weight_short = mf.racket_weight.value
+              assign weight_full = mf.racket_weight.value
+            endif
+
+            # Balance.
+            assign balance = ''
+            assign balance_key = ''
+            if t contains 'slightly head-heavy' or t contains 'slightly head heavy'
+              assign balance = 'Slightly head heavy'
+              assign balance_key = 'balance-head-heavy|balance-slightly-head-heavy'
+            elsif t contains 'head-heavy' or t contains 'head heavy'
+              assign balance = 'Head heavy'
+              assign balance_key = 'balance-head-heavy'
+            elsif t contains 'head-light' or t contains 'head light'
+              assign balance = 'Head light'
+              assign balance_key = 'balance-head-light'
+            elsif t contains 'even balance' or t contains 'even-balance' or t contains 'evenly balanced' or t contains 'even balanced'
+              assign balance = 'Even balance'
+              assign balance_key = 'balance-even'
+            endif
+            if mf.racket_balance.value != blank
+              assign balance = mf.racket_balance.value
+              assign balance_key = 'balance-' | append: mf.racket_balance.value | handleize
+            endif
+
+            # Flex.
+            assign flex = ''
+            assign flex_key = ''
+            if t contains 'extra stiff' or t contains 'extra-stiff'
+              assign flex = 'Extra stiff'
+              assign flex_key = 'flex-stiff|flex-extra-stiff'
+            elsif t contains 'medium-stiff' or t contains 'medium stiff'
+              assign flex = 'Medium-stiff'
+              assign flex_key = 'flex-medium-stiff|flex-stiff'
+            elsif t contains 'stiff'
+              assign flex = 'Stiff'
+              assign flex_key = 'flex-stiff'
+            elsif t contains 'medium flex' or t contains 'medium-flex' or t contains 'medium shaft'
+              assign flex = 'Medium'
+              assign flex_key = 'flex-medium'
+            elsif t contains 'flexible' or t contains 'flexible shaft'
+              assign flex = 'Flexible'
+              assign flex_key = 'flex-flexible'
+            endif
+            if mf.racket_flex.value != blank
+              assign flex = mf.racket_flex.value
+              assign flex_key = 'flex-' | append: mf.racket_flex.value | handleize
+            endif
+
+            # Player level: the range of levels the description mentions.
+            assign lv_beg = false
+            assign lv_int = false
+            assign lv_adv = false
+            if t contains 'beginner' or t contains 'entry-level' or t contains 'entry level' or t contains 'new players'
+              assign lv_beg = true
+            endif
+            if t contains 'intermediate' or t contains 'club player' or t contains 'developing'
+              assign lv_int = true
+            endif
+            if t contains 'advanced' or t contains 'professional' or t contains 'elite' or t contains 'competitive' or t contains 'tournament'
+              assign lv_adv = true
+            endif
+            assign level = ''
+            assign level_key = ''
+            if lv_beg
+              assign level_key = level_key | append: '|level-beginner'
+            endif
+            if lv_int
+              assign level_key = level_key | append: '|level-intermediate'
+            endif
+            if lv_adv
+              assign level_key = level_key | append: '|level-advanced'
+            endif
+            if lv_beg and lv_adv
+              assign level = 'Beginner to advanced'
+            elsif lv_beg and lv_int
+              assign level = 'Beginner to intermediate'
+            elsif lv_int and lv_adv
+              assign level = 'Intermediate to advanced'
+            elsif lv_beg
+              assign level = 'Beginner'
+            elsif lv_int
+              assign level = 'Intermediate'
+            elsif lv_adv
+              assign level = 'Advanced'
+            endif
+            if mf.racket_level.value != blank
+              assign level = mf.racket_level.value
+              assign level_key = '|level-' | append: mf.racket_level.value | handleize
+            endif
+
+            # Main playing style: whichever family of words the description uses most.
+            assign n_attack = t | split: 'attack' | size | minus: 1
+            assign n = t | split: 'smash' | size | minus: 1
+            assign n_attack = n_attack | plus: n
+            assign n = t | split: 'power' | size | minus: 1
+            assign n_attack = n_attack | plus: n
+            assign n_speed = t | split: 'speed' | size | minus: 1
+            assign n = t | split: ' fast' | size | minus: 1
+            assign n_speed = n_speed | plus: n
+            assign n = t | split: 'defen' | size | minus: 1
+            assign n_speed = n_speed | plus: n
+            assign n = t | split: 'quick' | size | minus: 1
+            assign n_speed = n_speed | plus: n
+            assign n_control = t | split: 'control' | size | minus: 1
+            assign n = t | split: 'all-round' | size | minus: 1
+            assign n_control = n_control | plus: n
+            assign n = t | split: 'versatil' | size | minus: 1
+            assign n_control = n_control | plus: n
+            assign n = t | split: 'precision' | size | minus: 1
+            assign n_control = n_control | plus: n
+            assign style = ''
+            assign style_key = ''
+            if n_attack > 0 and n_attack >= n_speed and n_attack >= n_control
+              assign style = 'Attack'
+              assign style_key = 'style-attack'
+            elsif n_speed > 0 and n_speed >= n_control
+              assign style = 'Speed'
+              assign style_key = 'style-speed'
+            elsif n_control > 0
+              assign style = 'Control'
+              assign style_key = 'style-control'
+            endif
+            assign style_field = mf.racket_style.value
+            if style_field == blank
+              capture style_field
+                render 'cb-metafield-text', field: mf.player_style
+                render 'cb-metafield-text', field: mf.play_style
+              endcapture
+              assign style_field = style_field | strip
+            endif
+            if style_field != blank
+              assign style = style_field
+              assign style_key = 'style-' | append: style_field | handleize
+            endif
+
+            # Everything an answer can match.
+            assign keys = '|'
+            for tag in product.tags
+              assign tag_key = tag | handleize
+              assign keys = keys | append: tag_key | append: '|'
+            endfor
+            assign brand_key = brand | handleize
+            assign keys = keys | append: 'brand-' | append: brand_key | append: '|' | append: style_key | append: '|' | append: balance_key | append: '|' | append: flex_key | append: level_key | append: '|'
+            if weight_class != blank
+              assign weight_key = weight_class | downcase
+              assign keys = keys | append: 'weight-' | append: weight_key | append: '|'
+            endif
+
+            assign badge = mf.racket_badge.value
+            if badge == blank and product.available
+              assign badge = block.settings.stock_badge
+            endif
+          -%}
+          <li
+            class="cb-rmatch-card"
+            data-cb-rmatch-product
+            data-keys="{{ keys | escape }}"
+            data-price="{{ product.price }}"
+            data-title="{{ product.title | escape }}"
+            data-style="{{ style | escape }}"
+            data-level="{{ level | escape }}"
+            data-weight="{{ weight_full | escape }}"
+            data-balance="{{ balance | escape }}"
+            data-flex="{{ flex | escape }}"
+            data-money="{{ product.price | money_with_currency | strip_html | escape }}"
+            data-why="{{ mf.racket_why.value | escape }}"
+          >
+            <div class="cb-rmatch-card__top">
+              <span class="cb-rmatch-card__tag" data-cb-rmatch-tag></span>
+              <span class="cb-rmatch-card__series">{{ series_label | escape }}</span>
+            </div>
+            <a class="cb-rmatch-card__media" href="{{ product.url }}" tabindex="-1" aria-hidden="true">
+              {%- if product.featured_image -%}
+                {{
+                  product.featured_image
+                  | image_url: width: 700
+                  | image_tag:
+                    widths: '350, 500, 700',
+                    sizes: '(min-width: 990px) 340px, (min-width: 750px) 45vw, 90vw',
+                    loading: 'lazy',
+                    alt: ''
+                }}
+              {%- endif -%}
+              {%- if badge != blank -%}
+                <span class="cb-rmatch-card__badge">{{ badge | escape }}</span>
+              {%- endif -%}
+            </a>
+            <p class="cb-rmatch-card__brand">{{ brand | escape }}</p>
+            <h3 class="cb-rmatch-card__title"><a href="{{ product.url }}">{{ product.title | escape }}</a></h3>
+            <p class="cb-rmatch-card__price">{{ product.price | money_with_currency }}</p>
+            {%- if weight_short != blank or balance != blank or flex != blank -%}
+              <ul class="cb-rmatch-card__chips" role="list">
+                {%- if weight_short != blank -%}<li>{{ weight_short | escape }}</li>{%- endif -%}
+                {%- if balance != blank -%}<li>{{ balance | escape }}</li>{%- endif -%}
+                {%- if flex != blank -%}<li>{{ flex | escape }} flex</li>{%- endif -%}
+              </ul>
+            {%- endif -%}
+            <div class="cb-rmatch-card__why">
+              <p class="cb-rmatch-card__why-label">
+                <svg class="cb-rmatch-card__why-icon cb-rmatch-card__why-icon--best" width="11" height="11" viewBox="2 2 20 20" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                <svg class="cb-rmatch-card__why-icon cb-rmatch-card__why-icon--other" width="11" height="11" viewBox="1.5 1.5 21 21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/><path d="m9 12 2 2 4-4"/></svg>
+                {{- block.settings.why_label | escape -}}
+              </p>
+              <p class="cb-rmatch-card__why-text" data-cb-rmatch-why></p>
+            </div>
+            <div class="cb-rmatch-card__actions">
+              <a class="cb-rmatch-card__view" href="{{ product.url }}">{{ block.settings.view_label | escape }}</a>
+              {%- if block.settings.show_compare -%}
+                <button type="button" class="cb-rmatch-card__compare" data-cb-rmatch-compare-btn>
+                  <svg width="12" height="12" viewBox="2 4 20 16" fill="currentColor" aria-hidden="true"><path d="M9.01 14H2v2h7.01v3L13 15l-3.99-4v3zm5.98-1v-3H22V8h-7.01V5L11 9l3.99 4z"/></svg>
+                  {{- block.settings.compare_label | escape -}}
+                </button>
+              {%- endif -%}
+            </div>
+          </li>
+        {%- endfor -%}
+      {%- endpaginate -%}
+    </template>
+  {%- endif -%}
+</div>
+
+{% stylesheet %}
+  .cb-rmatch-results {
+    width: 100%;
+    max-width: var(--cbrm-results-width, 1208px);
+    margin-inline: auto;
+    scroll-margin-top: calc(var(--header-height, 0px) + 16px);
+  }
+
+  .cb-rmatch-results[hidden] {
+    display: none;
+  }
+
+  .cb-rmatch-results .cb-rmatch-results__eyebrow {
+    margin: 0;
+    font-family: var(--cbrm-font-body);
+    font-weight: var(--cb-rmatch-results-eyebrow-weight, var(--cbrm-font-body-strong));
+    font-size: var(--cb-rmatch-results-eyebrow-size, 10px);
+    line-height: 1.3;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--cbrm-accent);
+  }
+
+  .cb-rmatch-results .cb-rmatch-results__heading,
+  .cb-rmatch-compare .cb-rmatch-compare__heading {
+    margin: 10px 0 0;
+    font-family: var(--cbrm-font-heading);
+    font-weight: var(--cb-rmatch-results-heading-weight, var(--cbrm-font-heading-medium-weight));
+    font-size: calc(var(--cb-rmatch-results-heading-size, 32px) * 26 / 32);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    color: var(--cbrm-text);
+  }
+
+  .cb-rmatch-compare .cb-rmatch-compare__heading {
+    margin-top: 0;
+  }
+
+  .cb-rmatch-results__heading:focus {
+    outline: none;
+  }
+
+  .cb-rmatch-results .cb-rmatch-results__text {
+    max-width: 700px;
+    margin: 14px 0 0;
+    font-family: var(--cbrm-font-body);
+    font-weight: var(--cb-rmatch-results-text-weight, var(--cbrm-font-body-weight));
+    font-size: calc(var(--cb-rmatch-results-text-size, 16px) * 15 / 16);
+    line-height: 1.55;
+    color: var(--cbrm-muted);
+  }
+
+  .cb-rmatch-results__grid {
+    --cbrm-columns: 3;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+    margin: 32px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .cb-rmatch-results__hint {
+    margin-top: 16px;
+    color: var(--cbrm-muted);
+    font-size: 13px;
+  }
+
+  /* Card */
+  .cb-rmatch-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    padding: 20px;
+    border-radius: var(--cbrm-radius);
+    background: var(--cbrm-results-card);
+  }
+
+  .cb-rmatch-card__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    min-height: 24px;
+  }
+
+  .cb-rmatch-card__tag {
+    display: inline-flex;
+    align-items: center;
+    min-height: 24px;
+    padding: 0 10px;
+    border-radius: 3px;
+    background: var(--cbrm-chip-strong);
+    font-family: var(--cbrm-font-body);
+    font-weight: var(--cb-rmatch-results-match-label-weight, 700);
+    font-size: var(--cb-rmatch-results-match-label-size, 10px);
+    line-height: 1.2;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--cbrm-text);
+  }
+
+  .cb-rmatch-card__tag:empty {
+    display: none;
+  }
+
+  .cb-rmatch-card.is-best .cb-rmatch-card__tag {
+    background: var(--cbrm-accent);
+  }
+
+  .cb-rmatch-card__series {
+    overflow: hidden;
+    font-family: var(--cbrm-font-body);
+    font-weight: var(--cb-rmatch-results-series-weight, 500);
+    font-size: var(--cb-rmatch-results-series-size, 10px);
+    line-height: 1.2;
+    letter-spacing: 0.08em;
+    text-align: right;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--cbrm-muted);
+  }
+
+  .cb-rmatch-card__media {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 343 / 260;
+    margin-top: 15px;
+    overflow: hidden;
+    border-radius: 4px;
+    background: var(--cbrm-image-bg);
+  }
+
+  .cb-rmatch-card__media img {
+    width: 100%;
+    height: 100%;
+    padding: 6%;
+    object-fit: contain;
+  }
+
+  .cb-rmatch-card__badge {
+    position: absolute;
+    right: 8px;
+    bottom: 8px;
+    padding: 4px 7px;
+    border-radius: 2px;
+    background: var(--cbrm-results-card);
+    font-family: var(--cbrm-font-body);
+    font-weight: var(--cb-rmatch-results-badge-weight, 700);
+    font-size: var(--cb-rmatch-results-badge-size, 9px);
+    line-height: 1.2;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--cbrm-text);
+  }
+
+  .cb-rmatch-card .cb-rmatch-card__brand {
+    margin: 20px 0 0;
+    font-family: var(--cbrm-font-body);
+    font-weight: var(--cb-rmatch-results-brand-weight, var(--cbrm-font-body-strong));
+    font-size: var(--cb-rmatch-results-brand-size, 9px);
+    line-height: 1.2;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--cbrm-muted);
+  }
+
+  .cb-rmatch-card .cb-rmatch-card__title {
+    margin: 8px 0 0;
+    font-family: var(--cbrm-font-heading);
+    font-weight: var(--cb-rmatch-results-name-weight, var(--cbrm-font-heading-medium-weight));
+    font-size: var(--cb-rmatch-results-name-size, 22px);
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+  }
+
+  .cb-rmatch-card__title a {
+    color: var(--cbrm-text);
+    text-decoration: none;
+  }
+
+  .cb-rmatch-card__title a:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .cb-rmatch-card .cb-rmatch-card__price {
+    margin: 6px 0 0;
+    font-family: var(--cbrm-font-heading);
+    font-weight: var(--cb-rmatch-results-price-weight, var(--cbrm-font-heading-weight));
+    font-size: var(--cb-rmatch-results-price-size, 18px);
+    line-height: 1.2;
+    color: var(--cbrm-text);
+  }
+
+  .cb-rmatch-card.is-best .cb-rmatch-card__price {
+    color: var(--cbrm-accent);
+  }
+
+  .cb-rmatch-card__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 14px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .cb-rmatch-card__chips li {
+    padding: 4px 9px;
+    border-radius: 3px;
+    background: var(--cbrm-option);
+    font-family: var(--cbrm-font-body);
+    font-weight: var(--cb-rmatch-results-chip-weight, 500);
+    font-size: var(--cb-rmatch-results-chip-size, 11px);
+    line-height: 1.3;
+    color: var(--cbrm-text);
+  }
+
+  /* The best match's note is lighter, with a red tick and label; the others are quieter. */
+  .cb-rmatch-card__why {
+    margin-top: 16px;
+    padding: 12px 14px;
+    border-radius: 4px;
+    background: var(--cbrm-option);
+  }
+
+  .cb-rmatch-card.is-best .cb-rmatch-card__why {
+    background: var(--cbrm-chip-strong);
+  }
+
+  .cb-rmatch-card .cb-rmatch-card__why-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+    font-family: var(--cbrm-font-body);
+    font-weight: var(--cb-rmatch-results-why-label-weight, var(--cbrm-font-body-strong));
+    font-size: var(--cb-rmatch-results-why-label-size, 9px);
+    line-height: 1.2;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--cbrm-muted);
+  }
+
+  .cb-rmatch-card.is-best .cb-rmatch-card__why-label {
+    color: var(--cbrm-accent);
+  }
+
+  .cb-rmatch-card__why-icon {
+    flex: none;
+  }
+
+  .cb-rmatch-card__why-icon--best,
+  .cb-rmatch-card.is-best .cb-rmatch-card__why-icon--other {
+    display: none;
+  }
+
+  .cb-rmatch-card.is-best .cb-rmatch-card__why-icon--best {
+    display: block;
+  }
+
+  .cb-rmatch-card .cb-rmatch-card__why-text {
+    margin: 8px 0 0;
+    font-family: var(--cbrm-font-body);
+    font-weight: var(--cb-rmatch-results-why-text-weight, var(--cbrm-font-body-weight));
+    font-size: var(--cb-rmatch-results-why-text-size, 12px);
+    line-height: 1.5;
+    color: var(--cbrm-muted);
+  }
+
+  .cb-rmatch-card__actions {
+    display: flex;
+    gap: 10px;
+    margin-top: auto;
+    padding-top: 18px;
+  }
+
+  .cb-rmatch-card__view,
+  .cb-rmatch-card__compare {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 44px;
+    margin: 0;
+    border: 0;
+    border-radius: 3px;
+    font-family: var(--cbrm-font-body);
+    font-weight: 700;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--cbrm-text);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  .cb-rmatch-card__view {
+    flex: 1 1 auto;
+    padding: 0 16px;
+    background: var(--cbrm-chip-strong);
+    font-weight: var(--cb-rmatch-results-view-button-weight, 700);
+    font-size: var(--cb-rmatch-results-view-button-size, 12px);
+    letter-spacing: 0.02em;
+  }
+
+  .cb-rmatch-card.is-best .cb-rmatch-card__view {
+    background: var(--cbrm-accent);
+  }
+
+  .cb-rmatch-card__compare {
+    flex: none;
+    padding: 0 12px;
+    background: var(--cbrm-option);
+    font-weight: var(--cb-rmatch-results-compare-button-weight, 700);
+    font-size: var(--cb-rmatch-results-compare-button-size, 9px);
+    letter-spacing: 0.04em;
+    color: var(--cbrm-muted);
+  }
+
+  .cb-rmatch-card__view:hover {
+    background: color-mix(in srgb, var(--cbrm-text) 10%, var(--cbrm-chip-strong));
+  }
+
+  .cb-rmatch-card.is-best .cb-rmatch-card__view:hover {
+    background: color-mix(in srgb, var(--cbrm-accent) 88%, #000);
+  }
+
+  .cb-rmatch-card__compare:hover {
+    color: var(--cbrm-text);
+  }
+
+  .cb-rmatch-card__view:focus-visible,
+  .cb-rmatch-card__compare:focus-visible {
+    outline: 2px solid var(--cbrm-text);
+    outline-offset: 2px;
+  }
+
+  /* Compare table */
+  .cb-rmatch-compare {
+    margin-top: 64px;
+    scroll-margin-top: calc(var(--header-height, 0px) + 16px);
+  }
+
+  .cb-rmatch-compare .cb-rmatch-compare__text {
+    margin: 10px 0 0;
+    font-family: var(--cbrm-font-body);
+    font-weight: var(--cb-rmatch-results-compare-text-weight, var(--cbrm-font-body-weight));
+    font-size: var(--cb-rmatch-results-compare-text-size, 14px);
+    line-height: 1.5;
+    letter-spacing: -0.01em;
+    color: var(--cbrm-muted);
+  }
+
+  .cb-rmatch-compare__scroll {
+    margin-top: 32px;
+    overflow-x: auto;
+    border-radius: var(--cbrm-radius);
+  }
+
+  /* Fixed layout: the specification column takes 17% and each racket an equal share, whatever its name's length. */
+  .cb-rmatch-compare__table {
+    width: 100%;
+    min-width: 640px;
+    table-layout: fixed;
+    border-collapse: collapse;
+    font-family: var(--cbrm-font-body);
+    font-size: var(--cb-rmatch-results-table-size, 12px);
+    line-height: 1.35;
+    color: var(--cbrm-soft);
+  }
+
+  .cb-rmatch-compare__table th,
+  .cb-rmatch-compare__table td {
+    padding: 14px 22px;
+    text-align: left;
+    vertical-align: middle;
+    font-weight: var(--cb-rmatch-results-table-weight, var(--cbrm-font-body-weight));
+  }
+
+  .cb-rmatch-compare__table thead th {
+    height: 42px;
+    padding-block: 10px;
+    background: var(--cbrm-chip-strong);
+    font-family: var(--cbrm-font-heading);
+    font-weight: var(--cb-rmatch-results-table-heading-weight, var(--cbrm-font-heading-weight));
+    font-size: var(--cb-rmatch-results-table-heading-size, 11px);
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--cbrm-text);
+  }
+
+  .cb-rmatch-compare__table thead th:first-child {
+    width: 17%;
+    font-family: var(--cbrm-font-body);
+    font-weight: var(--cb-rmatch-results-table-first-heading-weight, var(--cbrm-font-body-strong));
+    font-size: var(--cb-rmatch-results-table-first-heading-size, 9px);
+    letter-spacing: 0.05em;
+    color: var(--cbrm-muted);
+  }
+
+  .cb-rmatch-compare__table tbody tr {
+    background: var(--cbrm-card);
+  }
+
+  .cb-rmatch-compare__table tbody tr:nth-child(even) {
+    background: var(--cbrm-table-stripe);
+  }
+
+  .cb-rmatch-compare__table tbody th {
+    color: var(--cbrm-muted);
+  }
+
+  .cb-rmatch-compare__table tbody td {
+    height: 48px;
+  }
+
+  /* The best racket's cells and the price row label stay at least as bold as the rest when weights are set. */
+  .cb-rmatch-compare__table .is-best {
+    font-weight: max(var(--cb-rmatch-results-table-weight, 0), var(--cbrm-font-body-strong));
+    color: var(--cbrm-text);
+  }
+
+  .cb-rmatch-compare__table thead th.is-best {
+    font-weight: max(var(--cb-rmatch-results-table-heading-weight, 0), var(--cbrm-font-body-strong));
+    color: var(--cbrm-accent);
+  }
+
+  .cb-rmatch-compare__table tr.is-price {
+    background: var(--cbrm-chip-strong);
+  }
+
+  .cb-rmatch-compare__table tr.is-price th {
+    font-weight: max(var(--cb-rmatch-results-table-weight, 0), var(--cbrm-font-body-strong));
+    color: var(--cbrm-text);
+  }
+
+  .cb-rmatch-compare__table tr.is-price td {
+    height: 52px;
+    font-family: var(--cbrm-font-heading);
+    font-weight: var(--cb-rmatch-results-table-price-weight, var(--cbrm-font-heading-weight));
+    font-size: var(--cb-rmatch-results-table-price-size, 18px);
+    color: var(--cbrm-text);
+  }
+
+  .cb-rmatch-compare__table tr.is-price td.is-best {
+    color: var(--cbrm-accent);
+  }
+
+  .cb-rmatch-compare__table .is-flash {
+    box-shadow: inset 0 0 0 9999px color-mix(in srgb, var(--cbrm-accent) 12%, transparent);
+    transition: box-shadow 0.4s ease;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-rmatch-results__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 24px;
+    }
+
+    .cb-rmatch-results .cb-rmatch-results__heading,
+    .cb-rmatch-compare .cb-rmatch-compare__heading {
+      font-size: var(--cb-rmatch-results-heading-size, 32px);
+    }
+
+    .cb-rmatch-results .cb-rmatch-results__text {
+      font-size: var(--cb-rmatch-results-text-size, 16px);
+    }
+
+    .cb-rmatch-compare {
+      margin-top: 88px;
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .cb-rmatch-results__grid {
+      grid-template-columns: repeat(var(--cbrm-columns, 3), minmax(0, 1fr));
+      gap: 30px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Results",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Rackets"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Rackets to choose from",
+      "info": "Defaults to Rackets."
+    },
+    {
+      "type": "checkbox",
+      "id": "in_stock_only",
+      "label": "Only in-stock rackets",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "results_count",
+      "label": "Rackets to show",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "text",
+      "id": "brand_names",
+      "label": "Brand names",
+      "info": "Comma separated. Used to find each racket's brand in its title.",
+      "default": "Yonex, Victor, Li-Ning, Li Ning, Babolat, Ashaway, Hundred, Code Alpha, Apacs, Felet, Kawasaki, Carlton, Wilson"
+    },
+    {
+      "type": "text",
+      "id": "exclude_words",
+      "label": "Leave out rackets whose title contains",
+      "info": "Comma separated.",
+      "default": "2nd hand, junior, kid"
+    },
+    {
+      "type": "header",
+      "content": "Results heading"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Your racket matches"
+    },
+    {
+      "type": "text",
+      "id": "results_heading",
+      "label": "Heading",
+      "default": "Here’s what we’d put in your hand."
+    },
+    {
+      "type": "textarea",
+      "id": "results_text",
+      "label": "Text",
+      "info": "[count] is the number of rackets shown.",
+      "default": "Based on your answers, these are the [count] frames from our Papakura wall that best match your game."
+    },
+    {
+      "type": "header",
+      "content": "Racket cards"
+    },
+    {
+      "type": "text",
+      "id": "best_label",
+      "label": "First match label",
+      "info": "Shown after the racket's playing style.",
+      "default": "Best overall match"
+    },
+    {
+      "type": "text",
+      "id": "other_labels",
+      "label": "Other match labels",
+      "info": "Separate with |, in order.",
+      "default": "Strong match|Also worth a look|Worth a try"
+    },
+    {
+      "type": "text",
+      "id": "stock_badge",
+      "label": "Photo badge",
+      "info": "Shown on in-stock rackets. Leave empty to hide. A racket_badge metafield overrides it.",
+      "default": "In stock"
+    },
+    {
+      "type": "text",
+      "id": "why_label",
+      "label": "Why label",
+      "default": "Why it matches you"
+    },
+    {
+      "type": "text",
+      "id": "why_prefix",
+      "label": "Why text",
+      "info": "[answers] lists the answers this racket matches.",
+      "default": "Matches your answers: [answers]."
+    },
+    {
+      "type": "text",
+      "id": "why_fallback",
+      "label": "Why text with no direct match",
+      "default": "Our closest all-round pick for your answers. Ask the Pro Shop team to try it in store."
+    },
+    {
+      "type": "text",
+      "id": "view_label",
+      "label": "View button",
+      "default": "View racket"
+    },
+    {
+      "type": "text",
+      "id": "compare_label",
+      "label": "Compare button",
+      "default": "Compare"
+    },
+    {
+      "type": "header",
+      "content": "Compare table"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_compare",
+      "label": "Show compare table",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "compare_heading",
+      "label": "Heading",
+      "default": "Compare your matches"
+    },
+    {
+      "type": "text",
+      "id": "compare_text",
+      "label": "Text",
+      "default": "Side-by-side specifications across your [count] recommended frames."
+    },
+    {
+      "type": "text",
+      "id": "compare_first",
+      "label": "First column",
+      "default": "Specification"
+    },
+    {
+      "type": "text",
+      "id": "best_suffix",
+      "label": "Best match suffix",
+      "default": "(Best match)"
+    },
+    {
+      "type": "text",
+      "id": "row_style",
+      "label": "Row: playing style",
+      "default": "Playing style"
+    },
+    {
+      "type": "text",
+      "id": "row_level",
+      "label": "Row: player level",
+      "default": "Player level"
+    },
+    {
+      "type": "text",
+      "id": "row_weight",
+      "label": "Row: weight",
+      "default": "Weight"
+    },
+    {
+      "type": "text",
+      "id": "row_balance",
+      "label": "Row: balance",
+      "default": "Balance"
+    },
+    {
+      "type": "text",
+      "id": "row_flex",
+      "label": "Row: flex",
+      "default": "Flex"
+    },
+    {
+      "type": "text",
+      "id": "row_price",
+      "label": "Row: price",
+      "default": "Price"
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_size",
+      "label": "Eyebrow size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "eyebrow_weight",
+      "label": "Eyebrow weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading size",
+      "info": "The results and compare table headings. Scaled down on phones.",
+      "min": 16,
+      "max": 112,
+      "step": 1,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "select",
+      "id": "heading_weight",
+      "label": "Heading weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Text size",
+      "info": "Scaled down on phones.",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "text_weight",
+      "label": "Text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "match_label_size",
+      "label": "Match label size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "match_label_weight",
+      "label": "Match label weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "series_size",
+      "label": "Series size",
+      "info": "Brand and model line, top right of each card.",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "series_weight",
+      "label": "Series weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "badge_size",
+      "label": "Photo badge size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 9
+    },
+    {
+      "type": "select",
+      "id": "badge_weight",
+      "label": "Photo badge weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "brand_size",
+      "label": "Brand size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 9
+    },
+    {
+      "type": "select",
+      "id": "brand_weight",
+      "label": "Brand weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "name_size",
+      "label": "Racket name size",
+      "min": 10,
+      "max": 56,
+      "step": 0.5,
+      "unit": "px",
+      "default": 22
+    },
+    {
+      "type": "select",
+      "id": "name_weight",
+      "label": "Racket name weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "price_size",
+      "label": "Price size",
+      "min": 10,
+      "max": 56,
+      "step": 0.5,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "select",
+      "id": "price_weight",
+      "label": "Price weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "chip_size",
+      "label": "Spec chips size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "select",
+      "id": "chip_weight",
+      "label": "Spec chips weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "why_label_size",
+      "label": "Why label size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 9
+    },
+    {
+      "type": "select",
+      "id": "why_label_weight",
+      "label": "Why label weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "why_text_size",
+      "label": "Why text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "why_text_weight",
+      "label": "Why text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "view_button_size",
+      "label": "View button text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "view_button_weight",
+      "label": "View button text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "compare_button_size",
+      "label": "Compare button text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 9
+    },
+    {
+      "type": "select",
+      "id": "compare_button_weight",
+      "label": "Compare button text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "compare_text_size",
+      "label": "Compare text size",
+      "info": "The line under the compare table heading.",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "compare_text_weight",
+      "label": "Compare text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "table_heading_size",
+      "label": "Table racket names size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "select",
+      "id": "table_heading_weight",
+      "label": "Table racket names weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "table_first_heading_size",
+      "label": "Table first column heading size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 9
+    },
+    {
+      "type": "select",
+      "id": "table_first_heading_weight",
+      "label": "Table first column heading weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "table_size",
+      "label": "Table rows size",
+      "info": "Row names and specifications.",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "table_weight",
+      "label": "Table rows weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "table_price_size",
+      "label": "Table price size",
+      "min": 10,
+      "max": 56,
+      "step": 0.5,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "select",
+      "id": "table_price_weight",
+      "label": "Table price weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    }
+  ],
+  "presets": [{ "name": "[CB] Results" }]
+}
+{% endschema %}

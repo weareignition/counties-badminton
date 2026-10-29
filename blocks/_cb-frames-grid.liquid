@@ -1,4 +1,4 @@
-<div class="cb-frames__grid-wrap" {{ block.shopify_attributes }}>
+<div class="cb-frames__grid-wrap" style="--cb-frames-grid-empty-size: {{ block.settings.empty_size }}px; --cb-frames-grid-empty-weight: {{ block.settings.empty_weight }};" {{ block.shopify_attributes }}>
   <div
     class="cb-frames__grid cb-frames__grid--{{ block.settings.mobile_layout }}"
     style="
@@ -60,7 +60,8 @@
     border: 1px dashed var(--cbp-border);
     border-radius: var(--cbp-radius);
     font-family: var(--cbp-font-body);
-    font-size: 13px;
+    font-weight: var(--cb-frames-grid-empty-weight, inherit);
+    font-size: var(--cb-frames-grid-empty-size, 13px);
     text-align: center;
     color: var(--cbp-muted);
   }
@@ -132,6 +133,38 @@
       "id": "empty_text",
       "label": "No matches message",
       "default": "No frames match this filter."
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "empty_size",
+      "label": "No matches message size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "select",
+      "id": "empty_weight",
+      "label": "No matches message weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
     }
   ],
   "presets": [

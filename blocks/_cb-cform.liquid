@@ -1,0 +1,333 @@
+{%- comment -%}
+  A Shopify contact form (enquiries are emailed to the store's sender email, like Horizon's contact form). The fields
+  are [CB] Form field blocks laid out two per row (half width) or full width. The hidden contact[id] lets the success
+  and error messages show on the right form when a page has more than one.
+  Width and box styling (background, padding, border, corners) come from snippets/cb-text-box.
+{%- endcomment -%}
+{%- liquid
+  assign s = block.settings
+  assign form_id = 'CBContact-' | append: block.id
+-%}
+
+<div
+  class="cb-cform{% render 'cb-text-box', settings: s, part: 'class' %}"
+  style="--cb-cform-button-size: {{ s.button_size }}px; --cb-cform-button-weight: {{ s.button_weight }}; --cb-cform-message-size: {{ s.message_size }}px; --cb-cform-message-weight: {{ s.message_weight }};{% render 'cb-text-box', settings: s, part: 'style' %}"
+  {{ block.shopify_attributes }}
+>
+  {%- form 'contact', id: form_id, class: 'cb-cform__form' -%}
+    <input type="hidden" name="contact[id]" value="{{ form_id }}">
+
+    {%- liquid
+      assign form_matches = false
+      if form.id == form_id or form.id == blank
+        assign form_matches = true
+      endif
+    -%}
+
+    {%- if form.posted_successfully? and form_matches -%}
+      <p class="cb-cform__notice cb-cform__notice--success" role="status" tabindex="-1" autofocus>
+        {{- s.success_message | escape -}}
+      </p>
+    {%- endif -%}
+    {%- if form.errors and form_matches -%}
+      <div class="cb-cform__notice cb-cform__notice--error" role="alert" tabindex="-1" autofocus>
+        {{- form.errors | default_errors -}}
+      </div>
+    {%- endif -%}
+
+    <div class="cb-cform__fields">
+      {% content_for 'blocks' %}
+    </div>
+
+    {%- if s.button_label != blank -%}
+      <button type="submit" class="cb-cform__submit">{{ s.button_label | escape }}</button>
+    {%- endif -%}
+  {%- endform -%}
+</div>
+
+{% stylesheet %}
+  .cb-cform {
+    min-width: 0;
+    color: var(--cb-color-text, #ffffff);
+  }
+
+  .cb-cform__form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    margin: 0;
+  }
+
+  /* Phones: one field per row. Wider screens: half-width fields pair up. */
+  .cb-cform__fields {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+    align-self: stretch;
+  }
+
+  .cb-cform .cb-cform__submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 43px;
+    margin: 0;
+    padding: 0 20px;
+    border: 0;
+    border-radius: var(--cbct-input-radius, 6px);
+    background: var(--cb-color-accent, #d71f27);
+    font-family: var(--cb-font-body, var(--font-body--family));
+    font-weight: var(--cb-cform-button-weight, var(--cb-font-body-strong, 600));
+    font-size: var(--cb-cform-button-size, 12px);
+    line-height: 1.2;
+    color: #ffffff;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  .cb-cform .cb-cform__submit:hover {
+    background: color-mix(in srgb, var(--cb-color-accent, #d71f27) 88%, #000);
+  }
+
+  .cb-cform .cb-cform__submit:focus-visible {
+    outline: 2px solid var(--cb-color-text, #ffffff);
+    outline-offset: 3px;
+  }
+
+  .cb-cform__notice {
+    align-self: stretch;
+    margin: 0;
+    padding: 12px 16px;
+    border: 1px solid;
+    border-radius: var(--cbct-input-radius, 6px);
+    font-family: var(--cb-font-body, var(--font-body--family));
+    font-weight: var(--cb-cform-message-weight, inherit);
+    font-size: var(--cb-cform-message-size, 13px);
+    line-height: 1.5;
+  }
+
+  .cb-cform__notice--success {
+    border-color: rgb(34 197 94 / 0.5);
+    background: rgb(34 197 94 / 0.1);
+    color: #d6f5e0;
+  }
+
+  .cb-cform__notice--error {
+    border-color: color-mix(in srgb, var(--cb-color-accent, #d71f27) 60%, transparent);
+    background: color-mix(in srgb, var(--cb-color-accent, #d71f27) 12%, transparent);
+    color: #ffd9db;
+  }
+
+  .cb-cform__notice ul {
+    margin: 0;
+    padding-left: 18px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-cform__fields {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Contact form",
+  "tag": null,
+  "blocks": [
+    {
+      "type": "_cb-cform-field"
+    }
+  ],
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Enquiries are emailed to the store's sender email (Settings > Notifications), like Horizon's contact form."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button",
+      "default": "Send enquiry"
+    },
+    {
+      "type": "text",
+      "id": "success_message",
+      "label": "Message after sending",
+      "default": "Thanks for getting in touch. We'll reply as soon as we can."
+    },
+    {
+      "type": "header",
+      "content": "Width"
+    },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "Width",
+      "options": [
+        { "value": "auto", "label": "Auto (follows the section)" },
+        { "value": "fit", "label": "Fit the text" },
+        { "value": "full", "label": "Full width" },
+        { "value": "custom", "label": "Custom" }
+      ],
+      "default": "full"
+    },
+    {
+      "type": "range",
+      "id": "width_px",
+      "label": "Custom width",
+      "min": 100,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "default": 400,
+      "visible_if": "{{ block.settings.width == 'custom' }}"
+    },
+    {
+      "type": "header",
+      "content": "Box"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "info": "Leave empty for no background.",
+      "default": "#1b1b1b"
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Padding top and bottom",
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "default": 34
+    },
+    {
+      "type": "range",
+      "id": "padding_x",
+      "label": "Padding left and right",
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "default": 34
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "label": "Border",
+      "info": "0 = no border.",
+      "min": 0,
+      "max": 8,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "info": "Leave empty for a faint version of the text colour.",
+      "visible_if": "{{ block.settings.border_width > 0 }}"
+    },
+    {
+      "type": "range",
+      "id": "radius",
+      "label": "Corner radius",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "button_size",
+      "label": "Button text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "button_weight",
+      "label": "Button text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "message_size",
+      "label": "Sent and error message size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "select",
+      "id": "message_weight",
+      "label": "Sent and error message weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Contact form",
+      "blocks": {
+        "name": {
+          "type": "_cb-cform-field",
+          "settings": { "kind": "name", "label": "Name", "placeholder": "Your name", "required": true, "width": "half" }
+        },
+        "email": {
+          "type": "_cb-cform-field",
+          "settings": { "kind": "email", "label": "Email", "placeholder": "you@example.com", "width": "half" }
+        },
+        "message": {
+          "type": "_cb-cform-field",
+          "settings": {
+            "kind": "message",
+            "label": "Message",
+            "placeholder": "Tell us how we can help",
+            "required": true
+          }
+        }
+      },
+      "block_order": ["name", "email", "message"]
+    }
+  ]
+}
+{% endschema %}

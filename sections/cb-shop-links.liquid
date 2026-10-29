@@ -1,0 +1,242 @@
+{%- liquid
+  assign s = section.settings
+  assign font_scope = '#cb-shoplinks-' | append: section.id
+-%}
+
+{% render 'cb-font-styles',
+  selector: font_scope,
+  prefix: 'cbsl',
+  heading_font: s.heading_font,
+  body_font: s.body_font
+%}
+
+<section
+  id="cb-shoplinks-{{ section.id }}"
+  class="cb-shoplinks"
+  style="
+    --cbsl-bg: {{ s.background_color }};
+    --cbsl-card: {{ s.card_background_color }};
+    --cbsl-text: {{ s.text_color }};
+    --cbsl-muted: {{ s.muted_text_color }};
+    --cbsl-accent: {{ s.accent_color }};
+    --cbsl-radius: {{ s.card_radius }}px;
+    --cbsl-max-width: {{ s.max_width }}px;
+    --cbsl-stack-gap: {{ s.stack_gap }}px;
+    --cbsl-pt: {{ s.padding_top }}px;
+    --cbsl-pb: {{ s.padding_bottom }}px;
+  "
+>
+  <div class="cb-shoplinks__inner">
+    {% content_for 'blocks' %}
+  </div>
+</section>
+
+{% stylesheet %}
+  .cb-shoplinks {
+    color: var(--cbsl-text);
+    background: var(--cbsl-bg);
+    padding: calc(var(--cbsl-pt) * 0.75) 16px calc(var(--cbsl-pb) * 0.75);
+  }
+
+  .cb-shoplinks__inner {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--cbsl-stack-gap) * 0.75);
+    max-width: var(--cbsl-max-width);
+    margin-inline: auto;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-shoplinks {
+      padding: var(--cbsl-pt) 32px var(--cbsl-pb);
+    }
+
+    .cb-shoplinks__inner {
+      gap: var(--cbsl-stack-gap);
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .cb-shoplinks {
+      padding-inline: 48px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Shop links",
+  "tag": "div",
+  "class": "section-wrapper",
+  "blocks": [
+    { "type": "_cb-shoplink-header" },
+    { "type": "_cb-shoplink-cards" }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width",
+      "min": 960,
+      "max": 1800,
+      "step": 20,
+      "unit": "px",
+      "default": 1400
+    },
+    {
+      "type": "range",
+      "id": "stack_gap",
+      "label": "Space between header and cards",
+      "min": 8,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "default": 37
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Card corner radius",
+      "min": 0,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "info": "The chosen style sets the heading weight. Card titles use the font's regular style.",
+      "default": "space_grotesk_n5"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "inter_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#0b0b0b"
+    },
+    {
+      "type": "color",
+      "id": "card_background_color",
+      "label": "Cards",
+      "default": "#191919"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "muted_text_color",
+      "label": "Body text and card labels",
+      "default": "#a1a1aa"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "info": "Eyebrow and arrows.",
+      "default": "#d71f27"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Shop links",
+      "category": "t:categories.links",
+      "blocks": {
+        "header": {
+          "type": "_cb-shoplink-header",
+          "blocks": {
+            "eyebrow": {
+              "type": "cb-subheader",
+              "settings": { "subheader_text": "Complete your court setup", "letter_spacing": 0 }
+            },
+            "heading": { "type": "cb-heading", "settings": { "heading_text": "Ready from first step to first serve." } },
+            "text": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>Pair your verified footwear with tournament shuttlecocks, match rackets, and tour bags.</p>",
+                "letter_spacing": -1,
+                "max_width_unit": "px"
+              }
+            }
+          },
+          "block_order": ["eyebrow", "heading", "text"]
+        },
+        "cards": {
+          "type": "_cb-shoplink-cards",
+          "blocks": {
+            "rackets": {
+              "type": "_cb-shoplink-card",
+              "settings": { "label": "Equipment", "collection": "rackets", "card_title": "Shop rackets" }
+            },
+            "shuttles": {
+              "type": "_cb-shoplink-card",
+              "settings": { "label": "Consumables", "collection": "shuttles", "card_title": "Shop shuttles" }
+            },
+            "bags": {
+              "type": "_cb-shoplink-card",
+              "settings": {
+                "label": "Gear & travel",
+                "collection": "racket-bags",
+                "use_custom_title": true,
+                "card_title": "Shop bags & accessories"
+              }
+            }
+          },
+          "block_order": ["rackets", "shuttles", "bags"]
+        }
+      },
+      "block_order": ["header", "cards"]
+    }
+  ]
+}
+{% endschema %}

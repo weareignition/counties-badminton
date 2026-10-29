@@ -1,0 +1,256 @@
+{%- liquid
+  assign s = section.settings
+  assign font_scope = '#cb-steps-' | append: section.id
+-%}
+
+{% render 'cb-font-styles',
+  selector: font_scope,
+  prefix: 'cbst',
+  heading_font: s.heading_font,
+  body_font: s.body_font
+%}
+
+<section
+  id="cb-steps-{{ section.id }}"
+  class="cb-steps"
+  style="
+    --cbst-bg: {{ s.background_color }};
+    --cbst-card: {{ s.card_background_color }};
+    --cbst-text: {{ s.text_color }};
+    --cbst-muted: {{ s.muted_text_color }};
+    --cbst-accent: {{ s.accent_color }};
+    --cbst-radius: {{ s.card_radius }}px;
+    --cbst-max-width: {{ s.max_width }}px;
+    --cbst-stack-gap: {{ s.stack_gap }}px;
+    --cbst-pt: {{ s.padding_top }}px;
+    --cbst-pb: {{ s.padding_bottom }}px;
+  "
+>
+  <div class="cb-steps__inner">
+    {% content_for 'blocks' %}
+  </div>
+</section>
+
+{% stylesheet %}
+  .cb-steps {
+    color: var(--cbst-text);
+    background: var(--cbst-bg);
+    padding: calc(var(--cbst-pt) * 0.75) 16px calc(var(--cbst-pb) * 0.75);
+  }
+
+  .cb-steps__inner {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--cbst-stack-gap) * 0.75);
+    max-width: var(--cbst-max-width);
+    margin-inline: auto;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-steps {
+      padding: var(--cbst-pt) 32px var(--cbst-pb);
+    }
+
+    .cb-steps__inner {
+      gap: var(--cbst-stack-gap);
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .cb-steps {
+      padding-inline: 48px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Steps",
+  "tag": "div",
+  "class": "section-wrapper",
+  "blocks": [
+    { "type": "_cb-steps-header" },
+    { "type": "_cb-steps-cards" }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width",
+      "min": 960,
+      "max": 1800,
+      "step": 20,
+      "unit": "px",
+      "default": 1400
+    },
+    {
+      "type": "range",
+      "id": "stack_gap",
+      "label": "Space between header and steps",
+      "min": 8,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 46
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Card corner radius",
+      "min": 0,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 6
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "info": "Used for the heading (bold), numbers (medium) and step titles (regular).",
+      "default": "space_grotesk_n7"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "inter_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#0e0e0e"
+    },
+    {
+      "type": "color",
+      "id": "card_background_color",
+      "label": "Cards",
+      "default": "#181818"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "muted_text_color",
+      "label": "Body text",
+      "default": "#a1a1aa"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "info": "Eyebrow and step numbers.",
+      "default": "#d71f27"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Restringing steps",
+      "category": "t:categories.storytelling",
+      "blocks": {
+        "header": {
+          "type": "_cb-steps-header",
+          "blocks": {
+            "eyebrow": {
+              "type": "cb-subheader",
+              "settings": { "subheader_text": "Simple service", "letter_spacing": 0 }
+            },
+            "heading": {
+              "type": "cb-heading",
+              "settings": { "heading_text": "Restringing made simple.", "wrap": "wrap" }
+            },
+            "text": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>Four disciplined steps to restore tournament-level tension and snapback.</p>",
+                "letter_spacing": -1,
+                "max_width_unit": "px"
+              }
+            }
+          },
+          "block_order": ["eyebrow", "heading", "text"]
+        },
+        "steps": {
+          "type": "_cb-steps-cards",
+          "blocks": {
+            "choose": {
+              "type": "_cb-steps-card",
+              "settings": {
+                "card_title": "Choose",
+                "card_text": "Pick your preferred string and tension, or consult with our qualified technicians for guidance."
+              }
+            },
+            "drop_off": {
+              "type": "_cb-steps-card",
+              "settings": {
+                "card_title": "Drop off",
+                "card_text": "Bring your racket directly to the Papakura pro shop workshop at 41r Elliot Street."
+              }
+            },
+            "string": {
+              "type": "_cb-steps-card",
+              "settings": {
+                "card_title": "We string it",
+                "card_text": "Master stringers complete electronic restringing on certified constant-pull 6-point rigs."
+              }
+            },
+            "pick_up": {
+              "type": "_cb-steps-card",
+              "settings": {
+                "card_title": "Pick up & play",
+                "card_text": "Collect your completed racket and experience genuine crisp stringbed feel on court."
+              }
+            }
+          },
+          "block_order": ["choose", "drop_off", "string", "pick_up"]
+        }
+      },
+      "block_order": ["header", "steps"]
+    }
+  ]
+}
+{% endschema %}

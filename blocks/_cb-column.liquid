@@ -1,0 +1,278 @@
+{%- comment -%}
+  A column inside a [CB] Row (or directly in [CB] Blank section): stacks any blocks with a set gap and alignment, or
+  sets them side by side (wrapping), e.g. two buttons.
+  Width and box styling (background, padding, border, corners) come from snippets/cb-text-box.
+{%- endcomment -%}
+{%- liquid
+  assign s = block.settings
+  case s.vertical
+    when 'center'
+      assign justify = 'center'
+    when 'bottom'
+      assign justify = 'flex-end'
+    when 'spread'
+      assign justify = 'space-between'
+    else
+      assign justify = 'flex-start'
+  endcase
+  case s.horizontal
+    when 'center'
+      assign items = 'center'
+    when 'right'
+      assign items = 'flex-end'
+    when 'stretch'
+      assign items = 'stretch'
+    else
+      assign items = 'flex-start'
+  endcase
+  # Side by side: the main axis is horizontal, so the two alignments swap.
+  if s.direction == 'row'
+    assign row_justify = items
+    if row_justify == 'stretch'
+      assign row_justify = 'flex-start'
+    endif
+    assign items = justify
+    if items == 'space-between'
+      assign items = 'stretch'
+    endif
+    assign justify = row_justify
+  endif
+-%}
+
+<div
+  class="cb-col cb-col--{{ s.horizontal }}{% if s.direction == 'row' %} cb-col--row{% endif %}{% render 'cb-text-box', settings: s, part: 'class' %}"
+  style="
+    --cb-col-gap: {{ s.gap }}px;
+    --cb-col-text-gap: {{ s.text_gap }}px;
+    --cb-col-justify: {{ justify }};
+    --cb-col-items: {{ items }};
+    {% render 'cb-text-box', settings: s, part: 'style' %}
+  "
+  {{ block.shopify_attributes }}
+>
+  {% content_for 'blocks' %}
+</div>
+
+{% stylesheet %}
+  .cb-col {
+    display: flex;
+    flex-direction: column;
+    justify-content: var(--cb-col-justify, flex-start);
+    align-items: var(--cb-col-items, flex-start);
+    gap: var(--cb-col-gap, 16px);
+    min-width: 0;
+  }
+
+  /* A card that is alone in its column fills it, so cards in a same-height row line up (buttons at the bottom). */
+  .cb-col > :only-child:is(.cb-card, .cb-hcard) {
+    flex: 1 1 auto;
+  }
+
+  /* A subheader, heading and paragraph that follow each other sit closer than other blocks. */
+  .cb-col > :is(.cb-subheader, .cb-heading, .cb-paragraph) + :is(.cb-heading, .cb-paragraph) {
+    margin-top: calc(var(--cb-col-text-gap, 12px) - var(--cb-col-gap, 16px));
+  }
+
+  .cb-col.cb-col--row {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  /* Phones: columns stack, so side-by-side blocks start from the left like the text above them. */
+  @media screen and (max-width: 749px) {
+    .cb-col.cb-col--row.cb-col--right {
+      justify-content: flex-start;
+    }
+  }
+
+  .cb-col--center {
+    text-align: center;
+  }
+
+  .cb-col--right {
+    text-align: right;
+  }
+
+  /* Theme editor only: show where an empty column is, so blocks can be added to it. */
+  .cb-blank--editing .cb-col:not(:has(> *)) {
+    min-height: 80px;
+    border: 1px dashed rgb(255 255 255 / 0.2);
+    border-radius: 8px;
+  }
+
+  .cb-blank--editing .cb-col:not(:has(> *))::before {
+    content: 'Empty column: add blocks to it';
+    margin: auto;
+    font-size: 12px;
+    color: rgb(255 255 255 / 0.5);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Column",
+  "tag": null,
+  "blocks": [
+    {
+      "type": "@theme"
+    },
+    {
+      "type": "@app"
+    },
+    {
+      "type": "_cb-row"
+    },
+    {
+      "type": "_cb-cform"
+    }
+  ],
+  "settings": [
+    {
+      "type": "select",
+      "id": "vertical",
+      "label": "Vertical alignment",
+      "info": "Within the row, when columns are the same height.",
+      "options": [
+        { "value": "top", "label": "Top" },
+        { "value": "center", "label": "Middle" },
+        { "value": "bottom", "label": "Bottom" },
+        { "value": "spread", "label": "Spread out" }
+      ],
+      "default": "top"
+    },
+    {
+      "type": "select",
+      "id": "direction",
+      "label": "Blocks",
+      "options": [
+        { "value": "stack", "label": "Stacked" },
+        { "value": "row", "label": "Side by side" }
+      ],
+      "default": "stack"
+    },
+    {
+      "type": "select",
+      "id": "horizontal",
+      "label": "Horizontal alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" },
+        { "value": "stretch", "label": "Full width blocks" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Space between blocks",
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "text_gap",
+      "label": "Space between text blocks",
+      "info": "Between a subheader, heading and paragraph that follow each other. Other blocks use the space above.",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Width"
+    },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "Width",
+      "options": [
+        { "value": "auto", "label": "Auto (follows the section)" },
+        { "value": "fit", "label": "Fit the text" },
+        { "value": "full", "label": "Full width" },
+        { "value": "custom", "label": "Custom" }
+      ],
+      "default": "full"
+    },
+    {
+      "type": "range",
+      "id": "width_px",
+      "label": "Custom width",
+      "min": 100,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "default": 400,
+      "visible_if": "{{ block.settings.width == 'custom' }}"
+    },
+    {
+      "type": "header",
+      "content": "Box"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "info": "Leave empty for no background."
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Padding top and bottom",
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_x",
+      "label": "Padding left and right",
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "label": "Border",
+      "info": "0 = no border.",
+      "min": 0,
+      "max": 8,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "info": "Leave empty for a faint version of the text colour.",
+      "visible_if": "{{ block.settings.border_width > 0 }}"
+    },
+    {
+      "type": "range",
+      "id": "radius",
+      "label": "Corner radius",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Column"
+    }
+  ]
+}
+{% endschema %}

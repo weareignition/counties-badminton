@@ -1,0 +1,295 @@
+{%- liquid
+  assign s = section.settings
+  assign font_scope = '#cb-faq-' | append: section.id
+-%}
+
+{% render 'cb-font-styles',
+  selector: font_scope,
+  prefix: 'cbfq',
+  heading_font: s.heading_font,
+  body_font: s.body_font
+%}
+
+<section
+  id="cb-faq-{{ section.id }}"
+  class="cb-faq"
+  style="
+    --cbfq-bg: {{ s.background_color }};
+    --cbfq-item: {{ s.item_background_color }};
+    --cbfq-divider: {{ s.divider_color }};
+    --cbfq-text: {{ s.text_color }};
+    --cbfq-muted: {{ s.muted_text_color }};
+    --cbfq-accent: {{ s.accent_color }};
+    --cbfq-radius: {{ s.item_radius }}px;
+    --cbfq-max-width: {{ s.max_width }}px;
+    --cbfq-stack-gap: {{ s.stack_gap }}px;
+    --cbfq-pt: {{ s.padding_top }}px;
+    --cbfq-pb: {{ s.padding_bottom }}px;
+  "
+>
+  <div class="cb-faq__inner">
+    {% content_for 'blocks' %}
+  </div>
+</section>
+
+{%- if request.design_mode -%}
+  <script>
+    // In the theme editor, open a question when its block is selected.
+    if (!window.cbFaqEditorHook) {
+      window.cbFaqEditorHook = true;
+      document.addEventListener('shopify:block:select', (event) => {
+        const item = event.target.closest && event.target.closest('.cb-faq__item');
+        if (item) item.open = true;
+      });
+    }
+  </script>
+{%- endif -%}
+
+{% stylesheet %}
+  .cb-faq {
+    color: var(--cbfq-text);
+    background: var(--cbfq-bg);
+    padding: calc(var(--cbfq-pt) * 0.75) 16px calc(var(--cbfq-pb) * 0.75);
+  }
+
+  .cb-faq__inner {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--cbfq-stack-gap) * 0.75);
+    max-width: var(--cbfq-max-width);
+    margin-inline: auto;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-faq {
+      padding: var(--cbfq-pt) 32px var(--cbfq-pb);
+    }
+
+    .cb-faq__inner {
+      gap: var(--cbfq-stack-gap);
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .cb-faq {
+      padding-inline: 48px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] FAQ",
+  "tag": "div",
+  "class": "section-wrapper",
+  "blocks": [
+    { "type": "_cb-faq-header" },
+    { "type": "_cb-faq-list" }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width",
+      "min": 560,
+      "max": 1400,
+      "step": 20,
+      "unit": "px",
+      "default": 820
+    },
+    {
+      "type": "range",
+      "id": "stack_gap",
+      "label": "Space between header and questions",
+      "min": 8,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 38
+    },
+    {
+      "type": "range",
+      "id": "item_radius",
+      "label": "Question corner radius",
+      "min": 0,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 6
+    },
+    {
+      "type": "checkbox",
+      "id": "one_at_a_time",
+      "label": "One answer open at a time",
+      "info": "Opening a question closes the others.",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "info": "Used for the heading and questions.",
+      "default": "space_grotesk_n7"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "inter_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#0b0b0b"
+    },
+    {
+      "type": "color",
+      "id": "item_background_color",
+      "label": "Questions",
+      "default": "#181818"
+    },
+    {
+      "type": "color",
+      "id": "divider_color",
+      "label": "Divider under an open question",
+      "default": "#7f7f7f"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "muted_text_color",
+      "label": "Body text and icons",
+      "default": "#a1a1aa"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "info": "Eyebrow and the open question's icon.",
+      "default": "#d71f27"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Stringing FAQ",
+      "category": "t:categories.text",
+      "blocks": {
+        "header": {
+          "type": "_cb-faq-header",
+          "blocks": {
+            "eyebrow": {
+              "type": "cb-subheader",
+              "settings": { "subheader_text": "Frequently asked", "letter_spacing": 0 }
+            },
+            "heading": { "type": "cb-heading", "settings": { "heading_text": "Stringing questions", "wrap": "wrap" } },
+            "text": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>Answers directly from our workshop technicians in Papakura.</p>",
+                "letter_spacing": -1,
+                "max_width_unit": "px"
+              }
+            }
+          },
+          "block_order": ["eyebrow", "heading", "text"]
+        },
+        "questions": {
+          "type": "_cb-faq-list",
+          "blocks": {
+            "tension": {
+              "type": "_cb-faq-item",
+              "settings": {
+                "question": "How do I know what tension to use?",
+                "answer": "<p>The pro shop team can recommend an accurate starting point based on your racket's frame tolerance, current playing level, and whether you need more power or fine-tuned control. For most regular players, 24–25 lbs provides the ideal blend of durability and punch.</p>",
+                "open": true
+              }
+            },
+            "own_string": {
+              "type": "_cb-faq-item",
+              "settings": {
+                "question": "Can I bring my own string?",
+                "answer": "<p>Talk to the team when you drop your racket off. They'll check the string suits your frame, and labour pricing is confirmed in-store.</p>"
+              }
+            },
+            "how_long": {
+              "type": "_cb-faq-item",
+              "settings": {
+                "question": "How long does restringing take?",
+                "answer": "<p>Restringing runs 7 days, with a quick turnaround after 10am. The team will give you a pick-up time when you drop your racket off.</p>"
+              }
+            },
+            "drop_off": {
+              "type": "_cb-faq-item",
+              "settings": {
+                "question": "When can I drop my racket off?",
+                "answer": "<p>Bring it to the pro shop at 41R Elliot Street, Papakura, any day of the week. There's free parking at the hall.</p>"
+              }
+            },
+            "choose_string": {
+              "type": "_cb-faq-item",
+              "settings": {
+                "question": "Can you help me choose a string?",
+                "answer": "<p>Yes. Tell the team what you want more of — feel, durability, control or repulsion — and they'll recommend a practical setup for your racket and level.</p>"
+              }
+            },
+            "book": {
+              "type": "_cb-faq-item",
+              "settings": {
+                "question": "Do I need to book in advance?",
+                "answer": "<p>If you need your racket back by a certain day, contact the pro shop and the team will let you know what's possible.</p>"
+              }
+            }
+          },
+          "block_order": ["tension", "own_string", "how_long", "drop_off", "choose_string", "book"]
+        }
+      },
+      "block_order": ["header", "questions"]
+    }
+  ]
+}
+{% endschema %}

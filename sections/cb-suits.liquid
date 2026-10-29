@@ -1,0 +1,508 @@
+{%- comment -%}
+  A panel built from the shared blocks: [CB] Subheader, Heading, Paragraph and Button run across the full width,
+  [CB] Highlight cards and [CB] Cards fill the columns below them.
+{%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign font_scope = '#cb-suits-' | append: section.id
+  assign tablet_columns = s.columns | at_most: s.tablet_columns
+-%}
+
+{% render 'cb-font-styles',
+  selector: font_scope,
+  prefix: 'cbsu',
+  heading_font: s.heading_font,
+  body_font: s.body_font
+%}
+
+<section
+  id="cb-suits-{{ section.id }}"
+  class="cb-suits{% if s.equal_height %} cb-suits--equal{% endif %}"
+  style="
+    --cbsu-bg: {{ s.background_color }};
+    --cbsu-panel: {{ s.panel_color }};
+    --cbsu-text: {{ s.text_color }};
+    --cbsu-muted: {{ s.muted_text_color }};
+    --cbsu-accent: {{ s.accent_color }};
+    --cbsu-max-width: {{ s.max_width }}px;
+    --cbsu-side: {{ s.side_padding }}px;
+    --cbsu-panel-padding: {{ s.panel_padding }}px;
+    --cbsu-radius: {{ s.panel_radius }}px;
+    --cbsu-columns: {{ s.columns }};
+    --cbsu-columns-tablet: {{ tablet_columns }};
+    --cbsu-card-gap: {{ s.card_gap }}px;
+    --cbsu-text-gap: {{ s.text_gap }}px;
+    --cbsu-cards-gap: {{ s.cards_gap }}px;
+    --cbsu-pt: {{ s.padding_top }}px;
+    --cbsu-pb: {{ s.padding_bottom }}px;
+  "
+>
+  <div class="cb-suits__panel">
+    <div class="cb-suits__grid">
+      {%- content_for 'blocks' -%}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .cb-suits {
+    color: var(--cbsu-text);
+    background: var(--cbsu-bg);
+    padding: var(--cbsu-pt) 16px var(--cbsu-pb);
+  }
+
+  .cb-suits__panel {
+    max-width: var(--cbsu-max-width);
+    box-sizing: border-box;
+    margin-inline: auto;
+    padding: calc(var(--cbsu-panel-padding) * 0.6);
+    border-radius: var(--cbsu-radius);
+    background: var(--cbsu-panel);
+  }
+
+  /* Text blocks span the row; cards fill the columns. */
+  .cb-suits__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    gap: var(--cbsu-card-gap);
+  }
+
+  .cb-suits--equal .cb-suits__grid {
+    align-items: stretch;
+  }
+
+  .cb-suits__grid > :not(.cb-hcard, .cb-card) {
+    grid-column: 1 / -1;
+    align-self: start;
+  }
+
+  .cb-suits__grid > .cb-button:not(.cb-button--full) {
+    justify-self: start;
+  }
+
+  /* Text that follows text sits closer; the last block before the cards sets the space above them. */
+  .cb-suits__grid > :is(.cb-subheader, .cb-heading, .cb-paragraph, .cb-button) + :is(.cb-subheader, .cb-heading, .cb-paragraph, .cb-button) {
+    margin-top: calc(var(--cbsu-text-gap) - var(--cbsu-card-gap));
+  }
+
+  .cb-suits__grid > :not(.cb-hcard, .cb-card):has(+ :is(.cb-hcard, .cb-card)) {
+    margin-bottom: calc(var(--cbsu-cards-gap) - var(--cbsu-card-gap));
+  }
+
+  .cb-suits__grid:empty::before {
+    content: '';
+    display: block;
+    min-height: 80px;
+    border: 1px dashed rgb(255 255 255 / 0.2);
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-suits {
+      padding-inline: var(--cbsu-side);
+    }
+
+    .cb-suits__panel {
+      padding: var(--cbsu-panel-padding);
+    }
+
+    .cb-suits__grid {
+      grid-template-columns: repeat(var(--cbsu-columns-tablet), minmax(0, 1fr));
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .cb-suits__grid {
+      grid-template-columns: repeat(var(--cbsu-columns), minmax(0, 1fr));
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Who it suits",
+  "tag": "section",
+  "class": "section-wrapper",
+  "blocks": [
+    { "type": "cb-subheader" },
+    { "type": "cb-heading" },
+    { "type": "cb-paragraph" },
+    { "type": "cb-button" },
+    { "type": "cb-highlight-card" },
+    { "type": "cb-card" }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Cards per row",
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "tablet_columns",
+      "label": "Cards per row on tablets",
+      "info": "Phones show one card per row.",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "checkbox",
+      "id": "equal_height",
+      "label": "Same height cards",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "card_gap",
+      "label": "Space between cards",
+      "min": 0,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "range",
+      "id": "text_gap",
+      "label": "Space between text blocks",
+      "min": 0,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 7
+    },
+    {
+      "type": "range",
+      "id": "cards_gap",
+      "label": "Space above cards",
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Maximum width",
+      "min": 800,
+      "max": 1800,
+      "step": 20,
+      "unit": "px",
+      "default": 1520
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Side space",
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "panel_padding",
+      "label": "Panel padding",
+      "info": "Smaller on phones.",
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "panel_radius",
+      "label": "Panel corner radius",
+      "min": 0,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Fonts"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "space_grotesk_n7"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "inter_n4"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#0b0b0b"
+    },
+    {
+      "type": "color",
+      "id": "panel_color",
+      "label": "Panel",
+      "default": "#181818"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "muted_text_color",
+      "label": "Muted text",
+      "info": "Paragraphs and card text.",
+      "default": "#a1a1aa"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "default": "#d71f27"
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Who it suits",
+      "blocks": {
+        "subheader": {
+          "type": "cb-subheader",
+          "settings": {
+            "subheader_text": "Who this racket suits",
+            "size": 8,
+            "letter_spacing": 10,
+            "space_below": -2
+          }
+        },
+        "heading": {
+          "type": "cb-heading",
+          "settings": {
+            "heading_text": "Who this racket suits",
+            "size": 28,
+            "line_height": 115
+          }
+        },
+        "paragraph": {
+          "type": "cb-paragraph",
+          "settings": {
+            "body_text": "<p>The head-heavy mass combined with an ultra-stiff graphite shaft concentrates kinetic energy directly into downhill offensive shots. It transforms committed forearm acceleration into steep smash rebounds and penetrating flat drives, ideal for players who dictate exchanges and play with assertive racket speed.</p>",
+            "size": 14,
+            "line_height": 170,
+            "max_width_unit": "px",
+            "max_width_px": 720
+          }
+        },
+        "style": {
+          "type": "cb-highlight-card",
+          "settings": {
+            "label": "Playing style",
+            "title_text": "Attack & Power",
+            "body_text": "Engineered for pure downhill trajectory, rapid overhead whip, and relentless court penetration.",
+            "label_size": 8,
+            "title_size": 11,
+            "text_size": 10.5,
+            "title_font": "heading_bold",
+            "label_gap": 6,
+            "text_gap": 6,
+            "label_color": "#a1a1aa",
+            "background_color": "#1c1c1c",
+            "padding_y": 17,
+            "padding_x": 16,
+            "radius": 3
+          }
+        },
+        "level": {
+          "type": "cb-highlight-card",
+          "settings": {
+            "label": "Player level",
+            "title_text": "Advanced / Competitive",
+            "body_text": "Best for competitive club players, tournament reps, and players with established timing mechanics.",
+            "label_size": 8,
+            "title_size": 11,
+            "text_size": 10.5,
+            "title_font": "heading_bold",
+            "label_gap": 6,
+            "text_gap": 6,
+            "label_color": "#a1a1aa",
+            "background_color": "#1c1c1c",
+            "padding_y": 17,
+            "padding_x": 16,
+            "radius": 3
+          }
+        },
+        "feel": {
+          "type": "cb-highlight-card",
+          "settings": {
+            "label": "How it feels",
+            "title_text": "Crisp & Torsionally Solid",
+            "body_text": "Crisp, solid feedback with high torsional stability on impact to eliminate flutter during off-center hits.",
+            "label_size": 8,
+            "title_size": 11,
+            "text_size": 10.5,
+            "title_font": "heading_bold",
+            "label_gap": 6,
+            "text_gap": 6,
+            "label_color": "#a1a1aa",
+            "background_color": "#1c1c1c",
+            "padding_y": 17,
+            "padding_x": 16,
+            "radius": 3
+          }
+        },
+        "suits": {
+          "type": "cb-highlight-card",
+          "settings": {
+            "label": "Who it suits",
+            "title_text": "Aggressive Attackers",
+            "body_text": "Aggressive rear-court singles or doubles back-court attackers who thrive on maintaining offensive pressure.",
+            "label_size": 8,
+            "title_size": 11,
+            "text_size": 10.5,
+            "title_font": "heading_bold",
+            "label_gap": 6,
+            "text_gap": 6,
+            "label_color": "#a1a1aa",
+            "background_color": "#1c1c1c",
+            "padding_y": 17,
+            "padding_x": 16,
+            "radius": 3
+          }
+        }
+      },
+      "block_order": ["subheader", "heading", "paragraph", "style", "level", "feel", "suits"]
+    },
+    {
+      "name": "[CB] Spec guides",
+      "settings": {
+        "columns": 3,
+        "card_gap": 13,
+        "cards_gap": 12,
+        "panel_padding": 27
+      },
+      "blocks": {
+        "subheader": {
+          "type": "cb-subheader",
+          "settings": {
+            "subheader_text": "Pro shop guides",
+            "size": 8,
+            "letter_spacing": 10,
+            "space_below": -2
+          }
+        },
+        "heading": {
+          "type": "cb-heading",
+          "settings": {
+            "heading_text": "Need help understanding the specs?",
+            "size": 19,
+            "line_height": 120
+          }
+        },
+        "weight": {
+          "type": "cb-highlight-card",
+          "settings": {
+            "icon": "weight",
+            "icon_size": 18,
+            "title_text": "Racket weight explained",
+            "body_text": "How 3U vs 4U alters maneuverability and fatigue over long rallies.",
+            "title_size": 11,
+            "text_size": 10.5,
+            "title_font": "heading_bold",
+            "label_gap": 5,
+            "text_gap": 4,
+            "background_color": "#1c1b1b",
+            "padding_y": 12,
+            "padding_x": 12,
+            "radius": 3,
+            "label": ""
+          }
+        },
+        "balance": {
+          "type": "cb-highlight-card",
+          "settings": {
+            "icon": "balance",
+            "icon_size": 18,
+            "title_text": "Balance explained",
+            "body_text": "Understanding head-heavy power versus head-light defensive quickness.",
+            "title_size": 11,
+            "text_size": 10.5,
+            "title_font": "heading_bold",
+            "label_gap": 5,
+            "text_gap": 4,
+            "background_color": "#1c1b1b",
+            "padding_y": 12,
+            "padding_x": 12,
+            "radius": 3,
+            "label": ""
+          }
+        },
+        "tension": {
+          "type": "cb-highlight-card",
+          "settings": {
+            "icon": "tension",
+            "icon_size": 18,
+            "title_text": "String tension guide",
+            "body_text": "Selecting the optimal poundage to match your technique and arm speed.",
+            "title_size": 11,
+            "text_size": 10.5,
+            "title_font": "heading_bold",
+            "label_gap": 5,
+            "text_gap": 4,
+            "background_color": "#1c1b1b",
+            "padding_y": 12,
+            "padding_x": 12,
+            "radius": 3,
+            "label": ""
+          }
+        }
+      },
+      "block_order": ["subheader", "heading", "weight", "balance", "tension"]
+    }
+  ]
+}
+{% endschema %}

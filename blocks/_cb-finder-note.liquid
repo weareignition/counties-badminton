@@ -1,19 +1,27 @@
 {%- if block.settings.note_text != blank -%}
-  <p class="cb-finder__note" {{ block.shopify_attributes }}>
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      {%- case block.settings.icon -%}
-        {%- when 'check' -%}
-          <circle cx="12" cy="12" r="9"/><path d="m8.5 12 2.5 2.5 4.5-5"/>
-        {%- when 'clock' -%}
-          <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>
-        {%- when 'shield' -%}
-          <path d="M12 3 4.5 6v5.5c0 4.6 3.2 8.1 7.5 9.5 4.3-1.4 7.5-4.9 7.5-9.5V6z"/><path d="m9 12 2 2 4-4"/>
-        {%- when 'star' -%}
-          <path d="m12 3.5 2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/>
-        {%- when 'info' -%}
-          <circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>
-      {%- endcase -%}
-    </svg>
+  <p
+    class="cb-finder__note"
+    style="--cb-finder-note-text-size: {{ block.settings.text_size }}px; --cb-finder-note-text-weight: {{ block.settings.text_weight }};"
+    {{ block.shopify_attributes }}
+  >
+    {%- if block.settings.custom_icon != blank -%}
+      {%- render 'cb-icon-upload', image: block.settings.custom_icon, size: 16, tint: block.settings.custom_icon_tint -%}
+    {%- elsif block.settings.icon != 'none' -%}
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        {%- case block.settings.icon -%}
+          {%- when 'check' -%}
+            <circle cx="12" cy="12" r="9"/><path d="m8.5 12 2.5 2.5 4.5-5"/>
+          {%- when 'clock' -%}
+            <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>
+          {%- when 'shield' -%}
+            <path d="M12 3 4.5 6v5.5c0 4.6 3.2 8.1 7.5 9.5 4.3-1.4 7.5-4.9 7.5-9.5V6z"/><path d="m9 12 2 2 4-4"/>
+          {%- when 'star' -%}
+            <path d="m12 3.5 2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/>
+          {%- when 'info' -%}
+            <circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>
+        {%- endcase -%}
+      </svg>
+    {%- endif -%}
     <span>{{ block.settings.note_text | escape }}</span>
   </p>
 {%- endif -%}
@@ -25,13 +33,14 @@
     gap: 10px;
     margin: 0;
     font-family: var(--cbf-font-body);
-    font-weight: var(--cbf-font-body-weight);
-    font-size: 12px;
+    font-weight: var(--cb-finder-note-text-weight, var(--cbf-font-body-weight));
+    font-size: var(--cb-finder-note-text-size, 12px);
     line-height: 1.5;
     color: var(--cbf-muted);
   }
 
-  .cb-finder__note svg {
+  .cb-finder__note svg,
+  .cb-finder__note .cb-icon-upload {
     flex: none;
     color: var(--cbf-accent);
   }
@@ -51,15 +60,62 @@
         { "value": "clock", "label": "Clock" },
         { "value": "shield", "label": "Shield" },
         { "value": "star", "label": "Star" },
-        { "value": "info", "label": "Info" }
+        { "value": "info", "label": "Info" },
+        { "value": "none", "label": "None" }
       ],
       "default": "check"
+    },
+    {
+      "type": "image_picker",
+      "id": "custom_icon",
+      "label": "Custom icon",
+      "info": "Upload your own SVG (or PNG). It replaces the built-in icon above."
+    },
+    {
+      "type": "checkbox",
+      "id": "custom_icon_tint",
+      "label": "Colour it like the built-in icons",
+      "info": "For one-colour SVGs: uses this section's icon colour. Turn off to keep the file's own colours.",
+      "default": true,
+      "visible_if": "{{ block.settings.custom_icon != blank }}"
     },
     {
       "type": "text",
       "id": "note_text",
       "label": "Text",
       "default": "Takes less than 2 minutes."
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "text_weight",
+      "label": "Text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
     }
   ],
   "presets": [{ "name": "[CB] Note" }]

@@ -1,0 +1,107 @@
+<div
+  class="cb-advice__content cb-advice__content--{{ block.settings.alignment }}"
+  style="--cbn-content-gap: {{ block.settings.gap }}px;"
+  {{ block.shopify_attributes }}
+>
+  {% content_for 'blocks' %}
+</div>
+
+{% stylesheet %}
+  .cb-advice__content {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--cbn-content-gap, 12px);
+    min-width: 0;
+  }
+
+  /* Caps eyebrows sit optically high, so a leading one gets a little extra room above. */
+  .cb-advice__content > .cb-subheader:first-child {
+    margin-top: 5px;
+  }
+
+  .cb-advice__content > .cb-heading {
+    margin-top: 6px;
+  }
+
+  .cb-advice__content > .cb-paragraph {
+    margin-top: 3px;
+  }
+
+  .cb-advice__content > .cb-advice__buttons {
+    margin-top: var(--cbn-buttons-space, 16px);
+  }
+
+  .cb-advice__content--center {
+    align-items: center;
+    text-align: center;
+  }
+
+  .cb-advice__content--center > .cb-advice__buttons {
+    justify-content: center;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Content group",
+  "tag": null,
+  "blocks": [
+    { "type": "cb-subheader" },
+    { "type": "cb-heading" },
+    { "type": "cb-paragraph" },
+    { "type": "cb-button" },
+    { "type": "_cb-advice-buttons" },
+    { "type": "_cb-advice-note" }
+  ],
+  "settings": [
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Space between lines",
+      "min": 4,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    }
+  ],
+  "presets": [
+    {
+      "name": "[CB] Content group",
+      "blocks": {
+        "eyebrow": {
+          "type": "cb-subheader",
+          "settings": { "subheader_text": "Expert string advice", "letter_spacing": 0 }
+        },
+        "heading": {
+          "type": "cb-heading",
+          "settings": { "heading_text": "Not sure which string suits your game?", "wrap": "wrap" }
+        },
+        "text": {
+          "type": "cb-paragraph",
+          "settings": {
+            "body_text": "<p>Tell us what you want more of — feel, durability, control or repulsion — and the team can recommend a practical setup for your racket and level.</p>",
+            "letter_spacing": -1,
+            "max_width_unit": "px",
+            "max_width_px": 600
+          }
+        },
+        "buttons": { "type": "_cb-advice-buttons" }
+      },
+      "block_order": ["eyebrow", "heading", "text", "buttons"]
+    }
+  ]
+}
+{% endschema %}

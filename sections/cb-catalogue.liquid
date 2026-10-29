@@ -34,10 +34,40 @@
   endif
 
   # Quick-filter pills: the values of one Search & Discovery filter, one at a time (collection pages only).
-  assign quick_label = s.quick_filter | strip
+  # Several names can be given, comma-separated, and capitals and spaces don't matter ("Player style, Play style").
+  assign quick_names = s.quick_filter | downcase | split: ','
   assign quick_filter = nil
   if on_collection
-    assign quick_filter = source.filters | where: 'label', quick_label | first
+    for candidate in source.filters
+      assign candidate_key = candidate.label | downcase | remove: ' '
+      for name in quick_names
+        assign name_key = name | remove: ' '
+        if name_key != blank and candidate_key == name_key
+          assign quick_filter = candidate
+          break
+        endif
+      endfor
+      if quick_filter
+        break
+      endif
+    endfor
+  endif
+
+  # Filters applied in the sidebar (besides the quick filter) show as removable chips beside the title.
+  assign applied_count = 0
+  if on_collection
+    for f in source.filters
+      if f.label == quick_filter.label
+        continue
+      endif
+      if f.type == 'price_range'
+        if f.min_value.value != nil or f.max_value.value != nil
+          assign applied_count = applied_count | plus: 1
+        endif
+      else
+        assign applied_count = applied_count | plus: f.active_values.size
+      endif
+    endfor
   endif
 
   # Known brands, matched as whole words in product titles ("Li Ning Axforce" → Li-Ning).
@@ -77,31 +107,85 @@
       --cbk-max-width: {{ s.max_width }}px;
       --cbk-pt: {{ s.padding_top }}px;
       --cbk-pb: {{ s.padding_bottom }}px;
+      --cb-catalogue-title-size: {{ s.title_size }}px;
+      --cb-catalogue-title-weight: {{ s.title_weight }};
+      --cb-catalogue-count-size: {{ s.count_size }}px;
+      --cb-catalogue-count-weight: {{ s.count_weight }};
+      --cb-catalogue-pill-size: {{ s.pill_size }}px;
+      --cb-catalogue-pill-weight: {{ s.pill_weight }};
+      --cb-catalogue-sort-label-size: {{ s.sort_label_size }}px;
+      --cb-catalogue-sort-label-weight: {{ s.sort_label_weight }};
+      --cb-catalogue-sort-select-size: {{ s.sort_select_size }}px;
+      --cb-catalogue-sort-select-weight: {{ s.sort_select_weight }};
+      --cb-catalogue-filters-button-size: {{ s.filters_button_size }}px;
+      --cb-catalogue-filters-button-weight: {{ s.filters_button_weight }};
+      --cb-catalogue-filters-heading-size: {{ s.filters_heading_size }}px;
+      --cb-catalogue-filters-heading-weight: {{ s.filters_heading_weight }};
+      --cb-catalogue-clear-size: {{ s.clear_size }}px;
+      --cb-catalogue-clear-weight: {{ s.clear_weight }};
+      --cb-catalogue-badge-size: {{ s.badge_size }}px;
+      --cb-catalogue-badge-weight: {{ s.badge_weight }};
+      --cb-catalogue-brand-tag-size: {{ s.brand_tag_size }}px;
+      --cb-catalogue-brand-tag-weight: {{ s.brand_tag_weight }};
+      --cb-catalogue-product-title-size: {{ s.product_title_size }}px;
+      --cb-catalogue-product-title-weight: {{ s.product_title_weight }};
+      --cb-catalogue-specs-size: {{ s.specs_size }}px;
+      --cb-catalogue-specs-weight: {{ s.specs_weight }};
+      --cb-catalogue-price-size: {{ s.price_size }}px;
+      --cb-catalogue-price-weight: {{ s.price_weight }};
+      --cb-catalogue-compare-price-size: {{ s.compare_price_size }}px;
+      --cb-catalogue-compare-price-weight: {{ s.compare_price_weight }};
+      --cb-catalogue-currency-size: {{ s.currency_size }}px;
+      --cb-catalogue-currency-weight: {{ s.currency_weight }};
+      --cb-catalogue-stock-size: {{ s.stock_size }}px;
+      --cb-catalogue-stock-weight: {{ s.stock_weight }};
+      --cb-catalogue-card-button-size: {{ s.card_button_size }}px;
+      --cb-catalogue-card-button-weight: {{ s.card_button_weight }};
+      --cb-catalogue-showing-size: {{ s.showing_size }}px;
+      --cb-catalogue-showing-weight: {{ s.showing_weight }};
+      --cb-catalogue-pagination-size: {{ s.pagination_size }}px;
+      --cb-catalogue-pagination-weight: {{ s.pagination_weight }};
+      --cb-catalogue-empty-size: {{ s.empty_size }}px;
+      --cb-catalogue-empty-weight: {{ s.empty_weight }};
     "
   >
     <div class="cb-cat__inner">
-      {%- if source == blank -%}
-        <p class="cb-cat__hint cb-cat__hint--empty">
-          Choose a collection in this section’s settings (Products → Collection). Shoppers don’t see this section until it has one. Only you see this message.
-        </p>
-      {%- else -%}
+      {%- if source != blank -%}
         <form id="{{ form_id }}" class="cb-cat__topbar" action="{{ source.url }}" method="get">
-          <div class="cb-cat__titlebar">
-            <{{ s.heading_tag }} class="cb-cat__title">{{ heading | escape }}</{{ s.heading_tag }}>
-            {%- if s.show_count -%}
-              <span class="cb-cat__count">{{ source.products_count }} {{ s.count_label | escape }}</span>
-            {%- endif -%}
+          <div class="cb-cat__heading-group">
+            <div class="cb-cat__titlebar">
+              <{{ s.heading_tag }} class="cb-cat__title">{{ heading | escape }}</{{ s.heading_tag }}>
+              {%- if s.show_count -%}
+                {%- liquid
+                  # "1 products" → "1 product" (drops a trailing s for a single result).
+                  assign count_label = s.count_label
+                  if source.products_count == 1
+                    assign last_letter = count_label | slice: -1
+                    if last_letter == 's'
+                      assign label_length = count_label.size | minus: 1
+                      assign count_label = count_label | slice: 0, label_length
+                    endif
+                  endif
+                -%}
+                <span class="cb-cat__count">{{ source.products_count }} {{ count_label | escape }}</span>
+              {%- endif -%}
+            </div>
+            {% content_for 'block', type: 'cb-paragraph', id: 'intro' %}
           </div>
 
-          {%- if quick_filter -%}
-            <nav class="cb-cat__pills" aria-label="{{ quick_filter.label | escape }}">
-              <a
-                href="{{ quick_filter.url_to_remove }}"
-                class="cb-cat__pill{% if quick_filter.active_values.size == 0 %} is-active{% endif %}"
-                data-cb-cat-link
-              >
-                {{- s.all_label | escape -}}
-              </a>
+          {%- if quick_filter or applied_count > 0 -%}
+            <nav class="cb-cat__pills" aria-label="{{ quick_filter.label | default: 'Applied filters' | escape }}">
+              {%- if quick_filter -%}
+                <a
+                  href="{{ quick_filter.url_to_remove }}"
+                  class="cb-cat__pill{% if quick_filter.active_values.size == 0 %} is-active{% endif %}"
+                  data-cb-cat-link
+                >
+                  {{- s.all_label | escape -}}
+                </a>
+              {%- else -%}
+                <a href="{{ clear_url }}" class="cb-cat__pill" data-cb-cat-link>{{ s.all_label | escape }}</a>
+              {%- endif -%}
               {%- for value in quick_filter.values -%}
                 {%- liquid
                   assign href = quick_filter.url_to_remove
@@ -122,15 +206,41 @@
                   {{- value.label | escape -}}
                 </a>
               {%- endfor -%}
+              {%- if applied_count > 0 -%}
+                {%- capture remove_icon -%}
+                  <svg class="cb-cat__pill-x" width="9" height="9" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M3 3l6 6M9 3 3 9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                {%- endcapture -%}
+                {%- for f in source.filters -%}
+                  {%- if f.label == quick_filter.label -%}{%- continue -%}{%- endif -%}
+                  {%- if f.type == 'price_range' -%}
+                    {%- if f.min_value.value != nil or f.max_value.value != nil -%}
+                      {%- liquid
+                        assign min_price = f.min_value.value | money_without_trailing_zeros
+                        assign max_price = f.max_value.value | money_without_trailing_zeros
+                        if f.min_value.value != nil and f.max_value.value != nil
+                          assign price_text = min_price | append: ' – ' | append: max_price
+                        elsif f.max_value.value != nil
+                          assign price_text = 'Up to ' | append: max_price
+                        else
+                          assign price_text = min_price | append: '+'
+                        endif
+                      -%}
+                      <a href="{{ f.url_to_remove }}" class="cb-cat__pill cb-cat__pill--applied is-active" data-cb-cat-link aria-label="{{ f.label | escape }}: {{ price_text }} (remove)">
+                        {{- price_text -}}
+                        {{- remove_icon -}}
+                      </a>
+                    {%- endif -%}
+                  {%- else -%}
+                    {%- for value in f.active_values -%}
+                      <a href="{{ value.url_to_remove }}" class="cb-cat__pill cb-cat__pill--applied is-active" data-cb-cat-link aria-label="{{ f.label | escape }}: {{ value.label | escape }} (remove)">
+                        {{- value.label | escape -}}
+                        {{- remove_icon -}}
+                      </a>
+                    {%- endfor -%}
+                  {%- endif -%}
+                {%- endfor -%}
+              {%- endif -%}
             </nav>
-          {%- elsif request.design_mode and on_collection and quick_label != blank -%}
-            <p class="cb-cat__hint">
-              Style buttons appear once this collection has a “{{ quick_label | escape }}” filter (Search &amp; Discovery app → Filters). Only you see this.
-            </p>
-          {%- elsif request.design_mode and on_collection == false -%}
-            <p class="cb-cat__hint">
-              Showing “{{ source.title | escape }}” without filters or sorting: Shopify only allows those on a collection page. Add this section to a collection template (e.g. Collections → rackets) for the full version. Only you see this.
-            </p>
           {%- endif -%}
 
           <div class="cb-cat__tools">
@@ -254,9 +364,12 @@
                         endif
                       endif
 
+                      # Add-to-cart instead of a product link: products without options, either all of them or tagged ones.
                       assign quick_collect = false
-                      if s.quick_collect_tag != blank and product.has_only_default_variant and product.available
-                        if product.tags contains s.quick_collect_tag
+                      if product.has_only_default_variant and product.available
+                        if s.quick_add_mode == 'all'
+                          assign quick_collect = true
+                        elsif s.quick_collect_tag != blank and product.tags contains s.quick_collect_tag
                           assign quick_collect = true
                         endif
                       endif
@@ -355,6 +468,14 @@
                     assign to = paginate.items
                   endif
                   assign showing = s.showing_text | replace: '[from]', from | replace: '[to]', to | replace: '[total]', paginate.items
+                  # One result: "of 1 strings" → "of 1 string".
+                  if paginate.items == 1
+                    assign last_letter = showing | slice: -1
+                    if last_letter == 's'
+                      assign showing_length = showing.size | minus: 1
+                      assign showing = showing | slice: 0, showing_length
+                    endif
+                  endif
                   assign current_page = paginate.current_page | append: ''
                 -%}
                 <div class="cb-cat__footer">
@@ -417,6 +538,13 @@
     border-bottom: 1px solid var(--cbk-border);
   }
 
+  .cb-cat__heading-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+  }
+
   .cb-cat__titlebar {
     display: flex;
     align-items: center;
@@ -426,8 +554,8 @@
   .cb-cat__title {
     margin: 0;
     font-family: var(--cbk-font-heading);
-    font-weight: var(--cbk-font-heading-weight);
-    font-size: 22px;
+    font-weight: var(--cb-catalogue-title-weight, var(--cbk-font-heading-weight));
+    font-size: var(--cb-catalogue-title-size, 22px);
     line-height: 1.1;
     letter-spacing: 0.01em;
     text-transform: uppercase;
@@ -446,8 +574,8 @@
     border: 1px solid var(--cbk-border);
     border-radius: 2px;
     background: var(--cbk-card);
-    font-weight: var(--cbk-font-body-strong);
-    font-size: 10px;
+    font-weight: var(--cb-catalogue-count-weight, var(--cbk-font-body-strong));
+    font-size: var(--cb-catalogue-count-size, 10px);
     letter-spacing: 0.06em;
     text-transform: uppercase;
     white-space: nowrap;
@@ -475,7 +603,8 @@
     border: 1px solid var(--cbk-border);
     border-radius: 2px;
     background: var(--cbk-card);
-    font-size: 11px;
+    font-weight: var(--cb-catalogue-pill-weight, inherit);
+    font-size: var(--cb-catalogue-pill-size, 11px);
     line-height: 1.2;
     white-space: nowrap;
     color: var(--cbk-soft);
@@ -488,11 +617,24 @@
     color: var(--cbk-text);
   }
 
+  /* The active one stays at least as bold as the others when their weight is set. */
   .cb-cat__pill.is-active {
     border-color: var(--cbk-accent);
     background: var(--cbk-accent);
-    font-weight: var(--cbk-font-body-strong);
+    font-weight: max(var(--cb-catalogue-pill-weight, 0), var(--cbk-font-body-strong));
     color: #fff;
+  }
+
+  /* A filter applied in the sidebar, shown beside the title; × removes it. */
+  .cb-cat__pill.cb-cat__pill--applied {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .cb-cat__pill-x {
+    flex: none;
+    opacity: 0.85;
   }
 
   .cb-cat__hint {
@@ -500,6 +642,16 @@
     font-family: var(--cbk-font-body);
     font-size: 11px;
     color: var(--cbk-muted);
+  }
+
+  .cb-cat__hint--notice {
+    flex-basis: 100%;
+    padding: 10px 12px;
+    border: 1px dashed var(--cbk-accent);
+    border-radius: 4px;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--cbk-soft);
   }
 
   .cb-cat__hint--empty {
@@ -523,7 +675,8 @@
     align-items: center;
     gap: 10px;
     font-family: var(--cbk-font-body);
-    font-size: 10px;
+    font-weight: var(--cb-catalogue-sort-label-weight, inherit);
+    font-size: var(--cb-catalogue-sort-label-size, 10px);
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--cbk-muted);
@@ -534,8 +687,8 @@
     border: 1px solid var(--cbk-border);
     border-radius: 2px;
     background: var(--cbk-card) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12' fill='none' stroke='%23999' stroke-width='1.6' stroke-linecap='round'%3E%3Cpath d='m3 4.5 3 3 3-3'/%3E%3C/svg%3E") no-repeat right 10px center;
-    font-weight: var(--cbk-font-body-strong);
-    font-size: 10px;
+    font-weight: var(--cb-catalogue-sort-select-weight, var(--cbk-font-body-strong));
+    font-size: var(--cb-catalogue-sort-select-size, 10px);
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--cbk-text);
@@ -587,8 +740,8 @@
     border: 1px solid var(--cbk-border);
     border-radius: 2px;
     background: var(--cbk-card);
-    font-weight: var(--cbk-font-body-strong);
-    font-size: 11px;
+    font-weight: var(--cb-catalogue-filters-button-weight, var(--cbk-font-body-strong));
+    font-size: var(--cb-catalogue-filters-button-size, 11px);
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--cbk-text);
@@ -629,8 +782,8 @@
     gap: 8px;
     margin: 0 auto 0 0;
     font-family: var(--cbk-font-body);
-    font-weight: var(--cbk-font-body-strong);
-    font-size: 11px;
+    font-weight: var(--cb-catalogue-filters-heading-weight, var(--cbk-font-body-strong));
+    font-size: var(--cb-catalogue-filters-heading-size, 11px);
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--cbk-text);
@@ -642,8 +795,8 @@
 
   .cb-cat__clear {
     font-family: var(--cbk-font-body);
-    font-weight: var(--cbk-font-body-strong);
-    font-size: 10px;
+    font-weight: var(--cb-catalogue-clear-weight, var(--cbk-font-body-strong));
+    font-size: var(--cb-catalogue-clear-size, 10px);
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--cbk-accent);
@@ -734,8 +887,8 @@
     border-radius: 2px;
     background: #1c1c1c;
     font-family: var(--cbk-font-body);
-    font-weight: var(--cbk-font-body-strong);
-    font-size: 9px;
+    font-weight: var(--cb-catalogue-badge-weight, var(--cbk-font-body-strong));
+    font-size: var(--cb-catalogue-badge-size, 9px);
     line-height: 1.3;
     letter-spacing: 0.06em;
     text-transform: uppercase;
@@ -791,8 +944,8 @@
     justify-content: space-between;
     gap: 8px;
     font-family: var(--cbk-font-body);
-    font-weight: var(--cbk-font-body-strong);
-    font-size: 10px;
+    font-weight: var(--cb-catalogue-brand-tag-weight, var(--cbk-font-body-strong));
+    font-size: var(--cb-catalogue-brand-tag-size, 10px);
     letter-spacing: 0.08em;
     text-transform: uppercase;
   }
@@ -809,8 +962,8 @@
   .cb-cat-card__title {
     margin: 0;
     font-family: var(--cbk-font-heading);
-    font-weight: var(--cbk-font-heading-weight);
-    font-size: 15px;
+    font-weight: var(--cb-catalogue-product-title-weight, var(--cbk-font-heading-weight));
+    font-size: var(--cb-catalogue-product-title-size, 15px);
     line-height: 1.25;
     text-transform: uppercase;
     color: var(--cbk-text);
@@ -834,7 +987,8 @@
   .cb-cat-card__specs {
     margin: 0;
     font-family: var(--cbk-font-body);
-    font-size: 10px;
+    font-weight: var(--cb-catalogue-specs-weight, inherit);
+    font-size: var(--cb-catalogue-specs-size, 10px);
     line-height: 1.4;
     letter-spacing: 0.06em;
     text-transform: uppercase;
@@ -861,21 +1015,22 @@
 
   .cb-cat-card__amount {
     font-family: var(--cbk-font-heading);
-    font-weight: var(--cbk-font-heading-weight);
-    font-size: 16px;
+    font-weight: var(--cb-catalogue-price-weight, var(--cbk-font-heading-weight));
+    font-size: var(--cb-catalogue-price-size, 16px);
     color: var(--cbk-text);
   }
 
   .cb-cat-card__compare {
     font-family: var(--cbk-font-body);
-    font-size: 11px;
+    font-weight: var(--cb-catalogue-compare-price-weight, inherit);
+    font-size: var(--cb-catalogue-compare-price-size, 11px);
     color: var(--cbk-muted);
   }
 
   .cb-cat-card__currency {
     font-family: var(--cbk-font-body);
-    font-weight: var(--cbk-font-body-strong);
-    font-size: 9px;
+    font-weight: var(--cb-catalogue-currency-weight, var(--cbk-font-body-strong));
+    font-size: var(--cb-catalogue-currency-size, 9px);
     color: var(--cbk-muted);
   }
 
@@ -884,7 +1039,8 @@
     align-items: center;
     gap: 5px;
     font-family: var(--cbk-font-body);
-    font-size: 10px;
+    font-weight: var(--cb-catalogue-stock-weight, inherit);
+    font-size: var(--cb-catalogue-stock-size, 10px);
     color: var(--cbk-muted);
   }
 
@@ -902,7 +1058,7 @@
   }
 
   .cb-cat-card__stock--low {
-    font-weight: var(--cbk-font-body-strong);
+    font-weight: max(var(--cb-catalogue-stock-weight, 0), var(--cbk-font-body-strong));
     color: var(--cbk-accent);
   }
 
@@ -923,8 +1079,8 @@
     border-radius: 2px;
     background: var(--cbk-surface-strong);
     font-family: var(--cbk-font-body);
-    font-weight: var(--cbk-font-body-strong);
-    font-size: 11px;
+    font-weight: var(--cb-catalogue-card-button-weight, var(--cbk-font-body-strong));
+    font-size: var(--cb-catalogue-card-button-size, 11px);
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--cbk-text);
@@ -987,7 +1143,8 @@
     border: 1px dashed var(--cbk-border);
     border-radius: 4px;
     font-family: var(--cbk-font-body);
-    font-size: 13px;
+    font-weight: var(--cb-catalogue-empty-weight, inherit);
+    font-size: var(--cb-catalogue-empty-size, 13px);
     text-align: center;
     color: var(--cbk-muted);
   }
@@ -1015,7 +1172,8 @@
   .cb-cat__showing {
     margin: 0;
     font-family: var(--cbk-font-body);
-    font-size: 12px;
+    font-weight: var(--cb-catalogue-showing-weight, inherit);
+    font-size: var(--cb-catalogue-showing-size, 12px);
     color: var(--cbk-muted);
   }
 
@@ -1037,7 +1195,8 @@
     border-radius: 2px;
     background: var(--cbk-card);
     font-family: var(--cbk-font-body);
-    font-size: 12px;
+    font-weight: var(--cb-catalogue-pagination-weight, inherit);
+    font-size: var(--cb-catalogue-pagination-size, 12px);
     color: var(--cbk-soft);
     text-decoration: none;
   }
@@ -1050,7 +1209,7 @@
   .cb-cat__page.is-current {
     border-color: var(--cbk-accent);
     background: var(--cbk-accent);
-    font-weight: var(--cbk-font-body-strong);
+    font-weight: max(var(--cb-catalogue-pagination-weight, 0), var(--cbk-font-body-strong));
     color: #fff;
   }
 
@@ -1295,22 +1454,52 @@
     // Builds the URL from the form, including the sidebar inputs linked to it with form="…".
     const formUrl = (form) => {
       const params = new URLSearchParams();
+      // Price ranges that may be ticked together combine into one from–to span.
+      const spans = new Map();
       for (const element of form.elements) {
+        // A ticked price range sets Shopify's from/to price parameters.
+        if (element.matches('[data-cb-price-bucket]')) {
+          if (!element.checked || element.disabled) continue;
+          const list = element.closest('[data-cb-price-multi]');
+          if (list) {
+            const span = spans.get(list) || { gte: [], lte: [], gteName: element.dataset.gteName, lteName: element.dataset.lteName };
+            span.gte.push(element.dataset.gte || '');
+            span.lte.push(element.dataset.lte || '');
+            spans.set(list, span);
+            continue;
+          }
+          if (element.dataset.gte) params.append(element.dataset.gteName, element.dataset.gte);
+          if (element.dataset.lte) params.append(element.dataset.lteName, element.dataset.lte);
+          continue;
+        }
         if (!element.name || element.disabled || element.value === '') continue;
         if ((element.type === 'checkbox' || element.type === 'radio') && !element.checked) continue;
         if (element.dataset.cbPriceMax && Number(element.value) >= Number(element.dataset.cbPriceMax)) continue;
         params.append(element.name, element.value);
       }
+      // An open end on any ticked range (e.g. "Under $120" or "$240+") leaves that end of the span open.
+      for (const span of spans.values()) {
+        if (!span.gte.includes('')) params.append(span.gteName, String(Math.min(...span.gte.map(Number))));
+        if (!span.lte.includes('')) params.append(span.lteName, String(Math.max(...span.lte.map(Number))));
+      }
       const query = params.toString();
       return (form.getAttribute('action') || location.pathname) + (query ? `?${query}` : '');
     };
 
-    const ownForm = (form) => form?.id?.startsWith('cb-cat-form-') ? form : null;
+    // getAttribute, not form.id: a product form's <input name="id"> shadows the form's id property.
+    const ownForm = (form) => (form?.getAttribute?.('id') || '').startsWith('cb-cat-form-') ? form : null;
 
     document.addEventListener('change', (event) => {
       const form = ownForm(event.target.form);
       const root = form?.closest(ROOT);
-      if (root) load(root, formUrl(form));
+      if (!root) return;
+      // Price ranges are one choice (unless the filter lets several be ticked): ticking one clears the others.
+      if (event.target.matches('[data-cb-price-bucket]') && event.target.checked && !event.target.closest('[data-cb-price-multi]')) {
+        for (const other of event.target.closest('ul')?.querySelectorAll('[data-cb-price-bucket]') ?? []) {
+          if (other !== event.target) other.checked = false;
+        }
+      }
+      load(root, formUrl(form));
     });
 
     document.addEventListener('submit', (event) => {
@@ -1332,6 +1521,16 @@
     });
 
     document.addEventListener('click', (event) => {
+      // A filter's "Guide" opens its short text under the heading.
+      const guide = event.target.closest?.('[data-cb-cat-guide]');
+      if (guide) {
+        const open = guide.getAttribute('aria-expanded') !== 'true';
+        guide.setAttribute('aria-expanded', String(open));
+        const panel = document.getElementById(guide.getAttribute('aria-controls'));
+        if (panel) panel.hidden = !open;
+        return;
+      }
+
       const link = event.target.closest?.('a[data-cb-cat-link]');
       if (link) {
         const root = link.closest(ROOT);
@@ -1397,7 +1596,7 @@
 
 {% schema %}
 {
-  "name": "[CB] Racket catalogue",
+  "name": "[CB] Product catalogue",
   "tag": "div",
   "class": "section-wrapper",
   "blocks": [
@@ -1462,7 +1661,7 @@
       "type": "text",
       "id": "quick_filter",
       "label": "Style buttons filter",
-      "info": "Name of a Search & Discovery filter whose values show as buttons beside the title (one at a time), e.g. Play style.",
+      "info": "Name of a Search & Discovery filter whose values show as buttons beside the title (one at a time), e.g. Play style. List several, comma-separated, to match any. Other filters you tick show there too, with × to remove them.",
       "default": "Play style"
     },
     {
@@ -1513,7 +1712,7 @@
       "type": "collection",
       "id": "collection",
       "label": "Collection",
-      "info": "Used on pages that aren't collection pages. Leave empty to show the Rackets collection."
+      "info": "Only for normal pages (e.g. the homepage); leave empty there to show Rackets. On a collection template the products always come from the collection being viewed — change the preview at the top of the editor instead."
     },
     {
       "type": "range",
@@ -1591,16 +1790,27 @@
       "default": "Configure setup"
     },
     {
+      "type": "select",
+      "id": "quick_add_mode",
+      "label": "Add-to-cart button on",
+      "info": "Only in-stock products without options (sizes, speeds…) can be added straight from the grid.",
+      "options": [
+        { "value": "tag", "label": "Products with the tag below" },
+        { "value": "all", "label": "Every product without options" }
+      ],
+      "default": "tag"
+    },
+    {
       "type": "text",
       "id": "quick_collect_tag",
       "label": "Quick collect tag",
-      "info": "Products with this tag (and no variants) get an add-to-cart button instead.",
+      "info": "Used when the button is on products with a tag.",
       "default": "quick-collect"
     },
     {
       "type": "text",
       "id": "quick_label",
-      "label": "Quick collect button",
+      "label": "Add-to-cart button",
       "default": "Quick collect"
     },
     {
@@ -1764,11 +1974,576 @@
       "step": 4,
       "unit": "px",
       "default": 64
+    },
+    {
+      "type": "header",
+      "content": "Text sizes and weights"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Title size",
+      "min": 10,
+      "max": 56,
+      "step": 0.5,
+      "unit": "px",
+      "default": 22
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Title weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "count_size",
+      "label": "Product count size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "count_weight",
+      "label": "Product count weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "pill_size",
+      "label": "Style button text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "select",
+      "id": "pill_weight",
+      "label": "Style button text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "sort_label_size",
+      "label": "Sorting label size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "sort_label_weight",
+      "label": "Sorting label weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "sort_select_size",
+      "label": "Sorting dropdown size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "sort_select_weight",
+      "label": "Sorting dropdown weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "filters_button_size",
+      "label": "Filters button text size",
+      "info": "Shown on phones and tablets.",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "select",
+      "id": "filters_button_weight",
+      "label": "Filters button text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "filters_heading_size",
+      "label": "Filters heading size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "select",
+      "id": "filters_heading_weight",
+      "label": "Filters heading weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "clear_size",
+      "label": "Clear filters size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "clear_weight",
+      "label": "Clear filters weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "badge_size",
+      "label": "Badge size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 9
+    },
+    {
+      "type": "select",
+      "id": "badge_weight",
+      "label": "Badge weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "brand_tag_size",
+      "label": "Brand and tag size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "brand_tag_weight",
+      "label": "Brand and tag weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "product_title_size",
+      "label": "Product title size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "select",
+      "id": "product_title_weight",
+      "label": "Product title weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "specs_size",
+      "label": "Specs size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "specs_weight",
+      "label": "Specs weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "price_size",
+      "label": "Price size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "price_weight",
+      "label": "Price weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "compare_price_size",
+      "label": "Compare-at price size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "select",
+      "id": "compare_price_weight",
+      "label": "Compare-at price weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "currency_size",
+      "label": "Currency size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 9
+    },
+    {
+      "type": "select",
+      "id": "currency_weight",
+      "label": "Currency weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "stock_size",
+      "label": "Stock label size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "stock_weight",
+      "label": "Stock label weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "card_button_size",
+      "label": "Card button text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "select",
+      "id": "card_button_weight",
+      "label": "Card button text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "showing_size",
+      "label": "Results text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "showing_weight",
+      "label": "Results text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "pagination_size",
+      "label": "Pagination size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "pagination_weight",
+      "label": "Pagination weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "empty_size",
+      "label": "No results text size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "select",
+      "id": "empty_weight",
+      "label": "No results text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
     }
   ],
   "presets": [
     {
-      "name": "[CB] Racket catalogue",
+      "name": "[CB] Product catalogue",
       "category": "t:categories.products",
       "blocks": {
         "play_style": {

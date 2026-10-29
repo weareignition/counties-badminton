@@ -1,0 +1,28 @@
+{%- doc -%}
+  Outputs a metafield as plain text, whatever its type: text as it is, lists comma-separated, and metaobject
+  (dropdown) fields as their entries' label (or name / title / handle when there is no label field).
+
+  @param {object} field - The metafield, e.g. product.metafields.custom.play_style
+{%- enddoc -%}
+
+{%- liquid
+  assign field_type = field.type | default: ''
+  if field_type contains 'metaobject_reference'
+    if field_type contains 'list.'
+      for entry in field.value
+        assign entry_text = entry.label.value | default: entry.name.value | default: entry.title.value | default: entry.system.handle
+        echo entry_text
+        unless forloop.last
+          echo ', '
+        endunless
+      endfor
+    else
+      assign entry = field.value
+      echo entry.label.value | default: entry.name.value | default: entry.title.value | default: entry.system.handle
+    endif
+  elsif field_type contains 'list.'
+    echo field.value | join: ', '
+  elsif field != blank
+    echo field.value
+  endif
+-%}

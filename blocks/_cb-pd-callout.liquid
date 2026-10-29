@@ -1,0 +1,160 @@
+{%- liquid
+  assign s = block.settings
+  assign text = ''
+  assign show_label = true
+
+  # The product's own "Best for" metafield first; otherwise the chosen fallback.
+  if product.metafields.custom.best_for != blank
+    assign text = product.metafields.custom.best_for.value | strip_html | escape
+  elsif s.fallback == 'excerpt'
+    # The first paragraph with real sentences, skipping short lines such as "Key Features" or "Product Summary – …".
+    # strip_html keeps entities (&amp;), so the text isn't escaped again.
+    assign chunks = product.description | split: '</p>'
+    for chunk in chunks
+      assign para = chunk
+      if chunk contains '<p'
+        assign para = chunk | split: '<p' | last | prepend: '<p'
+      endif
+      assign para = para | strip_html | strip
+      assign para_words = para | split: ' ' | size
+      if para_words < 12
+        assign para = chunk | strip_html | strip
+        assign para_words = para | split: ' ' | size
+      endif
+      if para_words >= 12
+        assign text = para | truncatewords: s.excerpt_words
+        break
+      endif
+    endfor
+    if text == blank
+      assign text = product.description | strip_html | strip | truncatewords: s.excerpt_words
+    endif
+    assign show_label = false
+  elsif s.fallback == 'custom'
+    assign text = s.custom_text | escape
+  endif
+-%}
+
+{%- if text != blank -%}
+  <div class="cb-pd-callout cb-pd-callout--{{ s.style | default: 'box' }}" style="--cbpd-callout-size: {{ s.text_size }}px; --cbpd-callout-weight: {{ s.text_weight }};" {{ block.shopify_attributes }}>
+    <p>
+      {%- if show_label and s.label != blank -%}{{ s.label | escape }} {% endif -%}
+      {{- text -}}
+    </p>
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  .cb-pd-callout {
+    padding: 13px;
+    border-left: 2px solid var(--cb-color-accent, #d71f27);
+    border-radius: 2px;
+    background: var(--cbpd-bar, #1c1b1b);
+  }
+
+  .cb-pd-callout p {
+    margin: 0;
+    font-family: var(--cb-font-body, var(--font-body--family));
+    font-weight: var(--cbpd-callout-weight, var(--cb-font-body-weight, 400));
+    font-size: var(--cbpd-callout-size, 12px);
+    line-height: 1.6;
+    color: var(--cb-color-muted, #ffffff);
+  }
+
+  /* Plain: a paragraph, e.g. the description on the standard page. */
+  .cb-pd-callout.cb-pd-callout--plain {
+    padding: 0;
+    border: 0;
+    background: none;
+  }
+
+  .cb-pd-callout--plain p {
+    line-height: 1.55;
+    color: var(--cbpd-grey, #a1a1aa);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "[CB] Best for box",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "style",
+      "label": "Style",
+      "options": [
+        { "value": "box", "label": "Box with a red edge" },
+        { "value": "plain", "label": "Plain paragraph" }
+      ],
+      "default": "box"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Text size",
+      "min": 10,
+      "max": 18,
+      "step": 0.5,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "text_weight",
+      "label": "Text weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "paragraph",
+      "content": "Shows the product's custom.best_for metafield (a single or multi-line text metafield)."
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label before the metafield text",
+      "default": "Best for:"
+    },
+    {
+      "type": "select",
+      "id": "fallback",
+      "label": "When a product has no metafield",
+      "options": [
+        { "value": "excerpt", "label": "Show the start of the description" },
+        { "value": "custom", "label": "Show the text below" },
+        { "value": "hide", "label": "Hide the box" }
+      ],
+      "default": "excerpt"
+    },
+    {
+      "type": "range",
+      "id": "excerpt_words",
+      "label": "Description words",
+      "min": 10,
+      "max": 60,
+      "step": 1,
+      "default": 28,
+      "visible_if": "{{ block.settings.fallback == 'excerpt' }}"
+    },
+    {
+      "type": "textarea",
+      "id": "custom_text",
+      "label": "Text",
+      "visible_if": "{{ block.settings.fallback == 'custom' }}"
+    }
+  ],
+  "presets": [{ "name": "[CB] Best for box" }]
+}
+{% endschema %}
