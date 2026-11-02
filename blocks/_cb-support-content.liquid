@@ -1,4 +1,4 @@
-<div class="cb-support__content" {{ block.shopify_attributes }}>
+<div class="cb-support__content{% if block.settings.group_width > 0 %} cb-group-w{% endif %}" style="--cb-group-w: {{ block.settings.group_width }}px;" {{ block.shopify_attributes }}>
   {% content_for 'blocks' %}
 </div>
 
@@ -28,6 +28,19 @@
 {
   "name": "[CB] Content group",
   "tag": null,
+  "settings": [
+    {
+      "type": "range",
+      "id": "group_width",
+      "label": "Width",
+      "info": "0 follows the section.",
+      "min": 0,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "default": 0
+    }
+  ],
   "blocks": [
     { "type": "cb-subheader" },
     { "type": "cb-heading" },

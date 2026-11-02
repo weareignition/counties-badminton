@@ -1,6 +1,6 @@
 {%- comment -%}
   One question. Native <details>, so it works without JavaScript; items sharing a `name` close each other
-  (the section's "One answer open at a time" setting).
+  (the section's "One answer open at a time" setting). The section's script slides the panel open and closed.
 {%- endcomment -%}
 {%- if block.settings.question != blank -%}
   <details
@@ -27,7 +27,9 @@
       </svg>
     </summary>
     {%- if block.settings.answer != blank -%}
-      <div class="cb-faq__answer">{{ block.settings.answer }}</div>
+      <div class="cb-faq__panel">
+        <div class="cb-faq__answer">{{ block.settings.answer }}</div>
+      </div>
     {%- endif -%}
   </details>
 {%- endif -%}
@@ -45,7 +47,8 @@
     align-items: center;
     justify-content: space-between;
     gap: 16px;
-    padding: 14px 0 18px;
+    padding: 14px 0 16px;
+    border-bottom: 2px solid transparent;
     list-style: none;
     cursor: pointer;
     font-family: var(--cbfq-font-heading);
@@ -53,6 +56,7 @@
     font-size: calc(var(--cb-faq-item-question-size, 18px) * 16 / 18);
     line-height: 1.5;
     color: var(--cbfq-text);
+    transition: padding-bottom 0.28s ease, border-color 0.28s ease;
   }
 
   .cb-faq__item .cb-faq__question:hover {
@@ -69,14 +73,16 @@
     border-radius: 2px;
   }
 
-  .cb-faq__item[open] .cb-faq__question {
+  /* While an answer slides shut, the question already looks closed. */
+  .cb-faq__item[open]:not(.is-closing) .cb-faq__question {
     padding-bottom: 11px;
-    border-bottom: 2px solid var(--cbfq-divider);
+    border-bottom-color: var(--cbfq-divider);
   }
 
   .cb-faq__icon {
     flex: none;
     color: var(--cbfq-muted);
+    transition: color 0.28s ease;
   }
 
   .cb-faq__icon-bar {
@@ -86,12 +92,16 @@
   }
 
   /* Open: the plus becomes an accent minus. */
-  .cb-faq__item[open] .cb-faq__icon {
+  .cb-faq__item[open]:not(.is-closing) .cb-faq__icon {
     color: var(--cbfq-accent);
   }
 
-  .cb-faq__item[open] .cb-faq__icon-bar {
+  .cb-faq__item[open]:not(.is-closing) .cb-faq__icon-bar {
     transform: scaleY(0);
+  }
+
+  .cb-faq__panel {
+    overflow: hidden;
   }
 
   .cb-faq__answer {
@@ -125,11 +135,11 @@
 
     /* Question sits slightly above centre, as in the design. */
     .cb-faq__item .cb-faq__question {
-      padding-block: 17px 23px;
+      padding-block: 17px 21px;
       font-size: var(--cb-faq-item-question-size, 18px);
     }
 
-    .cb-faq__item[open] .cb-faq__question {
+    .cb-faq__item[open]:not(.is-closing) .cb-faq__question {
       padding-bottom: 14px;
     }
 
@@ -139,6 +149,8 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
+    .cb-faq__item .cb-faq__question,
+    .cb-faq__icon,
     .cb-faq__icon-bar {
       transition: none;
     }

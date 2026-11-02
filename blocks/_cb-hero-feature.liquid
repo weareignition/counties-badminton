@@ -13,6 +13,8 @@
             {%- case block.settings.icon -%}
               {%- when 'check' -%}
                 <circle cx="12" cy="12" r="9"/><path d="m8.5 12 2.5 2.5 4.5-5"/>
+              {%- when 'badge_check' -%}
+                <path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76z"/><path d="m9 12 2 2 4-4"/>
               {%- when 'sliders' -%}
                 <path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/>
               {%- when 'calendar' -%}
@@ -75,6 +77,7 @@
       "label": "Icon",
       "options": [
         { "value": "check", "label": "Check" },
+        { "value": "badge_check", "label": "Check badge" },
         { "value": "sliders", "label": "Sliders / stringing" },
         { "value": "calendar", "label": "Calendar" },
         { "value": "clock", "label": "Clock" },

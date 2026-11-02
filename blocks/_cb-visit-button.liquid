@@ -15,7 +15,7 @@
 {%- if block.settings.label != blank -%}
   <a
     href="{{ link }}"
-    class="cb-visit__button cb-visit__button--{{ block.settings.style }}"
+    class="cb-visit__button cb-visit__button--{{ block.settings.style }}{% unless block.settings.uppercase %} cb-visit__button--sentence{% endunless %}{% if block.settings.icon_position == 'before' %} cb-visit__button--icon-before{% endif %}{% if block.settings.icon_accent %} cb-visit__button--icon-accent{% endif %}"
     style="--cb-visit-button-text-size: {{ block.settings.text_size }}px; --cb-visit-button-text-weight: {{ block.settings.text_weight }};"
     {% if external %}
       target="_blank" rel="noopener"
@@ -35,6 +35,8 @@
               <path d="M12 21s-7-6.1-7-11.5a7 7 0 0 1 14 0C19 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>
             {%- when 'arrow' -%}
               <path d="M5 12h14M13 6l6 6-6 6"/>
+            {%- when 'mail' -%}
+              <rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 7 8.5 6 8.5-6"/>
           {%- endcase -%}
         </svg>
       {%- endif -%}
@@ -68,6 +70,33 @@
 
   .cb-visit__button svg {
     flex: none;
+  }
+
+  .cb-visit__button--sentence {
+    letter-spacing: 0.04em;
+    text-transform: none;
+  }
+
+  .cb-visit__button--icon-before {
+    flex-direction: row-reverse;
+  }
+
+  .cb-visit__button--icon-accent svg,
+  .cb-visit__button--icon-accent .cb-icon-upload {
+    color: var(--cbv-accent);
+  }
+
+  .cb-visit__button--soft {
+    gap: 8px;
+    min-height: 37px;
+    padding: 9px 20px;
+    border-color: var(--cbv-border);
+    background: color-mix(in srgb, var(--cbv-text) 3%, transparent);
+    color: var(--cbv-text);
+  }
+
+  .cb-visit__button--soft:hover {
+    border-color: var(--cbv-border-strong);
   }
 
   .cb-visit__button--light {
@@ -134,7 +163,8 @@
       "options": [
         { "value": "light", "label": "Light" },
         { "value": "accent", "label": "Accent" },
-        { "value": "outline", "label": "Outline" }
+        { "value": "outline", "label": "Outline" },
+        { "value": "soft", "label": "Soft fill" }
       ],
       "default": "light"
     },
@@ -146,6 +176,7 @@
         { "value": "store", "label": "Shop front" },
         { "value": "pin", "label": "Map pin" },
         { "value": "arrow", "label": "Arrow" },
+        { "value": "mail", "label": "Mail" },
         { "value": "none", "label": "None" }
       ],
       "default": "store"
@@ -163,6 +194,28 @@
       "info": "For one-colour SVGs: uses this section's icon colour. Turn off to keep the file's own colours.",
       "default": true,
       "visible_if": "{{ block.settings.custom_icon != blank }}"
+    },
+    {
+      "type": "select",
+      "id": "icon_position",
+      "label": "Icon position",
+      "options": [
+        { "value": "after", "label": "After the text" },
+        { "value": "before", "label": "Before the text" }
+      ],
+      "default": "after"
+    },
+    {
+      "type": "checkbox",
+      "id": "icon_accent",
+      "label": "Icon in the accent color",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "uppercase",
+      "label": "Capitals",
+      "default": true
     },
     {
       "type": "header",

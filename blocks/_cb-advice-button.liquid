@@ -24,7 +24,7 @@
     {% if new_tab %}
       target="_blank" rel="noopener"
     {% endif %}
-    style="--cb-advice-button-text-size: {{ block.settings.text_size }}px; --cb-advice-button-text-weight: {{ block.settings.text_weight }};"
+    style="--cb-advice-button-text-size: {{ block.settings.text_size }}px; --cb-advice-button-text-weight: {{ block.settings.text_weight }}; --cb-advice-button-ls: {{ block.settings.letter_spacing | divided_by: 100.0 }}em;"
     {{ block.shopify_attributes }}
   >
     {{- block.settings.label | escape -}}
@@ -67,7 +67,7 @@
     font-weight: var(--cb-advice-button-text-weight, var(--cbn-font-body-strong));
     font-size: var(--cb-advice-button-text-size, 10px);
     line-height: 1.2;
-    letter-spacing: 0;
+    letter-spacing: var(--cb-advice-button-ls, 0);
     text-transform: uppercase;
     text-decoration: none;
     transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
@@ -105,6 +105,16 @@
     border-color: var(--cbn-text);
   }
 
+  .cb-advice__button--quiet {
+    border-color: color-mix(in srgb, var(--cbn-text) 25%, transparent);
+    background: transparent;
+    color: var(--cbn-text);
+  }
+
+  .cb-advice__button--quiet:hover {
+    border-color: color-mix(in srgb, var(--cbn-text) 55%, transparent);
+  }
+
   .cb-advice__button:focus-visible {
     outline: 2px solid var(--cbn-text);
     outline-offset: 3px;
@@ -140,7 +150,8 @@
       "options": [
         { "value": "primary", "label": "Accent" },
         { "value": "secondary", "label": "Grey" },
-        { "value": "outline", "label": "Outline" }
+        { "value": "outline", "label": "Outline" },
+        { "value": "quiet", "label": "Thin outline" }
       ],
       "default": "primary"
     },
@@ -176,6 +187,17 @@
       "label": "Open link in a new tab",
       "info": "Directions always open in a new tab.",
       "default": false
+    },
+    {
+      "type": "range",
+      "id": "letter_spacing",
+      "label": "Letter spacing",
+      "info": "Percent of the text size.",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "%",
+      "default": 0
     },
     {
       "type": "header",

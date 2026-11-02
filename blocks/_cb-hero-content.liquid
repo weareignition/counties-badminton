@@ -1,6 +1,6 @@
 <div
-  class="cb-hero__content cb-hero__content--{{ block.settings.alignment }}"
-  style="--cbh-content-gap: {{ block.settings.gap }}px;"
+  class="cb-hero__content cb-hero__content--{{ block.settings.alignment }}{% if block.settings.group_width > 0 %} cb-group-w{% endif %}"
+  style="--cbh-content-gap: {{ block.settings.gap }}px; --cb-group-w: {{ block.settings.group_width }}px;"
   {{ block.shopify_attributes }}
 >
   {% content_for 'blocks' %}
@@ -43,6 +43,17 @@
     { "type": "@app" }
   ],
   "settings": [
+    {
+      "type": "range",
+      "id": "group_width",
+      "label": "Width",
+      "info": "0 follows the section.",
+      "min": 0,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "default": 0
+    },
     {
       "type": "range",
       "id": "gap",

@@ -45,7 +45,9 @@
               "type": "_cb-fintro-badge",
               "settings": {
                 "badge_text": "Racket finder",
-                "show_dot": true
+                "show_dot": true,
+                "text_size": 9,
+                "text_weight": "initial"
               },
               "blocks": {}
             },
@@ -61,11 +63,20 @@
                 "fluid_vw": 6,
                 "weight": "font",
                 "color": "text",
+                "custom_color": "#ffffff",
                 "line_height": 118,
                 "letter_spacing": -1,
                 "uppercase": false,
                 "wrap": "wrap",
-                "max_width": 720
+                "width": "auto",
+                "width_px": 400,
+                "max_width": 720,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
               },
               "blocks": {}
             },
@@ -79,19 +90,30 @@
                 "fluid_vw": 2,
                 "weight": "regular",
                 "color": "muted",
+                "custom_color": "#ffffff",
                 "line_height": 160,
                 "letter_spacing": 0,
                 "wrap": "pretty",
+                "width": "auto",
+                "width_px": 400,
                 "max_width_unit": "px",
                 "max_width_px": 580,
-                "max_width_ch": 60
+                "max_width_ch": 60,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
               },
               "blocks": {}
             },
             "cb_fintro_meta_zjjYkA": {
               "type": "_cb-fintro-meta",
               "settings": {
-                "meta_text": "[count] quick questions · Around 30–60 seconds"
+                "meta_text": "[count] quick questions · Around 30–60 seconds",
+                "text_size": 11,
+                "text_weight": "initial"
               },
               "blocks": {}
             },
@@ -108,7 +130,9 @@
                     "link": "shopify://collections/rackets",
                     "start_quiz": true,
                     "style": "primary",
-                    "show_arrow": true
+                    "show_arrow": true,
+                    "text_size": 18,
+                    "text_weight": "initial"
                   },
                   "blocks": {}
                 },
@@ -119,7 +143,9 @@
                     "link": "shopify://collections/rackets",
                     "start_quiz": false,
                     "style": "secondary",
-                    "show_arrow": false
+                    "show_arrow": false,
+                    "text_size": 18,
+                    "text_weight": "initial"
                   },
                   "blocks": {}
                 }
@@ -152,7 +178,11 @@
                 "icon": "racket",
                 "custom_icon_tint": true,
                 "feature_title": "Built around your play",
-                "feature_text": "Style-first matching prioritizing power angles, whip, and net touch."
+                "feature_text": "Style-first matching prioritizing power angles, whip, and net touch.",
+                "title_size": 18,
+                "title_weight": "initial",
+                "text_size": 12,
+                "text_weight": "initial"
               },
               "blocks": {}
             },
@@ -162,7 +192,11 @@
                 "icon": "sliders",
                 "custom_icon_tint": true,
                 "feature_title": "Unbiased multi-brand stock",
-                "feature_text": "Direct authorized stock from Yonex, Victor, Ashaway, and Babolat."
+                "feature_text": "Direct authorized stock from Yonex, Victor, Ashaway, and Babolat.",
+                "title_size": 18,
+                "title_weight": "initial",
+                "text_size": 12,
+                "text_weight": "initial"
               },
               "blocks": {}
             },
@@ -172,7 +206,11 @@
                 "icon": "badge_check",
                 "custom_icon_tint": true,
                 "feature_title": "Specialist Pro Shop guidance",
-                "feature_text": "Backed by certified stringers and on-court coaches in Papakura."
+                "feature_text": "Backed by certified stringers and on-court coaches in Papakura.",
+                "title_size": 18,
+                "title_weight": "initial",
+                "text_size": 12,
+                "text_weight": "initial"
               },
               "blocks": {}
             }
@@ -220,7 +258,21 @@
             "done_title": "Your matches are ready.",
             "restart_label": "Start again",
             "pill_pending": "MATCHING COMPLETE · [total] CURATED FRAMES IDENTIFIED",
-            "pill_done": "Matching complete · [count] curated frames identified"
+            "pill_done": "Matching complete · [count] curated frames identified",
+            "progress_size": 10,
+            "progress_weight": "initial",
+            "step_size": 12,
+            "step_weight": "initial",
+            "done_heading_size": 32,
+            "done_heading_weight": "initial",
+            "summary_size": 14,
+            "summary_weight": "initial",
+            "link_size": 12,
+            "link_weight": "initial",
+            "continue_size": 18,
+            "continue_weight": "initial",
+            "pill_size": 10,
+            "pill_weight": "initial"
           },
           "blocks": {
             "cb_rmatch_question_h9zLBY": {
@@ -228,7 +280,11 @@
               "settings": {
                 "step_name": "Player Level",
                 "question_title": "Where are you at with your game?",
-                "question_text": "This sets how forgiving the frame should be and how much power it should give back."
+                "question_text": "This sets how forgiving the frame should be and how much power it should give back.",
+                "title_size": 32,
+                "title_weight": "initial",
+                "text_size": 14,
+                "text_weight": "initial"
               },
               "blocks": {
                 "cb_rmatch_option_hjBnAt": {
@@ -237,7 +293,13 @@
                     "option_title": "Getting started",
                     "option_text": "New to badminton or coming back after a long break.",
                     "tag": "",
-                    "match_terms": "level-beginner, flex-flexible"
+                    "match_terms": "level-beginner, flex-flexible",
+                    "title_size": 22,
+                    "title_weight": "initial",
+                    "text_size": 12,
+                    "text_weight": "initial",
+                    "tag_size": 9,
+                    "tag_weight": "initial"
                   },
                   "blocks": {}
                 },
@@ -247,7 +309,13 @@
                     "option_title": "Club player",
                     "option_text": "Regular social or club nights, building consistency.",
                     "tag": "",
-                    "match_terms": "level-intermediate, flex-medium"
+                    "match_terms": "level-intermediate, flex-medium",
+                    "title_size": 22,
+                    "title_weight": "initial",
+                    "text_size": 12,
+                    "text_weight": "initial",
+                    "tag_size": 9,
+                    "tag_weight": "initial"
                   },
                   "blocks": {}
                 },
@@ -257,7 +325,13 @@
                     "option_title": "Competitive",
                     "option_text": "Interclub, tournaments and regular coached training.",
                     "tag": "",
-                    "match_terms": "level-advanced, flex-stiff"
+                    "match_terms": "level-advanced, flex-stiff",
+                    "title_size": 22,
+                    "title_weight": "initial",
+                    "text_size": 12,
+                    "text_weight": "initial",
+                    "tag_size": 9,
+                    "tag_weight": "initial"
                   },
                   "blocks": {}
                 },
@@ -267,7 +341,13 @@
                     "option_title": "Not sure yet",
                     "option_text": "Our Pro Shop team can help you work it out in store.",
                     "tag": "",
-                    "match_terms": ""
+                    "match_terms": "",
+                    "title_size": 22,
+                    "title_weight": "initial",
+                    "text_size": 12,
+                    "text_weight": "initial",
+                    "tag_size": 9,
+                    "tag_weight": "initial"
                   },
                   "blocks": {}
                 }
@@ -284,7 +364,11 @@
               "settings": {
                 "step_name": "Playing Style Identification",
                 "question_title": "How do you like to win points?",
-                "question_text": "Pick the style that feels closest to your game on court. This guides whether you need whip speed, smash power, or placement consistency."
+                "question_text": "Pick the style that feels closest to your game on court. This guides whether you need whip speed, smash power, or placement consistency.",
+                "title_size": 32,
+                "title_weight": "initial",
+                "text_size": 14,
+                "text_weight": "initial"
               },
               "blocks": {
                 "cb_rmatch_option_m7zXB8": {
@@ -293,7 +377,13 @@
                     "option_title": "Attack",
                     "option_text": "Pressure, steep overhead angles, and heavier rear-court smash power.",
                     "tag": "Popular for offensive singles & doubles",
-                    "match_terms": "style-attack, balance-head-heavy"
+                    "match_terms": "style-attack, balance-head-heavy",
+                    "title_size": 22,
+                    "title_weight": "initial",
+                    "text_size": 12,
+                    "text_weight": "initial",
+                    "tag_size": 9,
+                    "tag_weight": "initial"
                   },
                   "blocks": {}
                 },
@@ -303,7 +393,13 @@
                     "option_title": "Speed",
                     "option_text": "Fast defensive reactions, rapid net intercepts, and quick flat exchanges.",
                     "tag": "",
-                    "match_terms": "style-speed, balance-head-light"
+                    "match_terms": "style-speed, balance-head-light",
+                    "title_size": 22,
+                    "title_weight": "initial",
+                    "text_size": 12,
+                    "text_weight": "initial",
+                    "tag_size": 9,
+                    "tag_weight": "initial"
                   },
                   "blocks": {}
                 },
@@ -313,7 +409,13 @@
                     "option_title": "Control / Balanced",
                     "option_text": "Pinpoint placement, defensive consistency, and versatile touch.",
                     "tag": "",
-                    "match_terms": "style-control, balance-even"
+                    "match_terms": "style-control, balance-even",
+                    "title_size": 22,
+                    "title_weight": "initial",
+                    "text_size": 12,
+                    "text_weight": "initial",
+                    "tag_size": 9,
+                    "tag_weight": "initial"
                   },
                   "blocks": {}
                 },
@@ -323,7 +425,13 @@
                     "option_title": "Not sure yet",
                     "option_text": "Let our Pro Shop team recommend based on your player level.",
                     "tag": "",
-                    "match_terms": ""
+                    "match_terms": "",
+                    "title_size": 22,
+                    "title_weight": "initial",
+                    "text_size": 12,
+                    "text_weight": "initial",
+                    "tag_size": 9,
+                    "tag_weight": "initial"
                   },
                   "blocks": {}
                 }
@@ -340,7 +448,11 @@
               "settings": {
                 "step_name": "Game Format",
                 "question_title": "What do you play most?",
-                "question_text": "Doubles rewards fast hands at the net; singles rewards reach, power and placement."
+                "question_text": "Doubles rewards fast hands at the net; singles rewards reach, power and placement.",
+                "title_size": 32,
+                "title_weight": "initial",
+                "text_size": 14,
+                "text_weight": "initial"
               },
               "blocks": {
                 "cb_rmatch_option_jQP9ac": {
@@ -349,7 +461,13 @@
                     "option_title": "Singles",
                     "option_text": "Full-court rallies with clears, drops and smashes.",
                     "tag": "",
-                    "match_terms": "style-attack, style-control"
+                    "match_terms": "style-attack, style-control",
+                    "title_size": 22,
+                    "title_weight": "initial",
+                    "text_size": 12,
+                    "text_weight": "initial",
+                    "tag_size": 9,
+                    "tag_weight": "initial"
                   },
                   "blocks": {}
                 },
@@ -359,7 +477,13 @@
                     "option_title": "Doubles",
                     "option_text": "Fast drives, net kills and quick defence.",
                     "tag": "",
-                    "match_terms": "style-speed, balance-head-light"
+                    "match_terms": "style-speed, balance-head-light",
+                    "title_size": 22,
+                    "title_weight": "initial",
+                    "text_size": 12,
+                    "text_weight": "initial",
+                    "tag_size": 9,
+                    "tag_weight": "initial"
                   },
                   "blocks": {}
                 },
@@ -369,7 +493,13 @@
                     "option_title": "A mix of both",
                     "option_text": "Social nights with singles and doubles.",
                     "tag": "",
-                    "match_terms": "balance-even, style-control"
+                    "match_terms": "balance-even, style-control",
+                    "title_size": 22,
+                    "title_weight": "initial",
+                    "text_size": 12,
+                    "text_weight": "initial",
+                    "tag_size": 9,
+                    "tag_weight": "initial"
                   },
                   "blocks": {}
                 },
@@ -379,7 +509,13 @@
                     "option_title": "Not sure yet",
                     "option_text": "We’ll keep the recommendation all-round.",
                     "tag": "",
-                    "match_terms": ""
+                    "match_terms": "",
+                    "title_size": 22,
+                    "title_weight": "initial",
+                    "text_size": 12,
+                    "text_weight": "initial",
+                    "tag_size": 9,
+                    "tag_weight": "initial"
                   },
                   "blocks": {}
                 }
@@ -427,7 +563,45 @@
             "row_weight": "Weight",
             "row_balance": "Balance",
             "row_flex": "Flex",
-            "row_price": "Price"
+            "row_price": "Price",
+            "eyebrow_size": 10,
+            "eyebrow_weight": "initial",
+            "heading_size": 32,
+            "heading_weight": "initial",
+            "text_size": 16,
+            "text_weight": "initial",
+            "match_label_size": 10,
+            "match_label_weight": "initial",
+            "series_size": 10,
+            "series_weight": "initial",
+            "badge_size": 9,
+            "badge_weight": "initial",
+            "brand_size": 9,
+            "brand_weight": "initial",
+            "name_size": 22,
+            "name_weight": "initial",
+            "price_size": 18,
+            "price_weight": "initial",
+            "chip_size": 11,
+            "chip_weight": "initial",
+            "why_label_size": 9,
+            "why_label_weight": "initial",
+            "why_text_size": 12,
+            "why_text_weight": "initial",
+            "view_button_size": 12,
+            "view_button_weight": "initial",
+            "compare_button_size": 9,
+            "compare_button_weight": "initial",
+            "compare_text_size": 14,
+            "compare_text_weight": "initial",
+            "table_heading_size": 11,
+            "table_heading_weight": "initial",
+            "table_first_heading_size": 9,
+            "table_first_heading_weight": "initial",
+            "table_size": 12,
+            "table_weight": "initial",
+            "table_price_size": 18,
+            "table_price_weight": "initial"
           },
           "blocks": {}
         }
@@ -467,6 +641,7 @@
           "type": "_cb-fnext-card",
           "settings": {
             "icon": "store",
+            "custom_icon": "shopify://shop_images/store.svg",
             "custom_icon_tint": true,
             "card_heading": "Not sure between two frames?",
             "card_text": "Visit our Papakura Pro Shop at 41R Elliot Street to test court demo frames or speak with our coaches.",
@@ -475,7 +650,15 @@
             "button_style": "light",
             "show_arrow": false,
             "note_text": "Visit us (open 7 days)",
-            "show_note_dot": true
+            "show_note_dot": true,
+            "heading_size": 28,
+            "heading_weight": "initial",
+            "text_size": 12,
+            "text_weight": "initial",
+            "button_size": 16,
+            "button_weight": "initial",
+            "note_size": 10,
+            "note_weight": "initial"
           },
           "blocks": {}
         },
@@ -491,7 +674,15 @@
             "button_style": "accent",
             "show_arrow": true,
             "note_text": "",
-            "show_note_dot": true
+            "show_note_dot": true,
+            "heading_size": 28,
+            "heading_weight": "initial",
+            "text_size": 12,
+            "text_weight": "initial",
+            "button_size": 16,
+            "button_weight": "initial",
+            "note_size": 10,
+            "note_weight": "initial"
           },
           "blocks": {}
         }
@@ -502,7 +693,7 @@
       ],
       "name": "[CB] Finder next steps",
       "settings": {
-        "max_width": 1060,
+        "max_width": 1440,
         "card_gap": 24,
         "card_radius": 6,
         "stack_gap": 72,
@@ -522,7 +713,9 @@
         "light_button_text_color": "#0b0b0b",
         "dot_color": "#10b981",
         "padding_top": 40,
-        "padding_bottom": 64
+        "padding_bottom": 64,
+        "links_size": 16,
+        "links_weight": "initial"
       }
     }
   },

@@ -27,10 +27,63 @@
     --cbfq-pb: {{ s.padding_bottom }}px;
   "
 >
+  <span id="faq" class="cb-faq__anchor" aria-hidden="true"></span>
   <div class="cb-faq__inner">
     {% content_for 'blocks' %}
   </div>
 </section>
+
+<script>
+  // <details> can only jump open, so the click is taken over to slide the answer. Without this the questions still work.
+  if (!window.cbFaqSlide) {
+    window.cbFaqSlide = true;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    const slide = (item, open) => {
+      const panel = item.querySelector('.cb-faq__panel');
+      if (!panel || reducedMotion.matches) {
+        item.open = open;
+        return;
+      }
+      // A second click mid-slide carries on from the current height.
+      const from = item.open ? panel.offsetHeight : 0;
+      item.cbFaqSlide?.cancel();
+      item.open = true;
+      item.classList.toggle('is-closing', !open);
+      const animation = panel.animate(
+        { height: [`${from}px`, open ? `${panel.scrollHeight}px` : '0px'] },
+        { duration: 280, easing: 'ease' }
+      );
+      item.cbFaqSlide = animation;
+      animation.onfinish = () => {
+        item.open = open;
+        item.classList.remove('is-closing');
+        if (item.dataset.cbFaqName) {
+          item.name = item.dataset.cbFaqName;
+          delete item.dataset.cbFaqName;
+        }
+      };
+    };
+
+    document.addEventListener('click', (event) => {
+      const question = event.target.closest?.('.cb-faq__question');
+      if (!question) return;
+      event.preventDefault();
+      const item = question.closest('.cb-faq__item');
+      const opening = !item.open || item.classList.contains('is-closing');
+      if (opening && item.name) {
+        // The browser snaps other open answers shut, so each one leaves the group until it has finished sliding.
+        document.querySelectorAll(`.cb-faq__item[name="${item.name}"][open]`).forEach((other) => {
+          if (other === item) return;
+          other.dataset.cbFaqName = other.name;
+          other.removeAttribute('name');
+          slide(other, false);
+        });
+      }
+      slide(item, opening);
+    });
+  }
+</script>
 
 {%- if request.design_mode -%}
   <script>
@@ -50,6 +103,12 @@
     color: var(--cbfq-text);
     background: var(--cbfq-bg);
     padding: calc(var(--cbfq-pt) * 0.75) 16px calc(var(--cbfq-pb) * 0.75);
+  }
+
+  .cb-faq__anchor {
+    display: block;
+    height: 0;
+    scroll-margin-top: calc(var(--header-height, 80px) + 24px);
   }
 
   .cb-faq__inner {

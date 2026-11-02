@@ -1,6 +1,6 @@
 <div
-  class="cb-quiz__content"
-  style="--cbq-content-gap: {{ block.settings.gap }}px;"
+  class="cb-quiz__content{% if block.settings.group_width > 0 %} cb-group-w{% endif %}"
+  style="--cbq-content-gap: {{ block.settings.gap }}px; --cb-group-w: {{ block.settings.group_width }}px;"
   {{ block.shopify_attributes }}
 >
   {% content_for 'blocks' %}
@@ -29,6 +29,17 @@
     { "type": "_cb-quiz-features" }
   ],
   "settings": [
+    {
+      "type": "range",
+      "id": "group_width",
+      "label": "Width",
+      "info": "0 follows the section.",
+      "min": 0,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "default": 0
+    },
     {
       "type": "range",
       "id": "gap",

@@ -61,13 +61,14 @@
 
 {% stylesheet %}
   .cb-speed-tcard {
+    --cbd-tcard-line: color-mix(in srgb, var(--cbd-text) 40%, transparent);
     position: relative;
     display: flex;
     flex-direction: column;
     gap: 12px;
     min-width: 0;
     height: 100%;
-    padding: 20px;
+    padding: 22px;
     border: 1px solid var(--cbd-border);
     border-radius: var(--cbd-radius);
     background: var(--cbd-card);
@@ -75,7 +76,6 @@
 
   .cb-speed-tcard--highlight {
     border-color: var(--cbd-accent);
-    box-shadow: 0 0 28px var(--cbd-glow);
   }
 
   .cb-speed-tcard__flag {
@@ -128,7 +128,7 @@
     flex: none;
     margin-left: auto;
     padding: 3px 8px;
-    border: 1px solid var(--cbd-accent);
+    border: 1px solid var(--cbd-tcard-line);
     border-radius: 2px;
     font-family: var(--cbd-font-body);
     font-weight: var(--cb-speed-tcard-tag-weight, var(--cbd-font-body-strong));
@@ -140,9 +140,9 @@
   }
 
   .cb-speed-tcard__title {
-    margin: 4px 0 4px;
+    margin: 4px 0 0;
     padding-bottom: 14px;
-    border-bottom: 1px solid var(--cbd-border-strong);
+    border-bottom: 1px solid var(--cbd-tcard-line);
     font-family: var(--cbd-font-heading);
     font-weight: var(--cb-speed-tcard-title-weight, var(--cbd-font-heading-weight));
     font-size: var(--cb-speed-tcard-title-size, 19px);
@@ -154,8 +154,8 @@
   .cb-speed-tcard__points {
     display: flex;
     flex-direction: column;
-    gap: 7px;
-    margin: 0 0 6px;
+    gap: 10px;
+    margin: 0 0 16px;
     padding: 0;
     list-style: none;
   }
@@ -187,7 +187,7 @@
     gap: 6px;
     margin-top: auto;
     padding-top: 14px;
-    border-top: 1px solid var(--cbd-border);
+    border-top: 1px solid var(--cbd-tcard-line);
   }
 
   .cb-speed-tcard__suited-text {
@@ -196,12 +196,19 @@
     font-weight: var(--cb-speed-tcard-footer-text-weight, inherit);
     font-size: var(--cb-speed-tcard-footer-text-size, 11px);
     line-height: 1.55;
+    min-height: 3.1em;
     color: var(--cbd-soft);
   }
 
   .cb-speed-tcard--highlight .cb-speed-tcard__points li,
   .cb-speed-tcard--highlight .cb-speed-tcard__suited-text {
     color: var(--cbd-text);
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-speed-tcard {
+      padding: 30px;
+    }
   }
 {% endstylesheet %}
 

@@ -1,0 +1,63 @@
+{%- doc -%}
+  A card link that filters the [CB] Product catalogue on the same collection page, the way its own filter pills do.
+  It looks for the collection's Search & Discovery filter whose name matches one of `names` (comma separated; capitals
+  and spaces don't matter) and that filter's value matching `value` (same matching). Like the catalogue's quick
+  filter, the link replaces any other value of that filter, and removes the value when it is already applied.
+  The catalogue script (sections/cb-catalogue.liquid) swaps the catalogue in place on click and scrolls to it.
+
+  part 'href'  outputs the URL: the filter URL ending in #products, or `fallback` when the store doesn't offer that
+               filter or value yet (nothing when no fallback is given).
+  part 'attrs' outputs the data attributes the catalogue script reads, or nothing when the filter isn't available.
+
+  @param {string} names - Filter names, comma separated, e.g. "Player style, Play style".
+  @param {string} value - The value to apply, e.g. "Speed".
+  @param {string} [fallback] - URL to use when the filter or value isn't available.
+  @param {string} part - 'href' or 'attrs'.
+{%- enddoc -%}
+{%- liquid
+  assign found_param = ''
+  assign found_value = ''
+  assign found_url = ''
+  if collection and names != blank and value != blank
+    assign wanted_names = names | downcase | split: ','
+    assign wanted_value = value | downcase | remove: ' ' | strip
+    for candidate in collection.filters
+      assign candidate_key = candidate.label | downcase | remove: ' '
+      assign matched = false
+      for name in wanted_names
+        assign name_key = name | remove: ' ' | strip
+        if name_key != blank and name_key == candidate_key
+          assign matched = true
+          break
+        endif
+      endfor
+      if matched
+        for option in candidate.values
+          assign option_key = option.label | downcase | remove: ' '
+          if option_key == wanted_value
+            assign found_param = option.param_name
+            assign found_value = option.value
+            assign found_url = candidate.url_to_remove
+            unless option.active
+              assign joiner = '?'
+              if found_url contains '?'
+                assign joiner = '&'
+              endif
+              assign encoded = option.value | url_encode
+              assign found_url = found_url | append: joiner | append: option.param_name | append: '=' | append: encoded
+            endunless
+            break
+          endif
+        endfor
+        break
+      endif
+    endfor
+  endif
+-%}
+{%- if part == 'attrs' -%}
+  {%- if found_url != blank %} data-cb-cat-filter="{{ found_param | escape }}" data-cb-cat-value="{{ found_value | escape }}"{% endif -%}
+{%- elsif found_url != blank -%}
+  {{- found_url -}}#products
+{%- else -%}
+  {{- fallback -}}
+{%- endif -%}

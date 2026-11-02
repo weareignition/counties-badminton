@@ -12,7 +12,7 @@
 
 <section
   id="cb-guides-{{ section.id }}"
-  class="cb-guides cb-guides--design-{{ s.design | default: '1' }}"
+  class="cb-guides cb-guides--design-{{ s.design | default: '1' }}{% if s.design == '3' or s.design == '4' %} cb-guides--design-2{% endif %}{% if s.design == '4' %} cb-guides--design-3{% endif %}{% unless s.key_point_line %} cb-guides--plain-point{% endunless %}"
   style="
     --cbg-bg: {{ s.background_color }};
     --cbg-card: {{ s.card_background_color }};
@@ -149,6 +149,101 @@
       right: 24px;
     }
   }
+
+  /* The key point's line and dot only show when "Line and dot above the key point" is on. */
+  .cb-guides--design-2.cb-guides--plain-point .cb-guide-card__point {
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  .cb-guides--design-2.cb-guides--plain-point .cb-guide-card__point::before {
+    display: none;
+  }
+
+  /* Design 3: Design 2's numbered tips (the section carries both classes) with borderless cards and larger text. The
+     sizes are the block settings' own values. */
+  .cb-guides--design-3 .cb-guide-card {
+    border-color: transparent;
+  }
+
+  .cb-guides--design-3 .cb-guide-card__label {
+    padding-right: 36px;
+    font-weight: var(--cb-guides-card-label-weight, var(--cbg-font-body-weight));
+    font-size: var(--cb-guides-card-label-size, 10px);
+  }
+
+  .cb-guides--design-3 .cb-guide-card__label svg,
+  .cb-guides--design-3 .cb-guide-card__label .cb-icon-upload {
+    top: 14px;
+    right: 18px;
+    width: 24px;
+    height: 24px;
+  }
+
+  /* Uploaded icons are cropped tight to the artwork, so they take a smaller box, centred on the built-in icons' box. */
+  .cb-guides--design-3 .cb-guide-card__label .cb-icon-upload {
+    width: 21px;
+    height: 21px;
+    margin: 1.5px;
+  }
+
+  .cb-guides--design-3 .cb-guide-card__title {
+    font-size: var(--cb-guides-card-title-size, 17px);
+  }
+
+  .cb-guides--design-3 .cb-guide-card__summary {
+    margin-top: 6px;
+    font-size: var(--cb-guides-card-summary-size, 13px);
+    letter-spacing: 0;
+  }
+
+  .cb-guides--design-3 .cb-guide-card__point {
+    margin-top: 28px;
+    font-size: var(--cb-guides-card-point-size, 12px);
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-guides--design-3 .cb-guide-card {
+      padding: 22px 20px 23px;
+    }
+
+    .cb-guides--design-3 .cb-guide-card__label svg,
+    .cb-guides--design-3 .cb-guide-card__label .cb-icon-upload {
+      top: 16px;
+      right: 18px;
+    }
+
+    .cb-guides--design-3 .cb-guide-card__point {
+      margin-top: 38px;
+    }
+  }
+
+  /* Design 4: Design 3's cards (the section carries all three classes) with more room, a tighter key point in muted text
+     and no corner icons unless a card has one. */
+  .cb-guides--design-4 .cb-guide-card__label {
+    font-family: var(--cbg-font-heading);
+  }
+
+  .cb-guides--design-4 .cb-guide-card__summary {
+    margin-top: 12px;
+  }
+
+  .cb-guides--design-4 .cb-guide-card__point {
+    gap: 6px;
+    margin-top: 24px;
+    color: var(--cbg-muted);
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-guides--design-4 .cb-guide-card {
+      padding: 32px;
+    }
+
+    .cb-guides--design-4 .cb-guide-card__point {
+      margin-top: 24px;
+      padding-top: 24px;
+    }
+  }
 {% endstylesheet %}
 
 {% schema %}
@@ -174,9 +269,18 @@
       "label": "Design",
       "options": [
         { "value": "1", "label": "Guides with links" },
-        { "value": "2", "label": "Numbered tips with a key point" }
+        { "value": "2", "label": "Numbered tips with a key point" },
+        { "value": "3", "label": "Numbered tips, borderless cards" },
+        { "value": "4", "label": "Numbered tips, roomy cards" }
       ],
       "default": "1"
+    },
+    {
+      "type": "checkbox",
+      "id": "key_point_line",
+      "label": "Line and dot above the key point",
+      "default": false,
+      "visible_if": "{{ section.settings.design != '1' }}"
     },
     {
       "type": "range",
@@ -368,6 +472,7 @@
       "category": "t:categories.storytelling",
       "settings": {
         "design": "2",
+        "key_point_line": true,
         "background_color": "#111112",
         "card_background_color": "#181818",
         "border_color": "#ffffff0d",
@@ -445,6 +550,208 @@
             }
           },
           "block_order": ["grip", "bag", "care"]
+        }
+      },
+      "block_order": ["header", "grid"]
+    },
+    {
+      "name": "[CB] Footwear guidance",
+      "category": "t:categories.storytelling",
+      "settings": {
+        "design": "3",
+        "background_color": "#0b0b0b",
+        "card_background_color": "#191919",
+        "border_color": "#ffffff0d",
+        "card_radius": 8,
+        "stack_gap": 36,
+        "padding_top": 52,
+        "padding_bottom": 44
+      },
+      "blocks": {
+        "header": {
+          "type": "_cb-guides-header",
+          "settings": { "alignment": "left", "max_width": 680 },
+          "blocks": {
+            "eyebrow": {
+              "type": "cb-subheader",
+              "settings": { "subheader_text": "Footwear guidance", "letter_spacing": 0 }
+            },
+            "heading": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "Court shoes are built differently.",
+                "mobile_sizing": "fluid",
+                "fluid_min": 30,
+                "fluid_vw": 6.5
+              }
+            },
+            "text": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>Badminton involves quick stops, changes of direction and repeated movement across the court. The right footwear should feel secure, comfortable and suited to how you play.</p>",
+                "size": 16,
+                "mobile_size": 16,
+                "line_height": 165
+              }
+            }
+          },
+          "block_order": ["eyebrow", "heading", "text"]
+        },
+        "grid": {
+          "type": "_cb-guides-grid",
+          "settings": { "columns": 3, "gap": 22 },
+          "blocks": {
+            "fit": {
+              "type": "_cb-guides-card",
+              "settings": {
+                "icon": "ruler",
+                "label": "Fit",
+                "card_title": "Start with the right size",
+                "summary": "Choose a snug, comfortable fit that allows natural movement without sliding. Adequate room in the toe box ensures comfort during fast footwork and lunges.",
+                "point_text": "Recommended: Secure heel lock & natural forefoot comfort",
+                "link_label": "",
+                "label_size": 10.5,
+                "title_size": 21.5,
+                "summary_size": 13.5,
+                "point_size": 11.5
+              }
+            },
+            "style": {
+              "type": "_cb-guides-card",
+              "settings": {
+                "icon": "runner",
+                "label": "Playing style",
+                "card_title": "Lightweight or supportive?",
+                "summary": "A simple guide to choosing between agility and stability. Players who value quick court transitions prefer lightweight builds, while baseline players often prefer reinforced lateral support.",
+                "point_text": "Recommended: Select based on court role",
+                "link_label": "",
+                "label_size": 10.5,
+                "title_size": 21.5,
+                "summary_size": 13.5,
+                "point_size": 11.5
+              }
+            },
+            "court": {
+              "type": "_cb-guides-card",
+              "settings": {
+                "icon": "lunge",
+                "label": "Court use",
+                "card_title": "Use shoes made for the court",
+                "summary": "Badminton footwear is specifically engineered for indoor courts. Non-marking gum rubber outsoles maximize traction on timber flooring and help protect the playing surface.",
+                "point_text": "Notice: Reserved for clean indoor court use",
+                "link_label": "",
+                "label_size": 10.5,
+                "title_size": 21.5,
+                "summary_size": 13.5,
+                "point_size": 11.5
+              }
+            }
+          },
+          "block_order": ["fit", "style", "court"]
+        }
+      },
+      "block_order": ["header", "grid"]
+    },
+    {
+      "name": "[CB] Apparel guidance",
+      "category": "t:categories.storytelling",
+      "settings": {
+        "design": "4",
+        "key_point_line": true,
+        "background_color": "#0b0b0b",
+        "card_background_color": "#181818",
+        "border_color": "#ffffff0d",
+        "card_radius": 8,
+        "stack_gap": 40,
+        "padding_top": 52,
+        "padding_bottom": 44
+      },
+      "blocks": {
+        "header": {
+          "type": "_cb-guides-header",
+          "settings": { "alignment": "left", "max_width": 760 },
+          "blocks": {
+            "eyebrow": {
+              "type": "cb-subheader",
+              "settings": { "subheader_text": "Player gear guidance", "size": 11, "letter_spacing": 0 }
+            },
+            "heading": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "Choose what works for how you play.",
+                "size": 35,
+                "weight": "medium",
+                "mobile_sizing": "fluid",
+                "fluid_min": 30,
+                "fluid_vw": 6.5
+              }
+            },
+            "text": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>From comfortable court clothing to compression and support products, the right setup should suit your training, movement and personal preferences.</p>",
+                "size": 15,
+                "mobile_size": 15,
+                "line_height": 160
+              }
+            }
+          },
+          "block_order": ["eyebrow", "heading", "text"]
+        },
+        "grid": {
+          "type": "_cb-guides-grid",
+          "settings": { "columns": 3, "gap": 22 },
+          "blocks": {
+            "apparel": {
+              "type": "_cb-guides-card",
+              "settings": {
+                "icon": "none",
+                "label": "Apparel",
+                "card_title": "Start with comfort and movement",
+                "summary": "Choose court clothing that feels comfortable and allows easy movement during training and matches.",
+                "point_text": "Match play & training tops",
+                "point_icon": "racket",
+                "link_label": "",
+                "label_size": 12,
+                "title_size": 20,
+                "title_weight": "400",
+                "summary_size": 15
+              }
+            },
+            "compression": {
+              "type": "_cb-guides-card",
+              "settings": {
+                "icon": "none",
+                "label": "Compression",
+                "card_title": "When players choose compression",
+                "summary": "Explore compression products available through the Pro Shop and find the size and style that suits your preference.",
+                "point_text": "Fitted comfort on court",
+                "point_icon": "compress",
+                "link_label": "",
+                "label_size": 12,
+                "title_size": 20,
+                "title_weight": "400",
+                "summary_size": 15
+              }
+            },
+            "support": {
+              "type": "_cb-guides-card",
+              "settings": {
+                "icon": "none",
+                "label": "Support gear",
+                "card_title": "Finding the right support product",
+                "summary": "Browse support sleeves and related products, or ask the Pro Shop team for help with sizing and available options.",
+                "point_text": "In-store sizing advice",
+                "point_icon": "store",
+                "link_label": "",
+                "label_size": 12,
+                "title_size": 20,
+                "title_weight": "400",
+                "summary_size": 15
+              }
+            }
+          },
+          "block_order": ["apparel", "compression", "support"]
         }
       },
       "block_order": ["header", "grid"]

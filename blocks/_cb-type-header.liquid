@@ -1,6 +1,6 @@
 <div
-  class="cb-type__header cb-type__header--{{ block.settings.alignment }}"
-  style="--cbty-header-gap: {{ block.settings.gap }}px;"
+  class="cb-type__header cb-type__header--{{ block.settings.alignment }}{% if block.settings.group_width > 0 %} cb-group-w{% endif %}"
+  style="--cbty-header-gap: {{ block.settings.gap }}px; --cb-group-w: {{ block.settings.group_width }}px;"
   {{ block.shopify_attributes }}
 >
   {% content_for 'blocks' %}
@@ -32,6 +32,17 @@
     { "type": "cb-button" }
   ],
   "settings": [
+    {
+      "type": "range",
+      "id": "group_width",
+      "label": "Width",
+      "info": "0 follows the section.",
+      "min": 0,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "default": 0
+    },
     {
       "type": "select",
       "id": "alignment",

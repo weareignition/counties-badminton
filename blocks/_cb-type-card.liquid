@@ -86,20 +86,18 @@
   assign image = block.settings.image | default: match_image
   assign card_title = block.settings.card_title | default: type_name | default: pool.title
 
-  # Link: custom, then this page filtered by the product type, then a search for the words, then the collection.
+  # Link: custom, then this page filtered by the product type (a Search & Discovery filter named Product type, on
+  # the product type field or a metafield; snippets/cb-filter-link), then a search for the words, then the collection.
   assign url = block.settings.link
+  assign filter_attrs = ''
   if url == blank and type_key != blank and collection
-    for page_filter in collection.filters
-      if page_filter.param_name == 'filter.p.product_type'
-        for value in page_filter.values
-          assign value_key = value.label | handleize
-          if value_key == type_key and value.count > 0
-            assign url = value.url_to_add
-            break
-          endif
-        endfor
-      endif
-    endfor
+    capture url
+      render 'cb-filter-link', names: 'Product type, Type', value: block.settings.product_type, part: 'href'
+    endcapture
+    capture filter_attrs
+      render 'cb-filter-link', names: 'Product type, Type', value: block.settings.product_type, part: 'attrs'
+    endcapture
+    assign url = url | strip
   endif
   if url == blank and search_terms != blank
     assign encoded_terms = search_terms | url_encode
@@ -121,6 +119,7 @@
     href="{{ url }}"
   {% endif %}
   class="cb-type-card"
+  {{ filter_attrs }}
   style="
     --cb-type-card-title-size: {{ block.settings.title_size }}px;
     --cb-type-card-title-weight: {{ block.settings.title_weight }};
@@ -192,6 +191,11 @@
   a.cb-type-card:focus-visible {
     outline: 2px solid var(--cbty-text);
     outline-offset: 2px;
+  }
+
+  /* The card whose filter is applied to the products below. */
+  a.cb-type-card.is-active {
+    border-color: var(--cbty-accent);
   }
 
   .cb-type-card__media {

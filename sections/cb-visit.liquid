@@ -12,7 +12,7 @@
 
 <section
   id="cb-visit-{{ section.id }}"
-  class="cb-visit{% if s.show_panel %} cb-visit--panel{% endif %}"
+  class="cb-visit{% if s.show_panel %} cb-visit--panel{% endif %}{% if s.accent_edge %} cb-visit--accent-edge{% endif %}"
   style="
     --cbv-bg: {{ s.background_color }};
     --cbv-panel: {{ s.panel_background_color }};
@@ -24,6 +24,8 @@
     --cbv-button-bg: {{ s.button_background_color }};
     --cbv-button-text: {{ s.button_text_color }};
     --cbv-radius: {{ s.panel_radius }}px;
+    --cbv-panel-py: {{ s.panel_padding_y }}px;
+    --cbv-panel-px: {{ s.panel_padding_x }}px;
     --cbv-max-width: {{ s.max_width }}px;
     --cbv-pt: {{ s.padding_top }}px;
     --cbv-pb: {{ s.padding_bottom }}px;
@@ -58,6 +60,10 @@
     background: var(--cbv-panel);
   }
 
+  .cb-visit--panel.cb-visit--accent-edge .cb-visit__inner {
+    border-left: 6px solid var(--cbv-accent);
+  }
+
   .cb-visit .cb-visit__inner > .cb-visit__button {
     flex: 1 1 100%;
   }
@@ -74,7 +80,7 @@
     }
 
     .cb-visit--panel .cb-visit__inner {
-      padding: 26px 30px;
+      padding: var(--cbv-panel-py, 26px) var(--cbv-panel-px, 30px);
     }
 
     .cb-visit .cb-visit__inner > .cb-visit__button {
@@ -124,6 +130,36 @@
       "label": "Boxed panel",
       "info": "Border and background around the banner.",
       "default": true
+    },
+    {
+      "type": "range",
+      "id": "panel_padding_y",
+      "label": "Box padding top and bottom",
+      "info": "On tablet and desktop. Phones keep 20px.",
+      "min": 10,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 26,
+      "visible_if": "{{ section.settings.show_panel }}"
+    },
+    {
+      "type": "range",
+      "id": "panel_padding_x",
+      "label": "Box padding left and right",
+      "min": 10,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 30,
+      "visible_if": "{{ section.settings.show_panel }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "accent_edge",
+      "label": "Accent bar on the left edge",
+      "default": false,
+      "visible_if": "{{ section.settings.show_panel }}"
     },
     {
       "type": "range",

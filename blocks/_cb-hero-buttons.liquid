@@ -1,5 +1,6 @@
 <div
   class="cb-hero__buttons{% if block.settings.stack_mobile %} cb-hero__buttons--stack{% endif %}"
+  style="--cbh-buttons-space: {{ block.settings.space_above }}px;"
   {{ block.shopify_attributes }}
 >
   {% content_for 'blocks' %}
@@ -10,6 +11,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: 12px;
+    margin-top: var(--cbh-buttons-space, 0px);
   }
 
   @media screen and (max-width: 559px) {
@@ -35,6 +37,17 @@
       "id": "stack_mobile",
       "label": "Full-width buttons on mobile",
       "default": true
+    },
+    {
+      "type": "range",
+      "id": "space_above",
+      "label": "Extra space above",
+      "info": "Added to the content gap.",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 0
     }
   ],
   "presets": [

@@ -75,12 +75,22 @@
                 "subheader_text": "BADMINTON BUNDLES",
                 "secondary": "",
                 "show_dot": false,
+                "width": "auto",
+                "width_px": 400,
                 "size": 11,
                 "weight": "strong",
+                "secondary_weight": "initial",
                 "color": "accent",
+                "custom_color": "#ffffff",
                 "letter_spacing": 12,
                 "uppercase": true,
-                "space_below": -4
+                "space_below": -4,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
               },
               "blocks": {}
             },
@@ -89,6 +99,9 @@
               "settings": {
                 "heading_text": "Everything you need to get on court.&nbsp;",
                 "tag": "h2",
+                "width": "custom",
+                "width_px": 1600,
+                "max_width": 0,
                 "size": 64,
                 "mobile_sizing": "fluid",
                 "mobile_scale": 82,
@@ -96,30 +109,45 @@
                 "fluid_vw": 6.5,
                 "weight": "font",
                 "color": "text",
+                "custom_color": "#ffffff",
                 "line_height": 106,
                 "letter_spacing": -2,
                 "uppercase": false,
                 "wrap": "balance",
-                "max_width": 0
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
               },
               "blocks": {}
             },
             "cb_guides_text_LCkMdk": {
               "type": "cb-paragraph",
               "settings": {
-                "body_text": "<p>Read technical briefings straight from Counties Manukau stringers and coaching staff to demystify badminton gear.</p>",
+                "body_text": "<p>Three carefully curated setups for beginners, developing players and experienced competitors — with the essentials matched for each stage of your game.</p>",
+                "width": "auto",
+                "width_px": 400,
+                "max_width_unit": "none",
+                "max_width_px": 640,
+                "max_width_ch": 60,
                 "size": 18,
                 "mobile_sizing": "same",
                 "mobile_size": 18,
                 "fluid_vw": 2,
                 "weight": "regular",
                 "color": "muted",
+                "custom_color": "#ffffff",
                 "line_height": 160,
                 "letter_spacing": 0,
                 "wrap": "wrap",
-                "max_width_unit": "ch",
-                "max_width_px": 640,
-                "max_width_ch": 60
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
               },
               "blocks": {}
             }
@@ -147,7 +175,8 @@
       "name": "[CB] Technical guides",
       "settings": {
         "design": "1",
-        "max_width": 1400,
+        "key_point_line": false,
+        "max_width": 1200,
         "stack_gap": 40,
         "card_radius": 10,
         "heading_font": "space_grotesk_n7",
@@ -174,23 +203,36 @@
             "cb_subheader_rwVNBx": {
               "type": "cb-subheader",
               "settings": {
-                "subheader_text": "BADMINTON BUNDLES",
+                "subheader_text": "CHOOSE YOUR SETUP",
                 "secondary": "",
                 "show_dot": false,
+                "width": "auto",
+                "width_px": 400,
                 "size": 11,
                 "weight": "strong",
+                "secondary_weight": "initial",
                 "color": "accent",
+                "custom_color": "#ffffff",
                 "letter_spacing": 12,
                 "uppercase": true,
-                "space_below": -4
+                "space_below": -4,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
               },
               "blocks": {}
             },
             "cb_heading_FwmFA4": {
               "type": "cb-heading",
               "settings": {
-                "heading_text": "Everything you need to get on court.&nbsp;",
+                "heading_text": "Bundles for every level&nbsp;",
                 "tag": "h2",
+                "width": "auto",
+                "width_px": 400,
+                "max_width": 0,
                 "size": 64,
                 "mobile_sizing": "fluid",
                 "mobile_scale": 82,
@@ -198,30 +240,45 @@
                 "fluid_vw": 6.5,
                 "weight": "font",
                 "color": "text",
+                "custom_color": "#ffffff",
                 "line_height": 106,
                 "letter_spacing": -2,
                 "uppercase": false,
                 "wrap": "balance",
-                "max_width": 0
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
               },
               "blocks": {}
             },
             "cb_paragraph_AWaGtE": {
               "type": "cb-paragraph",
               "settings": {
-                "body_text": "<p>Read technical briefings straight from Counties Manukau stringers and coaching staff to demystify badminton gear.</p>",
+                "body_text": "<p>Straightforward combinations, clear pricing, and specialist support if you need help choosing.</p>",
+                "width": "auto",
+                "width_px": 400,
+                "max_width_unit": "none",
+                "max_width_px": 640,
+                "max_width_ch": 60,
                 "size": 18,
                 "mobile_sizing": "same",
                 "mobile_size": 18,
                 "fluid_vw": 2,
                 "weight": "regular",
                 "color": "muted",
+                "custom_color": "#ffffff",
                 "line_height": 160,
                 "letter_spacing": 0,
                 "wrap": "wrap",
-                "max_width_unit": "ch",
-                "max_width_px": 640,
-                "max_width_ch": 60
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
               },
               "blocks": {}
             }
@@ -239,7 +296,8 @@
       "name": "[CB] Technical guides",
       "settings": {
         "design": "1",
-        "max_width": 1400,
+        "key_point_line": false,
+        "max_width": 1200,
         "stack_gap": 40,
         "card_radius": 10,
         "heading_font": "space_grotesk_n7",
@@ -272,7 +330,17 @@
             "button_label": "Shop Starter Bundle",
             "button_link": "",
             "heading_font": "space_grotesk_n7",
-            "body_font": "inter_n4"
+            "body_font": "inter_n4",
+            "label_size": 10,
+            "label_weight": "initial",
+            "price_size": 32,
+            "price_weight": "initial",
+            "title_size": 20,
+            "title_weight": "initial",
+            "items_size": 13,
+            "items_weight": "initial",
+            "button_size": 13,
+            "button_weight": "initial"
           },
           "blocks": {}
         },
@@ -291,7 +359,17 @@
             "button_label": "Shop Intermediate Bundle",
             "button_link": "",
             "heading_font": "space_grotesk_n7",
-            "body_font": "inter_n4"
+            "body_font": "inter_n4",
+            "label_size": 10,
+            "label_weight": "initial",
+            "price_size": 32,
+            "price_weight": "initial",
+            "title_size": 20,
+            "title_weight": "initial",
+            "items_size": 13,
+            "items_weight": "initial",
+            "button_size": 13,
+            "button_weight": "initial"
           },
           "blocks": {}
         },
@@ -309,7 +387,17 @@
             "button_label": "Shop Expert Bundle",
             "button_link": "",
             "heading_font": "space_grotesk_n7",
-            "body_font": "inter_n4"
+            "body_font": "inter_n4",
+            "label_size": 10,
+            "label_weight": "initial",
+            "price_size": 32,
+            "price_weight": "initial",
+            "title_size": 20,
+            "title_weight": "initial",
+            "items_size": 13,
+            "items_weight": "initial",
+            "button_size": 13,
+            "button_weight": "initial"
           },
           "blocks": {}
         }
@@ -325,7 +413,7 @@
         "heading": "",
         "text": "",
         "columns": 3,
-        "max_width": 1080,
+        "max_width": 1200,
         "card_gap": 24,
         "card_radius": 8,
         "equal_height": true,
@@ -334,12 +422,19 @@
         "background_color": "{{ settings.color_palette.foreground }}",
         "card_color": "#181818",
         "frame_color": "#ffffff14",
+        "photo_color": "#ffffff",
         "text_color": "#ffffff",
         "item_text_color": "#eaeae8",
         "muted_text_color": "#a1a1aa",
         "accent_color": "#d71f27",
         "padding_top": 48,
-        "padding_bottom": 48
+        "padding_bottom": 48,
+        "eyebrow_size": 10,
+        "eyebrow_weight": "initial",
+        "heading_size": 32,
+        "heading_weight": "initial",
+        "text_size": 15,
+        "text_weight": "initial"
       }
     },
     "cb_advice_dzApGx": {
@@ -348,6 +443,7 @@
         "cb_advice_content_fh9gWU": {
           "type": "_cb-advice-content",
           "settings": {
+            "group_width": 0,
             "alignment": "left",
             "gap": 12
           },
@@ -358,12 +454,22 @@
                 "subheader_text": "NEED A SECOND OPINION?",
                 "secondary": "",
                 "show_dot": false,
+                "width": "auto",
+                "width_px": 400,
                 "size": 10,
                 "weight": "strong",
+                "secondary_weight": "initial",
                 "color": "accent",
+                "custom_color": "#ffffff",
                 "letter_spacing": 0,
                 "uppercase": true,
-                "space_below": 0
+                "space_below": 0,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
               },
               "blocks": {}
             },
@@ -372,6 +478,9 @@
               "settings": {
                 "heading_text": "Get help from people who play.",
                 "tag": "h2",
+                "width": "auto",
+                "width_px": 400,
+                "max_width": 0,
                 "size": 32,
                 "mobile_sizing": "scale",
                 "mobile_scale": 82,
@@ -379,11 +488,17 @@
                 "fluid_vw": 6,
                 "weight": "font",
                 "color": "text",
+                "custom_color": "#ffffff",
                 "line_height": 115,
                 "letter_spacing": -1,
                 "uppercase": false,
                 "wrap": "wrap",
-                "max_width": 0
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
               },
               "blocks": {}
             },
@@ -391,18 +506,27 @@
               "type": "cb-paragraph",
               "settings": {
                 "body_text": "<p>Tell us how you play and what you want to improve. Our team can help you choose the most suitable setup before you buy.</p>",
+                "width": "auto",
+                "width_px": 400,
+                "max_width_unit": "px",
+                "max_width_px": 960,
+                "max_width_ch": 60,
                 "size": 14,
                 "mobile_sizing": "same",
                 "mobile_size": 14,
                 "fluid_vw": 2,
                 "weight": "regular",
                 "color": "muted",
+                "custom_color": "#ffffff",
                 "line_height": 160,
                 "letter_spacing": -1,
                 "wrap": "wrap",
-                "max_width_unit": "px",
-                "max_width_px": 960,
-                "max_width_ch": 60
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
               },
               "blocks": {}
             },
@@ -422,7 +546,10 @@
                     "style": "primary",
                     "icon": "none",
                     "custom_icon_tint": true,
-                    "new_tab": false
+                    "new_tab": false,
+                    "letter_spacing": 0,
+                    "text_size": 10,
+                    "text_weight": "initial"
                   },
                   "blocks": {}
                 }
@@ -445,7 +572,7 @@
       ],
       "name": "[CB] Advice banner",
       "settings": {
-        "max_width": 1400,
+        "max_width": 1200,
         "panel_padding": 44,
         "panel_radius": 10,
         "show_border": false,

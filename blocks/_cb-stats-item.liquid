@@ -59,7 +59,7 @@
     position: relative;
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: calc(var(--cby-icon-box, 32px) * 3 / 8);
     min-width: 0;
   }
 
@@ -68,11 +68,17 @@
     flex: none;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
+    width: var(--cby-icon-box, 32px);
+    height: var(--cby-icon-box, 32px);
     border: 1px solid var(--cby-box-border);
     border-radius: 2px;
     color: var(--cby-accent);
+  }
+
+  .cb-stats__icon svg,
+  .cb-stats__icon .cb-icon-upload {
+    width: calc(var(--cby-icon-box, 32px) * 15 / 32);
+    height: calc(var(--cby-icon-box, 32px) * 15 / 32);
   }
 
   .cb-stats__content {
@@ -125,6 +131,32 @@
     font-size: var(--cb-stats-item-text-size, 10px);
     line-height: 1.4;
     color: var(--cby-muted);
+  }
+
+  /* Phones cap the sizes, so the items still fit two across. */
+  @media screen and (max-width: 749px) {
+    .cb-stats__item {
+      gap: 12px;
+    }
+
+    .cb-stats__icon {
+      width: min(var(--cby-icon-box, 32px), 32px);
+      height: min(var(--cby-icon-box, 32px), 32px);
+    }
+
+    .cb-stats__icon svg,
+    .cb-stats__icon .cb-icon-upload {
+      width: 15px;
+      height: 15px;
+    }
+
+    .cb-stats__title {
+      font-size: min(var(--cb-stats-item-stat-size, 14px), 14px);
+    }
+
+    .cb-stats__text {
+      font-size: min(var(--cb-stats-item-text-size, 10px), 11px);
+    }
   }
 {% endstylesheet %}
 

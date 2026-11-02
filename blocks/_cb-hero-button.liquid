@@ -5,7 +5,7 @@
 {%- if block.settings.label != blank -%}
   <a
     href="{{ link }}"
-    class="cb-hero__button cb-hero__button--{{ block.settings.style }}"
+    class="cb-hero__button cb-hero__button--{{ block.settings.style }}{% if block.settings.glow and block.settings.style == 'primary' %} cb-hero__button--glow{% endif %}"
     style="--cb-hero-button-label-size: {{ block.settings.label_size }}px; --cb-hero-button-label-weight: {{ block.settings.label_weight }};"
     {% if block.settings.open_in_new_tab %}
       target="_blank" rel="noopener"
@@ -14,7 +14,7 @@
   >
     {{- block.settings.label | escape -}}
     {%- if block.settings.show_arrow -%}
-      <svg class="cb-hero__button-arrow" width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <svg class="cb-hero__button-arrow{% if block.settings.arrow_direction == 'down' %} cb-hero__button-arrow--down{% endif %}" width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
         <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     {%- endif -%}
@@ -47,6 +47,10 @@
     background: color-mix(in srgb, var(--cbh-accent) 85%, #000);
   }
 
+  .cb-hero__button--glow {
+    box-shadow: 0 8px 20px -6px color-mix(in srgb, var(--cbh-accent) 60%, transparent);
+  }
+
   .cb-hero__button--secondary {
     background: var(--cbh-surface);
     border-color: var(--cbh-border);
@@ -69,6 +73,11 @@
 
   .cb-hero__button:hover .cb-hero__button-arrow {
     transform: translateX(3px);
+  }
+
+  /* Rotated with the rotate property, so the hover nudge above moves it down the page. */
+  .cb-hero__button-arrow--down {
+    rotate: 90deg;
   }
 {% endstylesheet %}
 
@@ -109,6 +118,24 @@
       "id": "show_arrow",
       "label": "Show arrow",
       "default": false
+    },
+    {
+      "type": "select",
+      "id": "arrow_direction",
+      "label": "Arrow direction",
+      "options": [
+        { "value": "right", "label": "Right" },
+        { "value": "down", "label": "Down" }
+      ],
+      "default": "right",
+      "visible_if": "{{ block.settings.show_arrow }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "glow",
+      "label": "Glow under the button",
+      "default": false,
+      "visible_if": "{{ block.settings.style == 'primary' }}"
     },
     {
       "type": "header",

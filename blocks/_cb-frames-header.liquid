@@ -1,5 +1,6 @@
 <div
-  class="cb-frames__header{% if block.settings.show_divider %} cb-frames__header--divider{% endif %}"
+  class="cb-frames__header{% if block.settings.show_divider %} cb-frames__header--divider{% endif %}{% if block.settings.group_width > 0 %} cb-group-w{% endif %}"
+  style="--cb-group-w: {{ block.settings.group_width }}px;"
   {{ block.shopify_attributes }}
 >
   {% content_for 'blocks' %}
@@ -52,6 +53,17 @@
     { "type": "_cb-frames-filters" }
   ],
   "settings": [
+    {
+      "type": "range",
+      "id": "group_width",
+      "label": "Width",
+      "info": "0 follows the section.",
+      "min": 0,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "default": 0
+    },
     {
       "type": "checkbox",
       "id": "show_divider",

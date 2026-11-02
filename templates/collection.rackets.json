@@ -15,25 +15,27 @@
         "cb_hero_content_jNXVAY": {
           "type": "_cb-hero-content",
           "settings": {
-            "gap": 24,
+            "gap": 20,
             "alignment": "start"
           },
           "blocks": {
             "cb_hero_badge_9dH9PW": {
               "type": "_cb-hero-badge",
               "settings": {
-                "badge_text": "Counties Manukau Badminton Association Official Store",
-                "badge_secondary": "",
-                "show_dot": true
+                "badge_text": "Specialist Racket Fitting",
+                "badge_secondary": "Papakura HQ",
+                "show_dot": true,
+                "text_size": 12,
+                "text_weight": "initial"
               },
               "blocks": {}
             },
             "cb_hero_heading_P4n6ax": {
               "type": "cb-heading",
               "settings": {
-                "heading_text": "&nbsp;Find the frame that fits your&nbsp;",
+                "heading_text": "Find the frame that fits your game.",
                 "tag": "h1",
-                "size": 64,
+                "size": 45,
                 "mobile_sizing": "fluid",
                 "mobile_scale": 82,
                 "fluid_min": 36,
@@ -41,10 +43,10 @@
                 "weight": "font",
                 "color": "text",
                 "custom_color": "#ffffff",
-                "line_height": 105,
+                "line_height": 110,
                 "letter_spacing": -2,
                 "uppercase": false,
-                "wrap": "balance",
+                "wrap": "wrap",
                 "width": "auto",
                 "width_px": 400,
                 "max_width": 0,
@@ -68,13 +70,13 @@
                 "weight": "regular",
                 "color": "muted",
                 "custom_color": "#ffffff",
-                "line_height": 155,
+                "line_height": 145,
                 "letter_spacing": 0,
                 "wrap": "wrap",
                 "width": "auto",
                 "width_px": 400,
-                "max_width_unit": "ch",
-                "max_width_px": 640,
+                "max_width_unit": "px",
+                "max_width_px": 630,
                 "max_width_ch": 52,
                 "background_color": "",
                 "padding_y": 0,
@@ -88,17 +90,21 @@
             "cb_hero_buttons_DdhF9n": {
               "type": "_cb-hero-buttons",
               "settings": {
-                "stack_mobile": true
+                "stack_mobile": true,
+                "space_above": 12
               },
               "blocks": {
                 "cb_hero_button_LKytPf": {
                   "type": "_cb-hero-button",
                   "settings": {
                     "label": "Find My Racket",
-                    "link": "",
+                    "link": "#racket-finder",
                     "open_in_new_tab": false,
                     "style": "primary",
-                    "show_arrow": true
+                    "show_arrow": true,
+                    "glow": true,
+                    "label_size": 14,
+                    "label_weight": "initial"
                   },
                   "blocks": {}
                 },
@@ -106,10 +112,13 @@
                   "type": "_cb-hero-button",
                   "settings": {
                     "label": "SHOP BY PLAY STYLE",
-                    "link": "",
+                    "link": "#products",
                     "open_in_new_tab": false,
                     "style": "secondary",
-                    "show_arrow": false
+                    "show_arrow": false,
+                    "glow": false,
+                    "label_size": 14,
+                    "label_weight": "initial"
                   },
                   "blocks": {}
                 }
@@ -122,7 +131,9 @@
             "cb_hero_features_wYQ7g4": {
               "type": "_cb-hero-features",
               "settings": {
-                "show_divider": true
+                "show_divider": true,
+                "divider_space_above": 4,
+                "divider_space_below": 20
               },
               "blocks": {
                 "cb_hero_feature_eDNxjc": {
@@ -131,7 +142,9 @@
                     "icon": "check",
                     "custom_icon": "shopify://shop_images/check.svg",
                     "custom_icon_tint": true,
-                    "feature_text": "100% Genuine Spec"
+                    "feature_text": "100% Genuine Spec",
+                    "text_size": 14,
+                    "text_weight": "initial"
                   },
                   "blocks": {}
                 },
@@ -141,7 +154,9 @@
                     "icon": "sliders",
                     "custom_icon": "shopify://shop_images/Icon_1.svg",
                     "custom_icon_tint": true,
-                    "feature_text": "Custom Stringing Option"
+                    "feature_text": "Custom Stringing Option",
+                    "text_size": 14,
+                    "text_weight": "initial"
                   },
                   "blocks": {}
                 },
@@ -151,7 +166,9 @@
                     "icon": "calendar",
                     "custom_icon": "shopify://shop_images/store.svg",
                     "custom_icon_tint": true,
-                    "feature_text": "Papakura Pickup Today"
+                    "feature_text": "Papakura Pickup Today",
+                    "text_size": 14,
+                    "text_weight": "initial"
                   },
                   "blocks": {}
                 }
@@ -174,10 +191,16 @@
         "cb_hero_media_zxCMk7": {
           "type": "_cb-hero-media",
           "settings": {
-            "image": "shopify://shop_images/20261021_140153.jpg",
+            "image": "shopify://shop_images/Counties_Manukau_Racket_Wall.png",
             "aspect_ratio": "4 / 3",
             "aspect_ratio_mobile": "4 / 3",
-            "radius": 12
+            "radius": 12,
+            "show_gradient": true,
+            "gradient_direction": "0deg",
+            "gradient_color": "#0b0b0b",
+            "gradient_start_opacity": 80,
+            "gradient_length": 50,
+            "gradient_end_opacity": 0
           },
           "blocks": {
             "cb_hero_label_bTJmtH": {
@@ -188,7 +211,10 @@
                 "label_secondary": "",
                 "uppercase": false,
                 "position": "top-left",
-                "style": "dark"
+                "style": "dark",
+                "text_size": 12,
+                "text_weight": "initial",
+                "secondary_weight": "initial"
               },
               "blocks": {}
             },
@@ -199,7 +225,10 @@
                 "label_secondary": "",
                 "uppercase": false,
                 "position": "top-left",
-                "style": "accent"
+                "style": "accent",
+                "text_size": 12,
+                "text_weight": "initial",
+                "secondary_weight": "initial"
               },
               "blocks": {}
             },
@@ -210,7 +239,10 @@
                 "label_secondary": "Yonex · Victor · Ashaway",
                 "uppercase": false,
                 "position": "bottom-right",
-                "style": "dark"
+                "style": "dark",
+                "text_size": 12,
+                "text_weight": "initial",
+                "secondary_weight": "initial"
               },
               "blocks": {}
             }
@@ -229,17 +261,18 @@
       "name": "[CB] Hero",
       "settings": {
         "design": "2",
-        "content_width": 55,
+        "media_edge": "margin",
+        "content_width": 43,
         "column_gap": 40,
-        "max_width": 1400,
+        "max_width": 1440,
         "media_first_mobile": false,
         "heading_font": "space_grotesk_n7",
         "body_font": "inter_n4",
-        "background_color": "#121212",
-        "glow_color": "#3a0c10",
+        "background_color": "#131313",
+        "glow_color": "#131313",
         "text_color": "#ffffff",
         "accent_color": "#d71f27",
-        "accent_text_color": "#ffffff",
+        "accent_text_color": "{{ settings.color_palette.background }}",
         "padding_top": 32,
         "padding_bottom": 32
       }
@@ -257,11 +290,12 @@
                 "subheader_text": "Choose by playing tactics",
                 "secondary": "",
                 "show_dot": true,
-                "size": 11,
+                "size": 12,
                 "weight": "strong",
-                "color": "soft",
-                "custom_color": "#ffffff",
-                "letter_spacing": 12,
+                "secondary_weight": "initial",
+                "color": "custom",
+                "custom_color": "#a3a3a3",
+                "letter_spacing": 10,
                 "uppercase": true,
                 "space_below": 0,
                 "width": "auto",
@@ -278,7 +312,9 @@
             "cb_tactics_note_3KYWqf": {
               "type": "_cb-tactics-note",
               "settings": {
-                "note_text": "Click a style card to filter collection below"
+                "note_text": "Click a style card to filter collection below",
+                "text_size": 12,
+                "text_weight": "initial"
               },
               "blocks": {}
             }
@@ -292,7 +328,7 @@
           "type": "_cb-tactics-cards",
           "settings": {
             "columns": 4,
-            "gap": 16,
+            "gap": 18,
             "show_numbers": true,
             "number_prefix": "Style"
           },
@@ -311,7 +347,17 @@
                 "custom_count": "16 Frames",
                 "cta_label": "Browse Speed",
                 "link": "",
-                "filter_value": "Speed"
+                "filter_value": "Speed",
+                "label_size": 11,
+                "label_weight": "initial",
+                "title_size": 18,
+                "title_weight": "initial",
+                "description_size": 13,
+                "description_weight": "initial",
+                "count_size": 12,
+                "count_weight": "initial",
+                "cta_size": 11,
+                "cta_weight": "500"
               },
               "blocks": {}
             },
@@ -323,20 +369,31 @@
                 "tactic_label": "Rear-court power",
                 "tactic_title": "Attack & Smash",
                 "tactic_text": "Steep offensive smashes, explosive baseline clears, heavy momentum & stiff power shafts.",
-                "highlight": false,
+                "highlight": true,
                 "collection": "",
                 "count_label": "Frames",
                 "custom_count": "18 Frames",
                 "cta_label": "Browse Attack",
                 "link": "",
-                "filter_value": "Attack"
+                "filter_value": "Attack",
+                "label_size": 11,
+                "label_weight": "initial",
+                "title_size": 18,
+                "title_weight": "initial",
+                "description_size": 13,
+                "description_weight": "initial",
+                "count_size": 12,
+                "count_weight": "initial",
+                "cta_size": 11,
+                "cta_weight": "500"
               },
               "blocks": {}
             },
             "cb_tactics_card_Pgy77d": {
               "type": "_cb-tactics-card",
               "settings": {
-                "icon": "racket",
+                "icon": "crosshair",
+                "custom_icon": "shopify://shop_images/Container.png",
                 "custom_icon_tint": true,
                 "tactic_label": "Tactical touch",
                 "tactic_title": "Control & Balanced",
@@ -347,7 +404,18 @@
                 "custom_count": "10 Frames",
                 "cta_label": "Browse Control",
                 "link": "",
-                "filter_value": "Control"
+                "filter_value": "Control",
+                "label_size": 11,
+                "label_weight": "initial",
+                "title_size": 18,
+                "title_weight": "initial",
+                "description_size": 13,
+                "description_weight": "initial",
+                "count_size": 12,
+                "count_weight": "initial",
+                "cta_size": 11,
+                "cta_weight": "500",
+                "icon_width": 84
               },
               "blocks": {}
             },
@@ -365,7 +433,18 @@
                 "custom_count": "8 Frames",
                 "cta_label": "Browse Beginner",
                 "link": "",
-                "filter_value": "Beginner"
+                "filter_value": "Beginner",
+                "label_size": 11,
+                "label_weight": "initial",
+                "title_size": 18,
+                "title_weight": "initial",
+                "description_size": 13,
+                "description_weight": "initial",
+                "count_size": 12,
+                "count_weight": "initial",
+                "cta_size": 11,
+                "cta_weight": "500",
+                "filter_name": "Player level, Recommended skill level"
               },
               "blocks": {}
             }
@@ -384,12 +463,13 @@
       ],
       "name": "[CB] Playing tactics",
       "settings": {
+        "design": "2",
         "max_width": 1400,
         "stack_gap": 18,
         "card_radius": 6,
         "heading_font": "space_grotesk_n7",
         "body_font": "inter_n4",
-        "background_color": "#121212",
+        "background_color": "#0e0e0e",
         "card_background_color": "#181818",
         "border_color": "#ffffff14",
         "text_color": "#ffffff",
@@ -426,7 +506,27 @@
             "price_display": "slider",
             "price_prefix": "Up to",
             "price_buckets": "Under $30 | 0-30\n$30 – $60 | 30-60\nOver $60 | 60+",
-            "price_multi": false
+            "price_multi": false,
+            "heading_size": 11,
+            "heading_weight": "initial",
+            "heading_link_size": 10,
+            "heading_link_weight": "initial",
+            "reset_size": 11,
+            "reset_weight": "initial",
+            "guide_size": 11,
+            "guide_weight": "initial",
+            "checkbox_size": 12,
+            "checkbox_weight": "initial",
+            "count_size": 11,
+            "count_weight": "initial",
+            "button_size": 11,
+            "button_weight": "initial",
+            "price_labels_size": 11,
+            "price_labels_weight": "initial",
+            "note_size": 11,
+            "note_weight": "initial",
+            "empty_size": 12,
+            "empty_weight": "initial"
           },
           "blocks": {}
         },
@@ -455,7 +555,27 @@
             "price_display": "slider",
             "price_prefix": "Up to",
             "price_buckets": "Under $30 | 0-30\n$30 – $60 | 30-60\nOver $60 | 60+",
-            "price_multi": false
+            "price_multi": false,
+            "heading_size": 11,
+            "heading_weight": "initial",
+            "heading_link_size": 10,
+            "heading_link_weight": "initial",
+            "reset_size": 11,
+            "reset_weight": "initial",
+            "guide_size": 11,
+            "guide_weight": "initial",
+            "checkbox_size": 12,
+            "checkbox_weight": "initial",
+            "count_size": 11,
+            "count_weight": "initial",
+            "button_size": 11,
+            "button_weight": "initial",
+            "price_labels_size": 11,
+            "price_labels_weight": "initial",
+            "note_size": 11,
+            "note_weight": "initial",
+            "empty_size": 12,
+            "empty_weight": "initial"
           },
           "blocks": {}
         },
@@ -484,7 +604,27 @@
             "price_display": "slider",
             "price_prefix": "Up to",
             "price_buckets": "Under $30 | 0-30\n$30 – $60 | 30-60\nOver $60 | 60+",
-            "price_multi": false
+            "price_multi": false,
+            "heading_size": 11,
+            "heading_weight": "initial",
+            "heading_link_size": 10,
+            "heading_link_weight": "initial",
+            "reset_size": 11,
+            "reset_weight": "initial",
+            "guide_size": 11,
+            "guide_weight": "initial",
+            "checkbox_size": 12,
+            "checkbox_weight": "initial",
+            "count_size": 11,
+            "count_weight": "initial",
+            "button_size": 11,
+            "button_weight": "initial",
+            "price_labels_size": 11,
+            "price_labels_weight": "initial",
+            "note_size": 11,
+            "note_weight": "initial",
+            "empty_size": 12,
+            "empty_weight": "initial"
           },
           "blocks": {}
         },
@@ -513,7 +653,27 @@
             "price_display": "slider",
             "price_prefix": "Up to",
             "price_buckets": "Under $30 | 0-30\n$30 – $60 | 30-60\nOver $60 | 60+",
-            "price_multi": false
+            "price_multi": false,
+            "heading_size": 11,
+            "heading_weight": "initial",
+            "heading_link_size": 10,
+            "heading_link_weight": "initial",
+            "reset_size": 11,
+            "reset_weight": "initial",
+            "guide_size": 11,
+            "guide_weight": "initial",
+            "checkbox_size": 12,
+            "checkbox_weight": "initial",
+            "count_size": 11,
+            "count_weight": "initial",
+            "button_size": 11,
+            "button_weight": "initial",
+            "price_labels_size": 11,
+            "price_labels_weight": "initial",
+            "note_size": 11,
+            "note_weight": "initial",
+            "empty_size": 12,
+            "empty_weight": "initial"
           },
           "blocks": {}
         },
@@ -542,7 +702,27 @@
             "price_display": "slider",
             "price_prefix": "Up to",
             "price_buckets": "Under $30 | 0-30\n$30 – $60 | 30-60\nOver $60 | 60+",
-            "price_multi": false
+            "price_multi": false,
+            "heading_size": 11,
+            "heading_weight": "initial",
+            "heading_link_size": 10,
+            "heading_link_weight": "initial",
+            "reset_size": 11,
+            "reset_weight": "initial",
+            "guide_size": 11,
+            "guide_weight": "initial",
+            "checkbox_size": 12,
+            "checkbox_weight": "initial",
+            "count_size": 11,
+            "count_weight": "initial",
+            "button_size": 11,
+            "button_weight": "initial",
+            "price_labels_size": 11,
+            "price_labels_weight": "initial",
+            "note_size": 11,
+            "note_weight": "initial",
+            "empty_size": 12,
+            "empty_weight": "initial"
           },
           "blocks": {}
         },
@@ -571,7 +751,27 @@
             "price_display": "slider",
             "price_prefix": "Up to",
             "price_buckets": "Under $30 | 0-30\n$30 – $60 | 30-60\nOver $60 | 60+",
-            "price_multi": false
+            "price_multi": false,
+            "heading_size": 11,
+            "heading_weight": "initial",
+            "heading_link_size": 10,
+            "heading_link_weight": "initial",
+            "reset_size": 11,
+            "reset_weight": "initial",
+            "guide_size": 11,
+            "guide_weight": "initial",
+            "checkbox_size": 12,
+            "checkbox_weight": "initial",
+            "count_size": 11,
+            "count_weight": "initial",
+            "button_size": 11,
+            "button_weight": "initial",
+            "price_labels_size": 11,
+            "price_labels_weight": "initial",
+            "note_size": 11,
+            "note_weight": "initial",
+            "empty_size": 12,
+            "empty_weight": "initial"
           },
           "blocks": {}
         },
@@ -589,7 +789,13 @@
             "promo_text": "Add any string of your choice. Our Papakura master stringers prepare your tension calibration before dispatch or pickup.",
             "footer_label": "Electronic constant pull",
             "footer_value": "±0.5 lbs precision",
-            "link": ""
+            "link": "",
+            "title_size": 11,
+            "title_weight": "initial",
+            "text_size": 12,
+            "text_weight": "initial",
+            "footer_size": 11,
+            "footer_weight": "initial"
           },
           "blocks": {}
         },
@@ -672,7 +878,47 @@
         "image_background_color": "#ffffff",
         "success_color": "#22c55e",
         "padding_top": 100,
-        "padding_bottom": 100
+        "padding_bottom": 100,
+        "title_size": 22,
+        "title_weight": "initial",
+        "count_size": 10,
+        "count_weight": "initial",
+        "pill_size": 11,
+        "pill_weight": "initial",
+        "sort_label_size": 10,
+        "sort_label_weight": "initial",
+        "sort_select_size": 10,
+        "sort_select_weight": "initial",
+        "filters_button_size": 11,
+        "filters_button_weight": "initial",
+        "filters_heading_size": 11,
+        "filters_heading_weight": "initial",
+        "clear_size": 10,
+        "clear_weight": "initial",
+        "badge_size": 9,
+        "badge_weight": "initial",
+        "brand_tag_size": 10,
+        "brand_tag_weight": "initial",
+        "product_title_size": 15,
+        "product_title_weight": "initial",
+        "specs_size": 10,
+        "specs_weight": "initial",
+        "price_size": 16,
+        "price_weight": "initial",
+        "compare_price_size": 11,
+        "compare_price_weight": "initial",
+        "currency_size": 9,
+        "currency_weight": "initial",
+        "stock_size": 10,
+        "stock_weight": "initial",
+        "card_button_size": 11,
+        "card_button_weight": "initial",
+        "showing_size": 12,
+        "showing_weight": "initial",
+        "pagination_size": 12,
+        "pagination_weight": "initial",
+        "empty_size": 13,
+        "empty_weight": "initial"
       }
     },
     "cb_finder_quiz_63GJEM": {
@@ -692,6 +938,7 @@
                 "show_dot": true,
                 "size": 10,
                 "weight": "strong",
+                "secondary_weight": "initial",
                 "color": "accent",
                 "custom_color": "#ffffff",
                 "letter_spacing": 12,
@@ -771,7 +1018,9 @@
                 "label": "Launch racket finder",
                 "link": "",
                 "style": "primary",
-                "show_arrow": true
+                "show_arrow": true,
+                "text_size": 11,
+                "text_weight": "initial"
               },
               "blocks": {}
             },
@@ -785,21 +1034,27 @@
                 "cb_quiz_feature_tafWnj": {
                   "type": "_cb-quiz-feature",
                   "settings": {
-                    "feature_text": "60-Second Guided Match"
+                    "feature_text": "60-Second Guided Match",
+                    "text_size": 11,
+                    "text_weight": "initial"
                   },
                   "blocks": {}
                 },
                 "cb_quiz_feature_mQipCP": {
                   "type": "_cb-quiz-feature",
                   "settings": {
-                    "feature_text": "Calibrated to Local Courts"
+                    "feature_text": "Calibrated to Local Courts",
+                    "text_size": 11,
+                    "text_weight": "initial"
                   },
                   "blocks": {}
                 },
                 "cb_quiz_feature_HFX3KG": {
                   "type": "_cb-quiz-feature",
                   "settings": {
-                    "feature_text": "Verified String Pairing"
+                    "feature_text": "Verified String Pairing",
+                    "text_size": 11,
+                    "text_weight": "initial"
                   },
                   "blocks": {}
                 }
@@ -833,7 +1088,25 @@
             "fallback_heading": "Popular picks to start with",
             "restart_label": "Start again",
             "view_all_label": "See all rackets",
-            "view_all_link": ""
+            "view_all_link": "",
+            "label_size": 10,
+            "label_weight": "initial",
+            "heading_size": 17,
+            "heading_weight": "initial",
+            "summary_size": 11,
+            "summary_weight": "initial",
+            "number_size": 12,
+            "number_weight": "initial",
+            "name_size": 13,
+            "name_weight": "initial",
+            "price_size": 11,
+            "price_weight": "initial",
+            "button_size": 11,
+            "button_weight": "initial",
+            "link_size": 11,
+            "link_weight": "initial",
+            "progress_size": 10,
+            "progress_weight": "initial"
           },
           "blocks": {
             "cb_quiz_question_cFyEFA": {
@@ -848,7 +1121,11 @@
                   "settings": {
                     "option_title": "Beginner",
                     "option_text": "New to the game or playing socially once a week.",
-                    "match_tags": "beginner, junior, kid, starter"
+                    "match_tags": "beginner, junior, kid, starter",
+                    "answer_size": 13,
+                    "answer_weight": "initial",
+                    "description_size": 11,
+                    "description_weight": "initial"
                   },
                   "blocks": {}
                 },
@@ -857,7 +1134,11 @@
                   "settings": {
                     "option_title": "Club Intermediate",
                     "option_text": "Regular club nights, building consistent technique.",
-                    "match_tags": "intermediate"
+                    "match_tags": "intermediate",
+                    "answer_size": 13,
+                    "answer_weight": "initial",
+                    "description_size": 11,
+                    "description_weight": "initial"
                   },
                   "blocks": {}
                 },
@@ -866,7 +1147,11 @@
                   "settings": {
                     "option_title": "Advanced & Interclub",
                     "option_text": "Interclub and tournament play with solid fundamentals.",
-                    "match_tags": "pro, tour"
+                    "match_tags": "pro, tour",
+                    "answer_size": 13,
+                    "answer_weight": "initial",
+                    "description_size": 11,
+                    "description_weight": "initial"
                   },
                   "blocks": {}
                 },
@@ -875,7 +1160,11 @@
                   "settings": {
                     "option_title": "Competitive & Elite",
                     "option_text": "National-level training, high swing speed and precision.",
-                    "match_tags": "pro, tour"
+                    "match_tags": "pro, tour",
+                    "answer_size": 13,
+                    "answer_weight": "initial",
+                    "description_size": 11,
+                    "description_weight": "initial"
                   },
                   "blocks": {}
                 }
@@ -899,7 +1188,11 @@
                   "settings": {
                     "option_title": "Rear-Court Attack",
                     "option_text": "Aggressive smashes, steep angle clears, heavy baseline offense.",
-                    "match_tags": "Astrox, Thruster, TK, Axforce"
+                    "match_tags": "Astrox, Thruster, TK, Axforce",
+                    "answer_size": 13,
+                    "answer_weight": "initial",
+                    "description_size": 11,
+                    "description_weight": "initial"
                   },
                   "blocks": {}
                 },
@@ -908,7 +1201,11 @@
                   "settings": {
                     "option_title": "Midcourt Drive & Speed",
                     "option_text": "Fast flat exchanges, rapid doubles counter-attacks.",
-                    "match_tags": "Nanoflare, Jetspeed, Auraspeed, ARS, BladeX, Blade X"
+                    "match_tags": "Nanoflare, Jetspeed, Auraspeed, ARS, BladeX, Blade X",
+                    "answer_size": 13,
+                    "answer_weight": "initial",
+                    "description_size": 11,
+                    "description_weight": "initial"
                   },
                   "blocks": {}
                 },
@@ -917,7 +1214,11 @@
                   "settings": {
                     "option_title": "Net Dominance & Touch",
                     "option_text": "Tight spinning net shots, deceptive lifts, high touch control.",
-                    "match_tags": "Arcsaber, DriveX, DX, Halbertec"
+                    "match_tags": "Arcsaber, DriveX, DX, Halbertec",
+                    "answer_size": 13,
+                    "answer_weight": "initial",
+                    "description_size": 11,
+                    "description_weight": "initial"
                   },
                   "blocks": {}
                 },
@@ -926,7 +1227,11 @@
                   "settings": {
                     "option_title": "Defensive Consistency",
                     "option_text": "Returning hard smashes, prolonged patient counter rallies.",
-                    "match_tags": "Arcsaber, Halbertec, Nanoflare"
+                    "match_tags": "Arcsaber, Halbertec, Nanoflare",
+                    "answer_size": 13,
+                    "answer_weight": "initial",
+                    "description_size": 11,
+                    "description_weight": "initial"
                   },
                   "blocks": {}
                 }
@@ -950,7 +1255,11 @@
                   "settings": {
                     "option_title": "Head-Heavy Power",
                     "option_text": "Extra mass in the head for heavier smashes and clears.",
-                    "match_tags": "Astrox, Thruster, TK, Axforce"
+                    "match_tags": "Astrox, Thruster, TK, Axforce",
+                    "answer_size": 13,
+                    "answer_weight": "initial",
+                    "description_size": 11,
+                    "description_weight": "initial"
                   },
                   "blocks": {}
                 },
@@ -959,7 +1268,11 @@
                   "settings": {
                     "option_title": "Even Balance",
                     "option_text": "All-round feel that switches easily between attack and defence.",
-                    "match_tags": "Arcsaber, DriveX, DX, Halbertec"
+                    "match_tags": "Arcsaber, DriveX, DX, Halbertec",
+                    "answer_size": 13,
+                    "answer_weight": "initial",
+                    "description_size": 11,
+                    "description_weight": "initial"
                   },
                   "blocks": {}
                 },
@@ -968,7 +1281,11 @@
                   "settings": {
                     "option_title": "Head-Light Speed",
                     "option_text": "Quick swings, fast reactions and easy defence at the net.",
-                    "match_tags": "Nanoflare, Jetspeed, Auraspeed, ARS, BladeX, Blade X"
+                    "match_tags": "Nanoflare, Jetspeed, Auraspeed, ARS, BladeX, Blade X",
+                    "answer_size": 13,
+                    "answer_weight": "initial",
+                    "description_size": 11,
+                    "description_weight": "initial"
                   },
                   "blocks": {}
                 },
@@ -977,7 +1294,11 @@
                   "settings": {
                     "option_title": "Not Sure Yet",
                     "option_text": "We'll balance it against your level and playing style.",
-                    "match_tags": ""
+                    "match_tags": "",
+                    "answer_size": 13,
+                    "answer_weight": "initial",
+                    "description_size": 11,
+                    "description_weight": "initial"
                   },
                   "blocks": {}
                 }
@@ -1001,7 +1322,11 @@
                   "settings": {
                     "option_title": "Under 22 lbs",
                     "option_text": "Softer feel, bigger sweet spot and easy power.",
-                    "match_tags": ""
+                    "match_tags": "",
+                    "answer_size": 13,
+                    "answer_weight": "initial",
+                    "description_size": 11,
+                    "description_weight": "initial"
                   },
                   "blocks": {}
                 },
@@ -1010,7 +1335,11 @@
                   "settings": {
                     "option_title": "22–25 lbs",
                     "option_text": "Balanced repulsion and control for most club players.",
-                    "match_tags": ""
+                    "match_tags": "",
+                    "answer_size": 13,
+                    "answer_weight": "initial",
+                    "description_size": 11,
+                    "description_weight": "initial"
                   },
                   "blocks": {}
                 },
@@ -1019,7 +1348,11 @@
                   "settings": {
                     "option_title": "26 lbs and Above",
                     "option_text": "Crisp feedback and precision for fast, clean strikers.",
-                    "match_tags": ""
+                    "match_tags": "",
+                    "answer_size": 13,
+                    "answer_weight": "initial",
+                    "description_size": 11,
+                    "description_weight": "initial"
                   },
                   "blocks": {}
                 },
@@ -1028,7 +1361,11 @@
                   "settings": {
                     "option_title": "Not Sure",
                     "option_text": "Our Papakura stringers will match tension to your swing.",
-                    "match_tags": ""
+                    "match_tags": "",
+                    "answer_size": 13,
+                    "answer_weight": "initial",
+                    "description_size": 11,
+                    "description_weight": "initial"
                   },
                   "blocks": {}
                 }
@@ -1089,6 +1426,7 @@
                 "show_dot": true,
                 "size": 10,
                 "weight": "strong",
+                "secondary_weight": "initial",
                 "color": "accent",
                 "custom_color": "#ffffff",
                 "letter_spacing": 12,
@@ -1185,7 +1523,17 @@
                 "highlight": false,
                 "collection": "",
                 "custom_count": "",
-                "link": ""
+                "link": "",
+                "name_size": 16,
+                "name_weight": "initial",
+                "origin_size": 8,
+                "origin_weight": "initial",
+                "description_size": 11,
+                "description_weight": "initial",
+                "count_size": 10,
+                "count_weight": "initial",
+                "link_size": 10,
+                "link_weight": "initial"
               },
               "blocks": {}
             },
@@ -1198,7 +1546,17 @@
                 "highlight": false,
                 "collection": "",
                 "custom_count": "",
-                "link": ""
+                "link": "",
+                "name_size": 16,
+                "name_weight": "initial",
+                "origin_size": 8,
+                "origin_weight": "initial",
+                "description_size": 11,
+                "description_weight": "initial",
+                "count_size": 10,
+                "count_weight": "initial",
+                "link_size": 10,
+                "link_weight": "initial"
               },
               "blocks": {}
             },
@@ -1211,7 +1569,17 @@
                 "highlight": false,
                 "collection": "",
                 "custom_count": "",
-                "link": ""
+                "link": "",
+                "name_size": 16,
+                "name_weight": "initial",
+                "origin_size": 8,
+                "origin_weight": "initial",
+                "description_size": 11,
+                "description_weight": "initial",
+                "count_size": 10,
+                "count_weight": "initial",
+                "link_size": 10,
+                "link_weight": "initial"
               },
               "blocks": {}
             },
@@ -1224,7 +1592,17 @@
                 "highlight": false,
                 "collection": "",
                 "custom_count": "",
-                "link": ""
+                "link": "",
+                "name_size": 16,
+                "name_weight": "initial",
+                "origin_size": 8,
+                "origin_weight": "initial",
+                "description_size": 11,
+                "description_weight": "initial",
+                "count_size": 10,
+                "count_weight": "initial",
+                "link_size": 10,
+                "link_weight": "initial"
               },
               "blocks": {}
             }
@@ -1278,6 +1656,7 @@
                 "show_dot": true,
                 "size": 10,
                 "weight": "strong",
+                "secondary_weight": "initial",
                 "color": "accent",
                 "custom_color": "#ffffff",
                 "letter_spacing": 12,
@@ -1361,7 +1740,11 @@
                   "type": "_cb-lab-box",
                   "settings": {
                     "box_title": "Comprehensive string stock",
-                    "box_text": "Yonex BG80, BG66 Ultimax, Exbolt 65, Victor VBS-66 Nano & Ashaway Zymax in full stock."
+                    "box_text": "Yonex BG80, BG66 Ultimax, Exbolt 65, Victor VBS-66 Nano & Ashaway Zymax in full stock.",
+                    "title_size": 10,
+                    "title_weight": "initial",
+                    "text_size": 11,
+                    "text_weight": "initial"
                   },
                   "blocks": {}
                 },
@@ -1369,7 +1752,11 @@
                   "type": "_cb-lab-box",
                   "settings": {
                     "box_title": "Exact tension calibration",
-                    "box_text": "Calibrated down to 0.5 lbs increments from 20 to 32 lbs tension with pre-stretch options."
+                    "box_text": "Calibrated down to 0.5 lbs increments from 20 to 32 lbs tension with pre-stretch options.",
+                    "title_size": 10,
+                    "title_weight": "initial",
+                    "text_size": 11,
+                    "text_weight": "initial"
                   },
                   "blocks": {}
                 }
@@ -1389,14 +1776,18 @@
                     "label": "Explore stringing workshop",
                     "link": "",
                     "style": "primary",
-                    "show_arrow": true
+                    "show_arrow": true,
+                    "text_size": 11,
+                    "text_weight": "initial"
                   },
                   "blocks": {}
                 },
                 "cb_lab_note_VrTwPQ": {
                   "type": "_cb-lab-note",
                   "settings": {
-                    "note_text": "Same-day / 24-hr turnaround in Papakura"
+                    "note_text": "Same-day / 24-hr turnaround in Papakura",
+                    "text_size": 10,
+                    "text_weight": "initial"
                   },
                   "blocks": {}
                 }
@@ -1422,7 +1813,9 @@
             "image_ratio_mobile": "4 / 3",
             "label_highlight": "Daily Workshop:",
             "label_text": "Mon–Sun 9:00am – 8:00pm",
-            "label_position": "bottom-left"
+            "label_position": "bottom-left",
+            "label_size": 11,
+            "label_weight": "initial"
           },
           "blocks": {}
         }
@@ -1477,6 +1870,7 @@
                 "show_dot": false,
                 "size": 10,
                 "weight": "strong",
+                "secondary_weight": "initial",
                 "color": "accent",
                 "custom_color": "#ffffff",
                 "letter_spacing": 8,
@@ -1565,7 +1959,9 @@
             "directions_address": "41R Elliot Street, Papakura, Auckland",
             "style": "light",
             "icon": "store",
-            "custom_icon_tint": true
+            "custom_icon_tint": true,
+            "text_size": 11,
+            "text_weight": "initial"
           },
           "blocks": {}
         }

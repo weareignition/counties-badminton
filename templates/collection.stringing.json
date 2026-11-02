@@ -32,9 +32,9 @@
             "cb_hero_heading_BrEykG": {
               "type": "cb-heading",
               "settings": {
-                "heading_text": "The right stringchanges the feel.&nbsp;",
+                "heading_text": "The right string changes the feel.",
                 "tag": "h1",
-                "size": 64,
+                "size": 56,
                 "mobile_sizing": "fluid",
                 "mobile_scale": 82,
                 "fluid_min": 36,
@@ -89,14 +89,15 @@
             "cb_hero_buttons_gwQPeU": {
               "type": "_cb-hero-buttons",
               "settings": {
-                "stack_mobile": true
+                "stack_mobile": true,
+                "space_above": 8
               },
               "blocks": {
                 "cb_hero_button_bmMkCb": {
                   "type": "_cb-hero-button",
                   "settings": {
                     "label": "REQUEST A RESTRING",
-                    "link": "",
+                    "link": "shopify://pages/contact",
                     "open_in_new_tab": false,
                     "style": "primary",
                     "show_arrow": true,
@@ -108,7 +109,7 @@
                   "type": "_cb-hero-button",
                   "settings": {
                     "label": "SHOP STRING",
-                    "link": "",
+                    "link": "#products",
                     "open_in_new_tab": false,
                     "style": "secondary",
                     "show_arrow": false,
@@ -125,7 +126,7 @@
             "cb_hero_features_t8rDdq": {
               "type": "_cb-hero-features",
               "settings": {
-                "show_divider": true
+                "show_divider": false
               },
               "blocks": {
                 "cb_hero_feature_gV6cHN": {
@@ -135,7 +136,7 @@
                     "custom_icon": "shopify://shop_images/Icon_090985f5-cda3-44a7-9368-71bbb4d78823.svg",
                     "custom_icon_tint": true,
                     "feature_text": "Available 7 days • Restringing after 10am • 41r Elliot St, Papakura",
-                    "text_size": 12
+                    "text_size": 12.5
                   },
                   "blocks": {}
                 }
@@ -157,9 +158,10 @@
           "type": "_cb-hero-media",
           "settings": {
             "image": "shopify://shop_images/string-image.png",
-            "aspect_ratio": "4 / 3",
+            "aspect_ratio": "16 / 9",
             "aspect_ratio_mobile": "4 / 3",
-            "radius": 12
+            "radius": 6,
+            "show_gradient": false
           },
           "blocks": {
             "cb_hero_label_Tg6tXN": {
@@ -199,17 +201,17 @@
       ],
       "name": "[CB] Hero",
       "settings": {
-        "design": "1",
-        "content_width": 55,
-        "column_gap": 40,
+        "design": "4",
+        "content_width": 44,
+        "column_gap": 32,
         "max_width": 1400,
         "media_first_mobile": false,
         "heading_font": "space_grotesk_n7",
         "body_font": "inter_n4",
         "background_color": "#0b0b0b",
-        "glow_color": "#3a0c10",
+        "glow_color": "#0b0b0b",
         "text_color": "#ffffff",
-        "accent_color": "#d71f27",
+        "accent_color": "#d91c24",
         "accent_text_color": "#ffffff",
         "padding_top": 32,
         "padding_bottom": 32
@@ -331,12 +333,12 @@
               "settings": {
                 "heading_text": "What do you need today?",
                 "tag": "h2",
-                "size": 34,
+                "size": 28,
                 "mobile_sizing": "scale",
                 "mobile_scale": 85,
                 "fluid_min": 28,
                 "fluid_vw": 6,
-                "weight": "font",
+                "weight": "medium",
                 "color": "text",
                 "custom_color": "#ffffff",
                 "line_height": 115,
@@ -394,7 +396,7 @@
           "type": "_cb-sel-cards",
           "settings": {
             "columns": 2,
-            "gap": 20
+            "gap": 24
           },
           "blocks": {
             "cb_sel_link_card_GKMK9K": {
@@ -411,7 +413,8 @@
                 "eyebrow_size": 9,
                 "title_size": 19,
                 "text_size": 12,
-                "link_size": 10
+                "link_size": 10,
+                "title_weight": "500"
               },
               "blocks": {}
             },
@@ -423,13 +426,14 @@
                 "card_title": "Choose your string",
                 "card_text": "Browse available tournament options for feel, durability, control and repulsion from certified brands like Yonex, Victor, and Ashaway.",
                 "link_label": "Shop string",
-                "link": "shopify://collections/stringing",
+                "link": "#products",
                 "icon": "target",
                 "custom_icon_tint": true,
                 "eyebrow_size": 9,
                 "title_size": 19,
                 "text_size": 12,
-                "link_size": 10
+                "link_size": 10,
+                "title_weight": "500"
               },
               "blocks": {}
             }
@@ -446,9 +450,9 @@
       ],
       "name": "[CB] Service selector",
       "settings": {
-        "max_width": 1400,
-        "stack_gap": 28,
-        "card_radius": 3,
+        "max_width": 820,
+        "stack_gap": 40,
+        "card_radius": 8,
         "media_size": 84,
         "heading_font": "space_grotesk_n7",
         "body_font": "inter_n4",
@@ -996,12 +1000,12 @@
               "settings": {
                 "heading_text": "Tension, explained simply.",
                 "tag": "h2",
-                "size": 30,
+                "size": 34,
                 "mobile_sizing": "scale",
                 "mobile_scale": 80,
                 "fluid_min": 28,
                 "fluid_vw": 6,
-                "weight": "font",
+                "weight": "medium",
                 "color": "text",
                 "custom_color": "#ffffff",
                 "line_height": 112,
@@ -1036,8 +1040,8 @@
                 "wrap": "wrap",
                 "width": "auto",
                 "width_px": 400,
-                "max_width_unit": "ch",
-                "max_width_px": 640,
+                "max_width_unit": "px",
+                "max_width_px": 670,
                 "max_width_ch": 62,
                 "background_color": "",
                 "padding_y": 0,
@@ -1059,14 +1063,14 @@
           "type": "_cb-speed-cards",
           "settings": {
             "columns": 3,
-            "gap": 16
+            "gap": 24
           },
           "blocks": {
             "cb_speed_tcard_3EcHzp": {
               "type": "_cb-speed-tcard",
               "settings": {
                 "card_label": "Lower tension",
-                "range_tag": "21–23 lbs",
+                "range_tag": "20–23 lbs",
                 "card_title": "More forgiving",
                 "points": "Larger sweet spot\nEasier power\nSofter feel",
                 "suited_label": "Best suited for",
@@ -1075,11 +1079,13 @@
                 "highlight_label": "CMBA popular starting point",
                 "label_size": 9,
                 "tag_size": 9,
-                "title_size": 19,
-                "points_size": 11,
-                "footer_label_size": 9,
-                "footer_text_size": 11,
-                "tab_size": 9
+                "title_size": 22,
+                "points_size": 12,
+                "footer_label_size": 10,
+                "footer_text_size": 12,
+                "tab_size": 9,
+                "title_weight": "500",
+                "footer_label_weight": "400"
               },
               "blocks": {}
             },
@@ -1096,11 +1102,13 @@
                 "highlight_label": "CMBA popular starting point",
                 "label_size": 9,
                 "tag_size": 9,
-                "title_size": 19,
-                "points_size": 11,
-                "footer_label_size": 9,
-                "footer_text_size": 11,
-                "tab_size": 9
+                "title_size": 22,
+                "points_size": 12,
+                "footer_label_size": 10,
+                "footer_text_size": 12,
+                "tab_size": 9,
+                "title_weight": "500",
+                "footer_label_weight": "400"
               },
               "blocks": {}
             },
@@ -1117,11 +1125,13 @@
                 "highlight_label": "CMBA popular starting point",
                 "label_size": 9,
                 "tag_size": 9,
-                "title_size": 19,
-                "points_size": 11,
-                "footer_label_size": 9,
-                "footer_text_size": 11,
-                "tab_size": 9
+                "title_size": 22,
+                "points_size": 12,
+                "footer_label_size": 10,
+                "footer_text_size": 12,
+                "tab_size": 9,
+                "title_weight": "500",
+                "footer_label_weight": "400"
               },
               "blocks": {}
             }
@@ -1136,19 +1146,23 @@
           "type": "_cb-speed-notice",
           "settings": {
             "show_icon": true,
-            "icon_type": "info",
+            "icon_type": "question",
             "custom_icon_tint": true,
             "notice_title": "Not sure what tension to request?",
             "notice_text": "Ask the pro shop staff in Papakura and we'll calibrate the tension to your racket model.",
             "button_label": "Ask the Pro Shop",
-            "button_caps": false,
-            "button_link": "#",
+            "button_caps": true,
+            "button_link": "shopify://pages/contact",
             "link_label": "Read the String Tension Guide",
-            "link_url": "",
-            "title_size": 15,
-            "text_size": 12,
-            "button_size": 11,
-            "link_size": 11
+            "link_url": "#faq",
+            "title_size": 16,
+            "text_size": 13.5,
+            "button_size": 9.5,
+            "link_size": 11.5,
+            "title_font": "body",
+            "title_weight": "600",
+            "padding_y": 22,
+            "padding_x": 22
           },
           "blocks": {}
         }
@@ -1161,13 +1175,13 @@
       "name": "[CB] Tension guide",
       "settings": {
         "max_width": 1400,
-        "stack_gap": 32,
-        "card_radius": 3,
+        "stack_gap": 48,
+        "card_radius": 6,
         "heading_font": "space_grotesk_n7",
         "body_font": "inter_n4",
-        "background_color": "#0d0d0d",
-        "card_background_color": "#1a1a1a",
-        "border_color": "#ffffff14",
+        "background_color": "#0e0e0e",
+        "card_background_color": "#181818",
+        "border_color": "#ffffff00",
         "text_color": "#ffffff",
         "accent_color": "#d71f27",
         "padding_top": 48,
@@ -1853,7 +1867,7 @@
                   "type": "_cb-advice-button",
                   "settings": {
                     "label": "Shop string",
-                    "link": "shopify://collections/stringing",
+                    "link": "#products",
                     "directions_address": "",
                     "style": "outline",
                     "icon": "none",

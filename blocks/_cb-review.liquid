@@ -1,5 +1,6 @@
 {%- comment -%}
-  One customer review for [CB] Reviews: stars, a quoted title, the review, the reviewer and a badge.
+  One customer review for [CB] Reviews: stars, a quoted title, the review, the reviewer and a badge. The section's
+  Design 2 leads with an initials box, the reviewer and the stars, and quotes the review itself.
   "Sample review" (on in the section's preset) shows the card only in the theme editor, so placeholder reviews never
   reach the store.
 {%- endcomment -%}
@@ -12,26 +13,74 @@
   if s.review_title == blank and s.review_text == blank
     assign show = false
   endif
+
+  # Design 2: "Marcus K." becomes MK, and the detail and badge share a line.
+  assign name_words = s.reviewer | split: ' '
+  assign initials = name_words.first | slice: 0
+  if name_words.size > 1
+    assign last_initial = name_words.last | slice: 0
+    assign initials = initials | append: last_initial
+  endif
+  assign initials = initials | upcase
+
+  assign detail_line = s.reviewer_detail
+  if s.reviewer_detail != blank and s.badge != blank
+    assign detail_line = s.reviewer_detail | append: ' • ' | append: s.badge
+  elsif s.badge != blank
+    assign detail_line = s.badge
+  endif
 -%}
 
 {%- if show -%}
-  <article class="cb-review{% if s.sample %} cb-review--sample{% endif %}" style="--cbrv-title-size: {{ s.title_size }}px; --cbrv-title-weight: {{ s.title_weight }}; --cbrv-text-size: {{ s.text_size }}px; --cbrv-text-weight: {{ s.text_weight }}; --cb-review-reviewer-size: {{ s.reviewer_size }}px; --cb-review-reviewer-weight: {{ s.reviewer_weight }};" {{ block.shopify_attributes }}>
-    {%- if s.stars > 0 -%}
-      {%- render 'cb-stars', rating: s.stars, size: 10.5 -%}
-    {%- endif -%}
-    {%- if s.review_title != blank -%}
-      <h3 class="cb-review__title">
-        {%- if s.quotes -%}&rdquo;{{ s.review_title | escape }}&rdquo;{%- else -%}{{ s.review_title | escape }}{%- endif -%}
-      </h3>
-    {%- endif -%}
-    {%- if s.review_text != blank -%}
-      <p class="cb-review__text">{{ s.review_text | escape | newline_to_br }}</p>
-    {%- endif -%}
-    {%- if s.reviewer != blank or s.badge != blank -%}
-      <footer class="cb-review__footer">
-        <span class="cb-review__name">{{ s.reviewer | escape }}</span>
-        {%- if s.badge != blank -%}<span class="cb-review__badge">{{ s.badge | escape }}</span>{%- endif -%}
-      </footer>
+  <article class="cb-review{% if s.sample %} cb-review--sample{% endif %}" style="--cbrv-title-size: {{ s.title_size }}px; --cbrv-title-weight: {{ s.title_weight }}; --cbrv-text-size: {{ s.text_size }}px; --cbrv-text-weight: {{ s.text_weight }}; --cb-review-reviewer-size: {{ s.reviewer_size }}px; --cb-review-reviewer-weight: {{ s.reviewer_weight }}; --cb-review-detail-size: {{ s.detail_size }}px; --cb-review-detail-weight: {{ s.detail_weight }}; --cb-review-meta-size: {{ s.meta_size }}px; --cb-review-meta-weight: {{ s.meta_weight }}; --cb-review-initials-size: {{ s.initials_size }}px; --cb-review-initials-weight: {{ s.initials_weight }};" {{ block.shopify_attributes }}>
+    {%- if section.settings.design == '2' -%}
+      <div class="cb-review__head">
+        {%- if initials != blank -%}
+          <span class="cb-review__avatar" aria-hidden="true">{{ initials | escape }}</span>
+        {%- endif -%}
+        <div class="cb-review__who">
+          {%- if s.reviewer != blank -%}
+            <p class="cb-review__name">{{ s.reviewer | escape }}</p>
+          {%- endif -%}
+          {%- if detail_line != blank -%}
+            <p class="cb-review__detail">{{ detail_line | escape }}</p>
+          {%- endif -%}
+        </div>
+        {%- if s.stars > 0 -%}
+          {%- render 'cb-stars', rating: s.stars, size: 12 -%}
+        {%- endif -%}
+      </div>
+      {%- if s.review_title != blank -%}
+        <h3 class="cb-review__title">{{ s.review_title | escape }}</h3>
+      {%- endif -%}
+      {%- if s.review_text != blank -%}
+        <p class="cb-review__text">
+          {%- if s.quotes -%}&quot;{%- endif -%}
+          {{- s.review_text | escape | newline_to_br -}}
+          {%- if s.quotes -%}&quot;{%- endif -%}
+        </p>
+      {%- endif -%}
+      {%- if s.meta_text != blank -%}
+        <p class="cb-review__meta">{{ s.meta_text | escape }}</p>
+      {%- endif -%}
+    {%- else -%}
+      {%- if s.stars > 0 -%}
+        {%- render 'cb-stars', rating: s.stars, size: 10.5 -%}
+      {%- endif -%}
+      {%- if s.review_title != blank -%}
+        <h3 class="cb-review__title">
+          {%- if s.quotes -%}&rdquo;{{ s.review_title | escape }}&rdquo;{%- else -%}{{ s.review_title | escape }}{%- endif -%}
+        </h3>
+      {%- endif -%}
+      {%- if s.review_text != blank -%}
+        <p class="cb-review__text">{{ s.review_text | escape | newline_to_br }}</p>
+      {%- endif -%}
+      {%- if s.reviewer != blank or s.badge != blank -%}
+        <footer class="cb-review__footer">
+          <span class="cb-review__name">{{ s.reviewer | escape }}</span>
+          {%- if s.badge != blank -%}<span class="cb-review__badge">{{ s.badge | escape }}</span>{%- endif -%}
+        </footer>
+      {%- endif -%}
     {%- endif -%}
   </article>
 {%- endif -%}
@@ -157,6 +206,18 @@
       "default": "Verified Buyer"
     },
     {
+      "type": "text",
+      "id": "reviewer_detail",
+      "label": "Reviewer detail",
+      "info": "Design 2. Shown under the name, before the badge, e.g. club or grade."
+    },
+    {
+      "type": "text",
+      "id": "meta_text",
+      "label": "Review details",
+      "info": "Design 2. Shown under the review, e.g. when it was written and the size bought."
+    },
+    {
       "type": "header",
       "content": "Text sizes and weights"
     },
@@ -230,6 +291,90 @@
       "type": "select",
       "id": "reviewer_weight",
       "label": "Reviewer and badge weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "detail_size",
+      "label": "Reviewer detail size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 11.5
+    },
+    {
+      "type": "select",
+      "id": "detail_weight",
+      "label": "Reviewer detail weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "meta_size",
+      "label": "Review details size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 11.5
+    },
+    {
+      "type": "select",
+      "id": "meta_weight",
+      "label": "Review details weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "initials_size",
+      "label": "Initials size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 13.5
+    },
+    {
+      "type": "select",
+      "id": "initials_weight",
+      "label": "Initials weight",
       "options": [
         { "value": "initial", "label": "Default" },
         { "value": "100", "label": "Thin" },

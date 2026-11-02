@@ -1,6 +1,12 @@
 {%- liquid
   assign image = block.settings.image
   assign mobile_image = block.settings.image_mobile | default: image
+
+  assign gradient_rgb = '11 11 11'
+  if block.settings.gradient_color != blank
+    assign gradient_color = block.settings.gradient_color
+    assign gradient_rgb = gradient_color.red | append: ' ' | append: gradient_color.green | append: ' ' | append: gradient_color.blue
+  endif
 -%}
 
 <div
@@ -9,7 +15,13 @@
     --cbh-ratio: {{ block.settings.aspect_ratio }};
     --cbh-ratio-mobile: {{ block.settings.aspect_ratio_mobile }};
     --cbh-radius: {{ block.settings.radius }}px;
+    --cbh-image-nudge: {{ block.settings.image_nudge }}px;
     --cbh-focal: {{ image.presentation.focal_point | default: 'center' }};
+    --cbh-gradient-angle: {{ block.settings.gradient_direction }};
+    --cbh-gradient-rgb: {{ gradient_rgb }};
+    --cbh-gradient-start: {{ block.settings.gradient_start_opacity }}%;
+    --cbh-gradient-stop: {{ block.settings.gradient_length }}%;
+    --cbh-gradient-end: {{ block.settings.gradient_end_opacity }}%;
   "
   {{ block.shopify_attributes }}
 >
@@ -36,6 +48,10 @@
       </picture>
     {%- else -%}
       {{ 'lifestyle-2' | placeholder_svg_tag: 'cb-hero__image cb-hero__image--placeholder' }}
+    {%- endif -%}
+
+    {%- if block.settings.show_gradient -%}
+      <div class="cb-hero__gradient" aria-hidden="true"></div>
     {%- endif -%}
 
     <div class="cb-hero__labels">
@@ -75,6 +91,19 @@
   .cb-hero__image--placeholder {
     fill: var(--cbh-muted);
     background: var(--cbh-surface);
+  }
+
+  /* Shade over the photo, under the labels: solid at the dark edge, fading to the end opacity by the stop. */
+  .cb-hero__gradient {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(
+      var(--cbh-gradient-angle, 0deg),
+      rgb(var(--cbh-gradient-rgb, 11 11 11) / var(--cbh-gradient-start, 80%)) 0%,
+      rgb(var(--cbh-gradient-rgb, 11 11 11) / var(--cbh-gradient-end, 0%)) var(--cbh-gradient-stop, 50%),
+      rgb(var(--cbh-gradient-rgb, 11 11 11) / var(--cbh-gradient-end, 0%)) 100%
+    );
   }
 
   /* Top labels form the first row, bottom labels the last; ::after forces the break between them. */
@@ -136,6 +165,7 @@
         { "value": "4 / 3", "label": "4:3" },
         { "value": "3 / 2", "label": "3:2" },
         { "value": "16 / 9", "label": "16:9" },
+        { "value": "17 / 8", "label": "Wide 17:8" },
         { "value": "4 / 5", "label": "Portrait 4:5" }
       ],
       "default": "4 / 3"
@@ -162,6 +192,81 @@
       "step": 2,
       "unit": "px",
       "default": 12
+    },
+    {
+      "type": "range",
+      "id": "image_nudge",
+      "label": "Move image down",
+      "info": "Design 6, on desktop. For image files with more empty space below the photo than above it.",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Gradient"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_gradient",
+      "label": "Show gradient over the image",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "gradient_direction",
+      "label": "Darkest at",
+      "options": [
+        { "value": "0deg", "label": "Bottom" },
+        { "value": "180deg", "label": "Top" },
+        { "value": "90deg", "label": "Left" },
+        { "value": "270deg", "label": "Right" }
+      ],
+      "default": "0deg",
+      "visible_if": "{{ block.settings.show_gradient }}"
+    },
+    {
+      "type": "color",
+      "id": "gradient_color",
+      "label": "Gradient color",
+      "default": "#0b0b0b",
+      "visible_if": "{{ block.settings.show_gradient }}"
+    },
+    {
+      "type": "range",
+      "id": "gradient_start_opacity",
+      "label": "Opacity at the dark edge",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 80,
+      "visible_if": "{{ block.settings.show_gradient }}"
+    },
+    {
+      "type": "range",
+      "id": "gradient_length",
+      "label": "Fades out by",
+      "info": "How far across the image the gradient reaches.",
+      "min": 5,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 50,
+      "visible_if": "{{ block.settings.show_gradient }}"
+    },
+    {
+      "type": "range",
+      "id": "gradient_end_opacity",
+      "label": "Opacity after the fade",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 0,
+      "visible_if": "{{ block.settings.show_gradient }}"
     }
   ],
   "presets": [{ "name": "[CB] Media group" }]

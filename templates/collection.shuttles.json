@@ -15,26 +15,27 @@
         "cb_hero_content_ATRdAe": {
           "type": "_cb-hero-content",
           "settings": {
-            "gap": 24,
+            "gap": 18,
             "alignment": "start"
           },
           "blocks": {
             "cb_hero_badge_bzMGmB": {
               "type": "_cb-hero-badge",
               "settings": {
-                "badge_text": "Counties Manukau Badminton Association Official Store",
-                "badge_secondary": "",
+                "badge_text": "Specialist Shuttle Stock",
+                "badge_secondary": "BWF Approved",
                 "show_dot": true,
-                "text_size": 12
+                "text_size": 12,
+                "text_weight": "initial"
               },
               "blocks": {}
             },
             "cb_hero_heading_fPj7xA": {
               "type": "cb-heading",
               "settings": {
-                "heading_text": "The right shuttle changes the game.&nbsp;",
+                "heading_text": "The right shuttle changes the game.",
                 "tag": "h1",
-                "size": 64,
+                "size": 44,
                 "mobile_sizing": "fluid",
                 "mobile_scale": 82,
                 "fluid_min": 36,
@@ -89,18 +90,22 @@
             "cb_hero_buttons_WT3P4j": {
               "type": "_cb-hero-buttons",
               "settings": {
-                "stack_mobile": true
+                "stack_mobile": true,
+                "space_above": 8
               },
               "blocks": {
                 "cb_hero_button_GhBGpp": {
                   "type": "_cb-hero-button",
                   "settings": {
                     "label": "SHOP ALL SHUTTLES",
-                    "link": "",
+                    "link": "#products",
                     "open_in_new_tab": false,
                     "style": "primary",
-                    "show_arrow": false,
-                    "label_size": 14
+                    "show_arrow": true,
+                    "arrow_direction": "down",
+                    "glow": true,
+                    "label_size": 14,
+                    "label_weight": "initial"
                   },
                   "blocks": {}
                 },
@@ -108,11 +113,14 @@
                   "type": "_cb-hero-button",
                   "settings": {
                     "label": "SHUTTLE SPEED GUIDE",
-                    "link": "",
+                    "link": "#guide",
                     "open_in_new_tab": false,
                     "style": "secondary",
-                    "show_arrow": false,
-                    "label_size": 14
+                    "show_arrow": true,
+                    "arrow_direction": "right",
+                    "glow": false,
+                    "label_size": 14,
+                    "label_weight": "initial"
                   },
                   "blocks": {}
                 }
@@ -125,7 +133,9 @@
             "cb_hero_features_3QKQLB": {
               "type": "_cb-hero-features",
               "settings": {
-                "show_divider": true
+                "show_divider": true,
+                "divider_space_above": 14,
+                "divider_space_below": 24
               },
               "blocks": {
                 "cb_hero_feature_fq4yF4": {
@@ -135,7 +145,8 @@
                     "custom_icon": "shopify://shop_images/check.svg",
                     "custom_icon_tint": true,
                     "feature_text": "100% Genuine Spec",
-                    "text_size": 14
+                    "text_size": 14,
+                    "text_weight": "initial"
                   },
                   "blocks": {}
                 },
@@ -146,7 +157,8 @@
                     "custom_icon": "shopify://shop_images/Icon_1.svg",
                     "custom_icon_tint": true,
                     "feature_text": "Club & Wholesale Cartons",
-                    "text_size": 14
+                    "text_size": 14,
+                    "text_weight": "initial"
                   },
                   "blocks": {}
                 },
@@ -157,7 +169,8 @@
                     "custom_icon": "shopify://shop_images/store.svg",
                     "custom_icon_tint": true,
                     "feature_text": "Papakura Pickup 7 Days",
-                    "text_size": 14
+                    "text_size": 14,
+                    "text_weight": "initial"
                   },
                   "blocks": {}
                 }
@@ -181,9 +194,15 @@
           "type": "_cb-hero-media",
           "settings": {
             "image": "shopify://shop_images/Tournament_Grade_Feather_Badminton_Shuttlecocks_and_Packaging_Tubes.png",
-            "aspect_ratio": "4 / 3",
+            "aspect_ratio": "17 / 8",
             "aspect_ratio_mobile": "4 / 3",
-            "radius": 12
+            "radius": 8,
+            "show_gradient": false,
+            "gradient_direction": "0deg",
+            "gradient_color": "#0b0b0b",
+            "gradient_start_opacity": 80,
+            "gradient_length": 50,
+            "gradient_end_opacity": 0
           },
           "blocks": {
             "cb_hero_label_WA4dJ3": {
@@ -194,7 +213,9 @@
                 "uppercase": false,
                 "position": "bottom-right",
                 "style": "dark",
-                "text_size": 12
+                "text_size": 12,
+                "text_weight": "initial",
+                "secondary_weight": "initial"
               },
               "blocks": {}
             }
@@ -210,18 +231,19 @@
       ],
       "name": "[CB] Hero",
       "settings": {
-        "design": "1",
-        "content_width": 55,
-        "column_gap": 40,
+        "design": "3",
+        "media_edge": "screen",
+        "content_width": 57,
+        "column_gap": 32,
         "max_width": 1400,
         "media_first_mobile": false,
         "heading_font": "space_grotesk_n7",
         "body_font": "inter_n4",
-        "background_color": "#121212",
-        "glow_color": "#3a0c10",
+        "background_color": "#131313",
+        "glow_color": "#181818",
         "text_color": "#ffffff",
-        "accent_color": "#d71f27",
-        "accent_text_color": "#ffffff",
+        "accent_color": "#d91c24",
+        "accent_text_color": "{{ settings.color_palette.background }}",
         "padding_top": 100,
         "padding_bottom": 100
       }
@@ -244,6 +266,7 @@
                 "show_dot": false,
                 "size": 10,
                 "weight": "strong",
+                "secondary_weight": "initial",
                 "color": "accent",
                 "custom_color": "#ffffff",
                 "letter_spacing": 10,
@@ -347,11 +370,19 @@
                 "button_label": "Shop Feather",
                 "link": "",
                 "eyebrow_size": 9,
+                "eyebrow_weight": "initial",
                 "title_size": 18,
+                "title_weight": "initial",
                 "description_size": 11,
+                "description_weight": "initial",
                 "tags_size": 10,
+                "tags_weight": "initial",
                 "price_size": 12,
-                "button_size": 11
+                "price_weight": "initial",
+                "button_size": 11,
+                "button_weight": "initial",
+                "filter_name": "Shuttle type, Type",
+                "filter_value": "Feather"
               },
               "blocks": {}
             },
@@ -371,11 +402,19 @@
                 "button_label": "Shop Nylon",
                 "link": "",
                 "eyebrow_size": 9,
+                "eyebrow_weight": "initial",
                 "title_size": 18,
+                "title_weight": "initial",
                 "description_size": 11,
+                "description_weight": "initial",
                 "tags_size": 10,
+                "tags_weight": "initial",
                 "price_size": 12,
-                "button_size": 11
+                "price_weight": "initial",
+                "button_size": 11,
+                "button_weight": "initial",
+                "filter_name": "Shuttle type, Type",
+                "filter_value": "Nylon"
               },
               "blocks": {}
             }
@@ -439,15 +478,25 @@
             "price_buckets": "Under $30 | 0-30\n$30 – $60 | 30-60\nOver $60 | 60+",
             "price_multi": false,
             "heading_size": 11,
+            "heading_weight": "initial",
             "heading_link_size": 10,
+            "heading_link_weight": "initial",
             "reset_size": 11,
+            "reset_weight": "initial",
             "guide_size": 11,
+            "guide_weight": "initial",
             "checkbox_size": 12,
+            "checkbox_weight": "initial",
             "count_size": 11,
+            "count_weight": "initial",
             "button_size": 11,
+            "button_weight": "initial",
             "price_labels_size": 11,
+            "price_labels_weight": "initial",
             "note_size": 11,
-            "empty_size": 12
+            "note_weight": "initial",
+            "empty_size": 12,
+            "empty_weight": "initial"
           },
           "blocks": {}
         },
@@ -478,15 +527,25 @@
             "price_buckets": "Under $30 | 0-30\n$30 – $60 | 30-60\nOver $60 | 60+",
             "price_multi": false,
             "heading_size": 11,
+            "heading_weight": "initial",
             "heading_link_size": 10,
+            "heading_link_weight": "initial",
             "reset_size": 11,
+            "reset_weight": "initial",
             "guide_size": 11,
+            "guide_weight": "initial",
             "checkbox_size": 12,
+            "checkbox_weight": "initial",
             "count_size": 11,
+            "count_weight": "initial",
             "button_size": 11,
+            "button_weight": "initial",
             "price_labels_size": 11,
+            "price_labels_weight": "initial",
             "note_size": 11,
-            "empty_size": 12
+            "note_weight": "initial",
+            "empty_size": 12,
+            "empty_weight": "initial"
           },
           "blocks": {}
         },
@@ -517,15 +576,25 @@
             "price_buckets": "Under $30 | 0-30\n$30 – $60 | 30-60\nOver $60 | 60+",
             "price_multi": false,
             "heading_size": 11,
+            "heading_weight": "initial",
             "heading_link_size": 10,
+            "heading_link_weight": "initial",
             "reset_size": 11,
+            "reset_weight": "initial",
             "guide_size": 11,
+            "guide_weight": "initial",
             "checkbox_size": 12,
+            "checkbox_weight": "initial",
             "count_size": 11,
+            "count_weight": "initial",
             "button_size": 11,
+            "button_weight": "initial",
             "price_labels_size": 11,
+            "price_labels_weight": "initial",
             "note_size": 11,
-            "empty_size": 12
+            "note_weight": "initial",
+            "empty_size": 12,
+            "empty_weight": "initial"
           },
           "blocks": {}
         },
@@ -556,15 +625,25 @@
             "price_buckets": "Under $30 | 0-30\n$30 – $60 | 30-60\nOver $60 | 60+",
             "price_multi": false,
             "heading_size": 11,
+            "heading_weight": "initial",
             "heading_link_size": 10,
+            "heading_link_weight": "initial",
             "reset_size": 11,
+            "reset_weight": "initial",
             "guide_size": 11,
+            "guide_weight": "initial",
             "checkbox_size": 12,
+            "checkbox_weight": "initial",
             "count_size": 11,
+            "count_weight": "initial",
             "button_size": 11,
+            "button_weight": "initial",
             "price_labels_size": 11,
+            "price_labels_weight": "initial",
             "note_size": 11,
-            "empty_size": 12
+            "note_weight": "initial",
+            "empty_size": 12,
+            "empty_weight": "initial"
           },
           "blocks": {}
         },
@@ -595,15 +674,25 @@
             "price_buckets": "Under $30 | 0-30\n$30 – $60 | 30-60\nOver $60 / Bulk | 60+",
             "price_multi": false,
             "heading_size": 11,
+            "heading_weight": "initial",
             "heading_link_size": 10,
+            "heading_link_weight": "initial",
             "reset_size": 11,
+            "reset_weight": "initial",
             "guide_size": 11,
+            "guide_weight": "initial",
             "checkbox_size": 12,
+            "checkbox_weight": "initial",
             "count_size": 11,
+            "count_weight": "initial",
             "button_size": 11,
+            "button_weight": "initial",
             "price_labels_size": 11,
+            "price_labels_weight": "initial",
             "note_size": 11,
-            "empty_size": 12
+            "note_weight": "initial",
+            "empty_size": 12,
+            "empty_weight": "initial"
           },
           "blocks": {}
         },
@@ -623,8 +712,11 @@
             "footer_value": "",
             "link": "",
             "title_size": 11,
+            "title_weight": "initial",
             "text_size": 12,
-            "footer_size": 11
+            "text_weight": "initial",
+            "footer_size": 11,
+            "footer_weight": "initial"
           },
           "blocks": {}
         },
@@ -708,25 +800,45 @@
         "padding_top": 100,
         "padding_bottom": 100,
         "title_size": 22,
+        "title_weight": "initial",
         "count_size": 10,
+        "count_weight": "initial",
         "pill_size": 11,
+        "pill_weight": "initial",
         "sort_label_size": 10,
+        "sort_label_weight": "initial",
         "sort_select_size": 10,
+        "sort_select_weight": "initial",
         "filters_button_size": 11,
+        "filters_button_weight": "initial",
         "filters_heading_size": 11,
+        "filters_heading_weight": "initial",
         "clear_size": 10,
+        "clear_weight": "initial",
         "badge_size": 9,
+        "badge_weight": "initial",
         "brand_tag_size": 10,
+        "brand_tag_weight": "initial",
         "product_title_size": 15,
+        "product_title_weight": "initial",
         "specs_size": 10,
+        "specs_weight": "initial",
         "price_size": 16,
+        "price_weight": "initial",
         "compare_price_size": 11,
+        "compare_price_weight": "initial",
         "currency_size": 9,
+        "currency_weight": "initial",
         "stock_size": 10,
+        "stock_weight": "initial",
         "card_button_size": 11,
+        "card_button_weight": "initial",
         "showing_size": 12,
+        "showing_weight": "initial",
         "pagination_size": 12,
-        "empty_size": 13
+        "pagination_weight": "initial",
+        "empty_size": 13,
+        "empty_weight": "initial"
       }
     },
     "cb_speed_QPpQiL": {
@@ -746,6 +858,7 @@
                 "show_dot": false,
                 "size": 10,
                 "weight": "strong",
+                "secondary_weight": "initial",
                 "color": "accent",
                 "custom_color": "#ffffff",
                 "letter_spacing": 10,
@@ -847,11 +960,17 @@
                 "highlight": false,
                 "highlight_label": "CMBA standard spec",
                 "tag_size": 9,
+                "tag_weight": "initial",
                 "title_size": 18,
+                "title_weight": "initial",
                 "subtitle_size": 9,
+                "subtitle_weight": "initial",
                 "text_size": 12,
+                "text_weight": "initial",
                 "footer_size": 10,
-                "tab_size": 9
+                "footer_weight": "initial",
+                "tab_size": 9,
+                "tab_weight": "initial"
               },
               "blocks": {}
             },
@@ -869,11 +988,17 @@
                 "highlight": true,
                 "highlight_label": "CMBA standard spec",
                 "tag_size": 9,
+                "tag_weight": "initial",
                 "title_size": 18,
+                "title_weight": "initial",
                 "subtitle_size": 9,
+                "subtitle_weight": "initial",
                 "text_size": 12,
+                "text_weight": "initial",
                 "footer_size": 10,
-                "tab_size": 9
+                "footer_weight": "initial",
+                "tab_size": 9,
+                "tab_weight": "initial"
               },
               "blocks": {}
             },
@@ -891,11 +1016,17 @@
                 "highlight": false,
                 "highlight_label": "CMBA standard spec",
                 "tag_size": 9,
+                "tag_weight": "initial",
                 "title_size": 18,
+                "title_weight": "initial",
                 "subtitle_size": 9,
+                "subtitle_weight": "initial",
                 "text_size": 12,
+                "text_weight": "initial",
                 "footer_size": 10,
-                "tab_size": 9
+                "footer_weight": "initial",
+                "tab_size": 9,
+                "tab_weight": "initial"
               },
               "blocks": {}
             }
@@ -920,9 +1051,13 @@
             "link_label": "Read the Full Shuttle Guide",
             "link_url": "",
             "title_size": 15,
+            "title_weight": "initial",
             "text_size": 12,
+            "text_weight": "initial",
             "button_size": 11,
-            "link_size": 11
+            "button_weight": "initial",
+            "link_size": 11,
+            "link_weight": "initial"
           },
           "blocks": {}
         }
@@ -964,7 +1099,8 @@
                 "secondary": "",
                 "show_dot": false,
                 "size": 10,
-                "weight": "strong",
+                "weight": "500",
+                "secondary_weight": "initial",
                 "color": "accent",
                 "custom_color": "#ffffff",
                 "letter_spacing": 8,
@@ -986,7 +1122,7 @@
               "settings": {
                 "heading_text": "Ordering shuttles for your club, school or squad?",
                 "tag": "h2",
-                "size": 20,
+                "size": 21,
                 "mobile_sizing": "scale",
                 "mobile_scale": 90,
                 "fluid_min": 28,
@@ -996,7 +1132,7 @@
                 "custom_color": "#ffffff",
                 "line_height": 115,
                 "letter_spacing": -1,
-                "uppercase": true,
+                "uppercase": false,
                 "wrap": "wrap",
                 "width": "auto",
                 "width_px": 400,
@@ -1013,7 +1149,7 @@
             "cb_visit_text_B7rQXe": {
               "type": "cb-paragraph",
               "settings": {
-                "body_text": "<p>Counties Manukau Badminton supplies clubs, schools, and tournament organizers across<br>New Zealand with verified wholesale carton pricing and scheduled replenishment.</p>",
+                "body_text": "<p>Counties Manukau Badminton supplies clubs, schools, and tournament organizers across<br/>New Zealand with verified wholesale carton pricing and scheduled replenishment.</p>",
                 "size": 13,
                 "mobile_sizing": "same",
                 "mobile_size": 13,
@@ -1051,10 +1187,14 @@
             "label": "Request Wholesale Pricing",
             "link": "",
             "directions_address": "",
-            "style": "outline",
-            "icon": "none",
+            "style": "soft",
+            "icon": "mail",
             "custom_icon_tint": true,
-            "text_size": 11
+            "icon_position": "before",
+            "icon_accent": true,
+            "uppercase": false,
+            "text_size": 10.5,
+            "text_weight": "500"
           },
           "blocks": {}
         }
@@ -1067,14 +1207,17 @@
       "settings": {
         "max_width": 1400,
         "show_panel": true,
+        "panel_padding_y": 26,
+        "panel_padding_x": 30,
+        "accent_edge": true,
         "panel_radius": 2,
         "heading_font": "space_grotesk_n7",
         "body_font": "inter_n4",
-        "background_color": "#0b0b0b",
-        "panel_background_color": "#181818",
+        "background_color": "#131313",
+        "panel_background_color": "#1c1b1b",
         "border_color": "#ffffff14",
         "text_color": "#ffffff",
-        "accent_color": "#d71f27",
+        "accent_color": "#d91c24",
         "button_background_color": "#ffffff",
         "button_text_color": "#111111",
         "padding_top": 52,
@@ -1088,12 +1231,15 @@
           "type": "_cb-strip-item",
           "settings": {
             "icon": "racket",
+            "custom_icon": "shopify://shop_images/rocket.png",
             "custom_icon_tint": true,
             "item_title": "Badminton people",
             "item_text": "Advice from players, coaches and stringers who know the game.",
             "link": "",
             "title_size": 11,
-            "text_size": 12
+            "title_weight": "initial",
+            "text_size": 12,
+            "text_weight": "initial"
           },
           "blocks": {}
         },
@@ -1101,12 +1247,15 @@
           "type": "_cb-strip-item",
           "settings": {
             "icon": "store",
+            "custom_icon": "shopify://shop_images/store.svg",
             "custom_icon_tint": true,
             "item_title": "Click & collect",
             "item_text": "Pick up from the Papakura pro shop seven days a week.",
             "link": "",
             "title_size": 11,
-            "text_size": 12
+            "title_weight": "initial",
+            "text_size": 12,
+            "text_weight": "initial"
           },
           "blocks": {}
         },
@@ -1119,7 +1268,9 @@
             "item_text": "Every purchase helps support Counties Manukau Badminton.",
             "link": "",
             "title_size": 11,
-            "text_size": 12
+            "title_weight": "initial",
+            "text_size": 12,
+            "text_weight": "initial"
           },
           "blocks": {}
         },
@@ -1132,7 +1283,9 @@
             "item_text": "Ask us before you buy and we'll help you choose the right shuttle.",
             "link": "",
             "title_size": 11,
-            "text_size": 12
+            "title_weight": "initial",
+            "text_size": 12,
+            "text_weight": "initial"
           },
           "blocks": {}
         }
@@ -1176,6 +1329,7 @@
                 "show_dot": false,
                 "size": 10,
                 "weight": "strong",
+                "secondary_weight": "initial",
                 "color": "accent",
                 "custom_color": "#ffffff",
                 "letter_spacing": 8,
@@ -1221,25 +1375,26 @@
               },
               "blocks": {}
             },
-            "cb_visit_text_UizFmg": {
+            "cb_paragraph_DYraW8": {
               "type": "cb-paragraph",
+              "name": "[CB] Paragraph",
               "settings": {
-                "body_text": "<p>Read our beginner-friendly guide to shuttle types, flight speeds, and what works best for<br>casual training, school sports, and association match play.</p>",
-                "size": 13,
+                "body_text": "<p>Read our beginner-friendly guide to shuttle types, flight speeds, and what works best for</p><p>&nbsp;casual training, school sports, and association match play.<br/></p>",
+                "size": 14,
                 "mobile_sizing": "same",
-                "mobile_size": 13,
+                "mobile_size": 14,
                 "fluid_vw": 2,
                 "weight": "regular",
                 "color": "muted",
                 "custom_color": "#ffffff",
-                "line_height": 160,
+                "line_height": 101,
                 "letter_spacing": 0,
                 "wrap": "wrap",
                 "width": "auto",
                 "width_px": 400,
-                "max_width_unit": "ch",
+                "max_width_unit": "none",
                 "max_width_px": 640,
-                "max_width_ch": 120,
+                "max_width_ch": 60,
                 "background_color": "",
                 "padding_y": 0,
                 "padding_x": 0,
@@ -1253,19 +1408,23 @@
           "block_order": [
             "cb_visit_eyebrow_9EGeRM",
             "cb_visit_heading_bRKkiK",
-            "cb_visit_text_UizFmg"
+            "cb_paragraph_DYraW8"
           ]
         },
         "cb_visit_button_KWBKxJ": {
           "type": "_cb-visit-button",
           "settings": {
             "label": "READ THE SHUTTLE GUIDE",
-            "link": "",
+            "link": "#guide",
             "directions_address": "",
             "style": "accent",
             "icon": "arrow",
             "custom_icon_tint": true,
-            "text_size": 11
+            "icon_position": "after",
+            "icon_accent": false,
+            "uppercase": true,
+            "text_size": 11,
+            "text_weight": "initial"
           },
           "blocks": {}
         }
@@ -1278,6 +1437,9 @@
       "settings": {
         "max_width": 1400,
         "show_panel": true,
+        "panel_padding_y": 48,
+        "panel_padding_x": 30,
+        "accent_edge": false,
         "panel_radius": 2,
         "heading_font": "space_grotesk_n7",
         "body_font": "inter_n4",

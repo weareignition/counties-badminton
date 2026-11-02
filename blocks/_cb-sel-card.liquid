@@ -67,7 +67,21 @@
 
   assign image = block.settings.image | default: first_image
 
+  # A filter value filters the [CB] Product catalogue on this collection page when the store offers that filter
+  # (snippets/cb-filter-link). Until it does, the button link, or the products. Without a filter value, the button
+  # link, then the collection.
   assign link = block.settings.link
+  assign filter_attrs = ''
+  if block.settings.filter_value != blank and collection
+    assign fallback = link | default: '#products'
+    capture link
+      render 'cb-filter-link', names: block.settings.filter_name, value: block.settings.filter_value, fallback: fallback, part: 'href'
+    endcapture
+    capture filter_attrs
+      render 'cb-filter-link', names: block.settings.filter_name, value: block.settings.filter_value, part: 'attrs'
+    endcapture
+    assign link = link | strip
+  endif
   if link == blank
     assign link = pool.url | default: routes.all_products_collection_url
   endif
@@ -130,7 +144,7 @@
           </p>
         {%- endif -%}
         {%- if block.settings.button_label != blank -%}
-          <a class="cb-sel-card__button" href="{{ link }}">
+          <a class="cb-sel-card__button" href="{{ link }}"{{ filter_attrs }}>
             {{- block.settings.button_label | escape -}}
             <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
@@ -244,6 +258,11 @@
     font-weight: var(--cb-sel-card-price-weight, var(--cbx-font-body-strong));
     font-size: var(--cb-sel-card-price-size, 12px);
     color: var(--cbx-text);
+  }
+
+  /* The button whose filter is applied to the products below. */
+  .cb-sel-card__button.is-active {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--cbx-accent) 35%, transparent);
   }
 
   .cb-sel-card__button {
@@ -397,6 +416,22 @@
       "id": "link",
       "label": "Button link",
       "info": "Leave empty to open the collection."
+    },
+    {
+      "type": "header",
+      "content": "Filter the products below"
+    },
+    {
+      "type": "text",
+      "id": "filter_name",
+      "label": "Filter name",
+      "info": "A Search & Discovery filter on this collection, e.g. Play style. Several names can be given, comma separated."
+    },
+    {
+      "type": "text",
+      "id": "filter_value",
+      "label": "Filter value",
+      "info": "Needs a filter name too. On a collection page the button filters the [CB] Product catalogue by this value. Until the store offers that filter, it opens the button link or jumps to the products."
     },
     {
       "type": "header",

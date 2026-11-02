@@ -67,6 +67,10 @@
     --cb-rmatch-results-table-weight: {{ block.settings.table_weight }};
     --cb-rmatch-results-table-price-size: {{ block.settings.table_price_size }}px;
     --cb-rmatch-results-table-price-weight: {{ block.settings.table_price_weight }};
+    {% if block.settings.results_heading_width > 0 %}--cb-rmatch-results-heading-width: {{ block.settings.results_heading_width }}px;{% endif %}
+    {% if block.settings.results_text_width > 0 %}--cb-rmatch-results-text-width: {{ block.settings.results_text_width }}px;{% endif %}
+    {% if block.settings.compare_heading_width > 0 %}--cb-rmatch-compare-heading-width: {{ block.settings.compare_heading_width }}px;{% endif %}
+    {% if block.settings.compare_text_width > 0 %}--cb-rmatch-compare-text-width: {{ block.settings.compare_text_width }}px;{% endif %}
   "
   {% unless request.design_mode %}
     hidden
@@ -510,7 +514,12 @@
     color: var(--cbrm-text);
   }
 
+  .cb-rmatch-results .cb-rmatch-results__heading {
+    max-width: var(--cb-rmatch-results-heading-width, none);
+  }
+
   .cb-rmatch-compare .cb-rmatch-compare__heading {
+    max-width: var(--cb-rmatch-compare-heading-width, none);
     margin-top: 0;
   }
 
@@ -519,7 +528,7 @@
   }
 
   .cb-rmatch-results .cb-rmatch-results__text {
-    max-width: 700px;
+    max-width: var(--cb-rmatch-results-text-width, 700px);
     margin: 14px 0 0;
     font-family: var(--cbrm-font-body);
     font-weight: var(--cb-rmatch-results-text-weight, var(--cbrm-font-body-weight));
@@ -824,6 +833,7 @@
   }
 
   .cb-rmatch-compare .cb-rmatch-compare__text {
+    max-width: var(--cb-rmatch-compare-text-width, none);
     margin: 10px 0 0;
     font-family: var(--cbrm-font-body);
     font-weight: var(--cb-rmatch-results-compare-text-weight, var(--cbrm-font-body-weight));
@@ -907,7 +917,7 @@
     color: var(--cbrm-accent);
   }
 
-  .cb-rmatch-compare__table tr.is-price {
+  .cb-rmatch-compare__table tbody tr.is-price {
     background: var(--cbrm-chip-strong);
   }
 
@@ -1029,6 +1039,28 @@
       "default": "Based on your answers, these are the [count] frames from our Papakura wall that best match your game."
     },
     {
+      "type": "range",
+      "id": "results_heading_width",
+      "label": "Heading width",
+      "info": "0 follows the section.",
+      "min": 0,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "results_text_width",
+      "label": "Text width",
+      "info": "0 keeps the standard width of 700px.",
+      "min": 0,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "default": 0
+    },
+    {
       "type": "header",
       "content": "Racket cards"
     },
@@ -1105,6 +1137,28 @@
       "id": "compare_text",
       "label": "Text",
       "default": "Side-by-side specifications across your [count] recommended frames."
+    },
+    {
+      "type": "range",
+      "id": "compare_heading_width",
+      "label": "Heading width",
+      "info": "0 follows the section.",
+      "min": 0,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "compare_text_width",
+      "label": "Text width",
+      "info": "0 follows the section.",
+      "min": 0,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "default": 0
     },
     {
       "type": "text",

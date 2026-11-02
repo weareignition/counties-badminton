@@ -1,8 +1,9 @@
 {%- comment -%}
   Reviews panel: the shared [CB] Subheader and [CB] Heading (static blocks), an overall rating on the right and
   [CB] Review cards. The overall rating comes from the product's reviews.rating and reviews.rating_count metafields
-  (filled by review apps), or the numbers typed in the settings; with neither it is hidden. The whole section hides
-  on the store when it has no rating and no real (non-sample) reviews.
+  (filled by review apps), or the numbers typed in the settings; with neither it is hidden. Sample numbers show only
+  in the theme editor, like sample reviews. The whole section hides on the store when it has no rating and no real
+  (non-sample) reviews.
 {%- endcomment -%}
 {%- liquid
   assign s = section.settings
@@ -18,6 +19,14 @@
   elsif s.rating_source == 'manual' and s.rating != blank
     assign rating = s.rating | plus: 0
     assign count = s.review_count
+  elsif s.rating_source == 'sample' and s.rating != blank and request.design_mode
+    assign rating = s.rating | plus: 0
+    assign count = s.review_count
+  endif
+
+  assign summary_stars = 12
+  if s.design == '2'
+    assign summary_stars = 15
   endif
 -%}
 
@@ -30,7 +39,7 @@
 
 <section
   id="cb-reviews-{{ section.id }}"
-  class="cb-reviews"
+  class="cb-reviews cb-reviews--design-{{ s.design | default: '1' }}"
   style="
     --cbrv-bg: {{ s.background_color }};
     --cbrv-panel: {{ s.panel_color }};
@@ -49,6 +58,8 @@
     --cbrv-pb: {{ s.padding_bottom }}px;
     --cb-reviews-summary-size: {{ s.summary_size }}px;
     --cb-reviews-summary-weight: {{ s.summary_weight }};
+    --cb-reviews-rating-size: {{ s.rating_size }}px;
+    --cb-reviews-rating-weight: {{ s.rating_weight }};
   "
 >
   <div class="cb-reviews__panel">
@@ -59,7 +70,7 @@
       </div>
       {%- if rating != blank -%}
         <p class="cb-reviews__summary">
-          {%- render 'cb-stars', rating: rating, scale: scale, size: 12 -%}
+          {%- render 'cb-stars', rating: rating, scale: scale, size: summary_stars -%}
           <strong>{{ s.rating_format | replace: '[rating]', rating }}</strong>
           {%- if count != blank -%}
             <span>{{ s.count_format | replace: '[count]', count }}</span>
@@ -169,6 +180,104 @@
       grid-template-columns: repeat(var(--cbrv-columns), minmax(0, 1fr));
     }
   }
+
+  /*
+   * Design 2: no outer panel, and each review is its own card led by an initials box with the stars opposite.
+   * Rules are prefixed with .cb-reviews--design-2 so they beat the blocks' own defaults in any stylesheet order.
+   */
+  .cb-reviews--design-2 {
+    --cbrv-card-padding: 22px;
+    --cbrv-card-radius: 8px;
+  }
+
+  .cb-reviews--design-2 .cb-reviews__panel {
+    padding: 0;
+    border-radius: 0;
+    background: none;
+  }
+
+  .cb-reviews--design-2 .cb-reviews__header {
+    align-items: flex-end;
+  }
+
+  .cb-reviews--design-2 .cb-reviews__intro {
+    gap: 8px;
+  }
+
+  .cb-reviews--design-2 .cb-reviews__summary {
+    gap: 6px 11px;
+  }
+
+  .cb-reviews--design-2 .cb-reviews__summary strong {
+    font-family: var(--cbrv-font-heading);
+    font-weight: var(--cb-reviews-rating-weight, var(--cbrv-font-heading-weight));
+    font-size: var(--cb-reviews-rating-size, 18px);
+    line-height: 1.2;
+  }
+
+  .cb-reviews--design-2 .cb-review__head {
+    display: flex;
+    align-items: center;
+    align-self: stretch;
+    gap: 12px;
+  }
+
+  .cb-reviews--design-2 .cb-review__avatar {
+    display: flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--cbrv-text) 3.5%, var(--cbrv-card));
+    font-family: var(--cbrv-font-heading);
+    font-weight: var(--cb-review-initials-weight, var(--cbrv-font-heading-weight));
+    font-size: var(--cb-review-initials-size, 13.5px);
+    line-height: 1;
+    color: var(--cbrv-text);
+  }
+
+  .cb-reviews--design-2 .cb-review__who {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .cb-reviews--design-2 .cb-review__name {
+    margin: 0;
+    font-family: var(--cbrv-font-heading);
+    font-weight: var(--cb-review-reviewer-weight, var(--cbrv-font-heading-weight));
+    font-size: var(--cb-review-reviewer-size, 12.5px);
+    line-height: 1.3;
+    color: var(--cbrv-text);
+  }
+
+  .cb-reviews--design-2 .cb-review__detail {
+    margin: 4px 0 0;
+    font-family: var(--cbrv-font-body);
+    font-weight: var(--cb-review-detail-weight, inherit);
+    font-size: var(--cb-review-detail-size, 11.5px);
+    line-height: 1.3;
+    color: var(--cbrv-muted);
+  }
+
+  .cb-reviews--design-2 .cb-review .cb-review__title {
+    margin-top: 14px;
+  }
+
+  .cb-reviews--design-2 .cb-review .cb-review__text {
+    margin-top: 16px;
+    line-height: 1.6;
+  }
+
+  .cb-reviews--design-2 .cb-review__meta {
+    margin: 14px 0 0;
+    font-family: var(--cbrv-font-body);
+    font-weight: var(--cb-review-meta-weight, inherit);
+    font-size: var(--cb-review-meta-size, 11.5px);
+    line-height: 1.4;
+    color: var(--cbrv-muted);
+  }
 {% endstylesheet %}
 
 {% schema %}
@@ -182,6 +291,16 @@
   },
   "settings": [
     {
+      "type": "select",
+      "id": "design",
+      "label": "Design",
+      "options": [
+        { "value": "1", "label": "Design 1 – reviews in one panel" },
+        { "value": "2", "label": "Design 2 – separate cards with initials" }
+      ],
+      "default": "1"
+    },
+    {
       "type": "header",
       "content": "Overall rating"
     },
@@ -192,6 +311,7 @@
       "options": [
         { "value": "product", "label": "The product's review metafields" },
         { "value": "manual", "label": "The numbers below" },
+        { "value": "sample", "label": "Sample numbers (theme editor only)" },
         { "value": "none", "label": "Hide it" }
       ],
       "default": "product",
@@ -202,13 +322,13 @@
       "id": "rating",
       "label": "Rating",
       "info": "e.g. 4.9. Use only real figures.",
-      "visible_if": "{{ section.settings.rating_source == 'manual' }}"
+      "visible_if": "{{ section.settings.rating_source == 'manual' or section.settings.rating_source == 'sample' }}"
     },
     {
       "type": "text",
       "id": "review_count",
       "label": "Number of reviews",
-      "visible_if": "{{ section.settings.rating_source == 'manual' }}"
+      "visible_if": "{{ section.settings.rating_source == 'manual' or section.settings.rating_source == 'sample' }}"
     },
     {
       "type": "text",
@@ -403,6 +523,36 @@
         { "value": "900", "label": "Black" }
       ],
       "default": "initial"
+    },
+    {
+      "type": "range",
+      "id": "rating_size",
+      "label": "Rating number size",
+      "info": "Design 2.",
+      "min": 6,
+      "max": 40,
+      "step": 0.5,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "select",
+      "id": "rating_weight",
+      "label": "Rating number weight",
+      "info": "Design 2.",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial"
     }
   ],
   "presets": [
@@ -435,6 +585,59 @@
             "review_title": "Solid stringing service in-shop",
             "review_text": "Great in-person advice on choosing 4U over 3U for match endurance. Racket was strung perfectly and ready before my weekly club night at the complex.",
             "reviewer": "Sarah W. (Papakura Club)"
+          }
+        }
+      },
+      "block_order": ["review_1", "review_2"]
+    },
+    {
+      "name": "[CB] Reviews (Design 2)",
+      "settings": {
+        "design": "2",
+        "rating_source": "sample",
+        "rating": "4.9",
+        "review_count": "28",
+        "rating_format": "[rating] / 5.0",
+        "count_format": "([count] CMBA Club Reviews)",
+        "card_gap": 22,
+        "header_gap": 22,
+        "max_width": 1320,
+        "card_color": "#181818",
+        "summary_size": 12
+      },
+      "blocks": {
+        "subheader": {
+          "type": "cb-subheader",
+          "static": true,
+          "settings": { "subheader_text": "Verified badminton athletes", "size": 9.5, "color": "muted", "letter_spacing": 8 }
+        },
+        "heading": {
+          "type": "cb-heading",
+          "static": true,
+          "settings": { "heading_text": "What players say", "size": 21, "line_height": 120 }
+        },
+        "review_1": {
+          "type": "_cb-review",
+          "settings": {
+            "sample": true,
+            "review_text": "Night and day difference coming from older court shoes. The carbon plate in the shank gives instant push-off during baseline recovery, and there's zero heel slip even in 3-set matches on the Papakura wood floors.",
+            "reviewer": "Marcus K.",
+            "reviewer_detail": "CMBA Senior Division 1 Player",
+            "meta_text": "Reviewed 2 weeks ago • Size US 9.5",
+            "text_size": 13.5,
+            "reviewer_size": 12.5
+          }
+        },
+        "review_2": {
+          "type": "_cb-review",
+          "settings": {
+            "sample": true,
+            "review_text": "Visited the pro shop counter on Thursday evening to try both sizes. The staff fitted me correctly with court socks. Cushioning through the heel completely solved my post-training knee soreness.",
+            "reviewer": "Tania L.",
+            "reviewer_detail": "Counties Masters Squad",
+            "meta_text": "Reviewed 1 month ago • Size US 8.5",
+            "text_size": 13.5,
+            "reviewer_size": 12.5
           }
         }
       },

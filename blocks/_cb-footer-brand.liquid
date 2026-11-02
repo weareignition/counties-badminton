@@ -1,4 +1,4 @@
-<div class="cb-footer__brand" {{ block.shopify_attributes }}>
+<div class="cb-footer__brand{% if block.settings.group_width > 0 %} cb-group-w{% endif %}" style="--cb-group-w: {{ block.settings.group_width }}px;" {{ block.shopify_attributes }}>
   {% content_for 'blocks' %}
 </div>
 
@@ -16,6 +16,19 @@
 {
   "name": "[CB] Brand column",
   "tag": null,
+  "settings": [
+    {
+      "type": "range",
+      "id": "group_width",
+      "label": "Width",
+      "info": "0 follows the section.",
+      "min": 0,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "default": 0
+    }
+  ],
   "blocks": [
     { "type": "_cb-footer-logo" },
     { "type": "cb-paragraph" },

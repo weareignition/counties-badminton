@@ -78,7 +78,7 @@
                   "type": "_cb-footer-link",
                   "settings": {
                     "link_label": "Rackets (All Brands)",
-                    "link": ""
+                    "link": "shopify://collections/rackets"
                   },
                   "blocks": {}
                 },
@@ -86,7 +86,7 @@
                   "type": "_cb-footer-link",
                   "settings": {
                     "link_label": "Interactive Racket Finder",
-                    "link": ""
+                    "link": "/collections/rackets#racket-finder"
                   },
                   "blocks": {}
                 },
@@ -94,7 +94,7 @@
                   "type": "_cb-footer-link",
                   "settings": {
                     "link_label": "Certified Stringing Specs",
-                    "link": ""
+                    "link": "shopify://collections/stringing"
                   },
                   "blocks": {}
                 },
@@ -125,7 +125,7 @@
                   "type": "_cb-footer-link",
                   "settings": {
                     "link_label": "Papakura Workshop & Pick-up",
-                    "link": ""
+                    "link": "shopify://pages/contact"
                   },
                   "blocks": {}
                 },
@@ -180,7 +180,7 @@
                   "type": "_cb-footer-link",
                   "settings": {
                     "link_label": "Terms & Warranty",
-                    "link": ""
+                    "link": "/policies/terms-of-service"
                   },
                   "blocks": {}
                 },
@@ -196,7 +196,7 @@
                   "type": "_cb-footer-link",
                   "settings": {
                     "link_label": "Contact Head Stringer",
-                    "link": ""
+                    "link": "shopify://pages/contact"
                   },
                   "blocks": {}
                 }

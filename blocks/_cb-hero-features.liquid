@@ -1,5 +1,6 @@
 <div
   class="cb-hero__features{% if block.settings.show_divider %} cb-hero__features--divider{% endif %}"
+  style="--cbh-divider-above: {{ block.settings.divider_space_above }}px; --cbh-divider-below: {{ block.settings.divider_space_below }}px;"
   {{ block.shopify_attributes }}
 >
   {% content_for 'blocks' %}
@@ -16,8 +17,8 @@
   }
 
   .cb-hero__features--divider {
-    margin-top: 12px;
-    padding-top: 28px;
+    margin-top: var(--cbh-divider-above, 12px);
+    padding-top: var(--cbh-divider-below, 28px);
     border-top: 1px solid var(--cbh-border);
   }
 
@@ -39,6 +40,29 @@
       "id": "show_divider",
       "label": "Show divider above",
       "default": true
+    },
+    {
+      "type": "range",
+      "id": "divider_space_above",
+      "label": "Space above the divider",
+      "info": "Added to the content gap.",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 12,
+      "visible_if": "{{ block.settings.show_divider }}"
+    },
+    {
+      "type": "range",
+      "id": "divider_space_below",
+      "label": "Space below the divider",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 28,
+      "visible_if": "{{ block.settings.show_divider }}"
     }
   ],
   "presets": [

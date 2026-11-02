@@ -67,13 +67,23 @@
     line-height: 1.4;
     color: var(--cbft-soft);
     text-decoration: none;
-    transition: color 0.2s ease;
+    background: linear-gradient(var(--cbft-accent), var(--cbft-accent)) no-repeat 0 100% / 0 1px;
+    padding-bottom: 3px;
+    transition: color 0.2s ease, background-size 0.25s ease;
   }
 
-  a.cb-footer__link:hover {
-    color: var(--cbft-text);
-    text-decoration: underline;
-    text-underline-offset: 3px;
+  /* Hover: the text brightens and an accent line sweeps in from the left. Touch screens have no hover to show. */
+  @media (hover: hover) {
+    .cb-footer__link:hover {
+      color: var(--cbft-text);
+      background-size: 100% 1px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cb-footer__link {
+      transition: none;
+    }
   }
 
   a.cb-footer__link:focus-visible {

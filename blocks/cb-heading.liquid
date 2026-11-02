@@ -116,6 +116,45 @@
     },
     {
       "type": "header",
+      "content": "Width"
+    },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "Width",
+      "options": [
+        { "value": "auto", "label": "Auto (follows the section)" },
+        { "value": "fit", "label": "Fit the text" },
+        { "value": "full", "label": "Full width" },
+        { "value": "custom", "label": "Custom" }
+      ],
+      "default": "auto"
+    },
+    {
+      "type": "range",
+      "id": "width_px",
+      "label": "Custom width",
+      "min": 100,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "default": 400,
+      "visible_if": "{{ block.settings.width == 'custom' }}"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "visible_if": "{{ block.settings.width != 'custom' }}",
+      "label": "Max width",
+      "info": "Longest the heading can get, e.g. to keep lines short. 0 = no limit.",
+      "min": 0,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "header",
       "content": "Size"
     },
     {
@@ -252,44 +291,6 @@
         { "value": "pretty", "label": "No single word on the last line" }
       ],
       "default": "balance"
-    },
-    {
-      "type": "header",
-      "content": "Width"
-    },
-    {
-      "type": "select",
-      "id": "width",
-      "label": "Width",
-      "options": [
-        { "value": "auto", "label": "Auto (follows the section)" },
-        { "value": "fit", "label": "Fit the text" },
-        { "value": "full", "label": "Full width" },
-        { "value": "custom", "label": "Custom" }
-      ],
-      "default": "auto"
-    },
-    {
-      "type": "range",
-      "id": "width_px",
-      "label": "Custom width",
-      "min": 100,
-      "max": 1600,
-      "step": 20,
-      "unit": "px",
-      "default": 400,
-      "visible_if": "{{ block.settings.width == 'custom' }}"
-    },
-    {
-      "type": "range",
-      "id": "max_width",
-      "label": "Max width",
-      "info": "Longest the heading can get, e.g. to keep lines short. 0 = no limit.",
-      "min": 0,
-      "max": 1600,
-      "step": 20,
-      "unit": "px",
-      "default": 0
     },
     {
       "type": "header",

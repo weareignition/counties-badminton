@@ -68,4 +68,30 @@
     box-sizing: border-box;
     width: min(var(--cb-box-w, 320px), 100%);
   }
+
+  /*
+   * A custom width on text beats the block's own max width and, from tablets up, a narrower container. Containers are
+   * centred on the page, so 50vw + 50% is the room from the container's left edge to the screen's right edge.
+   */
+  .cb-heading.cb-box--custom,
+  .cb-paragraph.cb-box--custom,
+  .cb-subheader.cb-box--custom {
+    max-width: none;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-heading.cb-box--custom,
+    .cb-paragraph.cb-box--custom,
+    .cb-subheader.cb-box--custom {
+      width: min(var(--cb-box-w, 320px), max(100%, calc(50vw + 50% - 48px)));
+    }
+  }
+
+  /* The Width slider on [CB] Header and Content blocks. The doubled class beats each block's own max width. */
+  .cb-group-w.cb-group-w {
+    box-sizing: border-box;
+    flex: 0 1 auto;
+    width: min(var(--cb-group-w, 100%), 100%);
+    max-width: none;
+  }
 {% endstylesheet %}

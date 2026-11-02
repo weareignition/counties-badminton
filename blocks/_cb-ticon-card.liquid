@@ -3,7 +3,21 @@
   the section is on (when there is one).
 {%- endcomment -%}
 {%- liquid
+  # A filter value filters the [CB] Product catalogue on this collection page when the store offers that filter
+  # (snippets/cb-filter-link). Until it does, the link, or the products. Without a filter value, the link, then the
+  # page's collection.
   assign url = block.settings.link
+  assign filter_attrs = ''
+  if block.settings.filter_value != blank and collection
+    assign fallback = url | default: '#products'
+    capture url
+      render 'cb-filter-link', names: block.settings.filter_name, value: block.settings.filter_value, fallback: fallback, part: 'href'
+    endcapture
+    capture filter_attrs
+      render 'cb-filter-link', names: block.settings.filter_name, value: block.settings.filter_value, part: 'attrs'
+    endcapture
+    assign url = url | strip
+  endif
   if url == blank and collection
     assign url = collection.url
   endif
@@ -27,6 +41,7 @@
     --cb-ticon-card-link-size: {{ block.settings.link_size }}px;
     --cb-ticon-card-link-weight: {{ block.settings.link_weight }};
   "
+  {{ filter_attrs }}
   {{ block.shopify_attributes }}
 >
   {%- if block.settings.custom_icon != blank or block.settings.icon != 'none' -%}
@@ -42,6 +57,14 @@
               <path d="M19 13v6h-6"/><path d="M5 11V5h6"/><path d="m5 5 14 14"/>
             {%- when 'shield' -%}
               <path d="M20 13c0 5-3.5 7.5-7.7 9a1 1 0 0 1-.6 0C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.2-2.7a1.2 1.2 0 0 1 1.6 0C14.5 3.8 17 5 19 5a1 1 0 0 1 1 1z"/><path d="M9 12h6M12 9v6"/>
+            {%- when 'shield_plain' -%}
+              <path d="M20 13c0 5-3.5 7.5-7.7 9a1 1 0 0 1-.6 0C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.2-2.7a1.2 1.2 0 0 1 1.6 0C14.5 3.8 17 5 19 5a1 1 0 0 1 1 1z"/>
+            {%- when 'bolt' -%}
+              <path d="M13 2 3 14h9l-1 8 10-12h-9z"/>
+            {%- when 'scales' -%}
+              <path d="m16 16 3-8 3 8c-.9.7-1.9 1-3 1s-2.1-.3-3-1z"/><path d="m2 16 3-8 3 8c-.9.7-1.9 1-3 1s-2.1-.3-3-1z"/><path d="M7 21h10M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/>
+            {%- when 'star' -%}
+              <path d="m12 3.5 2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/>
             {%- when 'shapes' -%}
               <path d="M8.3 10a.7.7 0 0 1-.6-1.1L11.4 3a.7.7 0 0 1 1.2 0l3.7 5.9a.7.7 0 0 1-.6 1.1z"/><rect x="3" y="14" width="7" height="7" rx="1"/><circle cx="17.5" cy="17.5" r="3.5"/>
             {%- when 'shirt' -%}
@@ -97,6 +120,15 @@
   a.cb-ticon-card:focus-visible {
     outline: 2px solid var(--cbtc-text);
     outline-offset: 2px;
+  }
+
+  /* The card whose filter is applied to the products below. */
+  a.cb-ticon-card.is-active {
+    box-shadow: inset 0 0 0 1px var(--cbtc-accent);
+  }
+
+  a.cb-ticon-card.is-active .cb-ticon-card__link {
+    color: var(--cbtc-accent);
   }
 
   .cb-ticon-card__icon {
@@ -178,6 +210,10 @@
         { "value": "hanger", "label": "Hanger" },
         { "value": "compress", "label": "Compression" },
         { "value": "shield", "label": "Shield" },
+        { "value": "shield_plain", "label": "Plain shield" },
+        { "value": "bolt", "label": "Lightning bolt" },
+        { "value": "scales", "label": "Balance scales" },
+        { "value": "star", "label": "Star" },
         { "value": "shapes", "label": "Shapes" },
         { "value": "shirt", "label": "Shirt" },
         { "value": "shoe", "label": "Shoe" },
@@ -212,6 +248,22 @@
       "id": "card_text",
       "label": "Text",
       "default": "Shirts, shorts and clothing for training and match play."
+    },
+    {
+      "type": "header",
+      "content": "Filter the products below"
+    },
+    {
+      "type": "text",
+      "id": "filter_name",
+      "label": "Filter name",
+      "info": "A Search & Discovery filter on this collection, e.g. Play style. Several names can be given, comma separated."
+    },
+    {
+      "type": "text",
+      "id": "filter_value",
+      "label": "Filter value",
+      "info": "Needs a filter name too. On a collection page the card filters the [CB] Product catalogue by this value. Until the store offers that filter, it opens the link or jumps to the products."
     },
     {
       "type": "header",

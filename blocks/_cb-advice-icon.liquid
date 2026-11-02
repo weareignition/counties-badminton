@@ -11,7 +11,7 @@
     endcase
   -%}
   <div
-    class="cb-advice__icon cb-advice__icon--{{ block.settings.color }}{% unless block.settings.show_on_mobile %} cb-advice__icon--desktop{% endunless %}"
+    class="cb-advice__icon cb-advice__icon--{{ block.settings.color }}{% unless block.settings.show_on_mobile %} cb-advice__icon--desktop{% endunless %}{% if block.settings.position == 'corner' %} cb-advice__icon--corner{% endif %}"
     style="--cbn-icon-size: {{ block.settings.size }}px; --cbn-icon-opacity: {{ block.settings.opacity | divided_by: 100.0 }};"
     aria-hidden="true"
     {{ block.shopify_attributes }}
@@ -61,6 +61,21 @@
 
   .cb-advice__icon .cb-icon-upload {
     aspect-ratio: 1;
+  }
+
+  /* Corner: pinned to the panel's bottom right, where the panel crops anything that reaches past it. */
+  @media screen and (min-width: 750px) {
+    .cb-advice__panel:has(> .cb-advice__icon--corner) {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cb-advice__icon--corner {
+      position: absolute;
+      right: 24px;
+      bottom: 0;
+      pointer-events: none;
+    }
   }
 
   /* Phones: half size, above the text. */
@@ -125,10 +140,26 @@
       "id": "size",
       "label": "Size",
       "min": 40,
-      "max": 200,
+      "max": 280,
       "step": 4,
       "unit": "px",
       "default": 136
+    },
+    {
+      "type": "select",
+      "id": "position",
+      "label": "Position",
+      "options": [
+        {
+          "value": "beside",
+          "label": "Beside the text"
+        },
+        {
+          "value": "corner",
+          "label": "Bottom right corner"
+        }
+      ],
+      "default": "beside"
     },
     {
       "type": "range",

@@ -71,6 +71,7 @@
         "separator": "•",
         "body_font": "inter_n4",
         "font_size": 12,
+        "font_weight": "initial",
         "padding": 7,
         "max_width": 1600,
         "background_color": "#d71f27",
@@ -89,16 +90,30 @@
             "title_text": "Pro shop",
             "keep_text_visible": true,
             "badge_text": "Papakura",
-            "subtitle": "Specialist Workshop & Rigging Lab"
+            "subtitle": "Specialist Workshop & Rigging Lab",
+            "shop_name_size": 18,
+            "shop_name_weight": "initial",
+            "title_size": 14,
+            "title_weight": "initial",
+            "badge_size": 10,
+            "badge_weight": "initial",
+            "subtitle_size": 11,
+            "subtitle_weight": "initial"
           },
           "blocks": {}
         },
         "nav": {
           "type": "_cb-header-nav",
           "settings": {
-            "menu": "main-menu",
+            "menu": "main-menu-2",
             "drawer_button_label": "Find My Racket",
-            "drawer_button_link": ""
+            "drawer_button_link": "",
+            "link_size": 14,
+            "link_weight": "initial",
+            "sublink_size": 14,
+            "sublink_weight": "initial",
+            "button_size": 14,
+            "button_weight": "initial"
           },
           "blocks": {}
         },
@@ -106,7 +121,9 @@
           "type": "_cb-header-search",
           "settings": {
             "placeholder": "Search frame, tension...",
-            "field_width": 180
+            "field_width": 180,
+            "placeholder_size": 13,
+            "placeholder_weight": "initial"
           },
           "blocks": {}
         },
@@ -114,9 +131,11 @@
           "type": "_cb-header-button",
           "settings": {
             "label": "Find My Racket",
-            "link": "",
+            "link": "/collections/rackets#racket-finder",
             "style": "primary",
-            "show_on_mobile": false
+            "show_on_mobile": false,
+            "label_size": 13,
+            "label_weight": "initial"
           },
           "blocks": {}
         },

@@ -402,12 +402,8 @@
         </div>
       </div>
     {%- elsif block.settings.display == 'buttons' -%}
-      <div
-        class="cb-cat-chips cb-cat-chips--{{ block.settings.button_style }}{% if block.settings.button_columns == 'auto' %} cb-cat-chips--auto{% endif %}"
-        {% unless block.settings.button_columns == 'auto' %}
-          style="--cbk-chip-columns: {{ block.settings.button_columns }};"
-        {% endunless %}
-      >
+      {%- assign chip_sizes = '100' -%}
+      {%- capture chip_items -%}
         {%- for entry in option_tokens -%}
           {%- liquid
             assign token = entry | split: '=' | first
@@ -428,9 +424,10 @@
             assign value_label = entry | remove_first: token | remove_first: '=' | default: value.label
           -%}
           {%- if token contains 'm' -%}
+            {%- assign value_label = missing_values[index] -%}
             <label class="cb-cat-chip is-disabled">
               <input class="cb-cat-chip__input" type="checkbox" disabled>
-              <span class="cb-cat-chip__text">{{ missing_values[index] | escape }}</span>
+              <span class="cb-cat-chip__text">{{ value_label | escape }}</span>
             </label>
           {%- else -%}
             <label class="cb-cat-chip{% if unavailable %} is-disabled{% endif %}">
@@ -450,7 +447,19 @@
               <span class="cb-cat-chip__text">{{ value_label | escape }}</span>
             </label>
           {%- endif -%}
+          {%- liquid
+            # Label lengths, offset to three digits so a text sort finds the longest
+            assign chip_size = value_label | size | plus: 100
+            assign chip_sizes = chip_sizes | append: ',' | append: chip_size
+          -%}
         {%- endfor -%}
+      {%- endcapture -%}
+      {%- assign chip_chars = chip_sizes | split: ',' | sort | last | minus: 100 -%}
+      <div
+        class="cb-cat-chips cb-cat-chips--{{ block.settings.button_style }}{% if block.settings.button_columns == 'auto' %} cb-cat-chips--auto{% endif %}"
+        style="--cbk-chip-chars: {{ chip_chars }};{% unless block.settings.button_columns == 'auto' %} --cbk-chip-columns: {{ block.settings.button_columns }};{% endunless %}"
+      >
+        {{- chip_items -}}
       </div>
     {%- else -%}
       <ul class="cb-cat-checks cb-cat-checks--{{ count_style }}{{ round_class }}" role="list">
@@ -1034,10 +1043,22 @@
     cursor: default;
   }
 
-  /* Buttons */
+  /* Buttons: up to the chosen columns, but never narrower than the longest label, so labels stay on one line. */
   .cb-cat-chips {
     display: grid;
-    grid-template-columns: repeat(var(--cbk-chip-columns, 2), minmax(0, 1fr));
+    grid-template-columns: repeat(
+      auto-fill,
+      minmax(
+        min(
+          100%,
+          max(
+            calc(var(--cbk-chip-chars, 0) * var(--cb-cat-filter-button-size, 11px) * 0.65 + 18px),
+            calc((100% - (var(--cbk-chip-columns, 2) - 1) * 8px) / var(--cbk-chip-columns, 2) - 0.1px)
+          )
+        ),
+        1fr
+      )
+    );
     gap: 8px;
   }
 

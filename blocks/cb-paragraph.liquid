@@ -113,6 +113,66 @@
     },
     {
       "type": "header",
+      "content": "Width"
+    },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "Width",
+      "options": [
+        { "value": "auto", "label": "Auto (follows the section)" },
+        { "value": "fit", "label": "Fit the text" },
+        { "value": "full", "label": "Full width" },
+        { "value": "custom", "label": "Custom" }
+      ],
+      "default": "auto"
+    },
+    {
+      "type": "range",
+      "id": "width_px",
+      "label": "Custom width",
+      "min": 100,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "default": 400,
+      "visible_if": "{{ block.settings.width == 'custom' }}"
+    },
+    {
+      "type": "select",
+      "id": "max_width_unit",
+      "visible_if": "{{ block.settings.width != 'custom' }}",
+      "label": "Max width",
+      "options": [
+        { "value": "none", "label": "No limit" },
+        { "value": "px", "label": "Pixels" },
+        { "value": "ch", "label": "Characters per line" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "max_width_px",
+      "label": "Max width",
+      "min": 200,
+      "max": 1200,
+      "step": 10,
+      "unit": "px",
+      "default": 640,
+      "visible_if": "{{ block.settings.max_width_unit == 'px' and block.settings.width != 'custom' }}"
+    },
+    {
+      "type": "range",
+      "id": "max_width_ch",
+      "label": "Characters per line",
+      "min": 20,
+      "max": 120,
+      "step": 1,
+      "default": 60,
+      "visible_if": "{{ block.settings.max_width_unit == 'ch' and block.settings.width != 'custom' }}"
+    },
+    {
+      "type": "header",
       "content": "Size"
     },
     {
@@ -232,65 +292,6 @@
         { "value": "pretty", "label": "No single word on the last line" }
       ],
       "default": "wrap"
-    },
-    {
-      "type": "header",
-      "content": "Width"
-    },
-    {
-      "type": "select",
-      "id": "width",
-      "label": "Width",
-      "options": [
-        { "value": "auto", "label": "Auto (follows the section)" },
-        { "value": "fit", "label": "Fit the text" },
-        { "value": "full", "label": "Full width" },
-        { "value": "custom", "label": "Custom" }
-      ],
-      "default": "auto"
-    },
-    {
-      "type": "range",
-      "id": "width_px",
-      "label": "Custom width",
-      "min": 100,
-      "max": 1600,
-      "step": 20,
-      "unit": "px",
-      "default": 400,
-      "visible_if": "{{ block.settings.width == 'custom' }}"
-    },
-    {
-      "type": "select",
-      "id": "max_width_unit",
-      "label": "Max width",
-      "options": [
-        { "value": "none", "label": "No limit" },
-        { "value": "px", "label": "Pixels" },
-        { "value": "ch", "label": "Characters per line" }
-      ],
-      "default": "none"
-    },
-    {
-      "type": "range",
-      "id": "max_width_px",
-      "label": "Max width",
-      "min": 200,
-      "max": 1200,
-      "step": 10,
-      "unit": "px",
-      "default": 640,
-      "visible_if": "{{ block.settings.max_width_unit == 'px' }}"
-    },
-    {
-      "type": "range",
-      "id": "max_width_ch",
-      "label": "Characters per line",
-      "min": 20,
-      "max": 120,
-      "step": 1,
-      "default": 60,
-      "visible_if": "{{ block.settings.max_width_unit == 'ch' }}"
     },
     {
       "type": "header",

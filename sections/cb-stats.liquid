@@ -19,6 +19,7 @@
     --cby-muted: {{ s.text_color | color_modify: 'alpha', 0.55 }};
     --cby-accent: {{ s.accent_color }};
     --cby-box-border: {{ s.box_border_color }};
+    --cby-icon-box: {{ s.icon_box_size }}px;
     --cby-columns: {{ s.columns }};
     --cby-max-width: {{ s.max_width }}px;
     --cby-pt: {{ s.padding_top }}px;
@@ -96,6 +97,16 @@
       "step": 20,
       "unit": "px",
       "default": 1400
+    },
+    {
+      "type": "range",
+      "id": "icon_box_size",
+      "label": "Icon box size",
+      "min": 24,
+      "max": 64,
+      "step": 2,
+      "unit": "px",
+      "default": 32
     },
     {
       "type": "header",

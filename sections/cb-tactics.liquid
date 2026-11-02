@@ -12,7 +12,7 @@
 
 <section
   id="cb-tactics-{{ section.id }}"
-  class="cb-tactics"
+  class="cb-tactics cb-tactics--design-{{ s.design | default: '1' }}"
   data-cb-tactics
   style="
     --cbt-bg: {{ s.background_color }};
@@ -61,16 +61,71 @@
       padding-inline: 48px;
     }
   }
+
+  /*
+   * Design 2: a sharp tinted square behind each card's icon instead of the soft glow, roomier cards, quieter greys.
+   * Rules are prefixed with .cb-tactics--design-2 so they beat the blocks' own defaults in any stylesheet order.
+   */
+  .cb-tactics--design-2 .cb-tactics__inner {
+    --cbt-muted: color-mix(in srgb, var(--cbt-text) 60%, transparent);
+    --cbt-quiet: color-mix(in srgb, var(--cbt-text) 45%, transparent);
+  }
+
+  .cb-tactics--design-2 .cb-tactics__note {
+    color: var(--cbt-quiet);
+  }
+
+  .cb-tactics--design-2 .cb-tactic {
+    gap: 12px;
+    padding: 22px 20px 20px 22px;
+  }
+
+  .cb-tactics--design-2 .cb-tactic::before {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(to bottom left, color-mix(in srgb, var(--cbt-accent) 10%, transparent), transparent);
+    transition: width 0.2s ease, height 0.2s ease;
+  }
+
+  .cb-tactics--design-2 .cb-tactic:hover::before,
+  .cb-tactics--design-2 .cb-tactic.is-active::before {
+    width: 88px;
+    height: 88px;
+    background: linear-gradient(to bottom left, color-mix(in srgb, var(--cbt-accent) 20%, transparent), transparent);
+  }
+
+  .cb-tactics--design-2 .cb-tactic:hover,
+  .cb-tactics--design-2 .cb-tactic.is-active {
+    border-color: color-mix(in srgb, var(--cbt-accent) 60%, transparent);
+    background: color-mix(in srgb, var(--cbt-text) 1.5%, var(--cbt-card));
+  }
+
+  .cb-tactics--design-2 .cb-tactic__icon {
+    color: var(--cbt-quiet);
+  }
+
+  .cb-tactics--design-2 .cb-tactic__title {
+    margin-top: 0;
+  }
+
+  .cb-tactics--design-2 .cb-tactic__text {
+    margin-bottom: 6px;
+  }
+
+  .cb-tactics--design-2 .cb-tactic__footer {
+    padding-top: 20px;
+  }
 {% endstylesheet %}
 
 {% javascript %}
   (() => {
     // A style card with a filter value filters the next [CB] Featured frames section further down the
     // page and scrolls to it. Without such a section (or a filter value) the card simply opens its link.
+    // A card that filters the [CB] Product catalogue is left to the catalogue's script.
     document.addEventListener('click', (event) => {
       const card = event.target.closest?.('[data-cb-tactic]');
       const root = card?.closest('[data-cb-tactics]');
-      if (!root || event.metaKey || event.ctrlKey || event.shiftKey) return;
+      if (!root || card.hasAttribute('data-cb-cat-filter') || event.metaKey || event.ctrlKey || event.shiftKey) return;
 
       const target = [...document.querySelectorAll('[data-cb-frames]')].find(
         (frames) => root.compareDocumentPosition(frames) & Node.DOCUMENT_POSITION_FOLLOWING
@@ -103,6 +158,23 @@
     "groups": ["header", "footer"]
   },
   "settings": [
+    {
+      "type": "select",
+      "id": "design",
+      "label": "Design",
+      "options": [
+        { "value": "1", "label": "Design 1 – soft corner glow" },
+        { "value": "2", "label": "Design 2 – tinted corner square" }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "text",
+      "id": "filter_name",
+      "label": "Filter name",
+      "info": "The Search & Discovery filter the cards apply to the [CB] Product catalogue on this page, matched by its name. Several names can be given, comma separated. A card can set its own.",
+      "default": "Player style, Play style"
+    },
     {
       "type": "header",
       "content": "Layout"
@@ -293,6 +365,125 @@
         }
       },
       "block_order": ["header", "cards"]
+    },
+    {
+      "name": "[CB] Playing tactics (Design 2)",
+      "category": "t:categories.collections",
+      "blocks": {
+        "header": {
+          "type": "_cb-tactics-header",
+          "blocks": {
+            "eyebrow": {
+              "type": "cb-subheader",
+              "settings": {
+                "subheader_text": "Choose by playing tactics",
+                "show_dot": true,
+                "size": 12,
+                "color": "custom",
+                "letter_spacing": 10,
+                "custom_color": "#a3a3a3"
+              }
+            },
+            "note": {
+              "type": "_cb-tactics-note",
+              "settings": {
+                "note_text": "Click a style card to filter collection below"
+              }
+            }
+          },
+          "block_order": [
+            "eyebrow",
+            "note"
+          ]
+        },
+        "cards": {
+          "type": "_cb-tactics-cards",
+          "blocks": {
+            "card_1": {
+              "type": "_cb-tactics-card",
+              "settings": {
+                "icon": "zap",
+                "tactic_label": "Rapid drive",
+                "tactic_title": "Speed & Drive",
+                "tactic_text": "Fast exchanges, rapid doubles defense, light swing inertia & aerodynamic head-light frames.",
+                "custom_count": "16 Frames",
+                "cta_label": "Browse Speed",
+                "filter_value": "Speed",
+                "label_size": 11,
+                "title_size": 18,
+                "cta_size": 11,
+                "cta_weight": "500"
+              }
+            },
+            "card_2": {
+              "type": "_cb-tactics-card",
+              "settings": {
+                "icon": "arrows",
+                "tactic_label": "Rear-court power",
+                "tactic_title": "Attack & Smash",
+                "tactic_text": "Steep offensive smashes, explosive baseline clears, heavy momentum & stiff power shafts.",
+                "custom_count": "18 Frames",
+                "cta_label": "Browse Attack",
+                "filter_value": "Attack",
+                "highlight": true,
+                "label_size": 11,
+                "title_size": 18,
+                "cta_size": 11,
+                "cta_weight": "500"
+              }
+            },
+            "card_3": {
+              "type": "_cb-tactics-card",
+              "settings": {
+                "icon": "crosshair",
+                "tactic_label": "Tactical touch",
+                "tactic_title": "Control & Balanced",
+                "tactic_text": "Tactical placement, net touch, sharp spinning slices, even balance & predictable stringbed hold.",
+                "custom_count": "10 Frames",
+                "cta_label": "Browse Control",
+                "filter_value": "Control",
+                "label_size": 11,
+                "title_size": 18,
+                "cta_size": 11,
+                "cta_weight": "500"
+              }
+            },
+            "card_4": {
+              "type": "_cb-tactics-card",
+              "settings": {
+                "icon": "shield",
+                "tactic_label": "Foundation",
+                "tactic_title": "Beginner & Club",
+                "tactic_text": "Forgiving oversized sweet spots, flexible shafts for easy depth, lightweight and arm protection.",
+                "custom_count": "8 Frames",
+                "cta_label": "Browse Beginner",
+                "filter_value": "Beginner",
+                "label_size": 11,
+                "title_size": 18,
+                "cta_size": 11,
+                "cta_weight": "500"
+              }
+            }
+          },
+          "block_order": [
+            "card_1",
+            "card_2",
+            "card_3",
+            "card_4"
+          ],
+          "settings": {
+            "gap": 18
+          }
+        }
+      },
+      "block_order": [
+        "header",
+        "cards"
+      ],
+      "settings": {
+        "design": "2",
+        "background_color": "#0e0e0e"
+      }
     }
   ]
 }

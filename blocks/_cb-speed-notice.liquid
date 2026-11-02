@@ -27,6 +27,8 @@
 <div
   class="cb-speed-notice"
   style="
+    --cb-speed-notice-py: {{ block.settings.padding_y }}px;
+    --cb-speed-notice-px: {{ block.settings.padding_x }}px;
     --cb-speed-notice-title-size: {{ block.settings.title_size }}px;
     --cb-speed-notice-title-weight: {{ block.settings.title_weight }};
     --cb-speed-notice-text-size: {{ block.settings.text_size }}px;
@@ -50,7 +52,7 @@
         </span>
       {%- endif -%}
       <div class="cb-speed-notice__copy">
-        <p class="cb-speed-notice__title">{{ block.settings.notice_title | escape }}</p>
+        <p class="cb-speed-notice__title{% if block.settings.title_font == 'body' %} cb-speed-notice__title--body{% endif %}">{{ block.settings.notice_title | escape }}</p>
         {%- if block.settings.notice_text != blank -%}
           <p class="cb-speed-notice__sub">{{ block.settings.notice_text | escape }}</p>
         {%- endif -%}
@@ -83,7 +85,7 @@
       {%- if block.settings.link_url != blank -%}
         <a class="cb-speed-notice__link" href="{{ block.settings.link_url }}">
           {{- link_label | escape -}}
-          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <svg width="10" height="10" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m6 3 5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
       {%- endif -%}
     {%- endif -%}
@@ -97,7 +99,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 14px 24px;
-    padding: 16px 18px;
+    padding: var(--cb-speed-notice-py, 16px) var(--cb-speed-notice-px, 18px);
     border: 1px solid var(--cbd-border);
     border-radius: var(--cbd-radius);
     background: var(--cbd-card);
@@ -138,7 +140,7 @@
     justify-content: center;
     width: 36px;
     height: 36px;
-    border: 1px solid color-mix(in srgb, var(--cbd-accent) 60%, transparent);
+    border: 1px solid color-mix(in srgb, var(--cbd-accent) 20%, transparent);
     border-radius: 6px;
     background: color-mix(in srgb, var(--cbd-accent) 12%, transparent);
     color: var(--cbd-accent);
@@ -158,6 +160,10 @@
     font-size: var(--cb-speed-notice-title-size, 15px);
     line-height: 1.3;
     color: var(--cbd-text);
+  }
+
+  .cb-speed-notice__title--body {
+    font-family: var(--cbd-font-body);
   }
 
   .cb-speed-notice__sub {
@@ -192,6 +198,8 @@
   }
 
   .cb-speed-notice__button--caps {
+    padding: 11px 22px;
+    border-radius: 3px;
     letter-spacing: 0.08em;
     text-transform: uppercase;
   }
@@ -271,6 +279,16 @@
       "info": "Optional. With a title the icon sits in a tinted square and the text below turns smaller."
     },
     {
+      "type": "select",
+      "id": "title_font",
+      "label": "Title font",
+      "options": [
+        { "value": "heading", "label": "Heading font" },
+        { "value": "body", "label": "Body font" }
+      ],
+      "default": "heading"
+    },
+    {
       "type": "textarea",
       "id": "notice_text",
       "label": "Text",
@@ -305,6 +323,26 @@
       "id": "link_url",
       "label": "Second link",
       "info": "The second link only shows once it has a link."
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Box padding top and bottom",
+      "min": 8,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "padding_x",
+      "label": "Box padding left and right",
+      "min": 8,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 18
     },
     {
       "type": "header",

@@ -15,7 +15,7 @@
         "cb_hero_content_66QGjG": {
           "type": "_cb-hero-content",
           "settings": {
-            "gap": 24,
+            "gap": 16,
             "alignment": "start"
           },
           "blocks": {
@@ -24,27 +24,38 @@
               "settings": {
                 "badge_text": "COURT FOOTWEAR",
                 "badge_secondary": "",
-                "show_dot": true
+                "show_dot": true,
+                "text_size": 12,
+                "text_weight": "initial"
               },
               "blocks": {}
             },
             "cb_hero_heading_UFq73i": {
               "type": "cb-heading",
               "settings": {
-                "heading_text": "&nbsp;Built for badminton movement.&nbsp;",
+                "heading_text": "Built for badminton movement.",
                 "tag": "h1",
-                "size": 64,
+                "size": 56,
                 "mobile_sizing": "fluid",
                 "mobile_scale": 82,
                 "fluid_min": 36,
                 "fluid_vw": 8,
                 "weight": "font",
                 "color": "text",
-                "line_height": 105,
+                "custom_color": "#ffffff",
+                "line_height": 115,
                 "letter_spacing": -2,
                 "uppercase": false,
-                "wrap": "balance",
-                "max_width": 0
+                "wrap": "wrap",
+                "width": "auto",
+                "width_px": 400,
+                "max_width": 0,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
               },
               "blocks": {}
             },
@@ -58,29 +69,43 @@
                 "fluid_vw": 2.2,
                 "weight": "regular",
                 "color": "muted",
-                "line_height": 155,
+                "custom_color": "#ffffff",
+                "line_height": 170,
                 "letter_spacing": 0,
                 "wrap": "wrap",
+                "width": "auto",
+                "width_px": 400,
                 "max_width_unit": "ch",
                 "max_width_px": 640,
-                "max_width_ch": 52
+                "max_width_ch": 56,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
               },
               "blocks": {}
             },
             "cb_hero_buttons_JaDttr": {
               "type": "_cb-hero-buttons",
               "settings": {
-                "stack_mobile": true
+                "stack_mobile": true,
+                "space_above": 16
               },
               "blocks": {
                 "cb_hero_button_rUTNP8": {
                   "type": "_cb-hero-button",
                   "settings": {
                     "label": "SHOP ALL FOOTWEAR",
-                    "link": "",
+                    "link": "#products",
                     "open_in_new_tab": false,
                     "style": "primary",
-                    "show_arrow": true
+                    "show_arrow": true,
+                    "arrow_direction": "down",
+                    "glow": false,
+                    "label_size": 14,
+                    "label_weight": "initial"
                   },
                   "blocks": {}
                 },
@@ -88,10 +113,14 @@
                   "type": "_cb-hero-button",
                   "settings": {
                     "label": "FIND YOUR SIZE",
-                    "link": "",
+                    "link": "shopify://pages/contact",
                     "open_in_new_tab": false,
                     "style": "secondary",
-                    "show_arrow": false
+                    "show_arrow": false,
+                    "arrow_direction": "right",
+                    "glow": false,
+                    "label_size": 14,
+                    "label_weight": "initial"
                   },
                   "blocks": {}
                 }
@@ -104,22 +133,30 @@
             "cb_hero_features_U8tdX6": {
               "type": "_cb-hero-features",
               "settings": {
-                "show_divider": true
+                "show_divider": false,
+                "divider_space_above": 12,
+                "divider_space_below": 28
               },
               "blocks": {
                 "cb_hero_feature_9iVVzP": {
                   "type": "_cb-hero-feature",
                   "settings": {
                     "icon": "check",
-                    "feature_text": "Badminton-specific footwear"
+                    "custom_icon_tint": true,
+                    "feature_text": "Badminton-specific footwear",
+                    "text_size": 14,
+                    "text_weight": "initial"
                   },
                   "blocks": {}
                 },
                 "cb_hero_feature_FXjm77": {
                   "type": "_cb-hero-feature",
                   "settings": {
-                    "icon": "sliders",
-                    "feature_text": "Click & collect Papakura"
+                    "icon": "store",
+                    "custom_icon_tint": true,
+                    "feature_text": "Click & collect Papakura",
+                    "text_size": 14,
+                    "text_weight": "initial"
                   },
                   "blocks": {}
                 },
@@ -127,7 +164,10 @@
                   "type": "_cb-hero-feature",
                   "settings": {
                     "icon": "calendar",
-                    "feature_text": "Open 7 Days"
+                    "custom_icon_tint": true,
+                    "feature_text": "Open 7 days",
+                    "text_size": 14,
+                    "text_weight": "initial"
                   },
                   "blocks": {}
                 }
@@ -153,7 +193,14 @@
             "image": "shopify://shop_images/footwear.png",
             "aspect_ratio": "4 / 3",
             "aspect_ratio_mobile": "4 / 3",
-            "radius": 12
+            "radius": 12,
+            "image_nudge": 22,
+            "show_gradient": false,
+            "gradient_direction": "0deg",
+            "gradient_color": "#0b0b0b",
+            "gradient_start_opacity": 80,
+            "gradient_length": 50,
+            "gradient_end_opacity": 0
           },
           "blocks": {}
         }
@@ -164,19 +211,23 @@
       ],
       "name": "[CB] Hero",
       "settings": {
-        "design": "1",
-        "content_width": 55,
+        "design": "6",
+        "breadcrumb": "Home / Equipment / Footwear",
+        "breadcrumb_size": 12,
+        "breadcrumb_weight": "initial",
+        "media_edge": "screen",
+        "content_width": 46,
         "column_gap": 40,
         "max_width": 1400,
         "media_first_mobile": false,
         "heading_font": "space_grotesk_n7",
         "body_font": "inter_n4",
-        "background_color": "#080808",
-        "glow_color": "#3a0c10",
+        "background_color": "#0b0b0b",
+        "glow_color": "#0b0b0b",
         "text_color": "#ffffff",
         "accent_color": "#d71f27",
         "accent_text_color": "#ffffff",
-        "padding_top": 32,
+        "padding_top": 20,
         "padding_bottom": 32
       }
     },
@@ -194,54 +245,82 @@
             "cb_ticon_eyebrow_3JXega": {
               "type": "cb-subheader",
               "settings": {
-                "subheader_text": "Shop by type",
+                "subheader_text": "Shop by need",
                 "secondary": "",
                 "show_dot": false,
                 "size": 10,
                 "weight": "strong",
+                "secondary_weight": "initial",
                 "color": "accent",
+                "custom_color": "#ffffff",
                 "letter_spacing": 0,
                 "uppercase": true,
-                "space_below": 0
+                "space_below": 0,
+                "width": "auto",
+                "width_px": 400,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
               },
               "blocks": {}
             },
             "cb_ticon_heading_9Kcipp": {
               "type": "cb-heading",
               "settings": {
-                "heading_text": "Gear up for the court.",
+                "heading_text": "Find the right court shoe.",
                 "tag": "h2",
                 "size": 32,
                 "mobile_sizing": "scale",
                 "mobile_scale": 82,
                 "fluid_min": 28,
                 "fluid_vw": 6,
-                "weight": "font",
+                "weight": "medium",
                 "color": "text",
+                "custom_color": "#ffffff",
                 "line_height": 115,
                 "letter_spacing": -1,
                 "uppercase": false,
                 "wrap": "wrap",
-                "max_width": 0
+                "width": "auto",
+                "width_px": 400,
+                "max_width": 0,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
               },
               "blocks": {}
             },
             "cb_ticon_text_jJmqme": {
               "type": "cb-paragraph",
               "settings": {
-                "body_text": "<p>Shirts, shorts, compression and support gear for training and match play, available online and at the Papakura Pro Shop.</p>",
+                "body_text": "<p>Match your movement profile to badminton-engineered court outsoles and support chassis.</p>",
                 "size": 14,
                 "mobile_sizing": "same",
                 "mobile_size": 14,
                 "fluid_vw": 2,
                 "weight": "regular",
                 "color": "muted",
+                "custom_color": "#ffffff",
                 "line_height": 160,
                 "letter_spacing": -1,
                 "wrap": "wrap",
+                "width": "auto",
+                "width_px": 400,
                 "max_width_unit": "px",
-                "max_width_px": 440,
-                "max_width_ch": 60
+                "max_width_px": 420,
+                "max_width_ch": 60,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
               },
               "blocks": {}
             }
@@ -262,44 +341,80 @@
             "cb_ticon_card_chnQnB": {
               "type": "_cb-ticon-card",
               "settings": {
-                "icon": "shapes",
+                "icon": "bolt",
+                "custom_icon_tint": true,
                 "card_title": "Speed & Agility",
                 "card_text": "For players who prioritise quick movement and a lightweight feel.",
                 "link_label": "View Speed Range",
-                "link": "shopify://collections/clothing"
+                "link": "",
+                "title_size": 18,
+                "title_weight": "500",
+                "text_size": 12,
+                "text_weight": "initial",
+                "link_size": 12,
+                "link_weight": "initial",
+                "filter_name": "Play style, Player style",
+                "filter_value": "Speed"
               },
               "blocks": {}
             },
             "cb_ticon_card_QJMCAW": {
               "type": "_cb-ticon-card",
               "settings": {
-                "icon": "shield",
+                "icon": "shield_plain",
+                "custom_icon_tint": true,
                 "card_title": "Stability & Support",
                 "card_text": "For players looking for a more planted, supportive court feel.",
                 "link_label": "View Support Models",
-                "link": "shopify://collections/accessories"
+                "link": "",
+                "title_size": 18,
+                "title_weight": "500",
+                "text_size": 12,
+                "text_weight": "initial",
+                "link_size": 12,
+                "link_weight": "initial",
+                "filter_name": "Play style, Player style",
+                "filter_value": "Stability"
               },
               "blocks": {}
             },
             "cb_ticon_card_EDrHV8": {
               "type": "_cb-ticon-card",
               "settings": {
-                "icon": "shield",
+                "icon": "scales",
+                "custom_icon_tint": true,
                 "card_title": "All-Round Court",
                 "card_text": "Balanced everyday badminton footwear for regular training and club play.",
                 "link_label": "View All-Round",
-                "link": "shopify://collections/accessories"
+                "link": "",
+                "title_size": 18,
+                "title_weight": "500",
+                "text_size": 12,
+                "text_weight": "initial",
+                "link_size": 12,
+                "link_weight": "initial",
+                "filter_name": "Play style, Player style",
+                "filter_value": "All-round"
               },
               "blocks": {}
             },
             "cb_ticon_card_DtGiLA": {
               "type": "_cb-ticon-card",
               "settings": {
-                "icon": "shapes",
+                "icon": "star",
+                "custom_icon_tint": true,
                 "card_title": "Beginner",
                 "card_text": "Simple, accessible options for newer players entering the game.",
                 "link_label": "View Entry Models",
-                "link": ""
+                "link": "",
+                "title_size": 18,
+                "title_weight": "500",
+                "text_size": 12,
+                "text_weight": "initial",
+                "link_size": 12,
+                "link_weight": "initial",
+                "filter_name": "Play style, Player style",
+                "filter_value": "Beginner"
               },
               "blocks": {}
             }
@@ -318,13 +433,14 @@
       ],
       "name": "[CB] Shop by type icons",
       "settings": {
+        "design": "2",
         "max_width": 1400,
-        "stack_gap": 32,
-        "card_radius": 5,
+        "stack_gap": 24,
+        "card_radius": 8,
         "heading_font": "space_grotesk_n7",
         "body_font": "inter_n4",
         "background_color": "#0b0b0b",
-        "card_background_color": "#181818",
+        "card_background_color": "#191919",
         "text_color": "#ffffff",
         "muted_text_color": "#a1a1aa",
         "accent_color": "#d71f27",
@@ -341,6 +457,7 @@
             "filter_label": "Brand",
             "title_text": "",
             "always_values": "Victor, Babolat",
+            "empty_text": "No options yet",
             "panel_style": "panel",
             "reset_label": "",
             "display": "list",
@@ -359,7 +476,27 @@
             "price_display": "slider",
             "price_prefix": "Up to",
             "price_buckets": "Under $30 | 0-30\n$30 – $60 | 30-60\nOver $60 | 60+",
-            "price_multi": false
+            "price_multi": false,
+            "heading_size": 11,
+            "heading_weight": "initial",
+            "heading_link_size": 10,
+            "heading_link_weight": "initial",
+            "reset_size": 11,
+            "reset_weight": "initial",
+            "guide_size": 11,
+            "guide_weight": "initial",
+            "checkbox_size": 12,
+            "checkbox_weight": "initial",
+            "count_size": 11,
+            "count_weight": "initial",
+            "button_size": 11,
+            "button_weight": "initial",
+            "price_labels_size": 11,
+            "price_labels_weight": "initial",
+            "note_size": 11,
+            "note_weight": "initial",
+            "empty_size": 12,
+            "empty_weight": "initial"
           },
           "blocks": {}
         },
@@ -369,6 +506,7 @@
             "filter_label": "Gender / Fit",
             "title_text": "Gender / Fit",
             "always_values": "Men, Women, Junior, Unisex",
+            "empty_text": "No options yet",
             "panel_style": "panel",
             "reset_label": "",
             "display": "list",
@@ -387,7 +525,27 @@
             "price_display": "slider",
             "price_prefix": "Up to",
             "price_buckets": "Under $30 | 0-30\n$30 – $60 | 30-60\nOver $60 | 60+",
-            "price_multi": false
+            "price_multi": false,
+            "heading_size": 11,
+            "heading_weight": "initial",
+            "heading_link_size": 10,
+            "heading_link_weight": "initial",
+            "reset_size": 11,
+            "reset_weight": "initial",
+            "guide_size": 11,
+            "guide_weight": "initial",
+            "checkbox_size": 12,
+            "checkbox_weight": "initial",
+            "count_size": 11,
+            "count_weight": "initial",
+            "button_size": 11,
+            "button_weight": "initial",
+            "price_labels_size": 11,
+            "price_labels_weight": "initial",
+            "note_size": 11,
+            "note_weight": "initial",
+            "empty_size": 12,
+            "empty_weight": "initial"
           },
           "blocks": {}
         },
@@ -397,6 +555,7 @@
             "filter_label": "Shoe size",
             "title_text": "Size (US)",
             "always_values": "7.0, 7.5, 8.0, 8.5, 9.0, 9.5, 10.0, 10.5, 11.0, 12.0",
+            "empty_text": "No options yet",
             "panel_style": "panel",
             "reset_label": "",
             "display": "buttons",
@@ -415,7 +574,27 @@
             "price_display": "slider",
             "price_prefix": "Up to",
             "price_buckets": "Under $30 | 0-30\n$30 – $60 | 30-60\nOver $60 | 60+",
-            "price_multi": false
+            "price_multi": false,
+            "heading_size": 11,
+            "heading_weight": "initial",
+            "heading_link_size": 10,
+            "heading_link_weight": "initial",
+            "reset_size": 11,
+            "reset_weight": "initial",
+            "guide_size": 11,
+            "guide_weight": "initial",
+            "checkbox_size": 12,
+            "checkbox_weight": "initial",
+            "count_size": 11,
+            "count_weight": "initial",
+            "button_size": 11,
+            "button_weight": "initial",
+            "price_labels_size": 11,
+            "price_labels_weight": "initial",
+            "note_size": 11,
+            "note_weight": "initial",
+            "empty_size": 12,
+            "empty_weight": "initial"
           },
           "blocks": {}
         },
@@ -424,6 +603,8 @@
           "settings": {
             "filter_label": "Price",
             "title_text": "Price Range (NZD)",
+            "always_values": "",
+            "empty_text": "No options yet",
             "panel_style": "panel",
             "reset_label": "",
             "display": "list",
@@ -442,7 +623,27 @@
             "price_display": "buckets",
             "price_prefix": "Up to",
             "price_buckets": "Under $120 | 0-120\n$120 - $180 | 120-180\n$180 - $240 | 180-240\n$240+ | 240+",
-            "price_multi": true
+            "price_multi": true,
+            "heading_size": 11,
+            "heading_weight": "initial",
+            "heading_link_size": 10,
+            "heading_link_weight": "initial",
+            "reset_size": 11,
+            "reset_weight": "initial",
+            "guide_size": 11,
+            "guide_weight": "initial",
+            "checkbox_size": 12,
+            "checkbox_weight": "initial",
+            "count_size": 11,
+            "count_weight": "initial",
+            "button_size": 11,
+            "button_weight": "initial",
+            "price_labels_size": 11,
+            "price_labels_weight": "initial",
+            "note_size": 11,
+            "note_weight": "initial",
+            "empty_size": 12,
+            "empty_weight": "initial"
           },
           "blocks": {}
         },
@@ -450,6 +651,7 @@
           "type": "_cb-cat-promo",
           "settings": {
             "icon": "store",
+            "custom_icon_tint": true,
             "look": "compact",
             "accent_border": false,
             "icon_layout": "side",
@@ -459,7 +661,13 @@
             "promo_text": "Try shoes on at our counter to ensure court fit precision before play.",
             "footer_label": "",
             "footer_value": "",
-            "link": ""
+            "link": "",
+            "title_size": 11,
+            "title_weight": "initial",
+            "text_size": 12,
+            "text_weight": "initial",
+            "footer_size": 11,
+            "footer_weight": "initial"
           },
           "blocks": {}
         },
@@ -467,19 +675,28 @@
           "type": "cb-paragraph",
           "static": true,
           "settings": {
-            "body_text": "<p>Filter by size, brand and price to find the right court shoes.</p>",
+            "body_text": "<p>Browse court shoes from Victor and Babolat, selected for badminton movement and everyday play.</p>",
             "size": 13,
             "mobile_sizing": "same",
             "mobile_size": 13,
             "fluid_vw": 2,
             "weight": "regular",
             "color": "muted",
+            "custom_color": "#ffffff",
             "line_height": 160,
             "letter_spacing": 0,
             "wrap": "wrap",
+            "width": "auto",
+            "width_px": 400,
             "max_width_unit": "ch",
             "max_width_px": 640,
-            "max_width_ch": 70
+            "max_width_ch": 100,
+            "background_color": "",
+            "padding_y": 0,
+            "padding_x": 0,
+            "border_width": 0,
+            "border_color": "",
+            "radius": 0
           },
           "blocks": {}
         }
@@ -492,46 +709,96 @@
         "pickup"
       ],
       "settings": {
-        "title_text": "",
+        "design": "3",
+        "eyebrow_text": "Footwear",
+        "title_text": "Shop Badminton Footwear",
         "heading_tag": "h1",
-        "show_count": true,
+        "show_count": false,
         "count_label": "products",
         "quick_filter": "",
         "all_label": "All products",
         "show_sort": true,
         "sort_label": "Sort by:",
-        "show_view_toggle": true,
+        "featured_label": "Featured Court Shoes",
+        "show_view_toggle": false,
         "filter_heading": "Filters",
         "clear_label": "Reset All",
         "collection": "",
-        "products_per_page": 16,
+        "products_per_page": 8,
         "columns": "4",
         "image_ratio": "1 / 1",
         "image_fit": "contain",
-        "show_wishlist": true,
-        "button_label": "View details",
-        "quick_add_mode": "all",
+        "show_wishlist": false,
+        "button_label": "View product",
+        "quick_add_mode": "tag",
         "quick_collect_tag": "quick-collect",
         "quick_label": "Add to cart",
-        "stock_label": "In Stock Papakura",
-        "low_stock_threshold": 2,
+        "stock_label": "Click & Collect",
+        "low_stock_threshold": 0,
+        "sizes_label": "Sizes:",
         "low_stock_label": "[count] In Stock Papakura",
         "brand_names": "Yonex, Victor, Babolat, Li-Ning, Mizuno, Asics, Ashaway, Code Alpha",
         "showing_text": "Showing [from]–[to] of [total] products",
+        "pagination_style": "load_more",
+        "load_more_label": "Load more products",
         "empty_text": "No products match these filters.",
         "sidebar_width": 300,
         "max_width": 1400,
         "heading_font": "space_grotesk_n7",
         "body_font": "inter_n4",
-        "background_color": "#07090d",
-        "card_background_color": "#141414",
+        "background_color": "#0b0b0b",
+        "card_background_color": "#191919",
         "border_color": "#ffffff1a",
         "text_color": "#ffffff",
         "accent_color": "#d71f27",
         "image_background_color": "#ffffff",
         "success_color": "#22c55e",
-        "padding_top": 80,
-        "padding_bottom": 80
+        "padding_top": 56,
+        "padding_bottom": 80,
+        "title_size": 30,
+        "title_weight": "500",
+        "count_size": 10,
+        "count_weight": "initial",
+        "pill_size": 11,
+        "pill_weight": "initial",
+        "sort_label_size": 10.5,
+        "sort_label_weight": "initial",
+        "sort_select_size": 11.5,
+        "sort_select_weight": "400",
+        "filters_button_size": 11,
+        "filters_button_weight": "initial",
+        "filters_heading_size": 11,
+        "filters_heading_weight": "initial",
+        "clear_size": 10,
+        "clear_weight": "initial",
+        "badge_size": 9,
+        "badge_weight": "initial",
+        "brand_tag_size": 7.5,
+        "brand_tag_weight": "initial",
+        "product_title_size": 17,
+        "product_title_weight": "500",
+        "specs_size": 9.5,
+        "specs_weight": "initial",
+        "price_size": 20,
+        "price_weight": "initial",
+        "compare_price_size": 11,
+        "compare_price_weight": "initial",
+        "currency_size": 9,
+        "currency_weight": "initial",
+        "stock_size": 10,
+        "stock_weight": "initial",
+        "card_button_size": 8.5,
+        "card_button_weight": "initial",
+        "showing_size": 12,
+        "showing_weight": "initial",
+        "pagination_size": 12,
+        "pagination_weight": "initial",
+        "eyebrow_size": 10,
+        "eyebrow_weight": "initial",
+        "load_more_size": 10,
+        "load_more_weight": "initial",
+        "empty_size": 13,
+        "empty_weight": "initial"
       }
     },
     "cb_guides_mnfTex": {
@@ -541,28 +808,38 @@
           "type": "_cb-guides-header",
           "settings": {
             "alignment": "left",
-            "max_width": 660
+            "max_width": 680
           },
           "blocks": {
             "cb_guides_eyebrow_xED8b7": {
               "type": "cb-subheader",
               "settings": {
-                "subheader_text": "Setup guidance",
+                "subheader_text": "Footwear guidance",
                 "secondary": "",
                 "show_dot": false,
                 "size": 10,
                 "weight": "strong",
+                "secondary_weight": "initial",
                 "color": "accent",
+                "custom_color": "#ffffff",
                 "letter_spacing": 0,
                 "uppercase": true,
-                "space_below": 0
+                "space_below": 0,
+                "width": "auto",
+                "width_px": 400,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
               },
               "blocks": {}
             },
             "cb_guides_heading_U86gAE": {
               "type": "cb-heading",
               "settings": {
-                "heading_text": "Small details make a big difference.",
+                "heading_text": "Court shoes are built differently.",
                 "tag": "h2",
                 "size": 32,
                 "mobile_sizing": "fluid",
@@ -571,30 +848,48 @@
                 "fluid_vw": 6.5,
                 "weight": "font",
                 "color": "text",
+                "custom_color": "#ffffff",
                 "line_height": 115,
                 "letter_spacing": -1,
                 "uppercase": false,
                 "wrap": "balance",
-                "max_width": 0
+                "width": "auto",
+                "width_px": 400,
+                "max_width": 0,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
               },
               "blocks": {}
             },
             "cb_guides_text_Xa7LDm": {
               "type": "cb-paragraph",
               "settings": {
-                "body_text": "<p>From the right grip feel to keeping your rackets protected between games, the right accessories help keep your setup comfortable and court-ready.</p>",
+                "body_text": "<p>Badminton involves quick stops, changes of direction and repeated movement across the court. The right footwear should feel secure, comfortable and suited to how you play.</p>",
                 "size": 16,
                 "mobile_sizing": "same",
                 "mobile_size": 16,
                 "fluid_vw": 2,
                 "weight": "regular",
                 "color": "muted",
-                "line_height": 156,
+                "custom_color": "#ffffff",
+                "line_height": 165,
                 "letter_spacing": 0,
                 "wrap": "wrap",
+                "width": "auto",
+                "width_px": 400,
                 "max_width_unit": "none",
                 "max_width_px": 640,
-                "max_width_ch": 60
+                "max_width_ch": 60,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
               },
               "blocks": {}
             }
@@ -620,11 +915,23 @@
                 "use_custom_text": false,
                 "card_title": "Start with the right size",
                 "summary": "Choose a snug, comfortable fit that allows natural movement\nwithout sliding. Adequate room in the toe box ensures comfort\nduring fast footwork and lunges.",
-                "icon": "shoe",
+                "icon": "ruler",
+                "custom_icon": "shopify://shop_images/Icon_9.svg",
+                "custom_icon_tint": true,
                 "label": "FIT",
                 "point_text": "Recommended: Secure heel lock & natural forefoot comfort",
                 "link_label": "",
-                "link": ""
+                "link": "",
+                "label_size": 10.5,
+                "label_weight": "initial",
+                "title_size": 21.5,
+                "title_weight": "initial",
+                "summary_size": 13.5,
+                "summary_weight": "initial",
+                "point_size": 11.5,
+                "point_weight": "initial",
+                "link_size": 12,
+                "link_weight": "initial"
               },
               "blocks": {}
             },
@@ -635,11 +942,23 @@
                 "use_custom_text": false,
                 "card_title": "Lightweight or supportive?",
                 "summary": "A simple guide to choosing between agility and stability.\nPlayers who value quick court transitions prefer lightweight\nbuilds, while baseline players often prefer reinforced lateral\nsupport.",
-                "icon": "athlete",
+                "icon": "runner",
+                "custom_icon": "shopify://shop_images/Icon_10.svg",
+                "custom_icon_tint": true,
                 "label": "PLAYING STYLE",
                 "point_text": "Recommended: Select based on court role",
                 "link_label": "",
-                "link": ""
+                "link": "",
+                "label_size": 10.5,
+                "label_weight": "initial",
+                "title_size": 21.5,
+                "title_weight": "initial",
+                "summary_size": 13.5,
+                "summary_weight": "initial",
+                "point_size": 11.5,
+                "point_weight": "initial",
+                "link_size": 12,
+                "link_weight": "initial"
               },
               "blocks": {}
             },
@@ -650,11 +969,23 @@
                 "use_custom_text": false,
                 "card_title": "Use shoes made for the court",
                 "summary": "Badminton footwear is specifically engineered for indoor\ncourts. Non-marking gum rubber outsoles maximize traction\non timber flooring and help protect the playing surface.",
-                "icon": "player",
+                "icon": "lunge",
+                "custom_icon": "shopify://shop_images/Icon_11.svg",
+                "custom_icon_tint": true,
                 "label": "COURT USE",
                 "point_text": "Notice: Reserved for clean indoor court use",
                 "link_label": "",
-                "link": ""
+                "link": "",
+                "label_size": 10.5,
+                "label_weight": "initial",
+                "title_size": 21.5,
+                "title_weight": "initial",
+                "summary_size": 13.5,
+                "summary_weight": "initial",
+                "point_size": 11.5,
+                "point_weight": "initial",
+                "link_size": 12,
+                "link_weight": "initial"
               },
               "blocks": {}
             }
@@ -672,14 +1003,14 @@
       ],
       "name": "[CB] Setup guidance",
       "settings": {
-        "design": "2",
+        "design": "3",
         "max_width": 1400,
-        "stack_gap": 40,
-        "card_radius": 4,
+        "stack_gap": 36,
+        "card_radius": 8,
         "heading_font": "space_grotesk_n7",
         "body_font": "inter_n4",
         "background_color": "#0b0b0b",
-        "card_background_color": "#181818",
+        "card_background_color": "#191919",
         "border_color": "#ffffff0d",
         "text_color": "#ffffff",
         "accent_color": "#d71f27",
@@ -705,10 +1036,20 @@
                 "show_dot": false,
                 "size": 10,
                 "weight": "strong",
+                "secondary_weight": "initial",
                 "color": "accent",
+                "custom_color": "#ffffff",
                 "letter_spacing": 0,
                 "uppercase": true,
-                "space_below": 0
+                "space_below": 0,
+                "width": "auto",
+                "width_px": 400,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
               },
               "blocks": {}
             },
@@ -724,11 +1065,20 @@
                 "fluid_vw": 6,
                 "weight": "font",
                 "color": "text",
+                "custom_color": "#ffffff",
                 "line_height": 115,
                 "letter_spacing": -1,
                 "uppercase": false,
                 "wrap": "balance",
-                "max_width": 0
+                "width": "auto",
+                "width_px": 400,
+                "max_width": 0,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
               },
               "blocks": {}
             }
@@ -756,7 +1106,17 @@
                 "card_text": "Engineered specifically for badminton movement, Victor footwear delivers responsive court feel, lateral stability, and reliable traction during rapid changes of direction.",
                 "link_label": "Explore [brand] range",
                 "link": "",
-                "search_word": "shoe"
+                "search_word": "shoe",
+                "brand_size": 22,
+                "brand_weight": "initial",
+                "badge_size": 9,
+                "badge_weight": "initial",
+                "title_size": 18,
+                "title_weight": "initial",
+                "text_size": 14,
+                "text_weight": "initial",
+                "link_size": 11,
+                "link_weight": "initial"
               },
               "blocks": {}
             },
@@ -771,7 +1131,17 @@
                 "card_text": "Babolat court shoes deliver robust non-marking court grip and long-lasting durability, tailored for players requiring confident footwork across intensive training and match play.",
                 "link_label": "Explore [brand] range",
                 "link": "",
-                "search_word": "shoe"
+                "search_word": "shoe",
+                "brand_size": 22,
+                "brand_weight": "initial",
+                "badge_size": 9,
+                "badge_weight": "initial",
+                "title_size": 18,
+                "title_weight": "initial",
+                "text_size": 14,
+                "text_weight": "initial",
+                "link_size": 11,
+                "link_weight": "initial"
               },
               "blocks": {}
             }
@@ -821,10 +1191,20 @@
                 "show_dot": false,
                 "size": 10,
                 "weight": "strong",
+                "secondary_weight": "initial",
                 "color": "accent",
+                "custom_color": "#ffffff",
                 "letter_spacing": 8,
                 "uppercase": true,
-                "space_below": 0
+                "space_below": 0,
+                "width": "auto",
+                "width_px": 400,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
               },
               "blocks": {}
             },
@@ -840,11 +1220,20 @@
                 "fluid_vw": 6,
                 "weight": "font",
                 "color": "text",
+                "custom_color": "#ffffff",
                 "line_height": 115,
                 "letter_spacing": -1,
                 "uppercase": true,
                 "wrap": "wrap",
-                "max_width": 0
+                "width": "auto",
+                "width_px": 400,
+                "max_width": 0,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
               },
               "blocks": {}
             },
@@ -858,12 +1247,21 @@
                 "fluid_vw": 2,
                 "weight": "regular",
                 "color": "muted",
+                "custom_color": "#ffffff",
                 "line_height": 160,
                 "letter_spacing": 0,
                 "wrap": "wrap",
+                "width": "auto",
+                "width_px": 400,
                 "max_width_unit": "ch",
                 "max_width_px": 640,
-                "max_width_ch": 120
+                "max_width_ch": 120,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
               },
               "blocks": {}
             }
@@ -881,7 +1279,13 @@
             "link": "",
             "directions_address": "41R Elliot Street, Papakura, Auckland",
             "style": "accent",
-            "icon": "pin"
+            "icon": "pin",
+            "custom_icon_tint": true,
+            "icon_position": "after",
+            "icon_accent": false,
+            "uppercase": true,
+            "text_size": 11,
+            "text_weight": "initial"
           },
           "blocks": {}
         }
@@ -894,6 +1298,9 @@
       "settings": {
         "max_width": 1400,
         "show_panel": true,
+        "panel_padding_y": 48,
+        "panel_padding_x": 30,
+        "accent_edge": false,
         "panel_radius": 2,
         "heading_font": "space_grotesk_n7",
         "body_font": "inter_n4",
@@ -915,9 +1322,14 @@
           "type": "_cb-stats-item",
           "settings": {
             "icon": "calendar",
+            "custom_icon_tint": true,
             "stat_title": "Badminton specialists",
             "stat_text": "Curated exclusively for court athletics",
-            "link": ""
+            "link": "",
+            "stat_size": 14,
+            "stat_weight": "initial",
+            "text_size": 10,
+            "text_weight": "initial"
           },
           "blocks": {}
         },
@@ -925,9 +1337,14 @@
           "type": "_cb-stats-item",
           "settings": {
             "icon": "clock",
+            "custom_icon_tint": true,
             "stat_title": "Click & collect Papakura",
             "stat_text": "Instant pickup at 41R Elliot Street",
-            "link": ""
+            "link": "",
+            "stat_size": 14,
+            "stat_weight": "initial",
+            "text_size": 10,
+            "text_weight": "initial"
           },
           "blocks": {}
         },
@@ -935,9 +1352,14 @@
           "type": "_cb-stats-item",
           "settings": {
             "icon": "tag",
+            "custom_icon_tint": true,
             "stat_title": "Open 7 days",
             "stat_text": "Full facility access throughout the week",
-            "link": ""
+            "link": "",
+            "stat_size": 14,
+            "stat_weight": "initial",
+            "text_size": 10,
+            "text_weight": "initial"
           },
           "blocks": {}
         },
@@ -945,9 +1367,14 @@
           "type": "_cb-stats-item",
           "settings": {
             "icon": "racket",
+            "custom_icon_tint": true,
             "stat_title": "Supporting Counties Manukau",
             "stat_text": "100% of proceeds fund local player pathways",
-            "link": ""
+            "link": "",
+            "stat_size": 14,
+            "stat_weight": "initial",
+            "text_size": 10,
+            "text_weight": "initial"
           },
           "blocks": {}
         }
@@ -962,6 +1389,7 @@
       "settings": {
         "columns": 4,
         "max_width": 1400,
+        "icon_box_size": 32,
         "heading_font": "space_grotesk_n7",
         "body_font": "inter_n4",
         "background_color": "#07090d",
@@ -990,10 +1418,20 @@
                 "show_dot": false,
                 "size": 10,
                 "weight": "strong",
+                "secondary_weight": "initial",
                 "color": "accent",
+                "custom_color": "#ffffff",
                 "letter_spacing": 0,
                 "uppercase": true,
-                "space_below": 0
+                "space_below": 0,
+                "width": "auto",
+                "width_px": 400,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
               },
               "blocks": {}
             },
@@ -1009,11 +1447,20 @@
                 "fluid_vw": 6,
                 "weight": "font",
                 "color": "text",
+                "custom_color": "#ffffff",
                 "line_height": 115,
                 "letter_spacing": -1,
                 "uppercase": false,
                 "wrap": "balance",
-                "max_width": 0
+                "width": "auto",
+                "width_px": 400,
+                "max_width": 0,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
               },
               "blocks": {}
             },
@@ -1027,12 +1474,21 @@
                 "fluid_vw": 2,
                 "weight": "regular",
                 "color": "muted",
+                "custom_color": "#ffffff",
                 "line_height": 160,
                 "letter_spacing": -1,
                 "wrap": "wrap",
+                "width": "auto",
+                "width_px": 400,
                 "max_width_unit": "px",
                 "max_width_px": 640,
-                "max_width_ch": 60
+                "max_width_ch": 60,
+                "background_color": "",
+                "padding_y": 0,
+                "padding_x": 0,
+                "border_width": 0,
+                "border_color": "",
+                "radius": 0
               },
               "blocks": {}
             }
@@ -1058,7 +1514,11 @@
                 "title_prefix": "Shop",
                 "use_custom_title": false,
                 "card_title": "Shop rackets",
-                "link": ""
+                "link": "",
+                "label_size": 9,
+                "label_weight": "initial",
+                "title_size": 18,
+                "title_weight": "initial"
               },
               "blocks": {}
             },
@@ -1070,7 +1530,11 @@
                 "title_prefix": "Shop",
                 "use_custom_title": false,
                 "card_title": "Shop shuttles",
-                "link": ""
+                "link": "",
+                "label_size": 9,
+                "label_weight": "initial",
+                "title_size": 18,
+                "title_weight": "initial"
               },
               "blocks": {}
             },
@@ -1082,7 +1546,11 @@
                 "title_prefix": "Shop",
                 "use_custom_title": true,
                 "card_title": "Shop bags & accessories",
-                "link": ""
+                "link": "",
+                "label_size": 9,
+                "label_weight": "initial",
+                "title_size": 18,
+                "title_weight": "initial"
               },
               "blocks": {}
             }

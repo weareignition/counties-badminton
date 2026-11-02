@@ -12,7 +12,7 @@
 
 <section
   id="cb-ticons-{{ section.id }}"
-  class="cb-ticons"
+  class="cb-ticons cb-ticons--design-{{ s.design | default: '1' }}"
   style="
     --cbtc-bg: {{ s.background_color }};
     --cbtc-card: {{ s.card_background_color }};
@@ -61,6 +61,46 @@
       padding-inline: 48px;
     }
   }
+
+  /*
+   * Design 2: icons in small boxes, and a quiet sentence-case link with its arrow out at the card's right edge.
+   * Rules are prefixed with .cb-ticons--design-2 so they beat the blocks' own defaults in any stylesheet order.
+   */
+  .cb-ticons--design-2 .cb-ticon-card {
+    padding: 22px 22px 24px;
+  }
+
+  .cb-ticons--design-2 .cb-ticon-card__icon {
+    width: 36px;
+    height: 36px;
+    padding: 8px;
+    border-radius: 4px;
+    background: color-mix(in srgb, var(--cbtc-text) 5%, var(--cbtc-card));
+  }
+
+  .cb-ticons--design-2 .cb-ticon-card .cb-ticon-card__title {
+    margin-top: 16px;
+  }
+
+  .cb-ticons--design-2 .cb-ticon-card__text {
+    margin-top: 10px;
+    line-height: 1.6;
+  }
+
+  .cb-ticons--design-2 .cb-ticon-card__link {
+    justify-content: space-between;
+    align-self: stretch;
+    padding-top: 30px;
+    font-weight: var(--cb-ticon-card-link-weight, var(--cbtc-font-body-weight));
+    text-transform: none;
+    color: var(--cbtc-muted);
+  }
+
+  .cb-ticons--design-2 .cb-ticon-card__link svg {
+    width: 14px;
+    height: 14px;
+    color: var(--cbtc-accent);
+  }
 {% endstylesheet %}
 
 {% schema %}
@@ -76,6 +116,16 @@
     "groups": ["header", "footer"]
   },
   "settings": [
+    {
+      "type": "select",
+      "id": "design",
+      "label": "Design",
+      "options": [
+        { "value": "1", "label": "Design 1 – plain icons" },
+        { "value": "2", "label": "Design 2 – icons in boxes" }
+      ],
+      "default": "1"
+    },
     {
       "type": "header",
       "content": "Layout"
@@ -257,6 +307,80 @@
             }
           },
           "block_order": ["apparel", "compression", "supports", "all"]
+        }
+      },
+      "block_order": ["header", "cards"]
+    },
+    {
+      "name": "[CB] Shop by type icons (Design 2)",
+      "category": "t:categories.collections",
+      "settings": { "design": "2", "card_background_color": "#191919" },
+      "blocks": {
+        "header": {
+          "type": "_cb-ticon-header",
+          "settings": { "text_position": "right" },
+          "blocks": {
+            "eyebrow": { "type": "cb-subheader", "settings": { "subheader_text": "Shop by need", "letter_spacing": 0 } },
+            "heading": {
+              "type": "cb-heading",
+              "settings": { "heading_text": "Find the right court shoe.", "wrap": "wrap", "weight": "medium" }
+            },
+            "text": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>Match your movement profile to badminton-engineered court outsoles and support chassis.</p>",
+                "max_width_unit": "px",
+                "max_width_px": 420
+              }
+            }
+          },
+          "block_order": ["eyebrow", "heading", "text"]
+        },
+        "cards": {
+          "type": "_cb-ticon-cards",
+          "blocks": {
+            "speed": {
+              "type": "_cb-ticon-card",
+              "settings": {
+                "icon": "bolt",
+                "card_title": "Speed & Agility",
+                "card_text": "For players who prioritise quick movement and a lightweight feel.",
+                "link_label": "View Speed Range",
+                "link_size": 12
+              }
+            },
+            "support": {
+              "type": "_cb-ticon-card",
+              "settings": {
+                "icon": "shield_plain",
+                "card_title": "Stability & Support",
+                "card_text": "For players looking for a more planted, supportive court feel.",
+                "link_label": "View Support Models",
+                "link_size": 12
+              }
+            },
+            "all_round": {
+              "type": "_cb-ticon-card",
+              "settings": {
+                "icon": "scales",
+                "card_title": "All-Round Court",
+                "card_text": "Balanced everyday badminton footwear for regular training and club play.",
+                "link_label": "View All-Round",
+                "link_size": 12
+              }
+            },
+            "beginner": {
+              "type": "_cb-ticon-card",
+              "settings": {
+                "icon": "star",
+                "card_title": "Beginner",
+                "card_text": "Simple, accessible options for newer players entering the game.",
+                "link_label": "View Entry Models",
+                "link_size": 12
+              }
+            }
+          },
+          "block_order": ["speed", "support", "all_round", "beginner"]
         }
       },
       "block_order": ["header", "cards"]

@@ -23,7 +23,6 @@
     --cbd-soft: {{ s.text_color | color_modify: 'alpha', 0.75 }};
     --cbd-muted: {{ s.text_color | color_modify: 'alpha', 0.55 }};
     --cbd-accent: {{ s.accent_color }};
-    --cbd-glow: {{ s.accent_color | color_modify: 'alpha', 0.28 }};
     --cbd-radius: {{ s.card_radius }}px;
     --cbd-max-width: {{ s.max_width }}px;
     --cbd-stack-gap: {{ s.stack_gap }}px;
@@ -31,6 +30,9 @@
     --cbd-pb: {{ s.padding_bottom }}px;
   "
 >
+  {%- if s.anchor != blank -%}
+    <span id="{{ s.anchor | handleize }}" class="cb-speed__anchor" aria-hidden="true"></span>
+  {%- endif -%}
   <div class="cb-speed__inner">
     {% content_for 'blocks' %}
   </div>
@@ -62,6 +64,12 @@
       padding-inline: 48px;
     }
   }
+  /* Target for same-page buttons (#guide), kept clear of the sticky header. */
+  .cb-speed__anchor {
+    display: block;
+    height: 0;
+    scroll-margin-top: calc(var(--header-height, 80px) + 24px);
+  }
 {% endstylesheet %}
 
 {% schema %}
@@ -78,6 +86,13 @@
     "groups": ["header", "footer"]
   },
   "settings": [
+    {
+      "type": "text",
+      "id": "anchor",
+      "label": "Jump link name",
+      "info": "Buttons on the same page can jump to this section with # and this name, e.g. #guide.",
+      "default": "guide"
+    },
     {
       "type": "header",
       "content": "Layout"

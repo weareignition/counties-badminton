@@ -31,19 +31,19 @@
             "cb_hero_heading_7tyBnb": {
               "type": "cb-heading",
               "settings": {
-                "heading_text": "&nbsp;Everything around your racketmatters.&nbsp;",
+                "heading_text": "Everything around your racket matters.",
                 "tag": "h1",
-                "size": 64,
+                "size": 56,
                 "mobile_sizing": "fluid",
                 "mobile_scale": 82,
                 "fluid_min": 36,
-                "fluid_vw": 8,
+                "fluid_vw": 3.9,
                 "weight": "font",
                 "color": "text",
-                "line_height": 105,
+                "line_height": 115,
                 "letter_spacing": -2,
                 "uppercase": false,
-                "wrap": "balance",
+                "wrap": "wrap",
                 "max_width": 0
               },
               "blocks": {}
@@ -58,7 +58,7 @@
                 "fluid_vw": 2.2,
                 "weight": "regular",
                 "color": "muted",
-                "line_height": 155,
+                "line_height": 165,
                 "letter_spacing": 0,
                 "wrap": "wrap",
                 "max_width_unit": "ch",
@@ -70,17 +70,18 @@
             "cb_hero_buttons_8hqVxC": {
               "type": "_cb-hero-buttons",
               "settings": {
-                "stack_mobile": true
+                "stack_mobile": true,
+                "space_above": 8
               },
               "blocks": {
                 "cb_hero_button_9jy9nm": {
                   "type": "_cb-hero-button",
                   "settings": {
                     "label": "SHOP ALL ACCESSORIES",
-                    "link": "",
+                    "link": "#products",
                     "open_in_new_tab": false,
                     "style": "primary",
-                    "show_arrow": true
+                    "show_arrow": false
                   },
                   "blocks": {}
                 },
@@ -88,7 +89,7 @@
                   "type": "_cb-hero-button",
                   "settings": {
                     "label": "SHOP BAGS",
-                    "link": "",
+                    "link": "shopify://collections/racket-bags",
                     "open_in_new_tab": false,
                     "style": "secondary",
                     "show_arrow": false
@@ -104,7 +105,9 @@
             "cb_hero_features_9Qh8it": {
               "type": "_cb-hero-features",
               "settings": {
-                "show_divider": true
+                "show_divider": true,
+                "divider_space_above": 8,
+                "divider_space_below": 30
               },
               "blocks": {
                 "cb_hero_feature_zLgRQV": {
@@ -113,7 +116,7 @@
                     "icon": "check",
                     "custom_icon": "shopify://shop_images/check.svg",
                     "custom_icon_tint": true,
-                    "feature_text": "Expert Advice"
+                    "feature_text": "Specialist Badminton Gear"
                   },
                   "blocks": {}
                 },
@@ -123,7 +126,7 @@
                     "icon": "sliders",
                     "custom_icon": "shopify://shop_images/store.svg",
                     "custom_icon_tint": true,
-                    "feature_text": "Professional Stringing"
+                    "feature_text": "Click & Collect Papakura"
                   },
                   "blocks": {}
                 },
@@ -133,7 +136,7 @@
                     "icon": "calendar",
                     "custom_icon": "shopify://shop_images/calendar.svg",
                     "custom_icon_tint": true,
-                    "feature_text": "Open 7 Days"
+                    "feature_text": "Open 7 Days (41R Elliot)"
                   },
                   "blocks": {}
                 }
@@ -170,20 +173,21 @@
       ],
       "name": "[CB] Hero",
       "settings": {
-        "design": "1",
-        "content_width": 55,
+        "design": "5",
+        "content_width": 52,
         "column_gap": 40,
         "max_width": 1400,
         "media_first_mobile": false,
         "heading_font": "space_grotesk_n7",
         "body_font": "inter_n4",
-        "background_color": "#121212",
-        "glow_color": "#3a0c10",
+        "background_color": "#0b0b0b",
+        "glow_color": "#0b0b0b",
         "text_color": "#ffffff",
-        "accent_color": "#d71f27",
+        "accent_color": "#d91c24",
         "accent_text_color": "#ffffff",
         "padding_top": 32,
-        "padding_bottom": 32
+        "padding_bottom": 32,
+        "breadcrumb": "Home / Equipment / Bags & Accessories"
       }
     },
     "type": {
@@ -383,7 +387,9 @@
             "price_display": "slider",
             "price_prefix": "Up to",
             "price_buckets": "Under $30 | 0-30\n$30 – $60 | 30-60\nOver $60 | 60+",
-            "price_multi": false
+            "price_multi": false,
+            "heading_size": 9.5,
+            "checkbox_size": 10.5
           },
           "blocks": {}
         },
@@ -411,7 +417,9 @@
             "price_display": "slider",
             "price_prefix": "Up to",
             "price_buckets": "Under $30 | 0-30\n$30 – $60 | 30-60\nOver $60 | 60+",
-            "price_multi": false
+            "price_multi": false,
+            "heading_size": 9.5,
+            "checkbox_size": 10.5
           },
           "blocks": {}
         },
@@ -438,7 +446,9 @@
             "price_display": "buckets",
             "price_prefix": "Up to",
             "price_buckets": "Under $20.00 | 0-20\n$20.00 - $50.00 | 20-50\n$50.00 - $120.00 | 50-120\n$120.00 + | 120+",
-            "price_multi": false
+            "price_multi": false,
+            "heading_size": 9.5,
+            "checkbox_size": 10.5
           },
           "blocks": {}
         },
@@ -464,7 +474,7 @@
           "type": "cb-paragraph",
           "static": true,
           "settings": {
-            "body_text": "<p>Filter by product type, brand and price to find the right bag or accessory.</p>",
+            "body_text": "<p>Browse bags, grips and badminton essentials for training, competition and everyday play.</p>",
             "size": 13,
             "mobile_sizing": "same",
             "mobile_size": 13,
@@ -488,7 +498,7 @@
         "pickup"
       ],
       "settings": {
-        "title_text": "",
+        "title_text": "Shop Bags & Accessories",
         "heading_tag": "h1",
         "show_count": true,
         "count_label": "products",
@@ -496,24 +506,24 @@
         "all_label": "All products",
         "show_sort": true,
         "sort_label": "Sort by:",
-        "show_view_toggle": true,
+        "show_view_toggle": false,
         "filter_heading": "Filters",
         "clear_label": "Clear all",
         "collection": "",
-        "products_per_page": 16,
+        "products_per_page": 8,
         "columns": "4",
         "image_ratio": "1 / 1",
         "image_fit": "contain",
-        "show_wishlist": true,
+        "show_wishlist": false,
         "button_label": "View details",
         "quick_add_mode": "all",
         "quick_collect_tag": "quick-collect",
         "quick_label": "Add to cart",
-        "stock_label": "In Stock Papakura",
-        "low_stock_threshold": 2,
+        "stock_label": "Click & Collect Papakura",
+        "low_stock_threshold": 0,
         "low_stock_label": "[count] In Stock Papakura",
         "brand_names": "Yonex, Victor, Ashaway, McDavid, Li-Ning, Babolat, Carlton, RSL",
-        "showing_text": "Showing [from]–[to] of [total] products",
+        "showing_text": "Showing [to] of [total] products",
         "empty_text": "No products match these filters.",
         "sidebar_width": 300,
         "max_width": 1400,
@@ -527,7 +537,19 @@
         "image_background_color": "#ffffff",
         "success_color": "#22c55e",
         "padding_top": 32,
-        "padding_bottom": 64
+        "padding_bottom": 64,
+        "design": "2",
+        "eyebrow_text": "Bags & Accessories",
+        "title_size": 33,
+        "title_weight": "500",
+        "count_size": 11,
+        "sort_label_size": 12,
+        "sort_select_size": 12,
+        "pagination_style": "load_more",
+        "product_title_size": 14,
+        "product_title_weight": "500",
+        "price_size": 14,
+        "stock_size": 9.5
       }
     },
     "cb_guides_qXU39L": {
@@ -686,7 +708,8 @@
         "text_color": "#ffffff",
         "accent_color": "#d71f27",
         "padding_top": 52,
-        "padding_bottom": 44
+        "padding_bottom": 44,
+        "key_point_line": true
       }
     },
     "cb_advice_ziAGxM": {
@@ -724,7 +747,7 @@
                 "mobile_scale": 82,
                 "fluid_min": 28,
                 "fluid_vw": 6,
-                "weight": "font",
+                "weight": "medium",
                 "color": "text",
                 "line_height": 115,
                 "letter_spacing": -1,
@@ -738,14 +761,14 @@
               "type": "cb-paragraph",
               "settings": {
                 "body_text": "<p>Pair your freshly gripped frame with professional electronic stringing and<br>tournament-grade shuttles from Counties Manukau specialists.</p>",
-                "size": 14,
+                "size": 16,
                 "mobile_sizing": "same",
                 "mobile_size": 14,
                 "fluid_vw": 2,
                 "weight": "regular",
                 "color": "muted",
-                "line_height": 160,
-                "letter_spacing": -1,
+                "line_height": 170,
+                "letter_spacing": 0,
                 "wrap": "wrap",
                 "max_width_unit": "px",
                 "max_width_px": 600,
@@ -764,12 +787,14 @@
                   "type": "_cb-advice-button",
                   "settings": {
                     "label": "SHOP RACKETS",
-                    "link": "shopify://pages/contact",
+                    "link": "shopify://collections/rackets",
                     "directions_address": "",
                     "style": "primary",
                     "icon": "none",
                     "custom_icon_tint": true,
-                    "new_tab": false
+                    "new_tab": false,
+                    "text_size": 11,
+                    "letter_spacing": 8
                   },
                   "blocks": {}
                 },
@@ -777,12 +802,14 @@
                   "type": "_cb-advice-button",
                   "settings": {
                     "label": "EXPLORE STRINGING",
-                    "link": "",
-                    "directions_address": "41R Elliot Street, Papakura, Auckland",
-                    "style": "secondary",
+                    "link": "shopify://collections/stringing",
+                    "directions_address": "",
+                    "style": "quiet",
                     "icon": "none",
                     "custom_icon_tint": true,
-                    "new_tab": false
+                    "new_tab": false,
+                    "text_size": 11,
+                    "letter_spacing": 8
                   },
                   "blocks": {}
                 }
@@ -807,9 +834,10 @@
             "custom_icon": "shopify://shop_images/Icon.svg",
             "custom_icon_tint": true,
             "color": "text",
-            "size": 200,
-            "opacity": 12,
-            "show_on_mobile": false
+            "size": 236,
+            "opacity": 6,
+            "show_on_mobile": false,
+            "position": "corner"
           },
           "blocks": {}
         }
@@ -822,8 +850,8 @@
       "settings": {
         "max_width": 1400,
         "panel_padding": 44,
-        "panel_radius": 10,
-        "show_border": false,
+        "panel_radius": 6,
+        "show_border": true,
         "heading_font": "space_grotesk_n7",
         "body_font": "inter_n4",
         "background_color": "#0b0b0b",
@@ -848,7 +876,9 @@
             "custom_icon_tint": true,
             "stat_title": "Badminton specialists",
             "stat_text": "Dedicated badminton equipment",
-            "link": ""
+            "link": "",
+            "stat_size": 17,
+            "text_size": 12.5
           },
           "blocks": {}
         },
@@ -859,7 +889,9 @@
             "custom_icon_tint": true,
             "stat_title": "Click & collect Papakura",
             "stat_text": "Pick up at our pro shop",
-            "link": ""
+            "link": "",
+            "stat_size": 17,
+            "text_size": 12.5
           },
           "blocks": {}
         },
@@ -870,7 +902,9 @@
             "custom_icon_tint": true,
             "stat_title": "Open 7 days",
             "stat_text": "41R Elliot Street Hall",
-            "link": ""
+            "link": "",
+            "stat_size": 17,
+            "text_size": 12.5
           },
           "blocks": {}
         },
@@ -882,7 +916,9 @@
             "custom_icon_tint": true,
             "stat_title": "Supporting Counties Manukau Badminton",
             "stat_text": "Official CMBA association shop",
-            "link": ""
+            "link": "",
+            "stat_size": 17,
+            "text_size": 12.5
           },
           "blocks": {}
         }
@@ -904,7 +940,8 @@
         "accent_color": "#d71f27",
         "box_border_color": "#ffffff26",
         "padding_top": 16,
-        "padding_bottom": 16
+        "padding_bottom": 16,
+        "icon_box_size": 40
       }
     },
     "cb_visit_EpWWm9": {

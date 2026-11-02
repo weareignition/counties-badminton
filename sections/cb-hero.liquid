@@ -1,6 +1,14 @@
 {%- liquid
   assign s = section.settings
   assign font_scope = '#cb-hero-' | append: section.id
+
+  # Designs 5, 6 and 7 show a breadcrumb at the top.
+  assign crumb_sep = blank
+  if s.design == '5' or s.design == '7'
+    assign crumb_sep = '/'
+  elsif s.design == '6'
+    assign crumb_sep = '&gt;'
+  endif
 -%}
 
 {% render 'cb-font-styles',
@@ -12,7 +20,7 @@
 
 <section
   id="cb-hero-{{ section.id }}"
-  class="cb-hero cb-hero--design-{{ s.design | default: '1' }}{% if s.media_first_mobile %} cb-hero--media-first{% endif %}"
+  class="cb-hero cb-hero--design-{{ s.design | default: '1' }}{% if s.design == '6' %} cb-hero--design-5{% endif %}{% if s.design == '7' %} cb-hero--design-4{% endif %}{% if s.media_first_mobile %} cb-hero--media-first{% endif %}{% if s.design == '2' and s.media_edge == 'margin' %} cb-hero--media-margin{% endif %}"
   style="
     --cbh-bg: {{ s.background_color }};
     --cbh-glow: {{ s.glow_color }};
@@ -30,6 +38,28 @@
     --cbh-media-col: {{ 100 | minus: s.content_width }}fr;
   "
 >
+  {%- if crumb_sep != blank and s.breadcrumb != blank -%}
+    {%- assign crumbs = s.breadcrumb | split: '/' -%}
+    <nav
+      class="cb-hero__crumbs"
+      aria-label="Breadcrumb"
+      style="--cb-hero-crumb-size: {{ s.breadcrumb_size }}px; --cb-hero-crumb-weight: {{ s.breadcrumb_weight }};"
+    >
+      {%- for crumb in crumbs -%}
+        {%- assign crumb_label = crumb | strip | escape -%}
+        {%- if forloop.last -%}
+          <span class="cb-hero__crumb-current" aria-current="page">{{ crumb_label }}</span>
+        {%- elsif forloop.first -%}
+          <a href="{{ routes.root_url }}">{{ crumb_label }}</a>
+          <span aria-hidden="true">{{ crumb_sep }}</span>
+        {%- else -%}
+          <span>{{ crumb_label }}</span>
+          <span aria-hidden="true">{{ crumb_sep }}</span>
+        {%- endif -%}
+      {%- endfor -%}
+    </nav>
+  {%- endif -%}
+
   <div class="cb-hero__inner">
     {% content_for 'blocks' %}
   </div>
@@ -186,6 +216,502 @@
       min-height: 460px;
       aspect-ratio: auto;
     }
+
+    /* "Page margin": the image stops at the same margin the text column starts from. */
+    .cb-hero--design-2.cb-hero--media-margin .cb-hero__media {
+      margin-right: max(48px, calc((100vw - var(--cbh-max-width)) / 2));
+    }
+  }
+
+  /*
+   * Design 3: the photo sits on a white mat inside a dark panel, with its label overhanging the mat's corner.
+   * The badge is a dark-red box and the buttons and features are smaller and quieter.
+   * Rules are prefixed with .cb-hero--design-3 so they beat the blocks' own defaults in any stylesheet order.
+   */
+  .cb-hero--design-3 {
+    --cbh-mat: 8px;
+  }
+
+  .cb-hero--design-3 .cb-hero__badge {
+    gap: 5px;
+    padding: 7px 10px;
+    border-color: color-mix(in srgb, var(--cbh-accent) 30%, transparent);
+    border-radius: 3px;
+    background: color-mix(in srgb, var(--cbh-accent) 10%, transparent);
+    font-size: calc(var(--cb-hero-badge-text-size, 12px) * 10 / 12);
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--cbh-accent);
+  }
+
+  .cb-hero--design-3 .cb-hero__badge-sep,
+  .cb-hero--design-3 .cb-hero__badge-secondary {
+    color: inherit;
+  }
+
+  .cb-hero--design-3 .cb-hero__buttons {
+    gap: 16px;
+  }
+
+  .cb-hero--design-3 .cb-hero__button {
+    min-height: 44px;
+    padding: 12px 24px;
+    border-radius: 3px;
+    font-size: calc(var(--cb-hero-button-label-size, 14px) * 11 / 14);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .cb-hero--design-3 .cb-hero__feature {
+    font-size: calc(var(--cb-hero-feature-text-size, 14px) * 12 / 14);
+    font-weight: var(--cb-hero-feature-text-weight, var(--cbh-font-body-weight));
+    color: color-mix(in srgb, var(--cbh-text) 80%, transparent);
+  }
+
+  .cb-hero--design-3 .cb-hero__media {
+    padding: 16px;
+    border: 1px solid var(--cbh-border);
+    border-radius: 4px;
+    background: var(--cbh-surface);
+  }
+
+  .cb-hero--design-3 .cb-hero__media-frame {
+    overflow: visible;
+    border: 0;
+    background: #fff;
+    box-shadow: none;
+  }
+
+  .cb-hero--design-3 .cb-hero__image,
+  .cb-hero--design-3 .cb-hero__gradient {
+    inset: var(--cbh-mat);
+    width: calc(100% - var(--cbh-mat) * 2);
+    height: calc(100% - var(--cbh-mat) * 2);
+  }
+
+  .cb-hero--design-3 .cb-hero__labels {
+    inset: -8px;
+  }
+
+  .cb-hero--design-3 .cb-hero__label--dark {
+    padding: 10px 12px;
+    border: 0;
+    border-radius: 2px;
+    background: rgb(11 11 11 / 0.9);
+    font-size: calc(var(--cb-hero-label-text-size, 12px) * 11 / 12);
+    font-weight: var(--cb-hero-label-text-weight, var(--cbh-font-body-weight));
+    color: #d8d8d8;
+  }
+
+  .cb-hero--design-3 .cb-hero__label--dark::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    margin-right: 10px;
+    border-radius: 50%;
+    vertical-align: 1px;
+    background: var(--cbh-accent);
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-hero--design-3 {
+      --cbh-mat: 16px;
+    }
+
+    .cb-hero--design-3 .cb-hero__media {
+      padding: 32px;
+    }
+
+    .cb-hero--design-3 .cb-hero__labels {
+      inset: -14px;
+    }
+  }
+
+  /*
+   * Design 4: the photo sits in a plain dark frame with a two-line label; the badge is plain accent text and the
+   * features have no divider. Rules are prefixed with .cb-hero--design-4 so they beat the blocks' own defaults.
+   */
+  .cb-hero--design-4 .cb-hero__content,
+  .cb-hero--design-5 .cb-hero__content {
+    --cbh-muted: color-mix(in srgb, var(--cbh-text) 62%, transparent);
+    --cb-color-muted: var(--cbh-muted);
+  }
+
+  .cb-hero--design-4 .cb-hero__badge,
+  .cb-hero--design-5 .cb-hero__badge {
+    padding: 0;
+    border: 0;
+    background: none;
+    font-size: calc(var(--cb-hero-badge-text-size, 12px) * 10 / 12);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .cb-hero--design-4 .cb-hero__badge-main,
+  .cb-hero--design-5 .cb-hero__badge-main {
+    color: var(--cbh-accent);
+  }
+
+  .cb-hero--design-4 .cb-hero__button {
+    min-height: 45px;
+    padding: 14px 32px;
+    border-radius: 3px;
+    font-size: calc(var(--cb-hero-button-label-size, 14px) * 10 / 14);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .cb-hero--design-4 .cb-hero__button--secondary {
+    border-color: color-mix(in srgb, var(--cbh-text) 85%, transparent);
+    background: transparent;
+  }
+
+  .cb-hero--design-4 .cb-hero__button--secondary:hover {
+    border-color: var(--cbh-text);
+    background: color-mix(in srgb, var(--cbh-text) 8%, transparent);
+  }
+
+  .cb-hero--design-4 .cb-hero__features {
+    margin-top: 8px;
+  }
+
+  .cb-hero--design-4 .cb-hero__feature,
+  .cb-hero--design-5 .cb-hero__feature {
+    font-weight: var(--cb-hero-feature-text-weight, var(--cbh-font-body-weight));
+    color: var(--cbh-muted);
+  }
+
+  .cb-hero--design-4 .cb-hero__media-frame {
+    border: 8px solid color-mix(in srgb, var(--cbh-text) 5%, var(--cbh-bg));
+    box-shadow: none;
+  }
+
+  .cb-hero--design-4 .cb-hero__label--dark {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    column-gap: 12px;
+    padding: 9px 16px;
+    border: 0;
+    border-radius: 3px;
+    background: rgb(32 32 33 / 0.96);
+    font-size: calc(var(--cb-hero-label-text-size, 12px) * 10 / 12);
+    letter-spacing: 0.1em;
+    color: #fff;
+  }
+
+  .cb-hero--design-4 .cb-hero__label--dark::before {
+    content: '';
+    grid-row: 1 / span 2;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--cbh-accent);
+  }
+
+  .cb-hero--design-4 .cb-hero__label-secondary {
+    font-size: calc(var(--cb-hero-label-text-size, 12px) * 12.5 / 12);
+    letter-spacing: 0;
+    white-space: normal;
+    opacity: 0.6;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-hero--design-4 .cb-hero__media-frame {
+      border-width: 12px;
+    }
+  }
+
+  /*
+   * Design 5: text and photo share one rounded panel, with the photo filling its right side edge to edge.
+   * Rules are prefixed with .cb-hero--design-5 so they beat the blocks' own defaults in any stylesheet order.
+   */
+  .cb-hero__crumbs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 8px;
+    max-width: var(--cbh-max-width);
+    margin: 0 auto 18px;
+    font-family: var(--cbh-font-body);
+    font-size: var(--cb-hero-crumb-size, 12px);
+    font-weight: var(--cb-hero-crumb-weight, var(--cbh-font-body-weight));
+    line-height: 1.3;
+    color: color-mix(in srgb, var(--cbh-text) 45%, transparent);
+  }
+
+  .cb-hero__crumbs a {
+    color: color-mix(in srgb, var(--cbh-text) 70%, transparent);
+    text-decoration: none;
+  }
+
+  .cb-hero__crumbs a:hover {
+    color: var(--cbh-text);
+  }
+
+  .cb-hero__crumb-current {
+    color: var(--cbh-text);
+  }
+
+  .cb-hero--design-5 .cb-hero__inner {
+    gap: 0;
+    align-items: stretch;
+    overflow: hidden;
+    border: 1px solid color-mix(in srgb, var(--cbh-text) 6%, transparent);
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--cbh-text) 5.5%, var(--cbh-bg));
+  }
+
+  .cb-hero--design-5 .cb-hero__content {
+    padding: 28px 20px;
+  }
+
+  .cb-hero--design-5 .cb-hero__buttons {
+    gap: 18px;
+  }
+
+  .cb-hero--design-5 .cb-hero__button {
+    min-height: 48px;
+    padding: 14px 28px;
+    border-radius: 3px;
+    font-size: calc(var(--cb-hero-button-label-size, 14px) * 12 / 14);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .cb-hero--design-5 .cb-hero__button--secondary {
+    background: transparent;
+  }
+
+  .cb-hero--design-5 .cb-hero__button--secondary:hover {
+    background: color-mix(in srgb, var(--cbh-text) 8%, transparent);
+  }
+
+  .cb-hero--design-5 .cb-hero__features--divider {
+    border-top-color: color-mix(in srgb, var(--cbh-text) 60%, transparent);
+  }
+
+  .cb-hero--design-5 .cb-hero__feature {
+    font-size: calc(var(--cb-hero-feature-text-size, 14px) * 12 / 14);
+  }
+
+  .cb-hero--design-5 .cb-hero__media-frame {
+    height: 100%;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-hero--design-5 .cb-hero__content {
+      padding: 40px 32px;
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .cb-hero--design-5 .cb-hero__content {
+      align-self: center;
+      padding: 56px;
+    }
+
+    .cb-hero--design-5 .cb-hero__media-frame {
+      min-height: 460px;
+      aspect-ratio: auto;
+    }
+
+    .cb-hero--design-5 .cb-hero__media {
+      border-left: 1px solid color-mix(in srgb, var(--cbh-text) 6%, transparent);
+    }
+  }
+
+  /*
+   * Design 6: Design 5's panel (the section carries both classes) with the whole photo inset on the right, shown
+   * uncropped at its own shape, plus a dark badge box and a filled secondary button.
+   */
+  .cb-hero--design-6 .cb-hero__crumbs {
+    gap: 4px;
+    margin-bottom: 28px;
+  }
+
+  .cb-hero--design-6 .cb-hero__crumbs a {
+    color: inherit;
+  }
+
+  .cb-hero--design-6 .cb-hero__crumbs a:hover {
+    color: var(--cbh-text);
+  }
+
+  .cb-hero--design-6 .cb-hero__inner {
+    border: 0;
+  }
+
+  .cb-hero--design-6 .cb-hero__badge {
+    gap: 7px;
+    padding: 6px 11px;
+    border-radius: 3px;
+    background: color-mix(in srgb, var(--cbh-text) 2.5%, var(--cbh-bg));
+    letter-spacing: 0.08em;
+  }
+
+  .cb-hero--design-6 .cb-hero__badge-main {
+    color: color-mix(in srgb, var(--cbh-text) 85%, transparent);
+  }
+
+  .cb-hero--design-6 .cb-hero__badge-dot {
+    width: 4px;
+    height: 4px;
+  }
+
+  .cb-hero--design-6 .cb-hero__button {
+    padding: 14px 26px;
+  }
+
+  .cb-hero--design-6 .cb-hero__button--secondary {
+    border-color: transparent;
+    background: color-mix(in srgb, var(--cbh-text) 9%, var(--cbh-bg));
+  }
+
+  .cb-hero--design-6 .cb-hero__button--secondary:hover {
+    border-color: transparent;
+    background: color-mix(in srgb, var(--cbh-text) 14%, var(--cbh-bg));
+  }
+
+  .cb-hero--design-6 .cb-hero__features {
+    margin-top: 24px;
+  }
+
+  .cb-hero--design-6 .cb-hero__media {
+    align-self: center;
+    padding: 0 20px 24px;
+    border-left: 0;
+  }
+
+  .cb-hero--design-6 .cb-hero__media-frame {
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+    aspect-ratio: auto;
+    background: none;
+  }
+
+  .cb-hero--design-6 .cb-hero__image {
+    position: static;
+    display: block;
+    height: auto;
+    border-radius: var(--cbh-radius, 12px);
+  }
+
+  .cb-hero--design-6 .cb-hero__image--placeholder {
+    aspect-ratio: var(--cbh-ratio, 4 / 3);
+  }
+
+  @media screen and (min-width: 750px) {
+    .cb-hero--design-6 .cb-hero__media {
+      padding: 0 32px 40px;
+    }
+
+    .cb-hero--design-6 .cb-hero__features {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 24px;
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .cb-hero--design-6 .cb-hero__content {
+      padding: 64px 0 64px 64px;
+    }
+
+    .cb-hero--design-6 .cb-hero__media {
+      padding: 40px 32px;
+    }
+
+    .cb-hero--design-6 .cb-hero__media-frame {
+      translate: 0 var(--cbh-image-nudge, 0px);
+    }
+  }
+
+  /*
+   * Design 7: Design 4's dark photo frame (the section carries both classes) with a breadcrumb, a grey badge, a filled
+   * secondary button and a line above the features. Italic heading text sits on its own line in grey. The badge and
+   * buttons use the heading font, and their text sizes here are the settings' own values.
+   */
+  .cb-hero--design-7 .cb-hero__crumbs {
+    gap: 4px 9px;
+    margin-bottom: 48px;
+  }
+
+  .cb-hero--design-7 .cb-hero__crumbs a {
+    color: inherit;
+  }
+
+  .cb-hero--design-7 .cb-hero__crumbs a:hover {
+    color: var(--cbh-text);
+  }
+
+  .cb-hero--design-7 .cb-hero__crumbs [aria-hidden] {
+    opacity: 0.25;
+  }
+
+  .cb-hero--design-7 .cb-hero__badge {
+    font-family: var(--cbh-font-heading);
+    font-size: var(--cb-hero-badge-text-size, 12px);
+  }
+
+  .cb-hero--design-7 .cb-hero__badge-main {
+    color: var(--cbh-muted);
+  }
+
+  .cb-hero--design-7 .cb-heading em {
+    display: block;
+    color: var(--cbh-muted);
+  }
+
+  .cb-hero--design-7 .cb-hero__buttons {
+    gap: 16px;
+  }
+
+  .cb-hero--design-7 .cb-hero__button {
+    min-height: 47px;
+    padding: 12px 32px;
+    font-family: var(--cbh-font-heading);
+    font-size: var(--cb-hero-button-label-size, 14px);
+  }
+
+  .cb-hero--design-7 .cb-hero__button--secondary {
+    padding-inline: 25px;
+    border-color: color-mix(in srgb, var(--cbh-text) 7%, transparent);
+    background: color-mix(in srgb, var(--cbh-text) 5.5%, var(--cbh-bg));
+    color: color-mix(in srgb, var(--cbh-text) 85%, transparent);
+  }
+
+  .cb-hero--design-7 .cb-hero__button--secondary:hover {
+    border-color: color-mix(in srgb, var(--cbh-text) 20%, transparent);
+    background: color-mix(in srgb, var(--cbh-text) 10%, var(--cbh-bg));
+  }
+
+  .cb-hero--design-7 .cb-hero__features--divider {
+    margin-top: var(--cbh-divider-above, 12px);
+    border-top-color: color-mix(in srgb, var(--cbh-text) 38%, transparent);
+  }
+
+  .cb-hero--design-7 .cb-hero__feature {
+    color: color-mix(in srgb, var(--cbh-text) 78%, transparent);
+  }
+
+  .cb-hero--design-7 .cb-hero__feature-icon svg,
+  .cb-hero--design-7 .cb-hero__feature-icon img,
+  .cb-hero--design-7 .cb-hero__feature-icon .cb-icon-upload {
+    width: 19px;
+    height: 19px;
+  }
+
+  .cb-hero--design-7 .cb-hero__media-frame {
+    border-width: 8px;
+  }
+
+  .cb-hero--design-7 .cb-hero__image {
+    border-radius: 3px;
   }
 
   @media (prefers-reduced-motion: no-preference) {
@@ -233,9 +759,63 @@
       "label": "Design",
       "options": [
         { "value": "1", "label": "Design 1 – framed image" },
-        { "value": "2", "label": "Design 2 – full-bleed image" }
+        { "value": "2", "label": "Design 2 – full-bleed image" },
+        { "value": "3", "label": "Design 3 – photo on a white mat" },
+        { "value": "4", "label": "Design 4 – photo in a dark frame" },
+        { "value": "5", "label": "Design 5 – text and photo in one panel" },
+        { "value": "6", "label": "Design 6 – text and inset photo in one panel" },
+        { "value": "7", "label": "Design 7 – dark photo frame with a breadcrumb" }
       ],
       "default": "1"
+    },
+    {
+      "type": "text",
+      "id": "breadcrumb",
+      "label": "Breadcrumb",
+      "info": "Shown above the panel. Separate the steps with /, e.g. Home / Equipment / Bags. The first step links to the home page.",
+      "visible_if": "{{ section.settings.design == '5' or section.settings.design == '6' or section.settings.design == '7' }}"
+    },
+    {
+      "type": "range",
+      "id": "breadcrumb_size",
+      "label": "Breadcrumb size",
+      "min": 6,
+      "max": 30,
+      "step": 0.5,
+      "unit": "px",
+      "default": 12,
+      "visible_if": "{{ section.settings.design == '5' or section.settings.design == '6' or section.settings.design == '7' }}"
+    },
+    {
+      "type": "select",
+      "id": "breadcrumb_weight",
+      "label": "Breadcrumb weight",
+      "options": [
+        { "value": "initial", "label": "Default" },
+        { "value": "100", "label": "Thin" },
+        { "value": "200", "label": "Extra light" },
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" },
+        { "value": "900", "label": "Black" }
+      ],
+      "default": "initial",
+      "visible_if": "{{ section.settings.design == '5' or section.settings.design == '6' or section.settings.design == '7' }}"
+    },
+    {
+      "type": "select",
+      "id": "media_edge",
+      "label": "Image reaches",
+      "info": "On desktop. Page margin stops the image at the same margin as the text side.",
+      "options": [
+        { "value": "screen", "label": "Screen edge" },
+        { "value": "margin", "label": "Page margin" }
+      ],
+      "default": "screen",
+      "visible_if": "{{ section.settings.design == '2' }}"
     },
     {
       "type": "header",
@@ -538,6 +1118,746 @@
         }
       },
       "block_order": ["content", "media"]
+    },
+    {
+      "name": "[CB] Hero (Design 3)",
+      "category": "t:categories.banners",
+      "settings": {
+        "design": "3",
+        "content_width": 44,
+        "column_gap": 56,
+        "padding_top": 72,
+        "padding_bottom": 72
+      },
+      "blocks": {
+        "content": {
+          "type": "_cb-hero-content",
+          "blocks": {
+            "badge": {
+              "type": "_cb-hero-badge",
+              "settings": {
+                "badge_text": "Specialist racket fitting",
+                "badge_secondary": "Papakura HQ"
+              }
+            },
+            "heading": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "Find the frame that fits your game.",
+                "tag": "h1",
+                "size": 46,
+                "mobile_sizing": "fluid",
+                "fluid_min": 36,
+                "fluid_vw": 8,
+                "line_height": 105,
+                "letter_spacing": -2
+              }
+            },
+            "text": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>We don’t sell rackets by logo alone. Choose by your swing speed, tactical play style and court needs — calibrated by CMBA certified stringers and competitive coaches.</p>",
+                "size": 16,
+                "mobile_sizing": "fluid",
+                "mobile_size": 15,
+                "fluid_vw": 2.2,
+                "line_height": 155,
+                "max_width_unit": "ch",
+                "max_width_ch": 52
+              }
+            },
+            "buttons": {
+              "type": "_cb-hero-buttons",
+              "blocks": {
+                "button_1": {
+                  "type": "_cb-hero-button",
+                  "settings": {
+                    "label": "Find My Racket",
+                    "style": "primary",
+                    "show_arrow": true
+                  }
+                },
+                "button_2": {
+                  "type": "_cb-hero-button",
+                  "settings": {
+                    "label": "Shop by Play Style",
+                    "style": "secondary",
+                    "show_arrow": false
+                  }
+                }
+              },
+              "block_order": [
+                "button_1",
+                "button_2"
+              ]
+            },
+            "features": {
+              "type": "_cb-hero-features",
+              "blocks": {
+                "feature_1": {
+                  "type": "_cb-hero-feature",
+                  "settings": {
+                    "icon": "check",
+                    "feature_text": "100% Genuine Spec"
+                  }
+                },
+                "feature_2": {
+                  "type": "_cb-hero-feature",
+                  "settings": {
+                    "icon": "sliders",
+                    "feature_text": "Custom Stringing Option"
+                  }
+                },
+                "feature_3": {
+                  "type": "_cb-hero-feature",
+                  "settings": {
+                    "icon": "store",
+                    "feature_text": "Papakura Pickup Today"
+                  }
+                }
+              },
+              "block_order": [
+                "feature_1",
+                "feature_2",
+                "feature_3"
+              ]
+            }
+          },
+          "block_order": [
+            "badge",
+            "heading",
+            "text",
+            "buttons",
+            "features"
+          ]
+        },
+        "media": {
+          "type": "_cb-hero-media",
+          "blocks": {
+            "label_1": {
+              "type": "_cb-hero-label",
+              "settings": {
+                "label_text": "41R Elliot St Pro Shop",
+                "position": "top-left",
+                "style": "dark",
+                "uppercase": true
+              }
+            },
+            "label_2": {
+              "type": "_cb-hero-label",
+              "settings": {
+                "label_text": "Master Calibration Lab",
+                "position": "top-left",
+                "style": "accent",
+                "uppercase": true
+              }
+            },
+            "label_3": {
+              "type": "_cb-hero-label",
+              "settings": {
+                "label_text": "In-Store Demo Rackets Available:",
+                "label_secondary": "Yonex · Victor · Ashaway",
+                "position": "bottom-right",
+                "style": "dark"
+              }
+            }
+          },
+          "block_order": [
+            "label_1",
+            "label_2",
+            "label_3"
+          ]
+        }
+      },
+      "block_order": [
+        "content",
+        "media"
+      ]
+    },
+    {
+      "name": "[CB] Hero (Design 4)",
+      "category": "t:categories.banners",
+      "settings": {
+        "design": "4",
+        "content_width": 44,
+        "column_gap": 56,
+        "padding_top": 72,
+        "padding_bottom": 72
+      },
+      "blocks": {
+        "content": {
+          "type": "_cb-hero-content",
+          "blocks": {
+            "badge": {
+              "type": "_cb-hero-badge",
+              "settings": {
+                "badge_text": "Specialist racket fitting",
+                "badge_secondary": "Papakura HQ"
+              }
+            },
+            "heading": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "Find the frame that fits your game.",
+                "tag": "h1",
+                "size": 46,
+                "mobile_sizing": "fluid",
+                "fluid_min": 36,
+                "fluid_vw": 8,
+                "line_height": 105,
+                "letter_spacing": -2
+              }
+            },
+            "text": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>We don’t sell rackets by logo alone. Choose by your swing speed, tactical play style and court needs — calibrated by CMBA certified stringers and competitive coaches.</p>",
+                "size": 16,
+                "mobile_sizing": "fluid",
+                "mobile_size": 15,
+                "fluid_vw": 2.2,
+                "line_height": 155,
+                "max_width_unit": "ch",
+                "max_width_ch": 52
+              }
+            },
+            "buttons": {
+              "type": "_cb-hero-buttons",
+              "blocks": {
+                "button_1": {
+                  "type": "_cb-hero-button",
+                  "settings": {
+                    "label": "Find My Racket",
+                    "style": "primary",
+                    "show_arrow": true
+                  }
+                },
+                "button_2": {
+                  "type": "_cb-hero-button",
+                  "settings": {
+                    "label": "Shop by Play Style",
+                    "style": "secondary",
+                    "show_arrow": false
+                  }
+                }
+              },
+              "block_order": [
+                "button_1",
+                "button_2"
+              ]
+            },
+            "features": {
+              "type": "_cb-hero-features",
+              "blocks": {
+                "feature_1": {
+                  "type": "_cb-hero-feature",
+                  "settings": {
+                    "icon": "check",
+                    "feature_text": "100% Genuine Spec"
+                  }
+                },
+                "feature_2": {
+                  "type": "_cb-hero-feature",
+                  "settings": {
+                    "icon": "sliders",
+                    "feature_text": "Custom Stringing Option"
+                  }
+                },
+                "feature_3": {
+                  "type": "_cb-hero-feature",
+                  "settings": {
+                    "icon": "store",
+                    "feature_text": "Papakura Pickup Today"
+                  }
+                }
+              },
+              "block_order": [
+                "feature_1",
+                "feature_2",
+                "feature_3"
+              ]
+            }
+          },
+          "block_order": [
+            "badge",
+            "heading",
+            "text",
+            "buttons",
+            "features"
+          ]
+        },
+        "media": {
+          "type": "_cb-hero-media",
+          "blocks": {
+            "label_1": {
+              "type": "_cb-hero-label",
+              "settings": {
+                "label_text": "41R Elliot St Pro Shop",
+                "position": "top-left",
+                "style": "dark",
+                "uppercase": true
+              }
+            },
+            "label_2": {
+              "type": "_cb-hero-label",
+              "settings": {
+                "label_text": "Master Calibration Lab",
+                "position": "top-left",
+                "style": "accent",
+                "uppercase": true
+              }
+            },
+            "label_3": {
+              "type": "_cb-hero-label",
+              "settings": {
+                "label_text": "In-Store Demo Rackets Available:",
+                "label_secondary": "Yonex · Victor · Ashaway",
+                "position": "bottom-right",
+                "style": "dark"
+              }
+            }
+          },
+          "block_order": [
+            "label_1",
+            "label_2",
+            "label_3"
+          ]
+        }
+      },
+      "block_order": [
+        "content",
+        "media"
+      ]
+    },
+    {
+      "name": "[CB] Hero (Design 5)",
+      "category": "t:categories.banners",
+      "settings": {
+        "design": "5",
+        "content_width": 44,
+        "column_gap": 56,
+        "padding_top": 72,
+        "padding_bottom": 72
+      },
+      "blocks": {
+        "content": {
+          "type": "_cb-hero-content",
+          "blocks": {
+            "badge": {
+              "type": "_cb-hero-badge",
+              "settings": {
+                "badge_text": "Specialist racket fitting",
+                "badge_secondary": "Papakura HQ"
+              }
+            },
+            "heading": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "Find the frame that fits your game.",
+                "tag": "h1",
+                "size": 46,
+                "mobile_sizing": "fluid",
+                "fluid_min": 36,
+                "fluid_vw": 8,
+                "line_height": 105,
+                "letter_spacing": -2
+              }
+            },
+            "text": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>We don’t sell rackets by logo alone. Choose by your swing speed, tactical play style and court needs — calibrated by CMBA certified stringers and competitive coaches.</p>",
+                "size": 16,
+                "mobile_sizing": "fluid",
+                "mobile_size": 15,
+                "fluid_vw": 2.2,
+                "line_height": 155,
+                "max_width_unit": "ch",
+                "max_width_ch": 52
+              }
+            },
+            "buttons": {
+              "type": "_cb-hero-buttons",
+              "blocks": {
+                "button_1": {
+                  "type": "_cb-hero-button",
+                  "settings": {
+                    "label": "Find My Racket",
+                    "style": "primary",
+                    "show_arrow": true
+                  }
+                },
+                "button_2": {
+                  "type": "_cb-hero-button",
+                  "settings": {
+                    "label": "Shop by Play Style",
+                    "style": "secondary",
+                    "show_arrow": false
+                  }
+                }
+              },
+              "block_order": [
+                "button_1",
+                "button_2"
+              ]
+            },
+            "features": {
+              "type": "_cb-hero-features",
+              "blocks": {
+                "feature_1": {
+                  "type": "_cb-hero-feature",
+                  "settings": {
+                    "icon": "check",
+                    "feature_text": "100% Genuine Spec"
+                  }
+                },
+                "feature_2": {
+                  "type": "_cb-hero-feature",
+                  "settings": {
+                    "icon": "sliders",
+                    "feature_text": "Custom Stringing Option"
+                  }
+                },
+                "feature_3": {
+                  "type": "_cb-hero-feature",
+                  "settings": {
+                    "icon": "store",
+                    "feature_text": "Papakura Pickup Today"
+                  }
+                }
+              },
+              "block_order": [
+                "feature_1",
+                "feature_2",
+                "feature_3"
+              ]
+            }
+          },
+          "block_order": [
+            "badge",
+            "heading",
+            "text",
+            "buttons",
+            "features"
+          ]
+        },
+        "media": {
+          "type": "_cb-hero-media",
+          "blocks": {
+            "label_1": {
+              "type": "_cb-hero-label",
+              "settings": {
+                "label_text": "41R Elliot St Pro Shop",
+                "position": "top-left",
+                "style": "dark",
+                "uppercase": true
+              }
+            },
+            "label_2": {
+              "type": "_cb-hero-label",
+              "settings": {
+                "label_text": "Master Calibration Lab",
+                "position": "top-left",
+                "style": "accent",
+                "uppercase": true
+              }
+            },
+            "label_3": {
+              "type": "_cb-hero-label",
+              "settings": {
+                "label_text": "In-Store Demo Rackets Available:",
+                "label_secondary": "Yonex · Victor · Ashaway",
+                "position": "bottom-right",
+                "style": "dark"
+              }
+            }
+          },
+          "block_order": [
+            "label_1",
+            "label_2",
+            "label_3"
+          ]
+        }
+      },
+      "block_order": [
+        "content",
+        "media"
+      ]
+    },
+    {
+      "name": "[CB] Hero (Design 6)",
+      "category": "t:categories.banners",
+      "settings": {
+        "design": "6",
+        "breadcrumb": "Home / Equipment / Footwear",
+        "content_width": 49,
+        "padding_top": 20,
+        "padding_bottom": 32
+      },
+      "blocks": {
+        "content": {
+          "type": "_cb-hero-content",
+          "blocks": {
+            "badge": {
+              "type": "_cb-hero-badge",
+              "settings": {
+                "badge_text": "Court footwear"
+              }
+            },
+            "heading": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "Built for badminton movement.",
+                "tag": "h1",
+                "size": 56,
+                "mobile_sizing": "fluid",
+                "fluid_min": 36,
+                "fluid_vw": 8,
+                "line_height": 115,
+                "letter_spacing": -2
+              }
+            },
+            "text": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>Shop badminton footwear selected for fast court movement, grip and support during training, club play and competition.</p>",
+                "size": 18,
+                "mobile_sizing": "fluid",
+                "mobile_size": 15,
+                "fluid_vw": 2.2,
+                "line_height": 170,
+                "max_width_unit": "ch",
+                "max_width_ch": 56
+              }
+            },
+            "buttons": {
+              "type": "_cb-hero-buttons",
+              "settings": {
+                "space_above": 16
+              },
+              "blocks": {
+                "button_1": {
+                  "type": "_cb-hero-button",
+                  "settings": {
+                    "label": "Shop all footwear",
+                    "style": "primary",
+                    "show_arrow": true,
+                    "arrow_direction": "down"
+                  }
+                },
+                "button_2": {
+                  "type": "_cb-hero-button",
+                  "settings": {
+                    "label": "Find your size",
+                    "style": "secondary",
+                    "show_arrow": false
+                  }
+                }
+              },
+              "block_order": [
+                "button_1",
+                "button_2"
+              ]
+            },
+            "features": {
+              "type": "_cb-hero-features",
+              "settings": {
+                "show_divider": false
+              },
+              "blocks": {
+                "feature_1": {
+                  "type": "_cb-hero-feature",
+                  "settings": {
+                    "icon": "check",
+                    "feature_text": "Badminton-specific footwear"
+                  }
+                },
+                "feature_2": {
+                  "type": "_cb-hero-feature",
+                  "settings": {
+                    "icon": "store",
+                    "feature_text": "Click & collect Papakura"
+                  }
+                },
+                "feature_3": {
+                  "type": "_cb-hero-feature",
+                  "settings": {
+                    "icon": "calendar",
+                    "feature_text": "Open 7 days"
+                  }
+                }
+              },
+              "block_order": [
+                "feature_1",
+                "feature_2",
+                "feature_3"
+              ]
+            }
+          },
+          "block_order": [
+            "badge",
+            "heading",
+            "text",
+            "buttons",
+            "features"
+          ]
+        },
+        "media": {
+          "type": "_cb-hero-media",
+          "settings": {
+            "show_gradient": false
+          }
+        }
+      },
+      "block_order": [
+        "content",
+        "media"
+      ]
+    },
+    {
+      "name": "[CB] Hero (Design 7)",
+      "category": "t:categories.banners",
+      "settings": {
+        "design": "7",
+        "breadcrumb": "Home / Equipment / Apparel & Support",
+        "breadcrumb_size": 13,
+        "content_width": 50,
+        "column_gap": 32,
+        "glow_color": "#0b0b0b",
+        "padding_top": 20,
+        "padding_bottom": 56
+      },
+      "blocks": {
+        "content": {
+          "type": "_cb-hero-content",
+          "blocks": {
+            "badge": {
+              "type": "_cb-hero-badge",
+              "settings": {
+                "badge_text": "Apparel & Support",
+                "text_size": 11,
+                "text_weight": "500"
+              }
+            },
+            "heading": {
+              "type": "cb-heading",
+              "settings": {
+                "heading_text": "Made for movement. <em>Ready for the court.</em>",
+                "tag": "h1",
+                "size": 54,
+                "mobile_sizing": "fluid",
+                "fluid_min": 36,
+                "fluid_vw": 8,
+                "line_height": 118,
+                "letter_spacing": -2
+              }
+            },
+            "text": {
+              "type": "cb-paragraph",
+              "settings": {
+                "body_text": "<p>Shop badminton apparel, compression gear and support products for training, club nights and competition.</p>",
+                "size": 18,
+                "mobile_sizing": "fluid",
+                "mobile_size": 15,
+                "fluid_vw": 2.2,
+                "line_height": 160,
+                "max_width_unit": "ch",
+                "max_width_ch": 50
+              }
+            },
+            "buttons": {
+              "type": "_cb-hero-buttons",
+              "settings": {
+                "space_above": 6
+              },
+              "blocks": {
+                "button_1": {
+                  "type": "_cb-hero-button",
+                  "settings": {
+                    "label": "Shop all apparel & support",
+                    "style": "primary",
+                    "show_arrow": true,
+                    "glow": true,
+                    "label_size": 14,
+                    "label_weight": "400"
+                  }
+                },
+                "button_2": {
+                  "type": "_cb-hero-button",
+                  "settings": {
+                    "label": "Shop support gear",
+                    "style": "secondary",
+                    "show_arrow": false,
+                    "label_size": 14,
+                    "label_weight": "400"
+                  }
+                }
+              },
+              "block_order": [
+                "button_1",
+                "button_2"
+              ]
+            },
+            "features": {
+              "type": "_cb-hero-features",
+              "settings": {
+                "show_divider": true,
+                "divider_space_above": 2,
+                "divider_space_below": 22
+              },
+              "blocks": {
+                "feature_1": {
+                  "type": "_cb-hero-feature",
+                  "settings": {
+                    "icon": "badge_check",
+                    "feature_text": "Badminton specialists",
+                    "text_size": 13
+                  }
+                },
+                "feature_2": {
+                  "type": "_cb-hero-feature",
+                  "settings": {
+                    "icon": "store",
+                    "feature_text": "Click & collect Papakura",
+                    "text_size": 13
+                  }
+                },
+                "feature_3": {
+                  "type": "_cb-hero-feature",
+                  "settings": {
+                    "icon": "clock",
+                    "feature_text": "Open 7 days",
+                    "text_size": 13
+                  }
+                }
+              },
+              "block_order": [
+                "feature_1",
+                "feature_2",
+                "feature_3"
+              ]
+            }
+          },
+          "block_order": [
+            "badge",
+            "heading",
+            "text",
+            "buttons",
+            "features"
+          ]
+        },
+        "media": {
+          "type": "_cb-hero-media",
+          "settings": {
+            "radius": 8,
+            "show_gradient": false
+          }
+        }
+      },
+      "block_order": [
+        "content",
+        "media"
+      ]
     }
   ]
 }
